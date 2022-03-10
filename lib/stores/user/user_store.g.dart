@@ -34,16 +34,38 @@ mixin _$UserStore on _UserStore, Store {
   final _$loginFutureAtom = Atom(name: '_UserStore.loginFuture');
 
   @override
-  ObservableFuture<bool> get loginFuture {
+  ObservableFuture<String?> get loginFuture {
     _$loginFutureAtom.reportRead();
     return super.loginFuture;
   }
 
   @override
-  set loginFuture(ObservableFuture<bool> value) {
+  set loginFuture(ObservableFuture<String?> value) {
     _$loginFutureAtom.reportWrite(value, super.loginFuture, () {
       super.loginFuture = value;
     });
+  }
+
+  final _$userAtom = Atom(name: '_UserStore.user');
+
+  @override
+  UserModel get user {
+    _$userAtom.reportRead();
+    return super.user;
+  }
+
+  @override
+  set user(UserModel value) {
+    _$userAtom.reportWrite(value, super.user, () {
+      super.user = value;
+    });
+  }
+
+  final _$fetchUserInforAsyncAction = AsyncAction('_UserStore.fetchUserInfor');
+
+  @override
+  Future<bool> fetchUserInfor() {
+    return _$fetchUserInforAsyncAction.run(() => super.fetchUserInfor());
   }
 
   final _$loginAsyncAction = AsyncAction('_UserStore.login');
@@ -58,6 +80,7 @@ mixin _$UserStore on _UserStore, Store {
     return '''
 success: ${success},
 loginFuture: ${loginFuture},
+user: ${user},
 isLoading: ${isLoading}
     ''';
   }

@@ -2,7 +2,6 @@ import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/assets.dart';
-import 'package:mobile/data/sharedpref/constants/preferences.dart';
 import 'package:mobile/stores/form/form_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/utils/device/device_utils.dart';
@@ -53,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       primary: true,
-      appBar: EmptyAppBar(),
+      appBar: const EmptyAppBar(),
       body: _buildBody(),
     );
   }
@@ -68,15 +67,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: <Widget>[
                     Expanded(
                       flex: 1,
-                      child: _buildLeftSide(),
+                      child: _buildBanner(),
                     ),
                     Expanded(
                       flex: 1,
-                      child: _buildRightSide(),
+                      child: _buildContent(),
                     ),
                   ],
                 )
-              : Center(child: _buildRightSide()),
+              : Center(child: _buildContent()),
           Observer(
             builder: (context) {
               return _store.success
@@ -97,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildLeftSide() {
+  Widget _buildBanner() {
     return SizedBox.expand(
       child: Image.asset(
         Assets.carBackground,
@@ -106,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildRightSide() {
+  Widget _buildContent() {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -174,8 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildForgotPasswordButton() {
     return Align(
       alignment: FractionalOffset.centerRight,
-      child: FlatButton(
-        padding: const EdgeInsets.all(0.0),
+      child: TextButton(
         child: Text(
           AppLocalizations.of(context).translate('login_btn_forgot_password'),
           style: Theme.of(context)
@@ -206,7 +204,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget navigate(BuildContext context) {
     SharedPreferences.getInstance().then((prefs) {
-      prefs.setBool(Preferences.is_logged_in, true);
+      // prefs.setBool(Preferences.is_logged_in, true);
     });
 
     Future.delayed(const Duration(milliseconds: 0), () {
@@ -220,15 +218,13 @@ class _LoginScreenState extends State<LoginScreen> {
   // General Methods:-----------------------------------------------------------
   _showErrorMessage(String message) {
     if (message.isNotEmpty) {
-      Future.delayed(const Duration(milliseconds: 0), () {
-        if (message.isNotEmpty) {
-          FlushbarHelper.createError(
-            message: message,
-            title: AppLocalizations.of(context).translate('home_tv_error'),
-            duration: const Duration(seconds: 3),
-          ).show(context);
-        }
-      });
+      if (message.isNotEmpty) {
+        FlushbarHelper.createError(
+          message: message,
+          title: AppLocalizations.of(context).translate('home_tv_error'),
+          duration: const Duration(seconds: 3),
+        ).show(context);
+      }
     }
 
     return const SizedBox.shrink();

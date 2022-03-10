@@ -1,39 +1,36 @@
 import 'dart:async';
+import 'dart:developer';
 
+import 'package:mobile/constants/numbers.dart';
+import 'package:mobile/data/network/apis/auth/auth_api.dart';
 import 'package:mobile/data/sharedpref/shared_preference_helper.dart';
-
-import 'network/apis/posts/post_api.dart';
 
 class Repository {
   // data source object
   // final PostDataSource _postDataSource;
 
   // api objects
-  final PostApi _postApi;
+  final AuthAPI _authApi;
 
   // shared pref object
   final SharedPreferenceHelper _sharedPrefsHelper;
 
   // constructor
   Repository(
-    this._postApi,
+    this._authApi,
     this._sharedPrefsHelper,
     // this._postDataSource,
   );
 
-  // Post: ---------------------------------------------------------------------
-  // Future<PostList?> getPosts() async {
-  //   // check to see if posts are present in database, then fetch from database
-  //   // else make a network call to get all posts, store them into database for
-  //   // later use
-  //   return await _postApi.getPosts().then((postsList) {
-  //     postsList.posts?.forEach((post) {
-  //       _postDataSource.insert(post);
-  //     });
-
-  //     return postsList;
-  //   }).catchError((error) => throw error);
-  // }
+  // Authorize: ---------------------------------------------------------------------
+  Future<Map<String, dynamic>?> fetchUserInfor(String authToken) async {
+    return await _authApi.fetchUserInfor(authToken).then((resVal) {
+      return resVal;
+    }).catchError((error) {
+      log("Login Fail");
+      return null;
+    });
+  }
 
   // Future<List<Post>> findPostById(int id) {
   //   //creating filter
@@ -66,14 +63,20 @@ class Repository {
   //     .catchError((error) => throw error);
 
   // Login:---------------------------------------------------------------------
-  Future<bool> login(String email, String password) async {
-    return await Future.delayed(Duration(seconds: 2), () => true);
+  Future<String?> login(String email, String password) async {
+    return await Future.delayed(
+        const Duration(seconds: Numbers.delayTimeInSecond), () => "askdhaksdh");
   }
 
-  Future<void> saveIsLoggedIn(bool value) =>
-      _sharedPrefsHelper.saveIsLoggedIn(value);
+  Future<String?> get authToken => _sharedPrefsHelper.authToken;
 
-  Future<bool> get isLoggedIn => _sharedPrefsHelper.isLoggedIn;
+  Future<bool> saveAuthToken(String authToken) async {
+    return _sharedPrefsHelper.saveAuthToken(authToken);
+  }
+
+  Future<bool> removeAuthToken() async {
+    return _sharedPrefsHelper.removeAuthToken();
+  }
 
   // Theme: --------------------------------------------------------------------
   Future<void> changeBrightnessToDark(bool value) =>

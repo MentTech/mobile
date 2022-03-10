@@ -1,10 +1,10 @@
 import 'dart:developer';
 
+import 'package:mobile/data/repository.dart';
+import 'package:mobile/models/user/user.dart';
 import 'package:mobile/stores/error/error_store.dart';
+import 'package:mobile/stores/form/form_store.dart';
 import 'package:mobx/mobx.dart';
-
-import '../../data/repository.dart';
-import '../form/form_store.dart';
 
 part 'user_store.g.dart';
 
@@ -20,8 +20,8 @@ abstract class _UserStore with Store {
   // store for handling error messages
   final ErrorStore errorStore = ErrorStore();
 
-  // bool to check if current user is logged in
-  bool isLoggedIn = false;
+  // token for access
+  String? accessToken;
 
   // constructor:---------------------------------------------------------------
   _UserStore(Repository repository) : _repository = repository {
@@ -29,8 +29,8 @@ abstract class _UserStore with Store {
     _setupDisposers();
 
     // checking if user is logged in
-    repository.isLoggedIn.then((value) {
-      isLoggedIn = value;
+    repository.authToken.then((value) {
+      accessToken = value;
     });
   }
 
@@ -44,44 +44,67 @@ abstract class _UserStore with Store {
   }
 
   // empty responses:-----------------------------------------------------------
-  static ObservableFuture<bool> emptyLoginResponse =
-      ObservableFuture.value(false);
+  static ObservableFuture<String?> emptyLoginResponse =
+      ObservableFuture.value(null);
 
   // store variables:-----------------------------------------------------------
   @observable
   bool success = false;
 
   @observable
-  ObservableFuture<bool> loginFuture = emptyLoginResponse;
+  ObservableFuture<String?> loginFuture = emptyLoginResponse;
+
+  @observable
+  late UserModel user;
 
   @computed
   bool get isLoading => loginFuture.status == FutureStatus.pending;
 
   // actions:-------------------------------------------------------------------
   @action
+  Future<bool> fetchUserInfor() async {
+    if (accessToken != null) {
+      // final res = await _repository.fetchUserInfor(accessToken!);
+
+      // if (res != null && res["user"] != null) {
+      //   user = UserInfo.fromJson(res["user"]);
+      //   return Future.value(true);
+      // }
+    }
+
+    return Future.value(false);
+  }
+
+  @action
   Future login(String email, String password) async {
     final future = _repository.login(email, password);
+
     loginFuture = ObservableFuture(future);
-    await future.then((value) async {
-      if (value) {
-        _repository.saveIsLoggedIn(true);
-        isLoggedIn = true;
+
+    await future.then((token) async {
+      if (token != null) {
+        _repository.saveAuthToken(token);
+        accessToken = token;
+
         success = true;
       } else {
         log('failed to login');
       }
     }).catchError((e) {
       log(e.toString());
-      isLoggedIn = false;
+      accessToken = null;
       success = false;
       throw e;
     });
   }
 
   logout() {
-    isLoggedIn = false;
-    _repository.saveIsLoggedIn(false);
+    accessToken = null;
+    _repository.removeAuthToken();
   }
+
+  // getter:--------------------------------------------------------------------
+  bool get isLoggedIn => accessToken != null;
 
   // general methods:-----------------------------------------------------------
   void dispose() {

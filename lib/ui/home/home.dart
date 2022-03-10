@@ -1,15 +1,8 @@
-import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-// ignore: import_of_legacy_library_into_null_safe
-// import 'package:material_dialog/material_dialog.dart';
-import 'package:mobile/data/sharedpref/constants/preferences.dart';
-import 'package:mobile/stores/language/language_store.dart';
-import 'package:mobile/stores/post/post_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
-import 'package:mobile/widgets/progress_indicator_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,9 +15,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   //stores:---------------------------------------------------------------------
-  late PostStore _postStore;
   late ThemeStore _themeStore;
-  late LanguageStore _languageStore;
+  // late LanguageStore _languageStore;
 
   @override
   void initState() {
@@ -36,14 +28,13 @@ class _HomeScreenState extends State<HomeScreen> {
     super.didChangeDependencies();
 
     // initializing stores
-    _languageStore = Provider.of<LanguageStore>(context);
+    // _languageStore = Provider.of<LanguageStore>(context);
     _themeStore = Provider.of<ThemeStore>(context);
-    _postStore = Provider.of<PostStore>(context);
 
     // check to see if already called api
-    if (!_postStore.loading) {
-      _postStore.getPosts();
-    }
+    // if (!_postStore.loading) {
+    //   _postStore.getPosts();
+    // }
   }
 
   @override
@@ -89,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return IconButton(
       onPressed: () {
         SharedPreferences.getInstance().then((preference) {
-          preference.setBool(Preferences.is_logged_in, false);
+          // preference.setBool(Preferences.is_logged_in, false);
           Navigator.of(context).pushReplacementNamed(Routes.login);
         });
       },
@@ -113,87 +104,87 @@ class _HomeScreenState extends State<HomeScreen> {
   // body methods:--------------------------------------------------------------
   Widget _buildBody() {
     return Stack(
-      children: <Widget>[
-        _handleErrorMessage(),
-        _buildMainContent(),
+      children: const <Widget>[
+        // _handleErrorMessage(),
+        // _buildMainContent(),
       ],
     );
   }
 
-  Widget _buildMainContent() {
-    return Observer(
-      builder: (context) {
-        return _postStore.loading
-            ? const CustomProgressIndicatorWidget()
-            : Material(child: _buildListView());
-      },
-    );
-  }
+  // Widget _buildMainContent() {
+  //   return Observer(
+  //     builder: (context) {
+  //       return _postStore.loading
+  //           ? const CustomProgressIndicatorWidget()
+  //           : Material(child: _buildListView());
+  //     },
+  //   );
+  // }
 
-  Widget _buildListView() {
-    return _postStore.postList != null
-        ? ListView.separated(
-            itemCount: _postStore.postList!.posts!.length,
-            separatorBuilder: (context, position) {
-              return const Divider();
-            },
-            itemBuilder: (context, position) {
-              return _buildListItem(position);
-            },
-          )
-        : Center(
-            child: Text(
-              AppLocalizations.of(context).translate('home_tv_no_post_found'),
-            ),
-          );
-  }
+  // Widget _buildListView() {
+  //   return _postStore.postList != null
+  //       ? ListView.separated(
+  //           itemCount: _postStore.postList!.posts!.length,
+  //           separatorBuilder: (context, position) {
+  //             return const Divider();
+  //           },
+  //           itemBuilder: (context, position) {
+  //             return _buildListItem(position);
+  //           },
+  //         )
+  //       : Center(
+  //           child: Text(
+  //             AppLocalizations.of(context).translate('home_tv_no_post_found'),
+  //           ),
+  //         );
+  // }
 
-  Widget _buildListItem(int position) {
-    return ListTile(
-      dense: true,
-      leading: const Icon(Icons.cloud_circle),
-      title: Text(
-        '${_postStore.postList?.posts?[position].title}',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        softWrap: false,
-        style: Theme.of(context).textTheme.bodyText1,
-      ),
-      subtitle: Text(
-        '${_postStore.postList?.posts?[position].body}',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        softWrap: false,
-      ),
-    );
-  }
+  // Widget _buildListItem(int position) {
+  //   return ListTile(
+  //     dense: true,
+  //     leading: const Icon(Icons.cloud_circle),
+  //     title: Text(
+  //       '${_postStore.postList?.posts?[position].title}',
+  //       maxLines: 1,
+  //       overflow: TextOverflow.ellipsis,
+  //       softWrap: false,
+  //       style: Theme.of(context).textTheme.bodyText1,
+  //     ),
+  //     subtitle: Text(
+  //       '${_postStore.postList?.posts?[position].body}',
+  //       maxLines: 1,
+  //       overflow: TextOverflow.ellipsis,
+  //       softWrap: false,
+  //     ),
+  //   );
+  // }
 
-  Widget _handleErrorMessage() {
-    return Observer(
-      builder: (context) {
-        if (_postStore.errorStore.errorMessage.isNotEmpty) {
-          return _showErrorMessage(_postStore.errorStore.errorMessage);
-        }
+  // Widget _handleErrorMessage() {
+  //   return Observer(
+  //     builder: (context) {
+  //       if (_postStore.errorStore.errorMessage.isNotEmpty) {
+  //         return _showErrorMessage(_postStore.errorStore.errorMessage);
+  //       }
 
-        return const SizedBox.shrink();
-      },
-    );
-  }
+  //       return const SizedBox.shrink();
+  //     },
+  //   );
+  // }
 
   // General Methods:-----------------------------------------------------------
-  _showErrorMessage(String message) {
-    Future.delayed(const Duration(milliseconds: 0), () {
-      if (message.isNotEmpty) {
-        FlushbarHelper.createError(
-          message: message,
-          title: AppLocalizations.of(context).translate('home_tv_error'),
-          duration: const Duration(seconds: 3),
-        ).show(context);
-      }
-    });
+  // _showErrorMessage(String message) {
+  //   Future.delayed(const Duration(milliseconds: 0), () {
+  //     if (message.isNotEmpty) {
+  //       FlushbarHelper.createError(
+  //         message: message,
+  //         title: AppLocalizations.of(context).translate('home_tv_error'),
+  //         duration: const Duration(seconds: 3),
+  //       ).show(context);
+  //     }
+  //   });
 
-    return const SizedBox.shrink();
-  }
+  //   return const SizedBox.shrink();
+  // }
 
   // _buildLanguageDialog() {
   //   _showDialog<String>(

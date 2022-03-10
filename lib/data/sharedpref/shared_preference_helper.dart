@@ -11,7 +11,7 @@ class SharedPreferenceHelper {
   // constructor
   SharedPreferenceHelper(this._sharedPreference);
 
-  // General Methods: ----------------------------------------------------------
+  // Authorization:-------------------------------------------------------------
   Future<String?> get authToken async {
     return _sharedPreference.getString(Preferences.auth_token);
   }
@@ -22,15 +22,6 @@ class SharedPreferenceHelper {
 
   Future<bool> removeAuthToken() async {
     return _sharedPreference.remove(Preferences.auth_token);
-  }
-
-  // Login:---------------------------------------------------------------------
-  Future<bool> get isLoggedIn async {
-    return _sharedPreference.getBool(Preferences.is_logged_in) ?? false;
-  }
-
-  Future<bool> saveIsLoggedIn(bool value) async {
-    return _sharedPreference.setBool(Preferences.is_logged_in, value);
   }
 
   // Theme:------------------------------------------------------

@@ -6,11 +6,9 @@ import 'package:mobile/constants/strings.dart';
 import 'package:mobile/data/repository.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/language/language_store.dart';
-import 'package:mobile/stores/post/post_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
-import 'package:mobile/ui/home/home.dart';
-import 'package:mobile/ui/login/login.dart';
+import 'package:mobile/ui/splash/splash.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +18,6 @@ class MyApp extends StatelessWidget {
   // Create your store as a final variable in a base Widget. This works better
   // with Hot Reload than creating it directly in the `build` function.
   final ThemeStore _themeStore = ThemeStore(getIt<Repository>());
-  final PostStore _postStore = PostStore(getIt<Repository>());
   final LanguageStore _languageStore = LanguageStore(getIt<Repository>());
   final UserStore _userStore = UserStore(getIt<Repository>());
 
@@ -31,7 +28,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<ThemeStore>(create: (_) => _themeStore),
-        Provider<PostStore>(create: (_) => _postStore),
+        Provider<UserStore>(create: (_) => _userStore),
         Provider<LanguageStore>(create: (_) => _languageStore),
       ],
       child: Observer(
@@ -56,9 +53,7 @@ class MyApp extends StatelessWidget {
               // Built-in localization of basic text for Cupertino widgets
               GlobalCupertinoLocalizations.delegate,
             ],
-            home: _userStore.isLoggedIn
-                ? const HomeScreen()
-                : const LoginScreen(),
+            home: const SplashScreen(),
           );
         },
       ),
