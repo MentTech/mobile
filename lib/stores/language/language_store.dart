@@ -20,8 +20,7 @@ abstract class _LanguageStore with Store {
   // supported languages
   List<Language> supportedLanguages = [
     Language(code: 'US', locale: 'en', language: 'English'),
-    Language(code: 'DK', locale: 'da', language: 'Danish'),
-    Language(code: 'ES', locale: 'es', language: 'España'),
+    Language(code: 'VN', locale: 'vi', language: 'Tiếng Việt'),
   ];
 
   // constructor:---------------------------------------------------------------
@@ -51,10 +50,8 @@ abstract class _LanguageStore with Store {
 
     if (_locale == 'en') {
       code = "US";
-    } else if (_locale == 'da') {
-      code = "DK";
-    } else if (_locale == 'es') {
-      code = "ES";
+    } else if (_locale == 'vi') {
+      code = "VN";
     }
 
     return code;

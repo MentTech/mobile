@@ -3,4 +3,6 @@ class Strings {
 
   //General
   static const String appName = "Tutoring and Mentoring";
+
+  static const String authorizeHeroTag = "jett_champion_auth";
 }

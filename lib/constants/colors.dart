@@ -15,4 +15,10 @@ class AppColors {
     800: Color(0xFFDB7424),
     900: Color(0xFFD56217)
   };
+
+  static final lightThemeColor = orange[200];
+  static final darkThemeColor = orange[700];
+
+  static const lightTextTheme = Colors.white70;
+  static const darkTextTheme = Colors.black54;
 }

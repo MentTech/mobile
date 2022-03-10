@@ -76,7 +76,7 @@ abstract class _UserStore with Store {
   }
 
   @action
-  Future login(String email, String password) async {
+  Future<bool> login(String email, String password) async {
     final future = _repository.login(email, password);
 
     loginFuture = ObservableFuture(future);
@@ -87,6 +87,8 @@ abstract class _UserStore with Store {
         accessToken = token;
 
         success = true;
+
+        return Future.value(true);
       } else {
         log('failed to login');
       }
@@ -96,6 +98,8 @@ abstract class _UserStore with Store {
       success = false;
       throw e;
     });
+
+    return Future.value(false);
   }
 
   logout() {

@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:dio/dio.dart';
 import 'package:mobile/data/network/constants/endpoints.dart';
 import 'package:mobile/data/network/dio_client.dart';
 

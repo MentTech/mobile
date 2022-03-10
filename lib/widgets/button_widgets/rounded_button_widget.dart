@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/constants/dimens.dart';
 
 class RoundedButtonWidget extends StatelessWidget {
   final String buttonText;
@@ -18,9 +19,14 @@ class RoundedButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       child: Container(
-        decoration: BoxDecoration(
+        padding: const EdgeInsets.symmetric(
+            vertical: Dimens.vertical_padding / 2,
+            horizontal: Dimens.horizontal_padding),
+        decoration: ShapeDecoration(
           color: buttonColor,
-          // shape:  StadiumBorder(),
+          shape: StadiumBorder(
+              side:
+                  BorderSide(color: Colors.white.withOpacity(0.2), width: 1.5)),
         ),
         child: Text(
           buttonText,

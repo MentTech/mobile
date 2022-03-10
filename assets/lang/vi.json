@@ -1,0 +1,15 @@
+{
+  "login_start": "Below are list of strings for login",
+  "login_et_user_email": "Nhập email",
+  "login_et_user_password": "Nhập mật khẩu",
+  "btn_forgot_password": "Quên mật khẩu?",
+  "login_btn_sign_in": "Đăng nhập",
+  "signup_btn_sign_up": "Đăng kí",
+  "login_error_fill_fields": "Hãy nhập hết các trường bắt buộc",
+  "login_others_ways": "Hoặc đăng nhập với",
+  "login_end": "------------------------------------------------------------------------------------",
+  "home_start": "Below are list of strings for home",
+  "home_tv_error": "Lỗi",
+  "home_tv_choose_language": "Chọn ngôn ngữ",
+  "home_end": "-------------------------------------------------------------------------------------"
+}
