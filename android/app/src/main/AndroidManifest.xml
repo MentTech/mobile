@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.jett.itus.mobile">
+    package="com.jett.sgrayk.mobile">
    <application
         android:label="mobile"
         android:name="${applicationName}"

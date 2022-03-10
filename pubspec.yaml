@@ -60,7 +60,7 @@ dependencies:
   another_flushbar: ^1.10.28
 
   # Material Dialog
-  material_dialog: ^0.0.9
+  material_dialogs: ^1.1.1
 
   # This package provides internationalization and localization facilities, including message
   # translation, plurals and genders, date/number formatting and parsing, and bidirectional text.
@@ -100,8 +100,8 @@ dev_dependencies:
   # build app icon with statement: `flutter clean && flutter pub get && flutter pub run flutter_launcher_icons:main` in terminal
   flutter_launcher_icons: ^0.9.2
   mobx_codegen: ^2.0.5+2
-  build_runner: ^2.1.7
   json_serializable: ^6.1.4 # for create json builder
+  build_runner: ^2.1.7
   # use command `flutter pub run build_runner build --delete-conflicting-outputs` to run 
   analyzer: ^3.2.0
 
@@ -121,7 +121,11 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/lang/
+    # - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

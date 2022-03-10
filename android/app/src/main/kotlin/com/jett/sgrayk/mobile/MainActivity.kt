@@ -1,4 +1,4 @@
-package com.jett.itus.mobile
+package com.jett.sgrayk.mobile
 
 import io.flutter.embedding.android.FlutterActivity
 
