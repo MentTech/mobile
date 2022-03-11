@@ -6,6 +6,12 @@ import 'package:validators/validators.dart';
 
 part 'form_store.g.dart';
 
+enum AuthenState {
+  signin,
+  signup,
+  forgot,
+}
+
 class FormStore = _FormStore with _$FormStore;
 
 abstract class _FormStore with Store {
@@ -32,6 +38,9 @@ abstract class _FormStore with Store {
 
   // store variables:-----------------------------------------------------------
   @observable
+  AuthenState stateAuthen = AuthenState.signin;
+
+  @observable
   String userEmail = '';
 
   @observable
@@ -39,6 +48,9 @@ abstract class _FormStore with Store {
 
   @observable
   String confirmPassword = '';
+
+  @observable
+  String name = '';
 
   @observable
   bool success = false;
@@ -57,7 +69,8 @@ abstract class _FormStore with Store {
       !formErrorStore.hasErrorsInRegister &&
       userEmail.isNotEmpty &&
       password.isNotEmpty &&
-      confirmPassword.isNotEmpty;
+      confirmPassword.isNotEmpty &&
+      name.isNotEmpty;
 
   @computed
   bool get canForgetPassword =>
@@ -77,6 +90,26 @@ abstract class _FormStore with Store {
   @action
   void setConfirmPassword(String value) {
     confirmPassword = value;
+  }
+
+  @action
+  void setName(String value) {
+    name = value;
+  }
+
+  @action
+  void setSignup() {
+    stateAuthen = AuthenState.signup;
+  }
+
+  @action
+  void setSignin() {
+    stateAuthen = AuthenState.signin;
+  }
+
+  @action
+  void setForgotPassword() {
+    stateAuthen = AuthenState.forgot;
   }
 
   @action
@@ -107,6 +140,15 @@ abstract class _FormStore with Store {
       formErrorStore.confirmPassword = "Confirm password can't be empty";
     } else if (value != password) {
       formErrorStore.confirmPassword = "Password doen't match";
+    } else {
+      formErrorStore.confirmPassword = null;
+    }
+  }
+
+  @action
+  void validateName(String value) {
+    if (value.isEmpty) {
+      formErrorStore.name = "Confirm name can't be empty";
     } else {
       formErrorStore.confirmPassword = null;
     }
@@ -154,6 +196,8 @@ abstract class _FormStore with Store {
   void validateAll() {
     validatePassword(password);
     validateUserEmail(userEmail);
+    validateConfirmPassword(confirmPassword);
+    validateName(name);
   }
 }
 
@@ -169,12 +213,18 @@ abstract class _FormErrorStore with Store {
   @observable
   String? confirmPassword;
 
+  @observable
+  String? name;
+
   @computed
   bool get hasErrorsInLogin => userEmail != null || password != null;
 
   @computed
   bool get hasErrorsInRegister =>
-      userEmail != null || password != null || confirmPassword != null;
+      userEmail != null ||
+      password != null ||
+      confirmPassword != null ||
+      name != null;
 
   @computed
   bool get hasErrorInForgotPassword => userEmail != null;

@@ -31,6 +31,9 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
   //text controllers:-----------------------------------------------------------
   final TextEditingController _userEmailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
   //stores:---------------------------------------------------------------------
   late UserStore _userStore;
@@ -40,6 +43,8 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
 
   //stores:---------------------------------------------------------------------
   final _store = FormStore();
+
+  //
 
   @override
   void initState() {
@@ -138,31 +143,36 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
   }
 
   Widget _buildContent() {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-            horizontal: Dimens.horizontal_padding * 2),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Hero(
-                tag: Strings.authorizeHeroTag,
-                child: AppIconWidget(image: 'assets/icons/ic_appicon.png')),
-            const SizedBox(height: Dimens.horizontal_padding * 2),
-            _buildUserIdField(),
-            _buildPasswordField(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildSignupButton(),
-                _buildForgotPasswordButton(),
-              ],
-            ),
-            _buildSignInButton(),
-            _othersWayLogin(),
-          ],
+    return AnimatedContainer(
+      duration: const Duration(seconds: Properties.delayTimeInSecond),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: Dimens.horizontal_padding * 2),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Hero(
+                  tag: Strings.authorizeHeroTag,
+                  child: AppIconWidget(image: 'assets/icons/ic_appicon.png')),
+              const SizedBox(height: Dimens.horizontal_padding * 2),
+              _buildUserIdField(),
+              _buildPasswordField(),
+              _buildConfirmPasswordField(),
+              _buildNameField(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildSignupinButton(),
+                  _buildForgotPasswordButton(),
+                ],
+              ),
+              _buildSignInButton(),
+              _othersWayLogin(),
+            ],
+          ),
         ),
       ),
     );
@@ -194,20 +204,65 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
   Widget _buildPasswordField() {
     return Observer(
       builder: (context) {
-        return TextFieldWidget(
-          hint:
-              AppLocalizations.of(context).translate('login_et_user_password'),
-          isObscure: true,
-          padding: const EdgeInsets.only(top: 16.0),
-          icon: Icons.lock,
-          iconColor: AppColors.darkTextTheme,
-          textController: _passwordController,
-          focusNode: _passwordFocusNode,
-          errorText: _store.formErrorStore.password,
-          onChanged: (value) {
-            _store.setPassword(_passwordController.text);
-          },
-        );
+        return _store.stateAuthen != AuthenState.forgot
+            ? TextFieldWidget(
+                hint: AppLocalizations.of(context)
+                    .translate('login_et_user_password'),
+                isObscure: true,
+                padding: const EdgeInsets.only(top: 16.0),
+                icon: Icons.lock,
+                iconColor: AppColors.darkTextTheme,
+                textController: _passwordController,
+                focusNode: _passwordFocusNode,
+                errorText: _store.formErrorStore.password,
+                onChanged: (value) {
+                  _store.setPassword(_passwordController.text);
+                },
+              )
+            : Container();
+      },
+    );
+  }
+
+  Widget _buildConfirmPasswordField() {
+    return Observer(
+      builder: (context) {
+        return _store.stateAuthen == AuthenState.signup
+            ? TextFieldWidget(
+                hint: AppLocalizations.of(context)
+                    .translate('login_et_user_password'),
+                isObscure: true,
+                padding: const EdgeInsets.only(top: 16.0),
+                icon: Icons.lock,
+                iconColor: AppColors.darkTextTheme,
+                textController: _confirmPasswordController,
+                errorText: _store.formErrorStore.confirmPassword,
+                onChanged: (value) {
+                  _store.setConfirmPassword(_confirmPasswordController.text);
+                },
+              )
+            : Container();
+      },
+    );
+  }
+
+  Widget _buildNameField() {
+    return Observer(
+      builder: (context) {
+        return _store.stateAuthen == AuthenState.signup
+            ? TextFieldWidget(
+                hint: AppLocalizations.of(context)
+                    .translate('login_et_user_password'),
+                padding: const EdgeInsets.only(top: 16.0),
+                icon: Icons.badge,
+                iconColor: AppColors.darkTextTheme,
+                textController: _nameController,
+                errorText: _store.formErrorStore.name,
+                onChanged: (value) {
+                  _store.setName(_nameController.text);
+                },
+              )
+            : Container();
       },
     );
   }
@@ -223,23 +278,42 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
               .caption
               ?.copyWith(color: AppColors.darkTextTheme),
         ),
-        onPressed: () {},
+        onPressed: () {
+          _store.setForgotPassword();
+        },
       ),
     );
   }
 
-  Widget _buildSignupButton() {
+  Widget _buildSignupinButton() {
     return Align(
       alignment: FractionalOffset.centerLeft,
-      child: TextButton(
-        child: Text(
-          AppLocalizations.of(context).translate('signup_btn_sign_up'),
-          style: Theme.of(context)
-              .textTheme
-              .caption
-              ?.copyWith(color: AppColors.darkTextTheme),
-        ),
-        onPressed: () {},
+      child: Observer(
+        builder: (context) => _store.stateAuthen == AuthenState.signin
+            ? TextButton(
+                child: Text(
+                  AppLocalizations.of(context).translate('signup_btn_sign_up'),
+                  style: Theme.of(context)
+                      .textTheme
+                      .caption
+                      ?.copyWith(color: AppColors.darkTextTheme),
+                ),
+                onPressed: () {
+                  _store.setSignup();
+                },
+              )
+            : TextButton(
+                child: Text(
+                  AppLocalizations.of(context).translate('signup_btn_sign_up'),
+                  style: Theme.of(context)
+                      .textTheme
+                      .caption
+                      ?.copyWith(color: AppColors.darkTextTheme),
+                ),
+                onPressed: () {
+                  _store.setSignin();
+                },
+              ),
       ),
     );
   }
@@ -320,6 +394,9 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
     // Clean up the controller when the Widget is removed from the Widget tree
     _userEmailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _nameController.dispose();
+
     _passwordFocusNode.dispose();
     super.dispose();
   }

@@ -30,6 +30,21 @@ mixin _$FormStore on _FormStore, Store {
           name: '_FormStore.canForgetPassword'))
       .value;
 
+  final _$stateAuthenAtom = Atom(name: '_FormStore.stateAuthen');
+
+  @override
+  AuthenState get stateAuthen {
+    _$stateAuthenAtom.reportRead();
+    return super.stateAuthen;
+  }
+
+  @override
+  set stateAuthen(AuthenState value) {
+    _$stateAuthenAtom.reportWrite(value, super.stateAuthen, () {
+      super.stateAuthen = value;
+    });
+  }
+
   final _$userEmailAtom = Atom(name: '_FormStore.userEmail');
 
   @override
@@ -72,6 +87,21 @@ mixin _$FormStore on _FormStore, Store {
   set confirmPassword(String value) {
     _$confirmPasswordAtom.reportWrite(value, super.confirmPassword, () {
       super.confirmPassword = value;
+    });
+  }
+
+  final _$nameAtom = Atom(name: '_FormStore.name');
+
+  @override
+  String get name {
+    _$nameAtom.reportRead();
+    return super.name;
+  }
+
+  @override
+  set name(String value) {
+    _$nameAtom.reportWrite(value, super.name, () {
+      super.name = value;
     });
   }
 
@@ -169,6 +199,50 @@ mixin _$FormStore on _FormStore, Store {
   }
 
   @override
+  void setName(String value) {
+    final _$actionInfo =
+        _$_FormStoreActionController.startAction(name: '_FormStore.setName');
+    try {
+      return super.setName(value);
+    } finally {
+      _$_FormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setSignup() {
+    final _$actionInfo =
+        _$_FormStoreActionController.startAction(name: '_FormStore.setSignup');
+    try {
+      return super.setSignup();
+    } finally {
+      _$_FormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setSignin() {
+    final _$actionInfo =
+        _$_FormStoreActionController.startAction(name: '_FormStore.setSignin');
+    try {
+      return super.setSignin();
+    } finally {
+      _$_FormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setForgotPassword() {
+    final _$actionInfo = _$_FormStoreActionController.startAction(
+        name: '_FormStore.setForgotPassword');
+    try {
+      return super.setForgotPassword();
+    } finally {
+      _$_FormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void validateUserEmail(String value) {
     final _$actionInfo = _$_FormStoreActionController.startAction(
         name: '_FormStore.validateUserEmail');
@@ -202,11 +276,24 @@ mixin _$FormStore on _FormStore, Store {
   }
 
   @override
+  void validateName(String value) {
+    final _$actionInfo = _$_FormStoreActionController.startAction(
+        name: '_FormStore.validateName');
+    try {
+      return super.validateName(value);
+    } finally {
+      _$_FormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
+stateAuthen: ${stateAuthen},
 userEmail: ${userEmail},
 password: ${password},
 confirmPassword: ${confirmPassword},
+name: ${name},
 success: ${success},
 loading: ${loading},
 canLogin: ${canLogin},
@@ -284,12 +371,28 @@ mixin _$FormErrorStore on _FormErrorStore, Store {
     });
   }
 
+  final _$nameAtom = Atom(name: '_FormErrorStore.name');
+
+  @override
+  String? get name {
+    _$nameAtom.reportRead();
+    return super.name;
+  }
+
+  @override
+  set name(String? value) {
+    _$nameAtom.reportWrite(value, super.name, () {
+      super.name = value;
+    });
+  }
+
   @override
   String toString() {
     return '''
 userEmail: ${userEmail},
 password: ${password},
 confirmPassword: ${confirmPassword},
+name: ${name},
 hasErrorsInLogin: ${hasErrorsInLogin},
 hasErrorsInRegister: ${hasErrorsInRegister},
 hasErrorInForgotPassword: ${hasErrorInForgotPassword}
