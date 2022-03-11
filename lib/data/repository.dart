@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:mobile/constants/numbers.dart';
+import 'package:mobile/constants/properties.dart';
 import 'package:mobile/data/network/apis/auth/auth_api.dart';
 import 'package:mobile/data/sharedpref/shared_preference_helper.dart';
 
@@ -65,7 +65,8 @@ class Repository {
   // Login:---------------------------------------------------------------------
   Future<String?> login(String email, String password) async {
     return await Future.delayed(
-        const Duration(seconds: Numbers.delayTimeInSecond), () => "askdhaksdh");
+        const Duration(seconds: Properties.delayTimeInSecond),
+        () => "askdhaksdh");
   }
 
   Future<String?> get authToken => _sharedPrefsHelper.authToken;

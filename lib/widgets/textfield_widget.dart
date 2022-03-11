@@ -55,7 +55,7 @@ class TextFieldWidget extends StatelessWidget {
     this.isObscure = false,
     this.isIcon = true,
     this.padding = const EdgeInsets.all(0),
-    this.hintColor = Colors.grey,
+    this.hintColor = Colors.white70,
     this.iconColor = Colors.grey,
     this.focusNode,
     this.onFieldSubmitted,

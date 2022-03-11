@@ -26,12 +26,13 @@ import 'package:mobile/constants/font_family.dart';
 final ThemeData themeData = ThemeData(
   fontFamily: FontFamily.productSans,
   brightness: Brightness.light,
-  primarySwatch: MaterialColor(AppColors.orange[500]!.value, AppColors.orange),
-  primaryColor: AppColors.orange[500],
+  primarySwatch:
+      MaterialColor(AppColors.darkBlue[500]!.value, AppColors.darkBlue),
+  primaryColor: AppColors.darkBlue[500],
 );
 
 final ThemeData themeDataDark = ThemeData(
   fontFamily: FontFamily.productSans,
   brightness: Brightness.dark,
-  primaryColor: AppColors.orange[500],
+  primaryColor: AppColors.darkBlue[500],
 );

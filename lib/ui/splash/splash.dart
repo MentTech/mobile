@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/assets.dart';
-import 'package:mobile/constants/numbers.dart';
+import 'package:mobile/constants/properties.dart';
 import 'package:mobile/constants/strings.dart';
 import 'package:mobile/effects/navigate/screen_transition.dart';
 import 'package:mobile/stores/user/user_store.dart';
+import 'package:mobile/ui/authorization/authorization_screen.dart';
 import 'package:mobile/ui/home/home.dart';
-import 'package:mobile/ui/login/login.dart';
 import 'package:mobile/widgets/app_icon_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -37,7 +37,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   startTimer() {
-    var _duration = const Duration(milliseconds: Numbers.delayTimeInMiliSecond);
+    var _duration =
+        const Duration(milliseconds: Properties.delayTimeInMiliSecond);
     return Timer(_duration, navigate);
   }
 
@@ -49,13 +50,15 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.pushReplacement(
           context,
           CustomFadeTransitionPageRoute(
-              timeCast: Numbers.delayTimeInSecond, child: const HomeScreen()));
+              timeCast: Properties.delayTimeInSecond,
+              child: const HomeScreen()));
     } else {
       // Navigator.of(context).pushReplacementNamed(Routes.login);
       Navigator.pushReplacement(
           context,
           CustomFadeTransitionPageRoute(
-              timeCast: Numbers.delayTimeInSecond, child: const LoginScreen()));
+              timeCast: Properties.delayTimeInSecond,
+              child: const AuthorizationScreen()));
     }
   }
 }

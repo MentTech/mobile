@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/ui/authorization/authorization_screen.dart';
 import 'package:mobile/ui/home/home.dart';
-import 'package:mobile/ui/login/login.dart';
 import 'package:mobile/ui/splash/splash.dart';
 
 class Routes {
@@ -13,7 +13,7 @@ class Routes {
 
   static final routes = <String, WidgetBuilder>{
     splash: (BuildContext context) => const SplashScreen(),
-    login: (BuildContext context) => const LoginScreen(),
+    login: (BuildContext context) => const AuthorizationScreen(),
     home: (BuildContext context) => const HomeScreen(),
   };
 }

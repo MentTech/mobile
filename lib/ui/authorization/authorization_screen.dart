@@ -4,10 +4,9 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/assets.dart';
 import 'package:mobile/constants/colors.dart';
 import 'package:mobile/constants/dimens.dart';
-import 'package:mobile/constants/numbers.dart';
+import 'package:mobile/constants/properties.dart';
 import 'package:mobile/constants/strings.dart';
 import 'package:mobile/stores/form/form_store.dart';
-import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
@@ -21,20 +20,19 @@ import 'package:mobile/widgets/text_widget.dart';
 import 'package:mobile/widgets/textfield_widget.dart';
 import 'package:provider/provider.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class AuthorizationScreen extends StatefulWidget {
+  const AuthorizationScreen({Key? key}) : super(key: key);
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _AuthorizationScreenState createState() => _AuthorizationScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _AuthorizationScreenState extends State<AuthorizationScreen> {
   //text controllers:-----------------------------------------------------------
   final TextEditingController _userEmailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   //stores:---------------------------------------------------------------------
-  late ThemeStore _themeStore;
   late UserStore _userStore;
 
   //focus node:-----------------------------------------------------------------
@@ -52,7 +50,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _themeStore = Provider.of<ThemeStore>(context);
     _userStore = Provider.of<UserStore>(context);
   }
 
@@ -88,10 +85,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     SafeArea(
                         child: Center(
                       child: GlassmorphismContainer(
-                        blur: Dimens.blur_glass_morphism,
-                        opacity: Dimens.opacity_glass_morphism,
+                        blur: Properties.blur_glass_morphism,
+                        opacity: Properties.opacity_glass_morphism,
                         padding: const EdgeInsets.symmetric(
-                            vertical: Dimens.vertical_padding),
+                            vertical: Dimens.vertical_padding * 2),
                         child: _buildContent(),
                       ),
                     )),
@@ -120,9 +117,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildBanner() {
     return SizedBox.expand(
-      child: Image.asset(
-        Assets.loginBackground,
-        fit: BoxFit.cover,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppColors.firstGradientBackgroundTheme,
+              AppColors.secondGradientBackgroundTheme,
+              AppColors.firstGradientBackgroundTheme,
+            ],
+          ),
+          // Image.asset(
+          //   Assets.loginBackground,
+          //   fit: BoxFit.cover,
+          // ),
+        ),
       ),
     );
   }
@@ -165,9 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
           hint: AppLocalizations.of(context).translate('login_et_user_email'),
           inputType: TextInputType.emailAddress,
           icon: Icons.person,
-          iconColor: _themeStore.darkMode
-              ? AppColors.darkTextTheme
-              : AppColors.lightTextTheme,
+          iconColor: AppColors.darkTextTheme,
           textController: _userEmailController,
           inputAction: TextInputAction.next,
           autoFocus: false,
@@ -192,9 +200,7 @@ class _LoginScreenState extends State<LoginScreen> {
           isObscure: true,
           padding: const EdgeInsets.only(top: 16.0),
           icon: Icons.lock,
-          iconColor: _themeStore.darkMode
-              ? AppColors.darkTextTheme
-              : AppColors.lightTextTheme,
+          iconColor: AppColors.darkTextTheme,
           textController: _passwordController,
           focusNode: _passwordFocusNode,
           errorText: _store.formErrorStore.password,
@@ -212,10 +218,10 @@ class _LoginScreenState extends State<LoginScreen> {
       child: TextButton(
         child: Text(
           AppLocalizations.of(context).translate('btn_forgot_password'),
-          style: Theme.of(context).textTheme.caption?.copyWith(
-              color: _themeStore.darkMode
-                  ? AppColors.darkThemeColor
-                  : AppColors.lightThemeColor),
+          style: Theme.of(context)
+              .textTheme
+              .caption
+              ?.copyWith(color: AppColors.darkTextTheme),
         ),
         onPressed: () {},
       ),
@@ -228,10 +234,10 @@ class _LoginScreenState extends State<LoginScreen> {
       child: TextButton(
         child: Text(
           AppLocalizations.of(context).translate('signup_btn_sign_up'),
-          style: Theme.of(context).textTheme.caption?.copyWith(
-              color: _themeStore.darkMode
-                  ? AppColors.darkThemeColor
-                  : AppColors.lightThemeColor),
+          style: Theme.of(context)
+              .textTheme
+              .caption
+              ?.copyWith(color: AppColors.darkTextTheme),
         ),
         onPressed: () {},
       ),
@@ -242,9 +248,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return RoundedButtonWidget(
       buttonText: AppLocalizations.of(context).translate('login_btn_sign_in'),
       buttonColor: Colors.transparent,
-      textColor: _themeStore.darkMode
-          ? AppColors.darkThemeColor!
-          : AppColors.lightThemeColor!,
+      textColor: AppColors.darkTextTheme,
       onPressed: () async {
         if (_store.canLogin) {
           DeviceUtils.hideKeyboard(context);
@@ -261,22 +265,25 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         TextWidget(
           text: AppLocalizations.of(context).translate('login_others_ways'),
+          textColor: AppColors.darkTextTheme,
         ),
-        // Row(
-        //   children: [
-        //     SGVButton(
-        //       width: 50,
-        //       assetName: Assets.facebookSGVLogo,
-        //       ontap: () {},
-        //     ),
-        //     const SizedBox(width: Dimens.horizontal_padding / 3),
-        //     SGVButton(
-        //       width: 50,
-        //       assetName: Assets.googleSGVLogo,
-        //       ontap: () {},
-        //     ),
-        //   ],
-        // ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SGVButton(
+              width: 40,
+              assetName: Assets.facebookSVGLogo,
+              ontap: () {},
+            ),
+            const SizedBox(width: Dimens.horizontal_padding / 3),
+            SGVButton(
+              width: 40,
+              assetName: Assets.googleSVGLogo,
+              ontap: () {},
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -300,7 +307,7 @@ class _LoginScreenState extends State<LoginScreen> {
       FlushbarHelper.createError(
         message: message,
         title: AppLocalizations.of(context).translate('home_tv_error'),
-        duration: const Duration(seconds: Numbers.delayTimeInSecond),
+        duration: const Duration(seconds: Properties.delayTimeInSecond),
       ).show(context);
     }
 

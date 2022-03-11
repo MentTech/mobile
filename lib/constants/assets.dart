@@ -8,6 +8,6 @@ class Assets {
   static const String loginBackground = "assets/images/img_bg.jpg";
 
   // SGV picture
-  static const String facebookSGVLogo = "assets/images/facebook-logo.svg";
-  static const String googleSGVLogo = "assets/images/google-logo.svg";
+  static const String facebookSVGLogo = "assets/icons/facebook-logo.svg";
+  static const String googleSVGLogo = "assets/icons/google-logo.svg";
 }
