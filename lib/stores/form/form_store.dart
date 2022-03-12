@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:mobile/di/components/service_locator.dart';
+import 'package:mobile/stores/authen/authen_store.dart';
 import 'package:mobile/stores/error/error_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:validators/validators.dart';
@@ -20,6 +22,9 @@ abstract class _FormStore with Store {
   // store for handling error messages
   final ErrorStore errorStore = ErrorStore();
 
+  // store for handling authenticators
+  final AuthenStore authenStore = getIt<AuthenStore>();
+
   _FormStore() {
     _setupValidations();
   }
@@ -31,7 +36,8 @@ abstract class _FormStore with Store {
     _disposers = [
       reaction((_) => userEmail, validateUserEmail),
       reaction((_) => password, validatePassword),
-      reaction((_) => confirmPassword, validateConfirmPassword)
+      reaction((_) => confirmPassword, validateConfirmPassword),
+      reaction((_) => name, validateName),
     ];
   }
 
@@ -163,9 +169,15 @@ abstract class _FormStore with Store {
   Future register() async {
     loading = true;
 
-    Future.delayed(const Duration(milliseconds: 2000)).then((future) {
+    authenStore.register(userEmail, password, name).then((future) {
       loading = false;
-      success = true;
+
+      if (future != null) {
+        errorStore.errorMessage = future;
+        success = false;
+      } else {
+        success = true;
+      }
     }).catchError((e) {
       loading = false;
       success = false;

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -139,6 +141,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
           Observer(
             // validator
             builder: (context) {
+              log("${_store.success}");
               return _store.success
                   ? navigate(context)
                   : _showErrorMessage(_store.errorStore.errorMessage);

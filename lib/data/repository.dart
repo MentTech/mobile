@@ -69,6 +69,20 @@ class Repository {
         () => "askdhaksdh");
   }
 
+  Future<Map<String, dynamic>> register(
+      String email, String password, String name) async {
+    return await _authApi.register({
+      "email": email,
+      "password": password,
+      "name": name,
+    }).then((resVal) {
+      return Future.value(resVal!);
+    }).catchError((error) {
+      log("Login Fail");
+      return {"message": "unknown errors"};
+    });
+  }
+
   Future<String?> get authToken => _sharedPrefsHelper.authToken;
 
   Future<bool> saveAuthToken(String authToken) async {
