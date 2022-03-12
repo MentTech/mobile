@@ -9,7 +9,6 @@ part 'form_store.g.dart';
 enum AuthenState {
   signin,
   signup,
-  forgot,
 }
 
 class FormStore = _FormStore with _$FormStore;
@@ -39,6 +38,9 @@ abstract class _FormStore with Store {
   // store variables:-----------------------------------------------------------
   @observable
   AuthenState stateAuthen = AuthenState.signin;
+
+  @observable
+  bool isForgotPasswordState = false;
 
   @observable
   String userEmail = '';
@@ -100,16 +102,19 @@ abstract class _FormStore with Store {
   @action
   void setSignup() {
     stateAuthen = AuthenState.signup;
+    isForgotPasswordState = false;
   }
 
   @action
   void setSignin() {
     stateAuthen = AuthenState.signin;
+    isForgotPasswordState = false;
   }
 
   @action
   void setForgotPassword() {
-    stateAuthen = AuthenState.forgot;
+    stateAuthen = AuthenState.signin;
+    isForgotPasswordState = true;
   }
 
   @action
@@ -157,6 +162,18 @@ abstract class _FormStore with Store {
   @action
   Future register() async {
     loading = true;
+
+    Future.delayed(const Duration(milliseconds: 2000)).then((future) {
+      loading = false;
+      success = true;
+    }).catchError((e) {
+      loading = false;
+      success = false;
+      errorStore.errorMessage = e.toString().contains("ERROR_USER_NOT_FOUND")
+          ? "Username and password doesn't match"
+          : "Something went wrong, please check your internet connection and try again";
+      log(e.toString());
+    });
   }
 
   @action

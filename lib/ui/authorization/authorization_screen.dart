@@ -27,7 +27,8 @@ class AuthorizationScreen extends StatefulWidget {
   _AuthorizationScreenState createState() => _AuthorizationScreenState();
 }
 
-class _AuthorizationScreenState extends State<AuthorizationScreen> {
+class _AuthorizationScreenState extends State<AuthorizationScreen>
+    with TickerProviderStateMixin {
   //text controllers:-----------------------------------------------------------
   final TextEditingController _userEmailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -44,12 +45,48 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
   //stores:---------------------------------------------------------------------
   final _store = FormStore();
 
-  //
+  // animate
+  // ignore: unused_field
+  late Animation<double> _authenAnimation;
+  late AnimationController _authenAnimationController;
+
+  // ignore: unused_field
+  late Animation<double> _forgotPassowrdAnimation;
+  late AnimationController _forgotPassowrdAnimationController;
 
   @override
   void initState() {
     super.initState();
     _passwordFocusNode = FocusNode();
+
+    _authenAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(
+        milliseconds: Properties.animatedTimeInMiliSecond,
+      ),
+    );
+    _authenAnimation = Tween<double>(
+      begin: 0,
+      end: Properties.animatedTimeInMiliSecond * 1.0,
+    ).animate(_authenAnimationController)
+      ..addListener(() {
+        setState(() {});
+      });
+
+    _forgotPassowrdAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(
+        milliseconds: Properties.animatedTimeInMiliSecond,
+      ),
+    );
+    _forgotPassowrdAnimation = Tween<double>(
+      begin: Properties.animatedTimeInMiliSecond * 1.0,
+      end: 0,
+    ).animate(_forgotPassowrdAnimationController)
+      ..addListener(() {
+        setState(() {});
+      });
+    _forgotPassowrdAnimationController.value = 1.0;
   }
 
   @override
@@ -143,127 +180,151 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
   }
 
   Widget _buildContent() {
-    return AnimatedContainer(
-      duration: const Duration(seconds: Properties.delayTimeInSecond),
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-              horizontal: Dimens.horizontal_padding * 2),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Hero(
-                  tag: Strings.authorizeHeroTag,
-                  child: AppIconWidget(image: 'assets/icons/ic_appicon.png')),
-              const SizedBox(height: Dimens.horizontal_padding * 2),
-              _buildUserIdField(),
-              _buildPasswordField(),
-              _buildConfirmPasswordField(),
-              _buildNameField(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildSignupinButton(),
-                  _buildForgotPasswordButton(),
-                ],
-              ),
-              _buildSignInButton(),
-              _othersWayLogin(),
-            ],
-          ),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+            horizontal: Dimens.horizontal_padding * 2),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Hero(
+                tag: Strings.authorizeHeroTag,
+                child: AppIconWidget(image: 'assets/icons/ic_appicon.png')),
+            const SizedBox(height: Dimens.horizontal_padding * 2),
+            _buildUserIdField(),
+            _buildPasswordField(),
+            _buildConfirmPasswordField(),
+            _buildNameField(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildSignupinButton(),
+                _buildForgotPasswordButton(),
+              ],
+            ),
+            _buildSignButton(),
+            _othersWayLogin(),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildUserIdField() {
-    return Observer(
-      builder: (context) {
-        return TextFieldWidget(
-          hint: AppLocalizations.of(context).translate('login_et_user_email'),
-          inputType: TextInputType.emailAddress,
-          icon: Icons.person,
-          iconColor: AppColors.darkTextTheme,
-          textController: _userEmailController,
-          inputAction: TextInputAction.next,
-          autoFocus: false,
-          onChanged: (value) {
-            _store.setUserId(_userEmailController.text);
-          },
-          onFieldSubmitted: (value) {
-            FocusScope.of(context).requestFocus(_passwordFocusNode);
-          },
-          errorText: _store.formErrorStore.userEmail,
-        );
-      },
+    return Container(
+      alignment: Alignment.center,
+      height: Dimens.text_field_height,
+      child: Observer(
+        builder: (context) {
+          return TextFieldWidget(
+            hint: AppLocalizations.of(context).translate('login_et_user_email'),
+            inputType: TextInputType.emailAddress,
+            icon: Icons.person,
+            iconColor: AppColors.darkTextTheme,
+            textController: _userEmailController,
+            inputAction: TextInputAction.done,
+            autoFocus: false,
+            onChanged: (value) {
+              _store.setUserId(_userEmailController.text);
+            },
+            // onFieldSubmitted: (value) {
+            //   FocusScope.of(context).requestFocus(_passwordFocusNode);
+            // },
+            errorText: _store.formErrorStore.userEmail,
+          );
+        },
+      ),
     );
   }
 
   Widget _buildPasswordField() {
-    return Observer(
-      builder: (context) {
-        return _store.stateAuthen != AuthenState.forgot
-            ? TextFieldWidget(
-                hint: AppLocalizations.of(context)
-                    .translate('login_et_user_password'),
-                isObscure: true,
-                padding: const EdgeInsets.only(top: 16.0),
-                icon: Icons.lock,
-                iconColor: AppColors.darkTextTheme,
-                textController: _passwordController,
-                focusNode: _passwordFocusNode,
-                errorText: _store.formErrorStore.password,
-                onChanged: (value) {
-                  _store.setPassword(_passwordController.text);
+    return Container(
+      alignment: Alignment.center,
+      height:
+          _forgotPassowrdAnimationController.value * Dimens.text_field_height,
+      child: _forgotPassowrdAnimationController.value >= 0.3
+          ? Opacity(
+              opacity: _forgotPassowrdAnimationController.value,
+              child: Observer(
+                builder: (context) {
+                  return TextFieldWidget(
+                    hint: AppLocalizations.of(context)
+                        .translate('login_et_user_password'),
+                    isObscure: true,
+                    padding: const EdgeInsets.only(top: 16.0),
+                    icon: Icons.lock,
+                    iconColor: AppColors.darkTextTheme,
+                    textController: _passwordController,
+                    focusNode: _passwordFocusNode,
+                    errorText: _store.formErrorStore.password,
+                    onChanged: (value) {
+                      _store.setPassword(_passwordController.text);
+                    },
+                  );
                 },
-              )
-            : Container();
-      },
+              ),
+            )
+          : const SizedBox(),
     );
   }
 
   Widget _buildConfirmPasswordField() {
-    return Observer(
-      builder: (context) {
-        return _store.stateAuthen == AuthenState.signup
-            ? TextFieldWidget(
-                hint: AppLocalizations.of(context)
-                    .translate('login_et_user_password'),
-                isObscure: true,
-                padding: const EdgeInsets.only(top: 16.0),
-                icon: Icons.lock,
-                iconColor: AppColors.darkTextTheme,
-                textController: _confirmPasswordController,
-                errorText: _store.formErrorStore.confirmPassword,
-                onChanged: (value) {
-                  _store.setConfirmPassword(_confirmPasswordController.text);
+    return Container(
+      alignment: Alignment.center,
+      height: _authenAnimationController.value * Dimens.text_field_height,
+      child: _authenAnimationController.value >= 0.3
+          ? Opacity(
+              opacity: _authenAnimationController.value,
+              child: Observer(
+                builder: (context) {
+                  return TextFieldWidget(
+                    hint: AppLocalizations.of(context)
+                        .translate('login_reet_user_password'),
+                    isObscure: true,
+                    padding: const EdgeInsets.only(top: 16.0),
+                    icon: Icons.lock,
+                    iconColor: AppColors.darkTextTheme,
+                    textController: _confirmPasswordController,
+                    errorText: _store.formErrorStore.confirmPassword,
+                    onChanged: (value) {
+                      _store
+                          .setConfirmPassword(_confirmPasswordController.text);
+                    },
+                  );
                 },
-              )
-            : Container();
-      },
+              ),
+            )
+          : const SizedBox(),
     );
   }
 
   Widget _buildNameField() {
-    return Observer(
-      builder: (context) {
-        return _store.stateAuthen == AuthenState.signup
-            ? TextFieldWidget(
-                hint: AppLocalizations.of(context)
-                    .translate('login_et_user_password'),
-                padding: const EdgeInsets.only(top: 16.0),
-                icon: Icons.badge,
-                iconColor: AppColors.darkTextTheme,
-                textController: _nameController,
-                errorText: _store.formErrorStore.name,
-                onChanged: (value) {
-                  _store.setName(_nameController.text);
+    return Container(
+      alignment: Alignment.center,
+      height: _authenAnimationController.value * Dimens.text_field_height,
+      child: _authenAnimationController.value >= 0.3
+          ? Opacity(
+              opacity: _authenAnimationController.value,
+              child: Observer(
+                builder: (context) {
+                  return TextFieldWidget(
+                    hint: AppLocalizations.of(context)
+                        .translate('login_et_user_name'),
+                    padding: const EdgeInsets.only(top: 16.0),
+                    icon: Icons.badge,
+                    iconColor: AppColors.darkTextTheme,
+                    textController: _nameController,
+                    errorText: _store.formErrorStore.name,
+                    onChanged: (value) {
+                      _store.setName(_nameController.text);
+                    },
+                  );
                 },
-              )
-            : Container();
-      },
+              ),
+            )
+          : const SizedBox(),
     );
   }
 
@@ -280,6 +341,9 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
         ),
         onPressed: () {
           _store.setForgotPassword();
+
+          _authenAnimationController.reverse();
+          _forgotPassowrdAnimationController.reverse();
         },
       ),
     );
@@ -288,45 +352,77 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
   Widget _buildSignupinButton() {
     return Align(
       alignment: FractionalOffset.centerLeft,
-      child: Observer(
-        builder: (context) => _store.stateAuthen == AuthenState.signin
-            ? TextButton(
-                child: Text(
-                  AppLocalizations.of(context).translate('signup_btn_sign_up'),
-                  style: Theme.of(context)
-                      .textTheme
-                      .caption
-                      ?.copyWith(color: AppColors.darkTextTheme),
-                ),
-                onPressed: () {
-                  _store.setSignup();
-                },
-              )
-            : TextButton(
-                child: Text(
-                  AppLocalizations.of(context).translate('signup_btn_sign_up'),
-                  style: Theme.of(context)
-                      .textTheme
-                      .caption
-                      ?.copyWith(color: AppColors.darkTextTheme),
-                ),
-                onPressed: () {
-                  _store.setSignin();
-                },
-              ),
-      ),
+      child: Observer(builder: (context) {
+        if (_store.stateAuthen == AuthenState.signin) {
+          return TextButton(
+            child: Text(
+              AppLocalizations.of(context).translate('signup_btn_sign_up'),
+              style: Theme.of(context)
+                  .textTheme
+                  .caption
+                  ?.copyWith(color: AppColors.darkTextTheme),
+            ),
+            onPressed: () {
+              _store.setSignup();
+              _authenAnimationController.forward();
+              _forgotPassowrdAnimationController.forward();
+            },
+          );
+        } else {
+          return TextButton(
+            child: Text(
+              AppLocalizations.of(context).translate('login_btn_sign_in'),
+              style: Theme.of(context)
+                  .textTheme
+                  .caption
+                  ?.copyWith(color: AppColors.darkTextTheme),
+            ),
+            onPressed: () {
+              _store.setSignin();
+              _authenAnimationController.reverse();
+              _forgotPassowrdAnimationController.forward();
+            },
+          );
+        }
+      }),
     );
   }
 
-  Widget _buildSignInButton() {
+  Widget _buildSignButton() {
+    bool conditional;
+    String keyTranslate;
+    Future<dynamic> Function() signFunction;
+
+    if (_store.isForgotPasswordState) {
+      keyTranslate = 'reset_btn_password';
+      signFunction = _store.forgotPassword;
+    } else {
+      if (_store.stateAuthen == AuthenState.signin) {
+        keyTranslate = 'login_btn_sign_in';
+        signFunction = _store.login;
+      } else {
+        keyTranslate = 'signup_btn_sign_up';
+        signFunction = _store.register;
+      }
+    }
+
     return RoundedButtonWidget(
-      buttonText: AppLocalizations.of(context).translate('login_btn_sign_in'),
+      buttonText: AppLocalizations.of(context).translate(keyTranslate),
       buttonColor: Colors.transparent,
       textColor: AppColors.darkTextTheme,
       onPressed: () async {
-        if (_store.canLogin) {
+        if (_store.isForgotPasswordState) {
+          conditional = _store.canForgetPassword;
+        } else {
+          if (_store.stateAuthen == AuthenState.signin) {
+            conditional = _store.canLogin;
+          } else {
+            conditional = _store.canRegister;
+          }
+        }
+        if (conditional) {
           DeviceUtils.hideKeyboard(context);
-          _store.login();
+          signFunction();
         } else {
           _showErrorMessage('Please fill in all fields');
         }
@@ -398,6 +494,10 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
     _nameController.dispose();
 
     _passwordFocusNode.dispose();
+
+    _authenAnimationController.dispose();
+    _forgotPassowrdAnimationController.dispose();
+
     super.dispose();
   }
 }

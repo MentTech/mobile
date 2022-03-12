@@ -45,6 +45,23 @@ mixin _$FormStore on _FormStore, Store {
     });
   }
 
+  final _$isForgotPasswordStateAtom =
+      Atom(name: '_FormStore.isForgotPasswordState');
+
+  @override
+  bool get isForgotPasswordState {
+    _$isForgotPasswordStateAtom.reportRead();
+    return super.isForgotPasswordState;
+  }
+
+  @override
+  set isForgotPasswordState(bool value) {
+    _$isForgotPasswordStateAtom.reportWrite(value, super.isForgotPasswordState,
+        () {
+      super.isForgotPasswordState = value;
+    });
+  }
+
   final _$userEmailAtom = Atom(name: '_FormStore.userEmail');
 
   @override
@@ -290,6 +307,7 @@ mixin _$FormStore on _FormStore, Store {
   String toString() {
     return '''
 stateAuthen: ${stateAuthen},
+isForgotPasswordState: ${isForgotPasswordState},
 userEmail: ${userEmail},
 password: ${password},
 confirmPassword: ${confirmPassword},
