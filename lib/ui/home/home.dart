@@ -160,8 +160,8 @@ class _HomeScreenState extends State<HomeScreen> {
   // Widget _handleErrorMessage() {
   //   return Observer(
   //     builder: (context) {
-  //       if (_postStore.errorStore.errorMessage.isNotEmpty) {
-  //         return _showErrorMessage(_postStore.errorStore.errorMessage);
+  //       if (_postStore.messageStore.errorMessage.isNotEmpty) {
+  //         return _showErrorMessage(_postStore.messageStore.errorMessage);
   //       }
 
   //       return const SizedBox.shrink();

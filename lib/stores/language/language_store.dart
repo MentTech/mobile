@@ -1,6 +1,5 @@
 import 'package:mobile/data/repository.dart';
 import 'package:mobile/models/language/language.dart';
-import 'package:mobile/stores/error/error_store.dart';
 import 'package:mobx/mobx.dart';
 
 part 'language_store.g.dart';
@@ -15,7 +14,6 @@ abstract class _LanguageStore with Store {
   final Repository _repository;
 
   // store for handling errors
-  final ErrorStore errorStore = ErrorStore();
 
   // supported languages
   List<Language> supportedLanguages = [

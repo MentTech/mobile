@@ -2,16 +2,16 @@ import 'dart:developer';
 
 import 'package:mobx/mobx.dart';
 
-part 'error_store.g.dart';
+part 'message_store.g.dart';
 
-class ErrorStore = _ErrorStore with _$ErrorStore;
+class MessageStore = _MessageStore with _$MessageStore;
 
-abstract class _ErrorStore with Store {
+abstract class _MessageStore with Store {
   // disposers
   late List<ReactionDisposer> _disposers;
 
   // constructor:---------------------------------------------------------------
-  _ErrorStore() {
+  _MessageStore() {
     _disposers = [
       reaction((_) => errorMessage, reset, delay: 200),
     ];
@@ -21,6 +21,9 @@ abstract class _ErrorStore with Store {
   @observable
   String errorMessage = '';
 
+  @observable
+  String successMessage = '';
+
   // actions:-------------------------------------------------------------------
   @action
   void setErrorMessage(String message) {
@@ -28,9 +31,15 @@ abstract class _ErrorStore with Store {
   }
 
   @action
+  void setSuccessMessage(String message) {
+    successMessage = message;
+  }
+
+  @action
   void reset(String value) {
     log('calling reset');
     errorMessage = '';
+    successMessage = '';
   }
 
   // dispose:-------------------------------------------------------------------

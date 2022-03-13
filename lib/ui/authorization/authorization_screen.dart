@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/assets.dart';
 import 'package:mobile/constants/colors.dart';
@@ -143,8 +144,10 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
             builder: (context) {
               log("${_store.success}");
               return _store.success
-                  ? navigate(context)
-                  : _showErrorMessage(_store.errorStore.errorMessage);
+                  ? _showSuccessMessage(_store.messageStore.successMessage,
+                      duration: Properties.delayTimeInSecond * 2)
+                  : _showErrorMessage(_store.messageStore.errorMessage,
+                      duration: Properties.delayTimeInSecond * 2);
             },
           ),
           Observer(
@@ -461,27 +464,45 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
     );
   }
 
-  Widget navigate(BuildContext context) {
-    _userStore.login(_store.userEmail, _store.password).then((value) {
-      if (value) {
-        _userStore.fetchUserInfor().then((value) {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-              Routes.home, (Route<dynamic> route) => false);
-        });
-      }
-    });
+  // Widget navigate(BuildContext context) {
+  //   _userStore.login(_store.userEmail, _store.password).then((value) {
+  //     if (value) {
+  //       _userStore.fetchUserInfor().then((value) {
+  //         Navigator.of(context).pushNamedAndRemoveUntil(
+  //             Routes.home, (Route<dynamic> route) => false);
+  //       });
+  //     }
+  //   });
 
-    return Container();
-  }
+  //   return Container();
+  // }
 
   // General Methods:-----------------------------------------------------------
-  _showErrorMessage(String message) {
+  _showErrorMessage(String message,
+      {int duration = Properties.delayTimeInSecond}) {
     if (message.isNotEmpty) {
-      FlushbarHelper.createError(
-        message: message,
-        title: AppLocalizations.of(context).translate('home_tv_error'),
-        duration: const Duration(seconds: Properties.delayTimeInSecond),
-      ).show(context);
+      WidgetsBinding.instance?.addPostFrameCallback((_) {
+        FlushbarHelper.createError(
+          message: message,
+          title: AppLocalizations.of(context).translate('home_tv_error'),
+          duration: Duration(seconds: duration),
+        ).show(context);
+      });
+    }
+
+    return const SizedBox.shrink();
+  }
+
+  _showSuccessMessage(String message,
+      {int duration = Properties.delayTimeInSecond}) {
+    if (message.isNotEmpty) {
+      WidgetsBinding.instance?.addPostFrameCallback((_) {
+        FlushbarHelper.createSuccess(
+          message: message,
+          title: AppLocalizations.of(context).translate('home_tv_success'),
+          duration: Duration(seconds: duration),
+        ).show(context);
+      });
     }
 
     return const SizedBox.shrink();

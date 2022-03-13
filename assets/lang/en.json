@@ -12,6 +12,7 @@
   "login_others_ways": "Or log in with",
   "login_end": "------------------------------------------------------------------------------------",
   "home_start": "Below are list of strings for home",
+  "home_tv_success": "Success",
   "home_tv_error": "Error",
   "home_tv_choose_language": "Choose Language",
   "home_end": "-------------------------------------------------------------------------------------"

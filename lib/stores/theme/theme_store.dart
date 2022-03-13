@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/data/repository.dart';
-import 'package:mobile/stores/error/error_store.dart';
+import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
 
 part 'theme_store.g.dart';
@@ -15,7 +15,7 @@ abstract class _ThemeStore with Store {
   final Repository _repository;
 
   // store for handling errors
-  final ErrorStore errorStore = ErrorStore();
+  final MessageStore messageStore = MessageStore();
 
   // store variables:-----------------------------------------------------------
   @observable

@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/authen/authen_store.dart';
-import 'package:mobile/stores/error/error_store.dart';
+import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:validators/validators.dart';
 
@@ -20,7 +20,7 @@ abstract class _FormStore with Store {
   final FormErrorStore formErrorStore = FormErrorStore();
 
   // store for handling error messages
-  final ErrorStore errorStore = ErrorStore();
+  final MessageStore messageStore = MessageStore();
 
   // store for handling authenticators
   final AuthenStore authenStore = getIt<AuthenStore>();
@@ -173,15 +173,17 @@ abstract class _FormStore with Store {
       loading = false;
 
       if (future != null) {
-        errorStore.errorMessage = future;
+        messageStore.errorMessage = future;
         success = false;
       } else {
+        messageStore.successMessage =
+            "Your account has been created successfully";
         success = true;
       }
     }).catchError((e) {
       loading = false;
       success = false;
-      errorStore.errorMessage = e.toString().contains("ERROR_USER_NOT_FOUND")
+      messageStore.errorMessage = e.toString().contains("ERROR_USER_NOT_FOUND")
           ? "Username and password doesn't match"
           : "Something went wrong, please check your internet connection and try again";
       log(e.toString());
@@ -198,7 +200,7 @@ abstract class _FormStore with Store {
     }).catchError((e) {
       loading = false;
       success = false;
-      errorStore.errorMessage = e.toString().contains("ERROR_USER_NOT_FOUND")
+      messageStore.errorMessage = e.toString().contains("ERROR_USER_NOT_FOUND")
           ? "Username and password doesn't match"
           : "Something went wrong, please check your internet connection and try again";
       log(e.toString());

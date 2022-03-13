@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:mobile/data/repository.dart';
 import 'package:mobile/models/user/user.dart';
-import 'package:mobile/stores/error/error_store.dart';
 import 'package:mobile/stores/form/form_store.dart';
+import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
 
 part 'user_store.g.dart';
@@ -18,7 +18,7 @@ abstract class _UserStore with Store {
   final FormErrorStore formErrorStore = FormErrorStore();
 
   // store for handling error messages
-  final ErrorStore errorStore = ErrorStore();
+  final MessageStore messageStore = MessageStore();
 
   // token for access
   String? accessToken;
