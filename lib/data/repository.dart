@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:mobile/constants/properties.dart';
 import 'package:mobile/data/network/apis/auth/auth_api.dart';
 import 'package:mobile/data/sharedpref/shared_preference_helper.dart';
 
@@ -63,18 +62,24 @@ class Repository {
   //     .catchError((error) => throw error);
 
   // Login:---------------------------------------------------------------------
-  Future<String?> login(String email, String password) async {
-    return await Future.delayed(
-        const Duration(seconds: Properties.delayTimeInSecond),
-        () => "askdhaksdh");
-  }
-
   Future<Map<String, dynamic>> register(
       String email, String password, String name) async {
     return await _authApi.register({
       "email": email,
       "password": password,
       "name": name,
+    }).then((resVal) {
+      return Future.value(resVal!);
+    }).catchError((error) {
+      log("Login Fail");
+      return {"message": "unknown errors"};
+    });
+  }
+
+  Future<Map<String, dynamic>> login(String email, String password) async {
+    return await _authApi.login({
+      "email": email,
+      "password": password,
     }).then((resVal) {
       return Future.value(resVal!);
     }).catchError((error) {

@@ -68,13 +68,6 @@ mixin _$UserStore on _UserStore, Store {
     return _$fetchUserInforAsyncAction.run(() => super.fetchUserInfor());
   }
 
-  final _$loginAsyncAction = AsyncAction('_UserStore.login');
-
-  @override
-  Future<bool> login(String email, String password) {
-    return _$loginAsyncAction.run(() => super.login(email, password));
-  }
-
   @override
   String toString() {
     return '''

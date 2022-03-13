@@ -137,6 +137,21 @@ mixin _$FormStore on _FormStore, Store {
     });
   }
 
+  final _$loginedAtom = Atom(name: '_FormStore.logined');
+
+  @override
+  bool get logined {
+    _$loginedAtom.reportRead();
+    return super.logined;
+  }
+
+  @override
+  set logined(bool value) {
+    _$loginedAtom.reportWrite(value, super.logined, () {
+      super.logined = value;
+    });
+  }
+
   final _$loadingAtom = Atom(name: '_FormStore.loading');
 
   @override
@@ -313,6 +328,7 @@ password: ${password},
 confirmPassword: ${confirmPassword},
 name: ${name},
 success: ${success},
+logined: ${logined},
 loading: ${loading},
 canLogin: ${canLogin},
 canRegister: ${canRegister},

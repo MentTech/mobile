@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:mobile/data/repository.dart';
 import 'package:mobile/models/user/user.dart';
 import 'package:mobile/stores/form/form_store.dart';
@@ -75,32 +73,32 @@ abstract class _UserStore with Store {
     return Future.value(false);
   }
 
-  @action
-  Future<bool> login(String email, String password) async {
-    final future = _repository.login(email, password);
+  // @action
+  // Future<bool> login(String email, String password) async {
+  //   final future = _repository.login(email, password);
 
-    loginFuture = ObservableFuture(future);
+  //   loginFuture = ObservableFuture(future);
 
-    await future.then((token) async {
-      if (token != null) {
-        _repository.saveAuthToken(token);
-        accessToken = token;
+  //   await future.then((token) async {
+  //     if (token != null) {
+  //       _repository.saveAuthToken(token);
+  //       accessToken = token;
 
-        success = true;
+  //       success = true;
 
-        return Future.value(true);
-      } else {
-        log('failed to login');
-      }
-    }).catchError((e) {
-      log(e.toString());
-      accessToken = null;
-      success = false;
-      throw e;
-    });
+  //       return Future.value(true);
+  //     } else {
+  //       log('failed to login');
+  //     }
+  //   }).catchError((e) {
+  //     log(e.toString());
+  //     accessToken = null;
+  //     success = false;
+  //     throw e;
+  //   });
 
-    return Future.value(false);
-  }
+  //   return Future.value(false);
+  // }
 
   logout() {
     accessToken = null;

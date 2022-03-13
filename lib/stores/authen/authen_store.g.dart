@@ -72,7 +72,7 @@ mixin _$AuthenStore on _AuthenStore, Store {
   final _$loginAsyncAction = AsyncAction('_AuthenStore.login');
 
   @override
-  Future<bool> login(String email, String password) {
+  Future<String?> login(String email, String password) {
     return _$loginAsyncAction.run(() => super.login(email, password));
   }
 

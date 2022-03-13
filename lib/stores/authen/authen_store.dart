@@ -76,30 +76,31 @@ abstract class _AuthenStore with Store {
   }
 
   @action
-  Future<bool> login(String email, String password) async {
-    // final future = _repository.login(email, password);
+  Future<String?> login(String email, String password) async {
+    final future = _repository.login(email, password);
 
-    // loginFuture = ObservableFuture(future);
+    loginFuture = ObservableFuture(future);
 
-    // await future.then((token) async {
-    //   if (token != null) {
-    //     _repository.saveAuthToken(token);
-    //     accessToken = token;
+    String? message;
 
-    //     success = true;
+    await future.then((mapJson) async {
+      if (mapJson["message"] == null) {
+        success = true;
 
-    //     return Future.value(true);
-    //   } else {
-    //     log('failed to login');
-    //   }
-    // }).catchError((e) {
-    //   log(e.toString());
-    //   accessToken = null;
-    //   success = false;
-    //   throw e;
-    // });
+        final token = mapJson["accessToken"];
+        _repository.saveAuthToken(token);
+        accessToken = token;
+      }
 
-    return Future.value(false);
+      message = mapJson['message'];
+    }).catchError((e) {
+      log(e.toString());
+      accessToken = null;
+      success = false;
+      throw e;
+    });
+
+    return Future.value(message);
   }
 
   logout() {

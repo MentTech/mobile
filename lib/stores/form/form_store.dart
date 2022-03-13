@@ -64,6 +64,9 @@ abstract class _FormStore with Store {
   bool success = false;
 
   @observable
+  bool logined = false;
+
+  @observable
   bool loading = false;
 
   @computed
@@ -194,9 +197,17 @@ abstract class _FormStore with Store {
   Future login() async {
     loading = true;
 
-    Future.delayed(const Duration(milliseconds: 2000)).then((future) {
+    authenStore.login(userEmail, password).then((future) {
       loading = false;
-      success = true;
+
+      if (future != null) {
+        messageStore.errorMessage = future;
+        success = false;
+      } else {
+        messageStore.successMessage = "You are login successfully";
+        success = true;
+        logined = true;
+      }
     }).catchError((e) {
       loading = false;
       success = false;

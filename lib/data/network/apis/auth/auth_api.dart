@@ -39,10 +39,30 @@ class AuthAPI {
     }
   }
 
-  Future<Map<String, dynamic>?> register(Map<String, dynamic> options) async {
+  Future<Map<String, dynamic>?> register(Map<String, dynamic> data) async {
     try {
       final res = await _dioClient.post(Endpoints.registerUser,
-          data: options,
+          data: data,
+          options: Options(
+            followRedirects: false,
+            validateStatus: (status) => true,
+            headers: {
+              'Content-Type': 'application/json; charset=utf-8',
+              // "Authorization": "Bearer $authToken"
+            },
+          ));
+
+      return res;
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>?> login(Map<String, dynamic> data) async {
+    try {
+      final res = await _dioClient.post(Endpoints.loginUser,
+          data: data,
           options: Options(
             followRedirects: false,
             validateStatus: (status) => true,
