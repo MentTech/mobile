@@ -5,7 +5,7 @@ import 'package:mobile/constants/assets.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/constants/strings.dart';
 import 'package:mobile/effects/navigate/screen_transition.dart';
-import 'package:mobile/stores/user/user_store.dart';
+import 'package:mobile/stores/authen/authen_store.dart';
 import 'package:mobile/ui/authorization/authorization_screen.dart';
 import 'package:mobile/ui/home/home.dart';
 import 'package:mobile/widgets/app_icon_widget.dart';
@@ -43,9 +43,9 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   navigate() async {
-    final UserStore userAuth = Provider.of<UserStore>(context, listen: false);
+    final AuthenStore auth = Provider.of<AuthenStore>(context, listen: false);
 
-    if (userAuth.accessToken != null) {
+    if (auth.accessToken != null) {
       // Navigator.of(context).pushReplacementNamed(Routes.home);
       Navigator.pushReplacement(
           context,

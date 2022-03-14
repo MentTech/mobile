@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobile/stores/authen/authen_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/utils/routes/routes.dart';
 import 'package:provider/provider.dart';
@@ -79,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
       onPressed: () {
         SharedPreferences.getInstance().then((preference) {
           // preference.setBool(Preferences.is_logged_in, false);
+          Provider.of<AuthenStore>(context, listen: false).logout();
           Navigator.of(context).pushReplacementNamed(Routes.login);
         });
       },

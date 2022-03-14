@@ -181,6 +181,15 @@ mixin _$FormStore on _FormStore, Store {
     return _$loginAsyncAction.run(() => super.login());
   }
 
+  final _$googleAuthenticatorAsyncAction =
+      AsyncAction('_FormStore.googleAuthenticator');
+
+  @override
+  Future<dynamic> googleAuthenticator() {
+    return _$googleAuthenticatorAsyncAction
+        .run(() => super.googleAuthenticator());
+  }
+
   final _$forgotPasswordAsyncAction = AsyncAction('_FormStore.forgotPassword');
 
   @override

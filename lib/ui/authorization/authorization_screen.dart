@@ -447,13 +447,23 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
             SGVButton(
               width: 40,
               assetName: Assets.facebookSVGLogo,
-              ontap: () {},
+              ontap: () {
+                FlushbarHelper.createInformation(
+                  message: "This feature will be in next update.",
+                  title:
+                      AppLocalizations.of(context).translate('home_tv_infor'),
+                  duration:
+                      const Duration(seconds: Properties.delayTimeInSecond),
+                ).show(context);
+              },
             ),
             const SizedBox(width: Dimens.horizontal_padding / 3),
             SGVButton(
               width: 40,
               assetName: Assets.googleSVGLogo,
-              ontap: () {},
+              ontap: () async {
+                _store.googleAuthenticator();
+              },
             ),
           ],
         ),

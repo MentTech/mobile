@@ -219,6 +219,21 @@ abstract class _FormStore with Store {
   }
 
   @action
+  Future googleAuthenticator() async {
+    loading = true;
+
+    try {
+      authenStore.googleAuthenticator().then((_) {
+        loading = false;
+      });
+    } catch (err) {
+      // other types of Exceptions
+      messageStore.errorMessage = err.toString();
+      success = false;
+    }
+  }
+
+  @action
   Future forgotPassword() async {
     loading = true;
   }

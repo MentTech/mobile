@@ -76,6 +76,15 @@ mixin _$AuthenStore on _AuthenStore, Store {
     return _$loginAsyncAction.run(() => super.login(email, password));
   }
 
+  final _$googleAuthenticatorAsyncAction =
+      AsyncAction('_AuthenStore.googleAuthenticator');
+
+  @override
+  Future<dynamic> googleAuthenticator() {
+    return _$googleAuthenticatorAsyncAction
+        .run(() => super.googleAuthenticator());
+  }
+
   @override
   String toString() {
     return '''

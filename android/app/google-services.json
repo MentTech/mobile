@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "457915059428",
+    "project_id": "jett-mobile-fp-hcmus",
+    "storage_bucket": "jett-mobile-fp-hcmus.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:457915059428:android:cdbc351d74e9075f9330f1",
+        "android_client_info": {
+          "package_name": "com.jett.sgrayk.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "457915059428-ssp201q0skmrhmg6pshuo7g9o263se99.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jett.sgrayk.mobile",
+            "certificate_hash": "0d2dc91981e3d9f7fa8433f85d335cee187fe3df"
+          }
+        },
+        {
+          "client_id": "457915059428-rr5p8hhsk38q03k5tes7gkh7js1c34gu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA64qMCbK2KJkOAofwyPoYG4Eg2cprB4qw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "457915059428-rr5p8hhsk38q03k5tes7gkh7js1c34gu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

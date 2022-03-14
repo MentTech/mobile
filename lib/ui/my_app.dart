@@ -5,9 +5,9 @@ import 'package:mobile/constants/app_theme.dart';
 import 'package:mobile/constants/strings.dart';
 import 'package:mobile/data/repository.dart';
 import 'package:mobile/di/components/service_locator.dart';
+import 'package:mobile/stores/authen/authen_store.dart';
 import 'package:mobile/stores/language/language_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
-import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/ui/splash/splash.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   // with Hot Reload than creating it directly in the `build` function.
   final ThemeStore _themeStore = ThemeStore(getIt<Repository>());
   final LanguageStore _languageStore = LanguageStore(getIt<Repository>());
-  final UserStore _userStore = UserStore(getIt<Repository>());
+  final AuthenStore _authenStore = AuthenStore(getIt<Repository>());
 
   MyApp({Key? key}) : super(key: key);
 
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<ThemeStore>(create: (_) => _themeStore),
-        Provider<UserStore>(create: (_) => _userStore),
+        Provider<AuthenStore>(create: (_) => _authenStore),
         Provider<LanguageStore>(create: (_) => _languageStore),
       ],
       child: Observer(

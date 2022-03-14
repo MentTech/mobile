@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mobile/data/repository.dart';
 import 'package:mobx/mobx.dart';
 
@@ -34,6 +36,9 @@ abstract class _AuthenStore with Store {
   // empty responses:-----------------------------------------------------------
   static ObservableFuture<Map<String, dynamic>> emptyLoginResponse =
       ObservableFuture.value({});
+
+  // general variables:---------------------------------------------------------
+  GoogleSignIn googleSignIn = GoogleSignIn(scopes: ["email"]);
 
   // store variables:-----------------------------------------------------------
 
@@ -101,6 +106,27 @@ abstract class _AuthenStore with Store {
     });
 
     return Future.value(message);
+  }
+
+  @action
+  Future googleAuthenticator() async {
+    try {
+      await googleSignIn.signIn().then((account) async {
+        account?.authentication.then((credential) {
+          final token = credential.accessToken;
+          print(token);
+
+          // _repository.saveAuthToken(token);
+          // accessToken = token;
+        });
+      });
+    } on PlatformException {
+      throw "PlatformException";
+      // Handle err
+    } catch (err) {
+      // other types of Exceptions
+      throw "other types of Exceptions";
+    }
   }
 
   logout() {
