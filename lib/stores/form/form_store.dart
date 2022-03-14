@@ -225,6 +225,9 @@ abstract class _FormStore with Store {
     try {
       authenStore.googleAuthenticator().then((_) {
         loading = false;
+        success = true;
+        logined = true;
+        messageStore.successMessage = "You are login successfully";
       });
     } catch (err) {
       // other types of Exceptions

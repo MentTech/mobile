@@ -139,7 +139,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
           Observer(
             // validator
             builder: (context) {
-              log("${_store.success}");
+              log("${_store.success} --------------- ");
               return _store.success
                   ? _showSuccessMessage(_store.messageStore.successMessage,
                       duration: Properties.delayTimeInSecond)
@@ -503,6 +503,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
   _showSuccessMessage(String message,
       {int duration = Properties.delayTimeInSecond}) {
     if (message.isNotEmpty) {
+      log("this snackbar is showed");
       WidgetsBinding.instance?.addPostFrameCallback((_) {
         FlushbarHelper.createSuccess(
           message: message,

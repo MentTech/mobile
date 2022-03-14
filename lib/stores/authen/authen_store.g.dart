@@ -80,7 +80,7 @@ mixin _$AuthenStore on _AuthenStore, Store {
       AsyncAction('_AuthenStore.googleAuthenticator');
 
   @override
-  Future<dynamic> googleAuthenticator() {
+  Future<String?> googleAuthenticator() {
     return _$googleAuthenticatorAsyncAction
         .run(() => super.googleAuthenticator());
   }

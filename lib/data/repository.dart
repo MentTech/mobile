@@ -61,7 +61,7 @@ class Repository {
   //     .then((id) => id)
   //     .catchError((error) => throw error);
 
-  // Login:---------------------------------------------------------------------
+  // Authenticator:-------------------------------------------------------------
   Future<Map<String, dynamic>> register(
       String email, String password, String name) async {
     return await _authApi.register({
@@ -71,7 +71,6 @@ class Repository {
     }).then((resVal) {
       return Future.value(resVal!);
     }).catchError((error) {
-      log("Login Fail");
       return {"message": "unknown errors"};
     });
   }
@@ -83,7 +82,17 @@ class Repository {
     }).then((resVal) {
       return Future.value(resVal!);
     }).catchError((error) {
-      log("Login Fail");
+      return {"message": "unknown errors"};
+    });
+  }
+
+  Future<Map<String, dynamic>> googleAuthenticator(
+      String googleAuthToken) async {
+    return await _authApi.googleAuthenticator(queryParameters: {
+      "token": googleAuthToken,
+    }).then((resVal) {
+      return Future.value(resVal!);
+    }).catchError((error) {
       return {"message": "unknown errors"};
     });
   }

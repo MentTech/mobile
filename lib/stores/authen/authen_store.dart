@@ -109,15 +109,33 @@ abstract class _AuthenStore with Store {
   }
 
   @action
-  Future googleAuthenticator() async {
+  Future<String?> googleAuthenticator() async {
+    String? message;
+
     try {
       await googleSignIn.signIn().then((account) async {
-        account?.authentication.then((credential) {
+        await account?.authentication.then((credential) async {
           final token = credential.accessToken;
-          print(token);
 
-          // _repository.saveAuthToken(token);
-          // accessToken = token;
+          if (token != null) {
+            await _repository.googleAuthenticator(token).then((mapJson) async {
+              if (mapJson["message"] == null) {
+                success = true;
+
+                accessToken = mapJson["accessToken"];
+                await _repository.saveAuthToken(accessToken!);
+              }
+
+              message = mapJson['message'];
+            }).catchError((e) {
+              log(e.toString());
+              accessToken = null;
+              success = false;
+              throw e;
+            });
+          } else {
+            throw StateError("Fail to authenticate by Google");
+          }
         });
       });
     } on PlatformException {
@@ -127,9 +145,21 @@ abstract class _AuthenStore with Store {
       // other types of Exceptions
       throw "other types of Exceptions";
     }
+
+    return Future.value(message);
   }
 
-  logout() {
+  logout() async {
+    try {
+      await googleSignIn.disconnect();
+    } on PlatformException {
+      throw "PlatformException";
+      // Handle err
+    } catch (err) {
+      // other types of Exceptions
+      throw "other types of Exceptions";
+    }
+
     accessToken = null;
     _repository.removeAuthToken();
   }

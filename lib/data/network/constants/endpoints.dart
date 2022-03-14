@@ -13,5 +13,6 @@ class Endpoints {
   /// AuthApi
   static const String registerUser = baseUrl + "/auth/signup";
   static const String loginUser = baseUrl + "/auth/signin";
+  static const String googleAuth = baseUrl + "/auth/google/token";
   static const String fetchUserInfor = baseUrl + "/users/profile";
 }

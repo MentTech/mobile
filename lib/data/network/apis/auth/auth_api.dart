@@ -79,6 +79,27 @@ class AuthAPI {
     }
   }
 
+  Future<Map<String, dynamic>?> googleAuthenticator(
+      {required Map<String, dynamic> queryParameters}) async {
+    try {
+      final res = await _dioClient.get(Endpoints.googleAuth,
+          queryParameters: queryParameters,
+          options: Options(
+            followRedirects: false,
+            validateStatus: (status) => true,
+            headers: {
+              'Content-Type': 'application/json; charset=utf-8',
+              // "Authorization": "Bearer $authToken"
+            },
+          ));
+
+      return res;
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
   // /// Returns list of post in response
   // Future<PostList> getPosts() async {
   //   try {
