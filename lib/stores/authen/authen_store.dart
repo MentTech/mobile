@@ -151,7 +151,9 @@ abstract class _AuthenStore with Store {
 
   logout() async {
     try {
-      await googleSignIn.disconnect();
+      if (googleSignIn.currentUser != null) {
+        await googleSignIn.disconnect();
+      }
     } on PlatformException {
       throw "PlatformException";
       // Handle err

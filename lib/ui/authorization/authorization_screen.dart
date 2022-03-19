@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -139,7 +137,6 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
           Observer(
             // validator
             builder: (context) {
-              log("${_store.success} --------------- ");
               return _store.success
                   ? _showSuccessMessage(_store.messageStore.successMessage,
                       duration: Properties.delayTimeInSecond)
@@ -503,7 +500,6 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
   _showSuccessMessage(String message,
       {int duration = Properties.delayTimeInSecond}) {
     if (message.isNotEmpty) {
-      log("this snackbar is showed");
       WidgetsBinding.instance?.addPostFrameCallback((_) {
         FlushbarHelper.createSuccess(
           message: message,

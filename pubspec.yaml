@@ -86,6 +86,12 @@ dependencies:
   # scope: https://developers.google.com/identity/protocols/oauth2/scopes
   google_sign_in: ^5.2.4
 
+  # A Flutter package for easy implementation of curved navigation bar.
+  curved_navigation_bar: ^1.0.3
+
+  # a widget provided to the flutter scroll component drop-down refresh and pull up load.
+  pull_to_refresh: ^2.0.0
+
   flutter_localizations:
     sdk: flutter
 
