@@ -27,9 +27,9 @@ abstract class _UserStore with Store {
     _setupDisposers();
 
     // checking if user is logged in
-    repository.authToken.then((value) {
-      accessToken = value;
-    });
+    // repository.authToken.then((value) {
+    //   accessToken = value;
+    // });
   }
 
   // disposers:-----------------------------------------------------------------
@@ -38,6 +38,7 @@ abstract class _UserStore with Store {
   void _setupDisposers() {
     _disposers = [
       reaction((_) => success, (_) => success = false, delay: 200),
+      reaction((_) => accessToken, (_) => accessToken = null, delay: 200),
     ];
   }
 
@@ -61,52 +62,23 @@ abstract class _UserStore with Store {
   // actions:-------------------------------------------------------------------
   @action
   Future<bool> fetchUserInfor() async {
-    if (accessToken != null) {
-      // final res = await _repository.fetchUserInfor(accessToken!);
+    assert(accessToken != null);
 
-      // if (res != null && res["user"] != null) {
-      //   user = UserInfo.fromJson(res["user"]);
-      //   return Future.value(true);
-      // }
-    }
+    final res = await _repository.fetchUserInfor(accessToken!);
+
+    // if (res['message'] != null) {
+    //   // do main task
+    // } else {
+    //   // exception task
+    // }
+
+    // if (res != null && res["user"] != null) {
+    //   user = UserInfo.fromJson(res["user"]);
+    //   return Future.value(true);
+    // }
 
     return Future.value(false);
   }
-
-  // @action
-  // Future<bool> login(String email, String password) async {
-  //   final future = _repository.login(email, password);
-
-  //   loginFuture = ObservableFuture(future);
-
-  //   await future.then((token) async {
-  //     if (token != null) {
-  //       _repository.saveAuthToken(token);
-  //       accessToken = token;
-
-  //       success = true;
-
-  //       return Future.value(true);
-  //     } else {
-  //       log('failed to login');
-  //     }
-  //   }).catchError((e) {
-  //     log(e.toString());
-  //     accessToken = null;
-  //     success = false;
-  //     throw e;
-  //   });
-
-  //   return Future.value(false);
-  // }
-
-  logout() {
-    accessToken = null;
-    _repository.removeAuthToken();
-  }
-
-  // getter:--------------------------------------------------------------------
-  bool get isLoggedIn => accessToken != null;
 
   // general methods:-----------------------------------------------------------
   void dispose() {

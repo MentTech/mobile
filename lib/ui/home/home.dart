@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:mobile/data/repository.dart';
-import 'package:mobile/di/components/service_locator.dart';
-import 'package:mobile/stores/user/user_store.dart';
-import 'package:provider/provider.dart';
 
 import 'page/home_page.dart';
 import 'page/settings_page.dart';
@@ -18,32 +14,29 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // key:-----------------------------------------------------------------------
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey =
       GlobalKey<CurvedNavigationBarState>();
 
-  final int _initButtonIndex = 1;
+  // controller:----------------------------------------------------------------
   final pageController = PageController(keepPage: true, initialPage: 1);
 
-  static const double _sizeBottomButton = 30;
+  // static value:--------------------------------------------------------------
+  static const double sizeBottomButton = 30;
+
+  // final value:---------------------------------------------------------------
   final durationEffect = const Duration(milliseconds: 500);
   final curveEffect = Curves.easeInOutSine;
 
-  final UserStore _userStore = UserStore(getIt<Repository>());
-
   final List<Icon> _listCurveButtonIcon = const [
     // Icon(Icons.date_range, size: _sizeBottomButton),
-    Icon(Icons.school_rounded, size: _sizeBottomButton),
-    Icon(Icons.home, size: _sizeBottomButton),
+    Icon(Icons.school_rounded, size: sizeBottomButton),
+    Icon(Icons.home, size: sizeBottomButton),
     // Icon(Icons.forum, size: _sizeBottomButton),
-    Icon(Icons.settings, size: _sizeBottomButton),
+    Icon(Icons.settings, size: sizeBottomButton),
   ];
 
-  void onBottomChanged(int index) {
-    pageController.animateToPage(index,
-        duration: durationEffect, curve: curveEffect);
-  }
-
-  List<Widget> pageList = [
+  final List<Widget> pageList = [
     // const SchedulePage(),
     const TutorPage(),
     const HomePage(),
@@ -51,45 +44,50 @@ class _HomeScreenState extends State<HomeScreen> {
     const SettingsPage(),
   ];
 
+  // state:---------------------------------------------------------------------
+  final int _initButtonIndex = 1;
+
+  // init stores:---------------------------------------------------------------
+
+  // general function
+  void onBottomChanged(int index) {
+    pageController.animateToPage(index,
+        duration: durationEffect, curve: curveEffect);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        Provider<UserStore>(create: (_) => _userStore),
-      ],
-      child: Observer(
-        name: 'main-observer',
-        builder: (context) => SafeArea(
-          child: Scaffold(
-            backgroundColor: Colors.white,
-            extendBody: true,
-            bottomNavigationBar: Theme(
-              data: Theme.of(context).copyWith(
-                  iconTheme: const IconThemeData(color: Colors.white)),
-              child: CurvedNavigationBar(
-                key: _bottomNavigationKey,
-                color: Theme.of(context).primaryColor,
-                height: _sizeBottomButton * 2,
-                backgroundColor: Colors.transparent,
-                index: _initButtonIndex,
-                animationCurve: curveEffect,
-                animationDuration: durationEffect,
-                items: _listCurveButtonIcon,
-                onTap: onBottomChanged,
-              ),
+    return Observer(
+      name: 'main-observer',
+      builder: (context) => SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          extendBody: true,
+          bottomNavigationBar: Theme(
+            data: Theme.of(context)
+                .copyWith(iconTheme: const IconThemeData(color: Colors.white)),
+            child: CurvedNavigationBar(
+              key: _bottomNavigationKey,
+              color: Theme.of(context).primaryColor,
+              height: sizeBottomButton * 2,
+              backgroundColor: Colors.transparent,
+              index: _initButtonIndex,
+              animationCurve: curveEffect,
+              animationDuration: durationEffect,
+              items: _listCurveButtonIcon,
+              onTap: onBottomChanged,
             ),
-            body: PageView(
-              children: pageList,
-              controller: pageController,
-              physics: const NeverScrollableScrollPhysics(),
-            ),
+          ),
+          body: PageView(
+            children: pageList,
+            controller: pageController,
+            physics: const NeverScrollableScrollPhysics(),
           ),
         ),
       ),
     );
   }
 }
-
 
 // class HomeScreen extends StatefulWidget {
 //   const HomeScreen({Key? key}) : super(key: key);

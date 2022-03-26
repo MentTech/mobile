@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:mobile/constants/assets.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/constants/strings.dart';
+import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/effects/navigate/screen_transition.dart';
 import 'package:mobile/stores/authen/authen_store.dart';
+import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/ui/authorization/authorization_screen.dart';
 import 'package:mobile/ui/home/home.dart';
 import 'package:mobile/widgets/app_icon_widget.dart';
@@ -43,22 +45,31 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   navigate() async {
-    final AuthenStore auth = Provider.of<AuthenStore>(context, listen: false);
+    final AuthenStore auth = getIt<AuthenStore>();
+    final UserStore userStore = Provider.of<UserStore>(context, listen: false);
 
-    if (auth.accessToken != null) {
-      // Navigator.of(context).pushReplacementNamed(Routes.home);
-      Navigator.pushReplacement(
-          context,
-          CustomFadeTransitionPageRoute(
-              timeCast: Properties.delayTimeInSecond,
-              child: const HomeScreen()));
-    } else {
-      // Navigator.of(context).pushReplacementNamed(Routes.login);
-      Navigator.pushReplacement(
-          context,
-          CustomFadeTransitionPageRoute(
-              timeCast: Properties.delayTimeInSecond,
-              child: const AuthorizationScreen()));
+    if (auth.canBeAuthenticated) {
+      userStore.accessToken = auth.accessToken;
+
+      await userStore.fetchUserInfor().then((isAuthenticated) {
+        if (isAuthenticated) {
+          // Navigator.of(context).pushReplacementNamed(Routes.home);
+          Navigator.pushReplacement(
+              context,
+              CustomFadeTransitionPageRoute(
+                  timeCast: Properties.delayTimeInSecond,
+                  child: const HomeScreen()));
+
+          return;
+        }
+      });
     }
+
+    // Navigator.of(context).pushReplacementNamed(Routes.login);
+    Navigator.pushReplacement(
+        context,
+        CustomFadeTransitionPageRoute(
+            timeCast: Properties.delayTimeInSecond,
+            child: const AuthorizationScreen()));
   }
 }

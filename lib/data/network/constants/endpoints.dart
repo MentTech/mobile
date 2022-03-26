@@ -11,8 +11,15 @@ class Endpoints {
   static const int connectionTimeout = 30000;
 
   /// AuthApi
+  /// Register User: /auth/signup
   static const String registerUser = baseUrl + "/auth/signup";
+
+  /// Login User: /auth/signin
   static const String loginUser = baseUrl + "/auth/signin";
+
+  /// Google Token: /auth/google/token
   static const String googleAuth = baseUrl + "/auth/google/token";
+
+  /// Get User Infor: /users/profile
   static const String fetchUserInfor = baseUrl + "/users/profile";
 }

@@ -23,10 +23,15 @@ class Repository {
 
   // Authorize: ---------------------------------------------------------------------
   Future<Map<String, dynamic>?> fetchUserInfor(String authToken) async {
-    return await _authApi.fetchUserInfor(authToken).then((resVal) {
+    return await _authApi.fetchUserInfor(
+      {
+        'Content-Type': 'application/json; charset=utf-8',
+        "Authorization": "Bearer $authToken"
+      },
+    ).then((resVal) {
       return resVal;
     }).catchError((error) {
-      log("Login Fail");
+      log("Fetch Userinfor failing");
       return null;
     });
   }

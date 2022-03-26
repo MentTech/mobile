@@ -55,6 +55,9 @@ abstract class _AuthenStore with Store {
   @computed
   bool get isLoading => loginFuture.status == FutureStatus.pending;
 
+  @computed
+  bool get canBeAuthenticated => accessToken != null;
+
   // actions:-------------------------------------------------------------------
   @action
   Future<String?> register(String email, String password, String name) async {

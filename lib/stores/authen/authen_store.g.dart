@@ -15,6 +15,13 @@ mixin _$AuthenStore on _AuthenStore, Store {
   bool get isLoading => (_$isLoadingComputed ??=
           Computed<bool>(() => super.isLoading, name: '_AuthenStore.isLoading'))
       .value;
+  Computed<bool>? _$canBeAuthenticatedComputed;
+
+  @override
+  bool get canBeAuthenticated => (_$canBeAuthenticatedComputed ??=
+          Computed<bool>(() => super.canBeAuthenticated,
+              name: '_AuthenStore.canBeAuthenticated'))
+      .value;
 
   final _$accessTokenAtom = Atom(name: '_AuthenStore.accessToken');
 
@@ -91,7 +98,8 @@ mixin _$AuthenStore on _AuthenStore, Store {
 accessToken: ${accessToken},
 success: ${success},
 loginFuture: ${loginFuture},
-isLoading: ${isLoading}
+isLoading: ${isLoading},
+canBeAuthenticated: ${canBeAuthenticated}
     ''';
   }
 }

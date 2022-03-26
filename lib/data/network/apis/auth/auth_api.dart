@@ -17,19 +17,19 @@ class AuthAPI {
     // this._restClient,
   );
 
-  Future<Map<String, dynamic>?> fetchUserInfor(String authToken) async {
+  Future<Map<String, dynamic>?> fetchUserInfor(
+      Map<String, dynamic> headers) async {
     try {
-      final res = await _dioClient.get(
-        Endpoints.fetchUserInfor,
-        // options: Options(
-        //   followRedirects: false,
-        //   validateStatus: (status) => true,
-        //   headers: {
-        //     'Content-Type': 'application/json; charset=utf-8',
-        //     "Authorization": "Bearer $authToken"
-        //   },
-        // )
-      );
+      final res = await _dioClient.get(Endpoints.fetchUserInfor,
+          options: Options(
+              followRedirects: false,
+              validateStatus: (status) => true,
+              headers: headers
+              // headers: {
+              //   'Content-Type': 'application/json; charset=utf-8',
+              //   "Authorization": "Bearer $authToken"
+              // },
+              ));
 
       return res;
       // return User.fromJson(res);
