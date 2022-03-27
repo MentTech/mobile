@@ -1,7 +1,5 @@
 import 'package:mobile/data/repository.dart';
 import 'package:mobile/models/user/user.dart';
-import 'package:mobile/stores/form/form_store.dart';
-import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
 
 part 'user_store.g.dart';
@@ -13,10 +11,10 @@ abstract class _UserStore with Store {
   final Repository _repository;
 
   // store for handling form errors
-  final FormErrorStore formErrorStore = FormErrorStore();
+  // final FormErrorStore formErrorStore = FormErrorStore();
 
   // store for handling error messages
-  final MessageStore messageStore = MessageStore();
+  // final MessageStore messageStore = MessageStore();
 
   // token for access
   String? accessToken;
@@ -54,7 +52,7 @@ abstract class _UserStore with Store {
   ObservableFuture<String?> loginFuture = emptyLoginResponse;
 
   @observable
-  late UserModel user;
+  UserModel? user;
 
   @computed
   bool get isLoading => loginFuture.status == FutureStatus.pending;
@@ -66,18 +64,27 @@ abstract class _UserStore with Store {
 
     final res = await _repository.fetchUserInfor(accessToken!);
 
-    // if (res['message'] != null) {
-    //   // do main task
-    // } else {
-    //   // exception task
-    // }
+    try {
+      user = UserModel.fromJson(res!);
+      success = true;
+    } catch (e) {
+      // res['message']
+      success = false;
+      return Future.value(false);
+    }
 
-    // if (res != null && res["user"] != null) {
-    //   user = UserInfo.fromJson(res["user"]);
-    //   return Future.value(true);
-    // }
+    //   if (res['message'] != null) {
+    //     // do main task
+    //   } else {
+    //     // exception task
+    //   }
 
-    return Future.value(false);
+    //   if (res != null && res["user"] != null) {
+    //     user = UserInfo.fromJson(res["user"]);
+    //     return Future.value(true);
+    //   }
+
+    return Future.value(true);
   }
 
   // general methods:-----------------------------------------------------------

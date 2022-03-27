@@ -5,11 +5,9 @@ import 'package:mobile/constants/assets.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/constants/strings.dart';
 import 'package:mobile/di/components/service_locator.dart';
-import 'package:mobile/effects/navigate/screen_transition.dart';
 import 'package:mobile/stores/authen/authen_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
-import 'package:mobile/ui/authorization/authorization_screen.dart';
-import 'package:mobile/ui/home/home.dart';
+import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/app_icon_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -53,23 +51,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
       await userStore.fetchUserInfor().then((isAuthenticated) {
         if (isAuthenticated) {
-          // Navigator.of(context).pushReplacementNamed(Routes.home);
-          Navigator.pushReplacement(
-              context,
-              CustomFadeTransitionPageRoute(
-                  timeCast: Properties.delayTimeInSecond,
-                  child: const HomeScreen()));
-
-          return;
+          Routes.authenticatedRoute(context);
+        } else {
+          Routes.unauthenticatedRoute(context);
         }
       });
+    } else {
+      Routes.unauthenticatedRoute(context);
     }
-
-    // Navigator.of(context).pushReplacementNamed(Routes.login);
-    Navigator.pushReplacement(
-        context,
-        CustomFadeTransitionPageRoute(
-            timeCast: Properties.delayTimeInSecond,
-            child: const AuthorizationScreen()));
   }
 }
