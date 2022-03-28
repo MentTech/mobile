@@ -7,8 +7,10 @@ import 'package:mobile/constants/strings.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/authen/authen_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
+import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/app_icon_widget.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -45,6 +47,10 @@ class _SplashScreenState extends State<SplashScreen> {
   navigate() async {
     final AuthenStore auth = getIt<AuthenStore>();
     final UserStore userStore = Provider.of<UserStore>(context, listen: false);
+
+    await PackageInfo.fromPlatform().then((packageInfo) {
+      DeviceUtils.packageInfo = packageInfo;
+    });
 
     if (auth.canBeAuthenticated) {
       userStore.accessToken = auth.accessToken;

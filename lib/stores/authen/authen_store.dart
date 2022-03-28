@@ -38,7 +38,10 @@ abstract class _AuthenStore with Store {
       ObservableFuture.value({});
 
   // general variables:---------------------------------------------------------
-  GoogleSignIn googleSignIn = GoogleSignIn(scopes: ["email"]);
+  final GoogleSignIn googleSignIn = GoogleSignIn(scopes: [
+    'email',
+    'https://www.googleapis.com/auth/userinfo.email',
+  ]);
 
   // store variables:-----------------------------------------------------------
 
@@ -116,29 +119,32 @@ abstract class _AuthenStore with Store {
     String? message;
 
     try {
-      await googleSignIn.signIn().then((account) async {
-        await account?.authentication.then((credential) async {
-          final token = credential.accessToken;
+      await logout().then((_) async {
+        await googleSignIn.signIn().then((account) async {
+          await account?.authentication.then((credential) async {
+            final token = credential.accessToken;
+            if (token != null) {
+              await _repository
+                  .googleAuthenticator(token)
+                  .then((mapJson) async {
+                if (mapJson["message"] == null) {
+                  success = true;
 
-          if (token != null) {
-            await _repository.googleAuthenticator(token).then((mapJson) async {
-              if (mapJson["message"] == null) {
-                success = true;
+                  accessToken = mapJson["accessToken"];
+                  await _repository.saveAuthToken(accessToken!);
+                }
 
-                accessToken = mapJson["accessToken"];
-                await _repository.saveAuthToken(accessToken!);
-              }
-
-              message = mapJson['message'];
-            }).catchError((e) {
-              log(e.toString());
-              accessToken = null;
-              success = false;
-              throw e;
-            });
-          } else {
-            throw StateError("Fail to authenticate by Google");
-          }
+                message = mapJson['message'];
+              }).catchError((e) {
+                log(e.toString());
+                accessToken = null;
+                success = false;
+                throw e;
+              });
+            } else {
+              throw StateError("Fail to authenticate by Google");
+            }
+          });
         });
       });
     } on PlatformException {
@@ -152,7 +158,7 @@ abstract class _AuthenStore with Store {
     return Future.value(message);
   }
 
-  logout() async {
+  Future logout() async {
     try {
       if (googleSignIn.currentUser != null) {
         await googleSignIn.disconnect();

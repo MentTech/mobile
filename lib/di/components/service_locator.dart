@@ -9,7 +9,9 @@ import 'package:mobile/di/module/local_module.dart';
 import 'package:mobile/di/module/network_module.dart';
 import 'package:mobile/stores/authen/authen_store.dart';
 import 'package:mobile/stores/form/form_store.dart';
+import 'package:mobile/stores/language/language_store.dart';
 import 'package:mobile/stores/message/message_store.dart';
+import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final getIt = GetIt.instance;
@@ -51,8 +53,7 @@ Future<void> setupLocator() async {
   ));
 
   // stores:--------------------------------------------------------------------
-  // getIt.registerSingleton(LanguageStore(getIt<Repository>()));
-  // getIt.registerSingleton(ThemeStore(getIt<Repository>()));
-  // getIt.registerSingleton(UserStore(getIt<Repository>()));
+  getIt.registerSingleton(LanguageStore(getIt<Repository>()));
+  getIt.registerSingleton(ThemeStore(getIt<Repository>()));
   getIt.registerSingleton(AuthenStore(getIt<Repository>()));
 }

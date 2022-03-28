@@ -8,6 +8,8 @@ class Dimens {
   //for all screens
   static const double horizontal_padding = 12.0;
   static const double vertical_padding = 12.0;
+  static const double horizontal_margin = 6.0;
+  static const double vertical_margin = 6.0;
 
   /// Text dimens
   /// return size 15
@@ -34,6 +36,7 @@ class Dimens {
   /// return size 10.0
   static const double highElevation = 10.0;
 
-  // widget
+  // BorderRadius
   static BorderRadius kBorderRadius = BorderRadius.circular(5);
+  static BorderRadius kMaxBorderRadius = BorderRadius.circular(20);
 }

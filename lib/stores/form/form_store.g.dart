@@ -185,7 +185,7 @@ mixin _$FormStore on _FormStore, Store {
       AsyncAction('_FormStore.googleAuthenticator');
 
   @override
-  Future<dynamic> googleAuthenticator() {
+  Future<bool> googleAuthenticator() {
     return _$googleAuthenticatorAsyncAction
         .run(() => super.googleAuthenticator());
   }

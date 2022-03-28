@@ -7,6 +7,7 @@ import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/constants/strings.dart';
 import 'package:mobile/stores/form/form_store.dart';
+import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
@@ -17,6 +18,7 @@ import 'package:mobile/widgets/progress_indicator_widget.dart';
 import 'package:mobile/widgets/button_widgets/rounded_button_widget.dart';
 import 'package:mobile/widgets/text_widget.dart';
 import 'package:mobile/widgets/textfield_widget.dart';
+import 'package:provider/provider.dart';
 
 class AuthorizationScreen extends StatefulWidget {
   const AuthorizationScreen({Key? key}) : super(key: key);
@@ -35,7 +37,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
   final TextEditingController _nameController = TextEditingController();
 
   //stores:---------------------------------------------------------------------
-  // late UserStore _userStore;
+  late final UserStore _userStore;
 
   //focus node:-----------------------------------------------------------------
   late FocusNode _passwordFocusNode;
@@ -90,7 +92,8 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // _userStore = Provider.of<UserStore>(context);
+
+    _userStore = Provider.of<UserStore>(context, listen: false);
   }
 
   @override
@@ -147,7 +150,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
           Observer(
             builder: (context) {
               return Visibility(
-                visible: _store.loading,
+                visible: _store.loading || _userStore.isLoading,
                 child: const CustomProgressIndicatorWidget(),
               );
             },
@@ -468,19 +471,6 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
     );
   }
 
-  // Widget navigate(BuildContext context) {
-  //   _userStore.login(_store.userEmail, _store.password).then((value) {
-  //     if (value) {
-  //       _userStore.fetchUserInfor().then((value) {
-  //         Navigator.of(context).pushNamedAndRemoveUntil(
-  //             Routes.home, (Route<dynamic> route) => false);
-  //       });
-  //     }
-  //   });
-
-  //   return Container();
-  // }
-
   // General Methods:-----------------------------------------------------------
   _showErrorMessage(String message,
       {int duration = Properties.delayTimeInSecond}) {
@@ -507,8 +497,10 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
           duration: Duration(seconds: duration),
         ).show(context).then((_) {
           if (_store.logined) {
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                Routes.home, (Route<dynamic> route) => false);
+            _userStore.fetchUserInfor().then((_) {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  Routes.home, (Route<dynamic> route) => false);
+            });
           }
         });
       });

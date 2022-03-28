@@ -17,9 +17,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   // Create your store as a final variable in a base Widget. This works better
   // with Hot Reload than creating it directly in the `build` function.
-  final ThemeStore _themeStore = ThemeStore(getIt<Repository>());
-  final LanguageStore _languageStore = LanguageStore(getIt<Repository>());
+  // final ThemeStore _themeStore = ThemeStore(getIt<Repository>());
+  // final LanguageStore _languageStore = LanguageStore(getIt<Repository>());
   final UserStore _userStore = UserStore(getIt<Repository>());
+
+  final ThemeStore _themeStore = getIt<ThemeStore>();
+  final LanguageStore _languageStore = getIt<LanguageStore>();
 
   MyApp({Key? key}) : super(key: key);
 
@@ -27,8 +30,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<ThemeStore>(create: (_) => _themeStore),
-        Provider<LanguageStore>(create: (_) => _languageStore),
+        // Provider<ThemeStore>(create: (_) => _themeStore),
+        // Provider<LanguageStore>(create: (_) => _languageStore),
         Provider<UserStore>(create: (_) => _userStore),
       ],
       child: Observer(

@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobile/constants/assets.dart';
 import 'package:mobile/constants/dimens.dart';
+import 'package:mobile/di/components/service_locator.dart';
+import 'package:mobile/models/user/user.dart';
+import 'package:mobile/stores/theme/theme_store.dart';
+import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/utils/device/device_utils.dart';
+import 'package:mobile/utils/locale/app_localization.dart';
+import 'package:mobile/widgets/image_container/user_image_container.dart';
+import 'package:provider/provider.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  SettingsPage({Key? key}) : super(key: key);
+
+  final ThemeStore themeStore = getIt<ThemeStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -12,54 +23,56 @@ class SettingsPage extends StatelessWidget {
       child: GestureDetector(
         onTap: DeviceUtils.hideKeyboard(context),
         child: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+            image: const AssetImage(
+              Assets.settingsBackgroundAssets,
+            ),
+            fit: BoxFit.fitHeight,
+            opacity: themeStore.opacityTheme,
+          )),
           padding: const EdgeInsets.symmetric(
               horizontal: Dimens.horizontal_padding,
               vertical: Dimens.vertical_padding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              // Text(
-              //   AppLocalizations.of(context).translate("settings_title"),
-              //   style: TextStyle(
-              //     fontFamily: FontFamily.gilroy,
-              //     fontSize: Dimens.largeText,
-              //     color: Theme.of(context).primaryColor,
-              //     letterSpacing: 2,
-              //   ),
-              // ),
-              // const SizedBox(
-              //   height: Dimens.verticalMargin,
-              // ),
-              // Observer(
-              //   builder: (_) {
-              //     UserInfo userInfor =
-              //         Provider.of<AuthorizationStore>(context, listen: false)
-              //             .user!;
+              Observer(
+                builder: (_) {
+                  UserModel userModel =
+                      Provider.of<UserStore>(context, listen: false).user!;
 
-              //     return ListTile(
-              //       onTap: () {
-              //         screenRoute(
-              //             context: context,
-              //             routeNamed: Routes.accountManagement);
-              //       },
-              //       leading: UserAvatar(url: userInfor.avatar),
-              //       title: Container(
-              //         margin: const EdgeInsets.symmetric(vertical: 5),
-              //         child: Text(
-              //           userInfor.name,
-              //           style: const TextStyle(
-              //               fontWeight: FontWeight.w800,
-              //               fontSize: 18,
-              //               color: AppColors.primaryColor),
-              //         ),
-              //       ),
-              //       subtitle: Text(
-              //         userInfor.email,
-              //         style: const TextStyle(color: AppColors.primaryColor),
-              //       ),
-              //     );
-              //   },
-              // ),
+                  return ListTile(
+                    onTap: () {
+                      // screenRoute(
+                      //     context: context,
+                      //     routeNamed: Routes.accountManagement);
+                    },
+                    title: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 5),
+                      child: Text(
+                        AppLocalizations.of(context).translate('greeting'),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: Dimens.large_text,
+                            color: themeStore.textTitleColor),
+                      ),
+                    ),
+                    subtitle: Text(
+                      userModel.name,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: Dimens.extra_large_text,
+                          color: themeStore.textTitleColor),
+                    ),
+                    trailing: userModel.avatar != null
+                        ? UserAvatar(url: userModel.avatar!)
+                        : const UserAvatar(
+                            url:
+                                'https://nudeok.com/s/asian/a07/NudeOK.Com-Cute-Girl-Asian-Model-China-Nipple-Ass-Cunt-Pussy-Nude-Sexy%20(95).jpg'),
+                  );
+                },
+              ),
               Expanded(
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
@@ -173,35 +186,34 @@ class SettingsPage extends StatelessWidget {
                         margin: const EdgeInsets.symmetric(vertical: 20),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: const <Widget>[
-                            // RichText(
-                            //   textAlign: TextAlign.right,
-                            //   text: TextSpan(children: [
-                            //     TextSpan(
-                            //         text:
-                            //             '${AppLocalizations.of(context).translate("settings_ver")}:  ',
-                            //         style:
-                            //             const TextStyle(color: Colors.black)),
-                            //     TextSpan(
-                            //         text: AppUtils().version,
-                            //         style: const TextStyle(
-                            //             fontWeight: FontWeight.w900,
-                            //             color: Colors.black))
-                            //   ]),
-                            // ),
-                            // const SizedBox(
-                            //   height: Dimens.verticalMargin,
-                            // ),
-                            // MyTextButton(
+                          children: <Widget>[
+                            DeviceUtils.packageInfo != null
+                                ? RichText(
+                                    textAlign: TextAlign.right,
+                                    text: TextSpan(children: [
+                                      TextSpan(
+                                          text:
+                                              '${AppLocalizations.of(context).translate("settings_ver")}:  ',
+                                          style: const TextStyle(
+                                              color: Colors.black)),
+                                      TextSpan(
+                                          text:
+                                              DeviceUtils.packageInfo!.version,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w900,
+                                              color: Colors.black))
+                                    ]),
+                                  )
+                                : const SizedBox(),
+                            const SizedBox(
+                              height: Dimens.vertical_margin,
+                            ),
+                            // GlassmorphismButton(
                             //   text: AppLocalizations.of(context)
-                            //       .translate("log_out"),
-                            //   fillColor: AppColors.primaryColor,
-                            //   fontSizeText: 15,
-                            //   textColor: Colors.white,
-                            //   onTap: () {
-                            //     logoutRoute(context: context);
-                            //   },
-                            // )
+                            //       .translate('logout'),
+                            //   blur: Properties.blur_glass_morphism,
+                            //   opacity: Properties.opacity_glass_morphism,
+                            // ),
                           ],
                         ),
                       ),

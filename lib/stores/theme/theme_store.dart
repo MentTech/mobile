@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/constants/colors.dart';
 import 'package:mobile/data/repository.dart';
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
@@ -23,6 +24,11 @@ abstract class _ThemeStore with Store {
 
   // getters:-------------------------------------------------------------------
   bool get darkMode => _darkMode;
+
+  double get opacityTheme => _darkMode ? 0.9 : 0.75;
+
+  Color get textTitleColor =>
+      _darkMode ? AppColors.darkTextTheme : AppColors.lightTextTheme;
 
   // constructor:---------------------------------------------------------------
   _ThemeStore(Repository repository) : _repository = repository {

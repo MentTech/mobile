@@ -41,7 +41,7 @@ abstract class _UserStore with Store {
   }
 
   // empty responses:-----------------------------------------------------------
-  static ObservableFuture<String?> emptyLoginResponse =
+  static ObservableFuture<Map<String, dynamic>?> emptyLoginResponse =
       ObservableFuture.value(null);
 
   // store variables:-----------------------------------------------------------
@@ -49,7 +49,7 @@ abstract class _UserStore with Store {
   bool success = false;
 
   @observable
-  ObservableFuture<String?> loginFuture = emptyLoginResponse;
+  ObservableFuture<Map<String, dynamic>?> loginFuture = emptyLoginResponse;
 
   @observable
   UserModel? user;
@@ -62,27 +62,20 @@ abstract class _UserStore with Store {
   Future<bool> fetchUserInfor() async {
     assert(accessToken != null);
 
-    final res = await _repository.fetchUserInfor(accessToken!);
+    final future = _repository.fetchUserInfor(accessToken!);
+    loginFuture = ObservableFuture(future);
 
-    try {
-      user = UserModel.fromJson(res!);
-      success = true;
-    } catch (e) {
-      // res['message']
-      success = false;
-      return Future.value(false);
-    }
-
-    //   if (res['message'] != null) {
-    //     // do main task
-    //   } else {
-    //     // exception task
-    //   }
-
-    //   if (res != null && res["user"] != null) {
-    //     user = UserInfo.fromJson(res["user"]);
-    //     return Future.value(true);
-    //   }
+    future.then((res) {
+      try {
+        user = UserModel.fromJson(res!);
+        success = true;
+        return Future.value(true);
+      } catch (e) {
+        // res['message']
+        success = false;
+        return Future.value(false);
+      }
+    });
 
     return Future.value(true);
   }

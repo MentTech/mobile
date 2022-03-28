@@ -82,7 +82,7 @@ class AuthAPI {
   Future<Map<String, dynamic>?> googleAuthenticator(
       {required Map<String, dynamic> queryParameters}) async {
     try {
-      final res = await _dioClient.get(Endpoints.googleAuth,
+      final res = await _dioClient.post(Endpoints.googleAuth,
           queryParameters: queryParameters,
           options: Options(
             followRedirects: false,

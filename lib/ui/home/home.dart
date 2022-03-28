@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     const TutorPage(),
     const HomePage(),
     // MessagePage(),
-    const SettingsPage(),
+    SettingsPage(),
   ];
 
   // state:---------------------------------------------------------------------

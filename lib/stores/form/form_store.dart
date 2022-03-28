@@ -219,21 +219,32 @@ abstract class _FormStore with Store {
   }
 
   @action
-  Future googleAuthenticator() async {
+  Future<bool> googleAuthenticator() async {
     loading = true;
 
     try {
-      authenStore.googleAuthenticator().then((_) {
+      authenStore.googleAuthenticator().then((result) {
         loading = false;
-        success = true;
-        logined = true;
-        messageStore.successMessage = "You are login successfully";
+
+        if (result == null) {
+          success = true;
+          logined = true;
+          messageStore.successMessage = "You are login successfully";
+          return Future.value(true);
+        } else {
+          success = false;
+          logined = false;
+          messageStore.errorMessage = result;
+          return Future.value(false);
+        }
       });
     } catch (err) {
       // other types of Exceptions
       messageStore.errorMessage = err.toString();
       success = false;
     }
+
+    return Future.value(false);
   }
 
   @action

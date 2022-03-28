@@ -1,9 +1,14 @@
 //
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 /// Helper class for device related operations.
 ///
 class DeviceUtils {
+  ///
+  /// save package information of application
+  ///
+  static PackageInfo? packageInfo;
 
   ///
   /// hides the keyboard if its already open
@@ -18,9 +23,9 @@ class DeviceUtils {
   ///
   static double getScaledSize(BuildContext context, double scale) =>
       scale *
-          (MediaQuery.of(context).orientation == Orientation.portrait
-              ? MediaQuery.of(context).size.width
-              : MediaQuery.of(context).size.height);
+      (MediaQuery.of(context).orientation == Orientation.portrait
+          ? MediaQuery.of(context).size.width
+          : MediaQuery.of(context).size.height);
 
   ///
   /// accepts a double [scale] and returns scaled sized based on the screen
