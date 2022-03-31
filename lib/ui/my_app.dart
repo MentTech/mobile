@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       ],
       child: Observer(
         name: 'global-observer',
-        builder: (context) {
+        builder: (_) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: Strings.appName,

@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Observer(
       name: 'main-observer',
-      builder: (context) => SafeArea(
+      builder: (_) => SafeArea(
         child: Scaffold(
           backgroundColor: Colors.white,
           extendBody: true,

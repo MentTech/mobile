@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:mobile/data/repository.dart';
 import 'package:mobile/models/user/user.dart';
 import 'package:mobx/mobx.dart';
@@ -19,6 +20,9 @@ abstract class _UserStore with Store {
   // token for access
   String? accessToken;
 
+  // function callback
+  ValueChanged<bool>? callback;
+
   // constructor:---------------------------------------------------------------
   _UserStore(Repository repository) : _repository = repository {
     // setting up disposers
@@ -35,8 +39,16 @@ abstract class _UserStore with Store {
 
   void _setupDisposers() {
     _disposers = [
-      reaction((_) => success, (_) => success = false, delay: 200),
-      reaction((_) => accessToken, (_) => accessToken = null, delay: 200),
+      // reaction((_) => success, (_) => success = false, delay: 200),
+      // reaction((_) => accessToken, (_) => accessToken = null, delay: 200),
+      reaction((_) => loginFuture.status, (FutureStatus status) {
+        if (status == FutureStatus.fulfilled) {
+          if (callback != null) {
+            callback!.call(success);
+            callback = null;
+          }
+        }
+      }),
     ];
   }
 
@@ -61,7 +73,6 @@ abstract class _UserStore with Store {
   @action
   Future<bool> fetchUserInfor() async {
     assert(accessToken != null);
-
     final future = _repository.fetchUserInfor(accessToken!);
     loginFuture = ObservableFuture(future);
 
@@ -77,7 +88,7 @@ abstract class _UserStore with Store {
       }
     });
 
-    return Future.value(true);
+    return Future.value(false);
   }
 
   // general methods:-----------------------------------------------------------

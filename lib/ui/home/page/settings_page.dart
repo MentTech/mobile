@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/assets.dart';
 import 'package:mobile/constants/dimens.dart';
+import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/user/user.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
-import 'package:mobile/widgets/image_container/user_image_container.dart';
+import 'package:mobile/widgets/container/image_container/user_image_container.dart';
+import 'package:mobile/widgets/container/section_container/named_container.dart';
+import 'package:mobile/widgets/glassmorphism_widgets/button_style.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -69,7 +72,7 @@ class SettingsPage extends StatelessWidget {
                         ? UserAvatar(url: userModel.avatar!)
                         : const UserAvatar(
                             url:
-                                'https://nudeok.com/s/asian/a07/NudeOK.Com-Cute-Girl-Asian-Model-China-Nipple-Ass-Cunt-Pussy-Nude-Sexy%20(95).jpg'),
+                                'https://images.unsplash.com/photo-1648615112483-aeed3ce1385e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=765&q=80'),
                   );
                 },
               ),
@@ -208,11 +211,48 @@ class SettingsPage extends StatelessWidget {
                             const SizedBox(
                               height: Dimens.vertical_margin,
                             ),
-                            // GlassmorphismButton(
-                            //   text: AppLocalizations.of(context)
-                            //       .translate('logout'),
-                            //   blur: Properties.blur_glass_morphism,
-                            //   opacity: Properties.opacity_glass_morphism,
+
+                            GlassmorphismButton(
+                              text: AppLocalizations.of(context)
+                                  .translate('logout'),
+                              blur: Properties.blur_glass_morphism,
+                              opacity: Properties.opacity_glass_morphism,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: Dimens.horizontal_padding,
+                                vertical: Dimens.vertical_padding,
+                              ),
+                              radius: 15,
+                              onTap: () {},
+                            ),
+
+                            // NamedContainer(
+                            //   children: <Widget>[
+                            //     GlassmorphismButton(
+                            //       text: AppLocalizations.of(context)
+                            //           .translate('logout'),
+                            //       blur: Properties.blur_glass_morphism,
+                            //       opacity: Properties.opacity_glass_morphism,
+                            //     ),
+                            //     GlassmorphismButton(
+                            //       text: AppLocalizations.of(context)
+                            //           .translate('logout'),
+                            //       blur: Properties.blur_glass_morphism,
+                            //       opacity: Properties.opacity_glass_morphism,
+                            //     ),
+                            //     GlassmorphismButton(
+                            //       text: AppLocalizations.of(context)
+                            //           .translate('logout'),
+                            //       blur: Properties.blur_glass_morphism,
+                            //       opacity: Properties.opacity_glass_morphism,
+                            //     ),
+                            //     GlassmorphismButton(
+                            //       text: AppLocalizations.of(context)
+                            //           .translate('logout'),
+                            //       blur: Properties.blur_glass_morphism,
+                            //       opacity: Properties.opacity_glass_morphism,
+                            //     ),
+                            //   ],
+                            //   crossAxisCount: 2,
                             // ),
                           ],
                         ),

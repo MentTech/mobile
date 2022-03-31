@@ -33,10 +33,11 @@ class Routes {
   ///
   /// Navigator.of(context).pushReplacementNamed(Routes.login);
   ///
-  static void unauthenticatedRoute(BuildContext context) =>
-      Navigator.pushReplacement(
-          context,
-          CustomFadeTransitionPageRoute(
-              timeCast: Properties.delayTimeInSecond,
-              child: const AuthorizationScreen()));
+  static void unauthenticatedRoute(BuildContext context) {
+    Navigator.pushReplacement(
+        context,
+        CustomFadeTransitionPageRoute(
+            timeCast: Properties.delayTimeInSecond,
+            child: const AuthorizationScreen()));
+  }
 }

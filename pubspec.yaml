@@ -86,6 +86,9 @@ dependencies:
   # scope: https://developers.google.com/identity/protocols/oauth2/scopes
   google_sign_in: ^5.2.4
 
+  # Authenticate for facebook
+  # flutter_facebook_auth: ^4.1.2
+
   # A Flutter package for easy implementation of curved navigation bar.
   curved_navigation_bar: ^1.0.3
 

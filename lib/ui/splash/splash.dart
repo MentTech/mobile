@@ -21,10 +21,27 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  // stores:--------------------------------------------------------------------
+  UserStore? userStore;
+
   @override
   void initState() {
     super.initState();
     startTimer();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    userStore = Provider.of<UserStore>(context, listen: false);
+    userStore!.callback = (result) {
+      if (result) {
+        Routes.authenticatedRoute(context);
+      } else {
+        Routes.unauthenticatedRoute(context);
+      }
+    };
   }
 
   @override
@@ -41,27 +58,21 @@ class _SplashScreenState extends State<SplashScreen> {
   startTimer() {
     var _duration =
         const Duration(milliseconds: Properties.delayTimeInMiliSecond);
-    return Timer(_duration, navigate);
+    return Timer(_duration, fetch);
   }
 
-  navigate() async {
+  void fetch() async {
     final AuthenStore auth = getIt<AuthenStore>();
-    final UserStore userStore = Provider.of<UserStore>(context, listen: false);
 
     await PackageInfo.fromPlatform().then((packageInfo) {
       DeviceUtils.packageInfo = packageInfo;
     });
 
     if (auth.canBeAuthenticated) {
-      userStore.accessToken = auth.accessToken;
+      userStore!.accessToken = auth.accessToken;
 
-      await userStore.fetchUserInfor().then((isAuthenticated) {
-        if (isAuthenticated) {
-          Routes.authenticatedRoute(context);
-        } else {
-          Routes.unauthenticatedRoute(context);
-        }
-      });
+      // asynchronous
+      userStore!.fetchUserInfor();
     } else {
       Routes.unauthenticatedRoute(context);
     }
