@@ -463,7 +463,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
               width: 40,
               assetName: Assets.googleSVGLogo,
               ontap: () async {
-                _store.googleAuthenticator();
+                await _store.googleAuthenticator();
               },
             ),
           ],

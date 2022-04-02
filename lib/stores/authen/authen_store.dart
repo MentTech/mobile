@@ -99,7 +99,7 @@ abstract class _AuthenStore with Store {
         success = true;
 
         final token = mapJson["accessToken"];
-        _repository.saveAuthToken(token);
+        await _repository.saveAuthToken(token);
         accessToken = token;
       }
 
@@ -117,9 +117,12 @@ abstract class _AuthenStore with Store {
   @action
   Future<String?> googleAuthenticator() async {
     String? message;
+    success = false;
+    accessToken = null;
+    message = "Can't login by Google account";
 
     try {
-      await logout().then((_) async {
+      await logoutGoogleAuth().then((_) async {
         await googleSignIn.signIn().then((account) async {
           await account?.authentication.then((credential) async {
             final token = credential.accessToken;
@@ -158,7 +161,14 @@ abstract class _AuthenStore with Store {
     return Future.value(message);
   }
 
-  Future logout() async {
+  Future<void> logout() async {
+    await logoutGoogleAuth();
+
+    accessToken = null;
+    _repository.removeAuthToken();
+  }
+
+  Future<void> logoutGoogleAuth() async {
     try {
       if (googleSignIn.currentUser != null) {
         await googleSignIn.disconnect();
@@ -170,9 +180,6 @@ abstract class _AuthenStore with Store {
       // other types of Exceptions
       throw "other types of Exceptions";
     }
-
-    accessToken = null;
-    _repository.removeAuthToken();
   }
 
   // getter:--------------------------------------------------------------------

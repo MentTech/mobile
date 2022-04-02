@@ -221,9 +221,10 @@ abstract class _FormStore with Store {
   @action
   Future<bool> googleAuthenticator() async {
     loading = true;
+    success = false;
 
     try {
-      authenStore.googleAuthenticator().then((result) {
+      await authenStore.googleAuthenticator().then((result) {
         loading = false;
 
         if (result == null) {

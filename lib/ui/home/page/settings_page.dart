@@ -5,12 +5,13 @@ import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/user/user.dart';
+import 'package:mobile/stores/authen/authen_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
+import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/container/image_container/user_image_container.dart';
-import 'package:mobile/widgets/container/section_container/named_container.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/button_style.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,7 @@ class SettingsPage extends StatelessWidget {
   SettingsPage({Key? key}) : super(key: key);
 
   final ThemeStore themeStore = getIt<ThemeStore>();
+  final AuthenStore authenStore = getIt<AuthenStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +224,11 @@ class SettingsPage extends StatelessWidget {
                                 vertical: Dimens.vertical_padding,
                               ),
                               radius: 15,
-                              onTap: () {},
+                              onTap: () {
+                                authenStore.logout().then((_) {
+                                  Routes.unauthenticatedRoute(context);
+                                });
+                              },
                             ),
 
                             // NamedContainer(
