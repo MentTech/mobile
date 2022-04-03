@@ -37,6 +37,8 @@ class Dimens {
   static const double highElevation = 10.0;
 
   // BorderRadius
-  static BorderRadius kBorderRadius = BorderRadius.circular(5);
-  static BorderRadius kMaxBorderRadius = BorderRadius.circular(20);
+  static const double kBorderRadiusValue = 5.0;
+  static const double kBorderMaxRadiusValue = 20.0;
+  static final BorderRadius kBorderRadius = BorderRadius.circular(5);
+  static final BorderRadius kMaxBorderRadius = BorderRadius.circular(20);
 }

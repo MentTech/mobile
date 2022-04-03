@@ -235,7 +235,7 @@ abstract class _FormStore with Store {
         } else {
           success = false;
           logined = false;
-          messageStore.errorMessage = result;
+          messageStore.errorMessage = "You has not authenticated yet";
           return Future.value(false);
         }
       });

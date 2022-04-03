@@ -12,6 +12,7 @@ import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/container/image_container/user_image_container.dart';
+import 'package:mobile/widgets/container/section_container/linear_named_widget_list.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/button_style.dart';
 import 'package:provider/provider.dart';
 
@@ -49,9 +50,7 @@ class SettingsPage extends StatelessWidget {
 
                   return ListTile(
                     onTap: () {
-                      // screenRoute(
-                      //     context: context,
-                      //     routeNamed: Routes.accountManagement);
+                      Navigator.of(context).pushNamed(Routes.profile);
                     },
                     title: Container(
                       margin: const EdgeInsets.symmetric(vertical: 5),
@@ -129,6 +128,62 @@ class SettingsPage extends StatelessWidget {
                           ],
                         ),
                       ),
+
+                      LinearNamedWidgetList(
+                        namedContainer: "Test",
+                        children: <Widget>[
+                          GlassmorphismButton(
+                            text: AppLocalizations.of(context)
+                                .translate('logout'),
+                            blur: Properties.blur_glass_morphism,
+                            opacity: Properties.opacity_glass_morphism,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Dimens.horizontal_padding,
+                              vertical: Dimens.vertical_padding,
+                            ),
+                            radius: 15,
+                            onTap: () {},
+                          ),
+                          GlassmorphismButton(
+                            text: AppLocalizations.of(context)
+                                .translate('logout'),
+                            blur: Properties.blur_glass_morphism,
+                            opacity: Properties.opacity_glass_morphism,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Dimens.horizontal_padding,
+                              vertical: Dimens.vertical_padding,
+                            ),
+                            radius: 15,
+                            onTap: () {},
+                          ),
+                          GlassmorphismButton(
+                            text: AppLocalizations.of(context)
+                                .translate('logout'),
+                            blur: Properties.blur_glass_morphism,
+                            opacity: Properties.opacity_glass_morphism,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Dimens.horizontal_padding,
+                              vertical: Dimens.vertical_padding,
+                            ),
+                            radius: 15,
+                            onTap: () {},
+                          ),
+                          GlassmorphismButton(
+                            text: AppLocalizations.of(context)
+                                .translate('logout'),
+                            blur: Properties.blur_glass_morphism,
+                            opacity: Properties.opacity_glass_morphism,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Dimens.horizontal_padding,
+                              vertical: Dimens.vertical_padding,
+                            ),
+                            radius: 15,
+                            onTap: () {},
+                          ),
+                        ],
+                        crossAxisCount: 2,
+                      ),
+
                       // Container(
                       //   margin: const EdgeInsets.symmetric(
                       //       vertical: Dimens.verticalMargin),
@@ -213,7 +268,6 @@ class SettingsPage extends StatelessWidget {
                             const SizedBox(
                               height: Dimens.vertical_margin,
                             ),
-
                             GlassmorphismButton(
                               text: AppLocalizations.of(context)
                                   .translate('logout'),
@@ -230,36 +284,6 @@ class SettingsPage extends StatelessWidget {
                                 });
                               },
                             ),
-
-                            // NamedContainer(
-                            //   children: <Widget>[
-                            //     GlassmorphismButton(
-                            //       text: AppLocalizations.of(context)
-                            //           .translate('logout'),
-                            //       blur: Properties.blur_glass_morphism,
-                            //       opacity: Properties.opacity_glass_morphism,
-                            //     ),
-                            //     GlassmorphismButton(
-                            //       text: AppLocalizations.of(context)
-                            //           .translate('logout'),
-                            //       blur: Properties.blur_glass_morphism,
-                            //       opacity: Properties.opacity_glass_morphism,
-                            //     ),
-                            //     GlassmorphismButton(
-                            //       text: AppLocalizations.of(context)
-                            //           .translate('logout'),
-                            //       blur: Properties.blur_glass_morphism,
-                            //       opacity: Properties.opacity_glass_morphism,
-                            //     ),
-                            //     GlassmorphismButton(
-                            //       text: AppLocalizations.of(context)
-                            //           .translate('logout'),
-                            //       blur: Properties.blur_glass_morphism,
-                            //       opacity: Properties.opacity_glass_morphism,
-                            //     ),
-                            //   ],
-                            //   crossAxisCount: 2,
-                            // ),
                           ],
                         ),
                       ),

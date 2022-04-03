@@ -11,7 +11,10 @@ class GlassmorphismButton extends StatelessWidget {
     required this.blur,
     required this.opacity,
     this.gradientBorder = const LinearGradient(
-      colors: [Colors.blue, Colors.orange],
+      colors: [
+        Colors.blue,
+        Colors.orange,
+      ],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     ),
@@ -46,13 +49,19 @@ class GlassmorphismButton extends StatelessWidget {
           child: Container(
             padding: padding,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(radius),
+              borderRadius: BorderRadius.circular(radius),
+              color: Colors.white.withOpacity(opacity),
+              border: Border.all(
+                width: 1.5,
                 color: Colors.white.withOpacity(opacity),
-                border: Border.all(
-                  width: 1.5,
-                  color: Colors.white.withOpacity(opacity),
-                )),
-            child: Text(text),
+              ),
+            ),
+            child: Text(text,
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: textColor,
+                    letterSpacing: 0.2,
+                    fontSize: Dimens.small_text)),
           ),
         ),
       ),
