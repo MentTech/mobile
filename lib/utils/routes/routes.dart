@@ -19,7 +19,7 @@ class Routes {
     splash: (BuildContext context) => const SplashScreen(),
     login: (BuildContext context) => const AuthorizationScreen(),
     home: (BuildContext context) => const HomeScreen(),
-    profile: (BuildContext context) => UserProfile(),
+    profile: (BuildContext context) => const UserProfile(),
   };
 
   ///

@@ -196,6 +196,8 @@ abstract class _FormStore with Store {
   @action
   Future login() async {
     loading = true;
+    success = false;
+    messageStore.successMessage = "You have not logined yet";
 
     authenStore.login(userEmail, password).then((future) {
       loading = false;

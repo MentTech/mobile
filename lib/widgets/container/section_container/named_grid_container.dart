@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/dimens.dart';
 
-class NamedContainer extends StatelessWidget {
-  const NamedContainer({
+class NamedGridContainer extends StatelessWidget {
+  const NamedGridContainer({
     Key? key,
     required this.children,
     required this.crossAxisCount,

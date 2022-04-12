@@ -86,13 +86,23 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
         setState(() {});
       });
     _forgotPassowrdAnimationController.value = 1.0;
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
 
     _userStore = Provider.of<UserStore>(context, listen: false);
+    _userStore.callback = (result) {
+      if (result) {
+        WidgetsBinding.instance?.addPostFrameCallback((_) {
+          FlushbarHelper.createSuccess(
+            message: _store.messageStore.successMessage,
+            title: AppLocalizations.of(context).translate('home_tv_success'),
+            duration: const Duration(seconds: Properties.delayTimeInSecond),
+          ).show(context).then((_) {
+            Routes.authenticatedRoute(context);
+          });
+        });
+      } else {
+        _showErrorMessage(_store.messageStore.errorMessage);
+      }
+    };
   }
 
   @override
@@ -140,8 +150,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
             // validator
             builder: (_) {
               return _store.success
-                  ? _showSuccessMessage(_store.messageStore.successMessage,
-                      duration: Properties.delayTimeInSecond)
+                  ? _showSuccessMessage()
                   : _showErrorMessage(_store.messageStore.errorMessage,
                       duration: Properties.delayTimeInSecond);
             },
@@ -488,23 +497,9 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
     return const SizedBox.shrink();
   }
 
-  _showSuccessMessage(String message,
-      {int duration = Properties.delayTimeInSecond}) {
-    if (message.isNotEmpty) {
-      WidgetsBinding.instance?.addPostFrameCallback((_) {
-        FlushbarHelper.createSuccess(
-          message: message,
-          title: AppLocalizations.of(context).translate('home_tv_success'),
-          duration: Duration(seconds: duration),
-        ).show(context).then((_) {
-          if (_store.logined) {
-            _userStore.fetchUserInfor().then((_) {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  Routes.home, (Route<dynamic> route) => false);
-            });
-          }
-        });
-      });
+  _showSuccessMessage() {
+    if (_store.logined) {
+      _userStore.fetchUserInfor();
     }
 
     return const SizedBox.shrink();

@@ -10,6 +10,8 @@ class GlassmorphismContainer extends StatelessWidget {
     required this.opacity,
     this.radius = 20,
     this.padding = const EdgeInsets.all(0),
+    this.height,
+    this.width,
   }) : super(key: key);
 
   final double blur;
@@ -17,6 +19,9 @@ class GlassmorphismContainer extends StatelessWidget {
   final double radius;
   final EdgeInsets padding;
   final Widget child;
+
+  final double? width;
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +33,8 @@ class GlassmorphismContainer extends StatelessWidget {
           sigmaY: blur,
         ),
         child: Container(
+          width: width,
+          height: height,
           padding: padding,
           decoration: BoxDecoration(
               color: Colors.white.withOpacity(opacity),
