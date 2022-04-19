@@ -17,9 +17,6 @@ abstract class _UserStore with Store {
   // store for handling error messages
   // final MessageStore messageStore = MessageStore();
 
-  // token for access
-  String? accessToken;
-
   // function callback
   ValueChanged<bool>? callback;
 
@@ -72,11 +69,13 @@ abstract class _UserStore with Store {
   // actions:-------------------------------------------------------------------
   @action
   Future<bool> fetchUserInfor() async {
-    accessToken ??= await _repository.authToken;
+    String? accessToken = await _repository.authToken;
 
-    assert(accessToken != null);
+    if (null == accessToken) {
+      return Future.value(false);
+    }
 
-    final future = _repository.fetchUserInfor(accessToken!);
+    final future = _repository.fetchUserInfor(accessToken);
     loginFuture = ObservableFuture(future);
 
     future.then((res) {

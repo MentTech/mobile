@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'form_store.dart';
+part of 'authen_form_store.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -8,29 +8,30 @@ part of 'form_store.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
-mixin _$FormStore on _FormStore, Store {
+mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
   Computed<bool>? _$canLoginComputed;
 
   @override
-  bool get canLogin => (_$canLoginComputed ??=
-          Computed<bool>(() => super.canLogin, name: '_FormStore.canLogin'))
-      .value;
+  bool get canLogin =>
+      (_$canLoginComputed ??= Computed<bool>(() => super.canLogin,
+              name: '_AuthenticatorFormStore.canLogin'))
+          .value;
   Computed<bool>? _$canRegisterComputed;
 
   @override
   bool get canRegister =>
       (_$canRegisterComputed ??= Computed<bool>(() => super.canRegister,
-              name: '_FormStore.canRegister'))
+              name: '_AuthenticatorFormStore.canRegister'))
           .value;
   Computed<bool>? _$canForgetPasswordComputed;
 
   @override
   bool get canForgetPassword => (_$canForgetPasswordComputed ??= Computed<bool>(
           () => super.canForgetPassword,
-          name: '_FormStore.canForgetPassword'))
+          name: '_AuthenticatorFormStore.canForgetPassword'))
       .value;
 
-  final _$stateAuthenAtom = Atom(name: '_FormStore.stateAuthen');
+  final _$stateAuthenAtom = Atom(name: '_AuthenticatorFormStore.stateAuthen');
 
   @override
   AuthenState get stateAuthen {
@@ -46,7 +47,7 @@ mixin _$FormStore on _FormStore, Store {
   }
 
   final _$isForgotPasswordStateAtom =
-      Atom(name: '_FormStore.isForgotPasswordState');
+      Atom(name: '_AuthenticatorFormStore.isForgotPasswordState');
 
   @override
   bool get isForgotPasswordState {
@@ -62,7 +63,7 @@ mixin _$FormStore on _FormStore, Store {
     });
   }
 
-  final _$userEmailAtom = Atom(name: '_FormStore.userEmail');
+  final _$userEmailAtom = Atom(name: '_AuthenticatorFormStore.userEmail');
 
   @override
   String get userEmail {
@@ -77,7 +78,7 @@ mixin _$FormStore on _FormStore, Store {
     });
   }
 
-  final _$passwordAtom = Atom(name: '_FormStore.password');
+  final _$passwordAtom = Atom(name: '_AuthenticatorFormStore.password');
 
   @override
   String get password {
@@ -92,7 +93,8 @@ mixin _$FormStore on _FormStore, Store {
     });
   }
 
-  final _$confirmPasswordAtom = Atom(name: '_FormStore.confirmPassword');
+  final _$confirmPasswordAtom =
+      Atom(name: '_AuthenticatorFormStore.confirmPassword');
 
   @override
   String get confirmPassword {
@@ -107,7 +109,7 @@ mixin _$FormStore on _FormStore, Store {
     });
   }
 
-  final _$nameAtom = Atom(name: '_FormStore.name');
+  final _$nameAtom = Atom(name: '_AuthenticatorFormStore.name');
 
   @override
   String get name {
@@ -122,7 +124,7 @@ mixin _$FormStore on _FormStore, Store {
     });
   }
 
-  final _$successAtom = Atom(name: '_FormStore.success');
+  final _$successAtom = Atom(name: '_AuthenticatorFormStore.success');
 
   @override
   bool get success {
@@ -137,7 +139,7 @@ mixin _$FormStore on _FormStore, Store {
     });
   }
 
-  final _$loginedAtom = Atom(name: '_FormStore.logined');
+  final _$loginedAtom = Atom(name: '_AuthenticatorFormStore.logined');
 
   @override
   bool get logined {
@@ -152,7 +154,7 @@ mixin _$FormStore on _FormStore, Store {
     });
   }
 
-  final _$loadingAtom = Atom(name: '_FormStore.loading');
+  final _$loadingAtom = Atom(name: '_AuthenticatorFormStore.loading');
 
   @override
   bool get loading {
@@ -167,14 +169,14 @@ mixin _$FormStore on _FormStore, Store {
     });
   }
 
-  final _$registerAsyncAction = AsyncAction('_FormStore.register');
+  final _$registerAsyncAction = AsyncAction('_AuthenticatorFormStore.register');
 
   @override
   Future<dynamic> register() {
     return _$registerAsyncAction.run(() => super.register());
   }
 
-  final _$loginAsyncAction = AsyncAction('_FormStore.login');
+  final _$loginAsyncAction = AsyncAction('_AuthenticatorFormStore.login');
 
   @override
   Future<dynamic> login() {
@@ -182,7 +184,7 @@ mixin _$FormStore on _FormStore, Store {
   }
 
   final _$googleAuthenticatorAsyncAction =
-      AsyncAction('_FormStore.googleAuthenticator');
+      AsyncAction('_AuthenticatorFormStore.googleAuthenticator');
 
   @override
   Future<bool> googleAuthenticator() {
@@ -190,140 +192,142 @@ mixin _$FormStore on _FormStore, Store {
         .run(() => super.googleAuthenticator());
   }
 
-  final _$forgotPasswordAsyncAction = AsyncAction('_FormStore.forgotPassword');
+  final _$forgotPasswordAsyncAction =
+      AsyncAction('_AuthenticatorFormStore.forgotPassword');
 
   @override
   Future<dynamic> forgotPassword() {
     return _$forgotPasswordAsyncAction.run(() => super.forgotPassword());
   }
 
-  final _$logoutAsyncAction = AsyncAction('_FormStore.logout');
+  final _$logoutAsyncAction = AsyncAction('_AuthenticatorFormStore.logout');
 
   @override
   Future<dynamic> logout() {
     return _$logoutAsyncAction.run(() => super.logout());
   }
 
-  final _$_FormStoreActionController = ActionController(name: '_FormStore');
+  final _$_AuthenticatorFormStoreActionController =
+      ActionController(name: '_AuthenticatorFormStore');
 
   @override
   void setUserId(String value) {
-    final _$actionInfo =
-        _$_FormStoreActionController.startAction(name: '_FormStore.setUserId');
+    final _$actionInfo = _$_AuthenticatorFormStoreActionController.startAction(
+        name: '_AuthenticatorFormStore.setUserId');
     try {
       return super.setUserId(value);
     } finally {
-      _$_FormStoreActionController.endAction(_$actionInfo);
+      _$_AuthenticatorFormStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void setPassword(String value) {
-    final _$actionInfo = _$_FormStoreActionController.startAction(
-        name: '_FormStore.setPassword');
+    final _$actionInfo = _$_AuthenticatorFormStoreActionController.startAction(
+        name: '_AuthenticatorFormStore.setPassword');
     try {
       return super.setPassword(value);
     } finally {
-      _$_FormStoreActionController.endAction(_$actionInfo);
+      _$_AuthenticatorFormStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void setConfirmPassword(String value) {
-    final _$actionInfo = _$_FormStoreActionController.startAction(
-        name: '_FormStore.setConfirmPassword');
+    final _$actionInfo = _$_AuthenticatorFormStoreActionController.startAction(
+        name: '_AuthenticatorFormStore.setConfirmPassword');
     try {
       return super.setConfirmPassword(value);
     } finally {
-      _$_FormStoreActionController.endAction(_$actionInfo);
+      _$_AuthenticatorFormStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void setName(String value) {
-    final _$actionInfo =
-        _$_FormStoreActionController.startAction(name: '_FormStore.setName');
+    final _$actionInfo = _$_AuthenticatorFormStoreActionController.startAction(
+        name: '_AuthenticatorFormStore.setName');
     try {
       return super.setName(value);
     } finally {
-      _$_FormStoreActionController.endAction(_$actionInfo);
+      _$_AuthenticatorFormStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void setSignup() {
-    final _$actionInfo =
-        _$_FormStoreActionController.startAction(name: '_FormStore.setSignup');
+    final _$actionInfo = _$_AuthenticatorFormStoreActionController.startAction(
+        name: '_AuthenticatorFormStore.setSignup');
     try {
       return super.setSignup();
     } finally {
-      _$_FormStoreActionController.endAction(_$actionInfo);
+      _$_AuthenticatorFormStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void setSignin() {
-    final _$actionInfo =
-        _$_FormStoreActionController.startAction(name: '_FormStore.setSignin');
+    final _$actionInfo = _$_AuthenticatorFormStoreActionController.startAction(
+        name: '_AuthenticatorFormStore.setSignin');
     try {
       return super.setSignin();
     } finally {
-      _$_FormStoreActionController.endAction(_$actionInfo);
+      _$_AuthenticatorFormStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void setForgotPassword() {
-    final _$actionInfo = _$_FormStoreActionController.startAction(
-        name: '_FormStore.setForgotPassword');
+    final _$actionInfo = _$_AuthenticatorFormStoreActionController.startAction(
+        name: '_AuthenticatorFormStore.setForgotPassword');
     try {
       return super.setForgotPassword();
     } finally {
-      _$_FormStoreActionController.endAction(_$actionInfo);
+      _$_AuthenticatorFormStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void validateUserEmail(String value) {
-    final _$actionInfo = _$_FormStoreActionController.startAction(
-        name: '_FormStore.validateUserEmail');
+    final _$actionInfo = _$_AuthenticatorFormStoreActionController.startAction(
+        name: '_AuthenticatorFormStore.validateUserEmail');
     try {
       return super.validateUserEmail(value);
     } finally {
-      _$_FormStoreActionController.endAction(_$actionInfo);
+      _$_AuthenticatorFormStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void validatePassword(String value) {
-    final _$actionInfo = _$_FormStoreActionController.startAction(
-        name: '_FormStore.validatePassword');
+    final _$actionInfo = _$_AuthenticatorFormStoreActionController.startAction(
+        name: '_AuthenticatorFormStore.validatePassword');
     try {
       return super.validatePassword(value);
     } finally {
-      _$_FormStoreActionController.endAction(_$actionInfo);
+      _$_AuthenticatorFormStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void validateConfirmPassword(String value) {
-    final _$actionInfo = _$_FormStoreActionController.startAction(
-        name: '_FormStore.validateConfirmPassword');
+    final _$actionInfo = _$_AuthenticatorFormStoreActionController.startAction(
+        name: '_AuthenticatorFormStore.validateConfirmPassword');
     try {
       return super.validateConfirmPassword(value);
     } finally {
-      _$_FormStoreActionController.endAction(_$actionInfo);
+      _$_AuthenticatorFormStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void validateName(String value) {
-    final _$actionInfo = _$_FormStoreActionController.startAction(
-        name: '_FormStore.validateName');
+    final _$actionInfo = _$_AuthenticatorFormStoreActionController.startAction(
+        name: '_AuthenticatorFormStore.validateName');
     try {
       return super.validateName(value);
     } finally {
-      _$_FormStoreActionController.endAction(_$actionInfo);
+      _$_AuthenticatorFormStoreActionController.endAction(_$actionInfo);
     }
   }
 

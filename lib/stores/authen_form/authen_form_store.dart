@@ -6,16 +6,17 @@ import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:validators/validators.dart';
 
-part 'form_store.g.dart';
+part 'authen_form_store.g.dart';
 
 enum AuthenState {
   signin,
   signup,
 }
 
-class FormStore = _FormStore with _$FormStore;
+class AuthenticatorFormStore = _AuthenticatorFormStore
+    with _$AuthenticatorFormStore;
 
-abstract class _FormStore with Store {
+abstract class _AuthenticatorFormStore with Store {
   // store for handling form errors
   final FormErrorStore formErrorStore = FormErrorStore();
 
@@ -25,7 +26,7 @@ abstract class _FormStore with Store {
   // store for handling authenticators
   final AuthenStore authenStore = getIt<AuthenStore>();
 
-  _FormStore() {
+  _AuthenticatorFormStore() {
     _setupValidations();
   }
 

@@ -6,7 +6,7 @@ import 'package:mobile/constants/colors.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/constants/strings.dart';
-import 'package:mobile/stores/form/form_store.dart';
+import 'package:mobile/stores/authen_form/authen_form_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
@@ -38,12 +38,10 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
 
   //stores:---------------------------------------------------------------------
   late final UserStore _userStore;
+  final _store = AuthenticatorFormStore();
 
   //focus node:-----------------------------------------------------------------
   final FocusNode _passwordFocusNode = FocusNode();
-
-  //stores:---------------------------------------------------------------------
-  final _store = FormStore();
 
   // animate
   // ignore: unused_field

@@ -69,8 +69,6 @@ class _SplashScreenState extends State<SplashScreen> {
     });
 
     if (auth.canBeAuthenticated) {
-      userStore!.accessToken = auth.accessToken;
-
       // asynchronous
       userStore!.fetchUserInfor();
     } else {

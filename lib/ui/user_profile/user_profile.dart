@@ -7,6 +7,7 @@ import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
+import 'package:mobile/ui/user_profile/user_editable_popup.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
@@ -14,6 +15,7 @@ import 'package:mobile/widgets/background_colorful/random_bubble_gradient_backgr
 import 'package:mobile/widgets/button_widgets/neumorphism_button.dart';
 import 'package:mobile/widgets/container/image_container/user_image_container.dart';
 import 'package:mobile/widgets/container/section_container/description_title_container.dart';
+import 'package:mobile/widgets/dialog_showing/slider_dialog.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -28,6 +30,7 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
   late UserStore tutorStore;
 
+  // Controller:----------------------------------------------------------------
   final RefreshController refreshController =
       RefreshController(initialRefresh: true);
 
@@ -224,6 +227,7 @@ class CustomSliverAppbarDelegate extends SliverPersistentHeaderDelegate {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
+            // Go back button
             NeumorphismButton(
               child: Icon(
                 Icons.arrow_back_ios_new_rounded,
@@ -233,13 +237,23 @@ class CustomSliverAppbarDelegate extends SliverPersistentHeaderDelegate {
                 Routes.popRoute(context);
               },
             ),
+            // Edit information popup
             NeumorphismButton(
               child: Icon(
                 Icons.edit,
                 color: AppColors.darkBlue[700],
               ),
               shape: BoxShape.circle,
-              onTap: () {},
+              onTap: () {
+                DialogPopupPresenter.showSlidePopupDialog<bool>(
+                        context,
+                        const UserEditablePopup(),
+                        DeviceUtils.getScaledHeight(context, 0.8),
+                        DeviceUtils.getScaledWidth(context, 0.8))
+                    .then((bool? result) {
+                  //
+                });
+              },
             ),
           ],
         ),

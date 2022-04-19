@@ -8,7 +8,7 @@ import 'package:mobile/data/sharedpref/shared_preference_helper.dart';
 import 'package:mobile/di/module/local_module.dart';
 import 'package:mobile/di/module/network_module.dart';
 import 'package:mobile/stores/authen/authen_store.dart';
-import 'package:mobile/stores/form/form_store.dart';
+import 'package:mobile/stores/authen_form/authen_form_store.dart';
 import 'package:mobile/stores/language/language_store.dart';
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
@@ -19,7 +19,7 @@ final getIt = GetIt.instance;
 Future<void> setupLocator() async {
   // factories:-----------------------------------------------------------------
   getIt.registerFactory(() => MessageStore());
-  getIt.registerFactory(() => FormStore());
+  getIt.registerFactory(() => AuthenticatorFormStore());
 
   // async singletons:----------------------------------------------------------
   // getIt.registerSingletonAsync<Database>(() => LocalModule.provideDatabase());
