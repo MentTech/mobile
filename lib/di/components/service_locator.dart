@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobile/data/network/apis/auth/auth_api.dart';
+import 'package:mobile/data/network/apis/mentor/mentor_api.dart';
 import 'package:mobile/data/network/dio_client.dart';
 import 'package:mobile/data/network/rest_client.dart';
 import 'package:mobile/data/repository.dart';
@@ -42,12 +43,19 @@ Future<void> setupLocator() async {
     ),
   );
 
+  getIt.registerSingleton(
+    MentorAPI(
+      getIt<DioClient>(),
+    ),
+  );
+
   // data sources
   // getIt.registerSingleton(PostDataSource(await getIt.getAsync<Database>()));
 
   // repository:----------------------------------------------------------------
   getIt.registerSingleton(Repository(
     getIt<AuthAPI>(),
+    getIt<MentorAPI>(),
     getIt<SharedPreferenceHelper>(),
     // getIt<PostDataSource>(),
   ));

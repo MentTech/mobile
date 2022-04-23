@@ -59,26 +59,26 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Observer(
       name: 'main-observer',
-      builder: (_) => SafeArea(
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          extendBody: true,
-          bottomNavigationBar: Theme(
-            data: Theme.of(context)
-                .copyWith(iconTheme: const IconThemeData(color: Colors.white)),
-            child: CurvedNavigationBar(
-              key: _bottomNavigationKey,
-              color: Theme.of(context).primaryColor,
-              height: sizeBottomButton * 2,
-              backgroundColor: Colors.transparent,
-              index: _initButtonIndex,
-              animationCurve: curveEffect,
-              animationDuration: durationEffect,
-              items: _listCurveButtonIcon,
-              onTap: onBottomChanged,
-            ),
+      builder: (_) => Scaffold(
+        backgroundColor: Colors.white,
+        extendBody: true,
+        bottomNavigationBar: Theme(
+          data: Theme.of(context)
+              .copyWith(iconTheme: const IconThemeData(color: Colors.white)),
+          child: CurvedNavigationBar(
+            key: _bottomNavigationKey,
+            color: Theme.of(context).primaryColor,
+            height: sizeBottomButton * 2,
+            backgroundColor: Colors.transparent,
+            index: _initButtonIndex,
+            animationCurve: curveEffect,
+            animationDuration: durationEffect,
+            items: _listCurveButtonIcon,
+            onTap: onBottomChanged,
           ),
-          body: PageView(
+        ),
+        body: SafeArea(
+          child: PageView(
             children: pageList,
             controller: pageController,
             physics: const NeverScrollableScrollPhysics(),

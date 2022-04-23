@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/dimens.dart';
+import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class FetchMethodWidget {
+class ApplicationUtils {
   static Row buildFetchWidget(
       BuildContext context, IconData icon, String fetchStatusStr) {
     return Row(
@@ -36,7 +37,7 @@ class FetchMethodWidget {
         IconData iconData;
         if (mode == LoadStatus.idle) {
           iconData = Icons.done_rounded;
-          text = 'AppLocalizations.of(context).translate("load_idle")';
+          text = AppLocalizations.of(context).translate("load_idle");
         }
         // else if (mode == LoadStatus.loading) {
         //   iconData = Icons.done_rounded;
@@ -46,13 +47,13 @@ class FetchMethodWidget {
         // }
         else if (mode == LoadStatus.failed) {
           iconData = Icons.sync_problem_rounded;
-          text = 'AppLocalizations.of(context).translate("load_failed")';
+          text = AppLocalizations.of(context).translate("load_failed");
         } else if (mode == LoadStatus.canLoading) {
           iconData = Icons.published_with_changes_rounded;
-          text = 'AppLocalizations.of(context).translate("load_canloading")';
+          text = AppLocalizations.of(context).translate("load_canloading");
         } else {
           iconData = Icons.download_done_rounded;
-          text = 'AppLocalizations.of(context).translate("load_else")';
+          text = AppLocalizations.of(context).translate("load_else");
         }
         return SizedBox(
           height: 55.0,
@@ -71,7 +72,7 @@ class FetchMethodWidget {
       complete: buildFetchWidget(
         context,
         Icons.done_rounded,
-        'AppLocalizations.of(context).translate("load_success")',
+        AppLocalizations.of(context).translate("load_success"),
       ),
     );
   }

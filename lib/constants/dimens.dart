@@ -36,6 +36,13 @@ class Dimens {
   /// return size 10.0
   static const double highElevation = 10.0;
 
+  // Spacer
+  /// return vertical space = 18.0
+  static const double vertical_space = 20.0;
+
+  /// return horizontal space = 25.0
+  static const double horizontal_space = 25.0;
+
   // BorderRadius
   static const double kBorderRadiusValue = 5.0;
   static const double kBorderMaxRadiusValue = 20.0;

@@ -11,7 +11,7 @@ import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
-import 'package:mobile/widgets/container/image_container/user_image_container.dart';
+import 'package:mobile/widgets/container/image_container/network_image_widget.dart';
 import 'package:mobile/widgets/container/section_container/linear_named_widget_list.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/button_style.dart';
 import 'package:provider/provider.dart';
@@ -69,11 +69,11 @@ class SettingsPage extends StatelessWidget {
                           fontSize: Dimens.extra_large_text,
                           color: themeStore.textTitleColor),
                     ),
-                    trailing: userModel.avatar != null
-                        ? UserAvatar(url: userModel.avatar!)
-                        : const UserAvatar(
-                            url:
-                                'https://images.unsplash.com/photo-1648615112483-aeed3ce1385e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=765&q=80'),
+                    trailing: NetworkImageWidget(
+                      url: userModel.avatar,
+                      alternativeUrl:
+                          'https://images.unsplash.com/photo-1648615112483-aeed3ce1385e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=765&q=80',
+                    ),
                   );
                 },
               ),

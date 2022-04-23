@@ -2,12 +2,19 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/dimens.dart';
 
-class UserAvatar extends StatelessWidget {
-  const UserAvatar({Key? key, required this.url, this.radius})
-      : super(key: key);
+class NetworkImageWidget extends StatelessWidget {
+  const NetworkImageWidget({
+    Key? key,
+    required this.url,
+    this.radius,
+    this.alternativeUrl,
+    this.borderRadius,
+  }) : super(key: key);
 
-  final String url;
+  final String? url;
+  final String? alternativeUrl;
   final double? radius;
+  final BorderRadius? borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +23,12 @@ class UserAvatar extends StatelessWidget {
       child: AspectRatio(
         aspectRatio: 1 / 1,
         child: ClipRRect(
-          borderRadius: Dimens.kMaxBorderRadius,
+          borderRadius: borderRadius ?? Dimens.kMaxBorderRadius,
           // handle 404 NOT Found Image
           child: CachedNetworkImage(
-            imageUrl: url,
+            imageUrl: url ??
+                alternativeUrl ??
+                "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
             fit: BoxFit.cover,
             placeholder: (context, url) => const Center(
               child: CircularProgressIndicator(),
@@ -31,7 +40,9 @@ class UserAvatar extends StatelessWidget {
               } else if (error.statusCode == 404) {
                 // log("File Not Found");
               }
-              return const Icon(Icons.person_outline_rounded);
+              return alternativeUrl != null
+                  ? Image.network(alternativeUrl!)
+                  : const Icon(Icons.person_outline_rounded);
             },
           ),
         ),

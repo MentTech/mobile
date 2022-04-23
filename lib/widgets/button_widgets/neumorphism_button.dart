@@ -28,9 +28,12 @@ class NeumorphismButton extends StatelessWidget {
       child: Container(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 0.5, sigmaY: 0.5),
-          child: Container(
-            decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
-            child: child,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(borderRadius),
+            child: Container(
+              decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
+              child: child,
+            ),
           ),
         ),
         padding: padding,

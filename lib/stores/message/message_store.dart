@@ -24,6 +24,9 @@ abstract class _MessageStore with Store {
   @observable
   String successMessage = '';
 
+  @observable
+  bool expriredToken = false;
+
   // actions:-------------------------------------------------------------------
   @action
   void setErrorMessage(String message) {
@@ -40,6 +43,11 @@ abstract class _MessageStore with Store {
     log('calling reset');
     errorMessage = '';
     successMessage = '';
+  }
+
+  @action
+  void notifyExpiredTokenStatus() {
+    expriredToken = true;
   }
 
   // dispose:-------------------------------------------------------------------

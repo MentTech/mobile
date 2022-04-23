@@ -20,5 +20,14 @@
   "greeting": "Xin chào",
   "settings_ver": "Phiên bản",
   "logout": "Đăng xuất",
-  "settings_end": "---------------------------------------------------------------------------------"
+  "settings_end": "---------------------------------------------------------------------------------",
+  "mentor_search": "Tìm kiếm mentor",
+  "tutors_end": "-----------------------------------------------------------------------------------",
+  "load_success": "Hoàn tất tải lại",
+  "load_idle": "Kéo lên để load thêm",
+  "load_loading": "Đang tải",
+  "load_failed": "Tải thất bại!",
+  "load_canloading": "Thả để tải",
+  "load_else": "Đã tải trang cuối cùng",
+  "refresher_status_end": "-------------------------------------------------------------------------"
 }

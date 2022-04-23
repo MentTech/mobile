@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:mobile/data/network/apis/auth/auth_api.dart';
+import 'package:mobile/data/network/apis/mentor/mentor_api.dart';
 import 'package:mobile/data/sharedpref/shared_preference_helper.dart';
 
 class Repository {
@@ -10,6 +11,7 @@ class Repository {
 
   // api objects
   final AuthAPI _authApi;
+  final MentorAPI _mentorAPI;
 
   // shared pref object
   final SharedPreferenceHelper _sharedPrefsHelper;
@@ -17,11 +19,12 @@ class Repository {
   // constructor
   Repository(
     this._authApi,
+    this._mentorAPI,
     this._sharedPrefsHelper,
     // this._postDataSource,
   );
 
-  // Authorize: ---------------------------------------------------------------------
+  // User: ---------------------------------------------------------------------
   Future<Map<String, dynamic>?> fetchUserInfor(String authToken) async {
     return await _authApi.fetchUserInfor(
       {
@@ -33,6 +36,20 @@ class Repository {
     }).catchError((error) {
       log("Fetch Userinfor failing");
       return null;
+    });
+  }
+
+  // Mentor: -------------------------------------------------------------------
+  Future<Map<String, dynamic>?> searchMentor(
+      Map<String, dynamic> parameters) async {
+    return _mentorAPI
+        .searchMentors(
+      parameters: parameters,
+    )
+        .catchError((error) {
+      return {
+        "onError": error.toString(),
+      };
     });
   }
 

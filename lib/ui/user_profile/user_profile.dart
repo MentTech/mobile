@@ -5,6 +5,7 @@ import 'package:mobile/constants/colors.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
+import 'package:mobile/models/user/user.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/ui/user_profile/user_editable_popup.dart';
@@ -13,7 +14,7 @@ import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
 import 'package:mobile/widgets/background_colorful/random_bubble_gradient_background.dart';
 import 'package:mobile/widgets/button_widgets/neumorphism_button.dart';
-import 'package:mobile/widgets/container/image_container/user_image_container.dart';
+import 'package:mobile/widgets/container/image_container/network_image_widget.dart';
 import 'package:mobile/widgets/container/section_container/description_title_container.dart';
 import 'package:mobile/widgets/dialog_showing/slider_dialog.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
@@ -28,7 +29,7 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
-  late UserStore tutorStore;
+  late UserStore userStore;
 
   // Controller:----------------------------------------------------------------
   final RefreshController refreshController =
@@ -40,7 +41,7 @@ class _UserProfileState extends State<UserProfile> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    tutorStore = Provider.of<UserStore>(context);
+    userStore = Provider.of<UserStore>(context);
   }
 
   @override
@@ -69,6 +70,7 @@ class _UserProfileState extends State<UserProfile> {
               SliverPersistentHeader(
                 delegate: CustomSliverAppbarDelegate(
                   expandedHeight: DeviceUtils.getScaledHeight(context, .65),
+                  userModel: userStore.user!,
                 ),
                 floating: true,
                 pinned: true,
@@ -109,9 +111,11 @@ class _UserProfileState extends State<UserProfile> {
 
 class CustomSliverAppbarDelegate extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
+  final UserModel userModel;
 
   CustomSliverAppbarDelegate({
     required this.expandedHeight,
+    required this.userModel,
   });
 
   double shrinkPerExpanded(double shrinkOffset) =>
@@ -162,10 +166,7 @@ class CustomSliverAppbarDelegate extends SliverPersistentHeaderDelegate {
                   ),
                 ],
               ),
-              const UserAvatar(
-                url:
-                    'https://images.unsplash.com/photo-1648615112483-aeed3ce1385e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=765&q=80',
-              ),
+              NetworkImageWidget(url: userModel.avatar),
             ],
           ),
         );

@@ -20,5 +20,14 @@
   "greeting": "Hello",
   "settings_ver": "Version",
   "logout": "Logout",
-  "settings_end": "---------------------------------------------------------------------------------"
+  "settings_end": "---------------------------------------------------------------------------------",
+  "mentor_search": "Search mentor",
+  "tutors_end": "-----------------------------------------------------------------------------------",
+  "load_success": "Refresh completed",
+  "load_idle": "Pull up to load",
+  "load_loading": "Loading",
+  "load_failed": "Load Failed!",
+  "load_canloading": "release to load more",
+  "load_else": "No more Data",
+  "refresher_status_end": "-------------------------------------------------------------------------"
 }

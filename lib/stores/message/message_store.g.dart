@@ -39,6 +39,21 @@ mixin _$MessageStore on _MessageStore, Store {
     });
   }
 
+  final _$expriredTokenAtom = Atom(name: '_MessageStore.expriredToken');
+
+  @override
+  bool get expriredToken {
+    _$expriredTokenAtom.reportRead();
+    return super.expriredToken;
+  }
+
+  @override
+  set expriredToken(bool value) {
+    _$expriredTokenAtom.reportWrite(value, super.expriredToken, () {
+      super.expriredToken = value;
+    });
+  }
+
   final _$_MessageStoreActionController =
       ActionController(name: '_MessageStore');
 
@@ -76,6 +91,17 @@ mixin _$MessageStore on _MessageStore, Store {
   }
 
   @override
+  void notifyExpiredTokenStatus() {
+    final _$actionInfo = _$_MessageStoreActionController.startAction(
+        name: '_MessageStore.notifyExpiredTokenStatus');
+    try {
+      return super.notifyExpiredTokenStatus();
+    } finally {
+      _$_MessageStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic dispose() {
     final _$actionInfo = _$_MessageStoreActionController.startAction(
         name: '_MessageStore.dispose');
@@ -90,7 +116,8 @@ mixin _$MessageStore on _MessageStore, Store {
   String toString() {
     return '''
 errorMessage: ${errorMessage},
-successMessage: ${successMessage}
+successMessage: ${successMessage},
+expriredToken: ${expriredToken}
     ''';
   }
 }
