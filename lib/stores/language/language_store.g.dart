@@ -16,7 +16,8 @@ mixin _$LanguageStore on _LanguageStore, Store {
           Computed<String>(() => super.locale, name: '_LanguageStore.locale'))
       .value;
 
-  final _$_localeAtom = Atom(name: '_LanguageStore._locale');
+  late final _$_localeAtom =
+      Atom(name: '_LanguageStore._locale', context: context);
 
   @override
   String get _locale {
@@ -31,8 +32,8 @@ mixin _$LanguageStore on _LanguageStore, Store {
     });
   }
 
-  final _$_LanguageStoreActionController =
-      ActionController(name: '_LanguageStore');
+  late final _$_LanguageStoreActionController =
+      ActionController(name: '_LanguageStore', context: context);
 
   @override
   void changeLanguage(String value) {

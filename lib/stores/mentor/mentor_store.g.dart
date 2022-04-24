@@ -16,7 +16,8 @@ mixin _$MentorStore on _MentorStore, Store {
           Computed<bool>(() => super.isLoading, name: '_MentorStore.isLoading'))
       .value;
 
-  final _$successAtom = Atom(name: '_MentorStore.success');
+  late final _$successAtom =
+      Atom(name: '_MentorStore.success', context: context);
 
   @override
   bool get success {
@@ -31,7 +32,7 @@ mixin _$MentorStore on _MentorStore, Store {
     });
   }
 
-  final _$pageAtom = Atom(name: '_MentorStore.page');
+  late final _$pageAtom = Atom(name: '_MentorStore.page', context: context);
 
   @override
   int get page {
@@ -46,7 +47,8 @@ mixin _$MentorStore on _MentorStore, Store {
     });
   }
 
-  final _$requestFutureAtom = Atom(name: '_MentorStore.requestFuture');
+  late final _$requestFutureAtom =
+      Atom(name: '_MentorStore.requestFuture', context: context);
 
   @override
   ObservableFuture<Map<String, dynamic>?> get requestFuture {
@@ -61,29 +63,32 @@ mixin _$MentorStore on _MentorStore, Store {
     });
   }
 
-  final _$listMentorsAtom = Atom(name: '_MentorStore.listMentors');
+  late final _$listMentorsAtom =
+      Atom(name: '_MentorStore.listMentors', context: context);
 
   @override
-  List<MentorModel> get listMentors {
+  ObservableList<MentorModel> get listMentors {
     _$listMentorsAtom.reportRead();
     return super.listMentors;
   }
 
   @override
-  set listMentors(List<MentorModel> value) {
+  set listMentors(ObservableList<MentorModel> value) {
     _$listMentorsAtom.reportWrite(value, super.listMentors, () {
       super.listMentors = value;
     });
   }
 
-  final _$searchMentorsAsyncAction = AsyncAction('_MentorStore.searchMentors');
+  late final _$searchMentorsAsyncAction =
+      AsyncAction('_MentorStore.searchMentors', context: context);
 
   @override
   Future<void> searchMentors() {
     return _$searchMentorsAsyncAction.run(() => super.searchMentors());
   }
 
-  final _$_MentorStoreActionController = ActionController(name: '_MentorStore');
+  late final _$_MentorStoreActionController =
+      ActionController(name: '_MentorStore', context: context);
 
   @override
   bool nextPage() {

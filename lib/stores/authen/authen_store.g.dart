@@ -23,7 +23,8 @@ mixin _$AuthenStore on _AuthenStore, Store {
               name: '_AuthenStore.canBeAuthenticated'))
       .value;
 
-  final _$accessTokenAtom = Atom(name: '_AuthenStore.accessToken');
+  late final _$accessTokenAtom =
+      Atom(name: '_AuthenStore.accessToken', context: context);
 
   @override
   String? get accessToken {
@@ -38,7 +39,8 @@ mixin _$AuthenStore on _AuthenStore, Store {
     });
   }
 
-  final _$successAtom = Atom(name: '_AuthenStore.success');
+  late final _$successAtom =
+      Atom(name: '_AuthenStore.success', context: context);
 
   @override
   bool get success {
@@ -53,7 +55,8 @@ mixin _$AuthenStore on _AuthenStore, Store {
     });
   }
 
-  final _$loginFutureAtom = Atom(name: '_AuthenStore.loginFuture');
+  late final _$loginFutureAtom =
+      Atom(name: '_AuthenStore.loginFuture', context: context);
 
   @override
   ObservableFuture<Map<String, dynamic>> get loginFuture {
@@ -68,7 +71,8 @@ mixin _$AuthenStore on _AuthenStore, Store {
     });
   }
 
-  final _$registerAsyncAction = AsyncAction('_AuthenStore.register');
+  late final _$registerAsyncAction =
+      AsyncAction('_AuthenStore.register', context: context);
 
   @override
   Future<String?> register(String email, String password, String name) {
@@ -76,15 +80,16 @@ mixin _$AuthenStore on _AuthenStore, Store {
         .run(() => super.register(email, password, name));
   }
 
-  final _$loginAsyncAction = AsyncAction('_AuthenStore.login');
+  late final _$loginAsyncAction =
+      AsyncAction('_AuthenStore.login', context: context);
 
   @override
   Future<String?> login(String email, String password) {
     return _$loginAsyncAction.run(() => super.login(email, password));
   }
 
-  final _$googleAuthenticatorAsyncAction =
-      AsyncAction('_AuthenStore.googleAuthenticator');
+  late final _$googleAuthenticatorAsyncAction =
+      AsyncAction('_AuthenStore.googleAuthenticator', context: context);
 
   @override
   Future<String?> googleAuthenticator() {

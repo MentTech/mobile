@@ -34,7 +34,7 @@ class AuthAPI {
       return res;
       // return User.fromJson(res);
     } catch (e) {
-      log(e.toString());
+      log("?>" + e.toString());
       rethrow;
     }
   }

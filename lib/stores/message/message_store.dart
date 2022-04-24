@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:mobx/mobx.dart';
 
 part 'message_store.g.dart';
@@ -40,7 +38,6 @@ abstract class _MessageStore with Store {
 
   @action
   void reset(String value) {
-    log('calling reset');
     errorMessage = '';
     successMessage = '';
   }

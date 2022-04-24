@@ -6,13 +6,13 @@ part 'skill.g.dart';
 class Skill {
   int id;
   String? description;
-  String? additional;
+  // String? additional;
   bool isAccepted;
 
   Skill({
     required this.id,
     this.description,
-    this.additional,
+    // this.additional,
     required this.isAccepted,
   });
 

@@ -9,7 +9,8 @@ part of 'message_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$MessageStore on _MessageStore, Store {
-  final _$errorMessageAtom = Atom(name: '_MessageStore.errorMessage');
+  late final _$errorMessageAtom =
+      Atom(name: '_MessageStore.errorMessage', context: context);
 
   @override
   String get errorMessage {
@@ -24,7 +25,8 @@ mixin _$MessageStore on _MessageStore, Store {
     });
   }
 
-  final _$successMessageAtom = Atom(name: '_MessageStore.successMessage');
+  late final _$successMessageAtom =
+      Atom(name: '_MessageStore.successMessage', context: context);
 
   @override
   String get successMessage {
@@ -39,7 +41,8 @@ mixin _$MessageStore on _MessageStore, Store {
     });
   }
 
-  final _$expriredTokenAtom = Atom(name: '_MessageStore.expriredToken');
+  late final _$expriredTokenAtom =
+      Atom(name: '_MessageStore.expriredToken', context: context);
 
   @override
   bool get expriredToken {
@@ -54,8 +57,8 @@ mixin _$MessageStore on _MessageStore, Store {
     });
   }
 
-  final _$_MessageStoreActionController =
-      ActionController(name: '_MessageStore');
+  late final _$_MessageStoreActionController =
+      ActionController(name: '_MessageStore', context: context);
 
   @override
   void setErrorMessage(String message) {

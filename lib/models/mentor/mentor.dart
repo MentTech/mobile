@@ -7,6 +7,25 @@ import 'package:mobile/models/categories/skill/skill.dart';
 
 part 'mentor.g.dart';
 
+//:-----------------------------------------------------------------------------
+
+@JsonSerializable()
+class MentorModelList {
+  @JsonKey(name: "data")
+  List<MentorModel> list;
+
+  MentorModelList({
+    required this.list,
+  });
+
+  factory MentorModelList.fromJson(Map<String, dynamic> json) =>
+      _$MentorModelListFromJson(json);
+
+  Map<String, dynamic> toJson() => _$MentorModelListToJson(this);
+}
+
+//:-----------------------------------------------------------------------------
+
 @JsonSerializable()
 class MentorModel {
   int id;
@@ -14,6 +33,8 @@ class MentorModel {
   String birthday;
   String avatar;
   // bool? isPasswordSet;
+
+  @JsonKey(name: "User_mentor")
   UserMentor userMentor;
 
   MentorModel({
@@ -35,7 +56,7 @@ class MentorModel {
 
 @JsonSerializable()
 class UserMentor {
-  String linkedin;
+  String? linkedin;
   String introduction;
   int rating;
   List<Program> programs;

@@ -31,7 +31,8 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
           name: '_AuthenticatorFormStore.canForgetPassword'))
       .value;
 
-  final _$stateAuthenAtom = Atom(name: '_AuthenticatorFormStore.stateAuthen');
+  late final _$stateAuthenAtom =
+      Atom(name: '_AuthenticatorFormStore.stateAuthen', context: context);
 
   @override
   AuthenState get stateAuthen {
@@ -46,8 +47,8 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
     });
   }
 
-  final _$isForgotPasswordStateAtom =
-      Atom(name: '_AuthenticatorFormStore.isForgotPasswordState');
+  late final _$isForgotPasswordStateAtom = Atom(
+      name: '_AuthenticatorFormStore.isForgotPasswordState', context: context);
 
   @override
   bool get isForgotPasswordState {
@@ -63,7 +64,8 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
     });
   }
 
-  final _$userEmailAtom = Atom(name: '_AuthenticatorFormStore.userEmail');
+  late final _$userEmailAtom =
+      Atom(name: '_AuthenticatorFormStore.userEmail', context: context);
 
   @override
   String get userEmail {
@@ -78,7 +80,8 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
     });
   }
 
-  final _$passwordAtom = Atom(name: '_AuthenticatorFormStore.password');
+  late final _$passwordAtom =
+      Atom(name: '_AuthenticatorFormStore.password', context: context);
 
   @override
   String get password {
@@ -93,8 +96,8 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
     });
   }
 
-  final _$confirmPasswordAtom =
-      Atom(name: '_AuthenticatorFormStore.confirmPassword');
+  late final _$confirmPasswordAtom =
+      Atom(name: '_AuthenticatorFormStore.confirmPassword', context: context);
 
   @override
   String get confirmPassword {
@@ -109,7 +112,8 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
     });
   }
 
-  final _$nameAtom = Atom(name: '_AuthenticatorFormStore.name');
+  late final _$nameAtom =
+      Atom(name: '_AuthenticatorFormStore.name', context: context);
 
   @override
   String get name {
@@ -124,7 +128,8 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
     });
   }
 
-  final _$successAtom = Atom(name: '_AuthenticatorFormStore.success');
+  late final _$successAtom =
+      Atom(name: '_AuthenticatorFormStore.success', context: context);
 
   @override
   bool get success {
@@ -139,7 +144,8 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
     });
   }
 
-  final _$loginedAtom = Atom(name: '_AuthenticatorFormStore.logined');
+  late final _$loginedAtom =
+      Atom(name: '_AuthenticatorFormStore.logined', context: context);
 
   @override
   bool get logined {
@@ -154,7 +160,8 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
     });
   }
 
-  final _$loadingAtom = Atom(name: '_AuthenticatorFormStore.loading');
+  late final _$loadingAtom =
+      Atom(name: '_AuthenticatorFormStore.loading', context: context);
 
   @override
   bool get loading {
@@ -169,22 +176,25 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
     });
   }
 
-  final _$registerAsyncAction = AsyncAction('_AuthenticatorFormStore.register');
+  late final _$registerAsyncAction =
+      AsyncAction('_AuthenticatorFormStore.register', context: context);
 
   @override
   Future<dynamic> register() {
     return _$registerAsyncAction.run(() => super.register());
   }
 
-  final _$loginAsyncAction = AsyncAction('_AuthenticatorFormStore.login');
+  late final _$loginAsyncAction =
+      AsyncAction('_AuthenticatorFormStore.login', context: context);
 
   @override
   Future<dynamic> login() {
     return _$loginAsyncAction.run(() => super.login());
   }
 
-  final _$googleAuthenticatorAsyncAction =
-      AsyncAction('_AuthenticatorFormStore.googleAuthenticator');
+  late final _$googleAuthenticatorAsyncAction = AsyncAction(
+      '_AuthenticatorFormStore.googleAuthenticator',
+      context: context);
 
   @override
   Future<bool> googleAuthenticator() {
@@ -192,23 +202,24 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
         .run(() => super.googleAuthenticator());
   }
 
-  final _$forgotPasswordAsyncAction =
-      AsyncAction('_AuthenticatorFormStore.forgotPassword');
+  late final _$forgotPasswordAsyncAction =
+      AsyncAction('_AuthenticatorFormStore.forgotPassword', context: context);
 
   @override
   Future<dynamic> forgotPassword() {
     return _$forgotPasswordAsyncAction.run(() => super.forgotPassword());
   }
 
-  final _$logoutAsyncAction = AsyncAction('_AuthenticatorFormStore.logout');
+  late final _$logoutAsyncAction =
+      AsyncAction('_AuthenticatorFormStore.logout', context: context);
 
   @override
   Future<dynamic> logout() {
     return _$logoutAsyncAction.run(() => super.logout());
   }
 
-  final _$_AuthenticatorFormStoreActionController =
-      ActionController(name: '_AuthenticatorFormStore');
+  late final _$_AuthenticatorFormStoreActionController =
+      ActionController(name: '_AuthenticatorFormStore', context: context);
 
   @override
   void setUserId(String value) {
@@ -373,7 +384,8 @@ mixin _$FormErrorStore on _FormErrorStore, Store {
               name: '_FormErrorStore.hasErrorInForgotPassword'))
       .value;
 
-  final _$userEmailAtom = Atom(name: '_FormErrorStore.userEmail');
+  late final _$userEmailAtom =
+      Atom(name: '_FormErrorStore.userEmail', context: context);
 
   @override
   String? get userEmail {
@@ -388,7 +400,8 @@ mixin _$FormErrorStore on _FormErrorStore, Store {
     });
   }
 
-  final _$passwordAtom = Atom(name: '_FormErrorStore.password');
+  late final _$passwordAtom =
+      Atom(name: '_FormErrorStore.password', context: context);
 
   @override
   String? get password {
@@ -403,7 +416,8 @@ mixin _$FormErrorStore on _FormErrorStore, Store {
     });
   }
 
-  final _$confirmPasswordAtom = Atom(name: '_FormErrorStore.confirmPassword');
+  late final _$confirmPasswordAtom =
+      Atom(name: '_FormErrorStore.confirmPassword', context: context);
 
   @override
   String? get confirmPassword {
@@ -418,7 +432,7 @@ mixin _$FormErrorStore on _FormErrorStore, Store {
     });
   }
 
-  final _$nameAtom = Atom(name: '_FormErrorStore.name');
+  late final _$nameAtom = Atom(name: '_FormErrorStore.name', context: context);
 
   @override
   String? get name {

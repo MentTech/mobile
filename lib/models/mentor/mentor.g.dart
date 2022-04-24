@@ -6,13 +6,25 @@ part of 'mentor.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+MentorModelList _$MentorModelListFromJson(Map<String, dynamic> json) =>
+    MentorModelList(
+      list: (json['data'] as List<dynamic>)
+          .map((e) => MentorModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$MentorModelListToJson(MentorModelList instance) =>
+    <String, dynamic>{
+      'data': instance.list,
+    };
+
 MentorModel _$MentorModelFromJson(Map<String, dynamic> json) => MentorModel(
       id: json['id'] as int,
       name: json['name'] as String,
       birthday: json['birthday'] as String,
       avatar: json['avatar'] as String,
       userMentor:
-          UserMentor.fromJson(json['userMentor'] as Map<String, dynamic>),
+          UserMentor.fromJson(json['User_mentor'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$MentorModelToJson(MentorModel instance) =>
@@ -21,11 +33,11 @@ Map<String, dynamic> _$MentorModelToJson(MentorModel instance) =>
       'name': instance.name,
       'birthday': instance.birthday,
       'avatar': instance.avatar,
-      'userMentor': instance.userMentor,
+      'User_mentor': instance.userMentor,
     };
 
 UserMentor _$UserMentorFromJson(Map<String, dynamic> json) => UserMentor(
-      linkedin: json['linkedin'] as String,
+      linkedin: json['linkedin'] as String?,
       introduction: json['introduction'] as String,
       rating: json['rating'] as int,
       programs: (json['programs'] as List<dynamic>)

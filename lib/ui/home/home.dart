@@ -77,12 +77,10 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: onBottomChanged,
           ),
         ),
-        body: SafeArea(
-          child: PageView(
-            children: pageList,
-            controller: pageController,
-            physics: const NeverScrollableScrollPhysics(),
-          ),
+        body: PageView(
+          children: pageList,
+          controller: pageController,
+          physics: const NeverScrollableScrollPhysics(),
         ),
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:mobile/data/repository.dart';
 import 'package:mobile/models/mentor/mentor.dart';
 import 'package:mobile/stores/message/message_store.dart';
@@ -22,24 +23,25 @@ abstract class _MentorStore with Store {
 
   // disposers:-----------------------------------------------------------------
   late List<ReactionDisposer> _disposers;
+  VoidCallback? callback;
 
   void _setupDisposers() {
     _disposers = [
-      // reaction((_) => success, (_) => success = false, delay: 200),
-      // reaction((_) => accessToken, (_) => accessToken = null, delay: 200),
-      // reaction((_) => loginFuture.status, (FutureStatus status) {
-      //   if (status == FutureStatus.fulfilled) {
-      //     if (callback != null) {
-      //       callback!.call(success);
-      //       callback = null;
-      //     }
-      //   }
-      // }),
+      reaction((_) => success, (_) => success = false, delay: 200),
+      reaction((_) => requestFuture.status, (FutureStatus status) {
+        if (status == FutureStatus.fulfilled) {
+          if (callback != null) {
+            callback!.call();
+            callback = null;
+            requestFuture = emptyResponse;
+          }
+        }
+      }),
     ];
   }
 
   // empty responses:-----------------------------------------------------------
-  static ObservableFuture<Map<String, dynamic>?> emptyLoginResponse =
+  static ObservableFuture<Map<String, dynamic>?> emptyResponse =
       ObservableFuture.value(null);
 
   // non-observable variables:--------------------------------------------------
@@ -57,10 +59,10 @@ abstract class _MentorStore with Store {
   int page = 0;
 
   @observable
-  ObservableFuture<Map<String, dynamic>?> requestFuture = emptyLoginResponse;
+  ObservableFuture<Map<String, dynamic>?> requestFuture = emptyResponse;
 
   @observable
-  List<MentorModel> listMentors = [];
+  ObservableList<MentorModel> listMentors = ObservableList<MentorModel>();
 
   // computed:------------------------------------------------------------------
   @computed
@@ -119,13 +121,18 @@ abstract class _MentorStore with Store {
     requestFuture = ObservableFuture(future);
 
     future.then((res) {
+      // totalPage = res!["totalPage"];
+      // listMentors = ObservableList.of(MentorModelList.fromJson(res).list);
       try {
-        // user = UserModel.fromJson(res!);
-        // print(res);
+        totalPage = res!["totalPage"];
+        listMentors = ObservableList.of(MentorModelList.fromJson(res).list);
 
         success = true;
       } catch (e) {
         // res['message']
+        messageStore.errorMessage = e.toString();
+        messageStore.successMessage = "";
+
         success = false;
       }
     });

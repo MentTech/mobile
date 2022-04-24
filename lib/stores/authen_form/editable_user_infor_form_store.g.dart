@@ -17,8 +17,9 @@ mixin _$UserInforEditorFormStore on _UserInforEditorFormStore, Store {
               name: '_UserInforEditorFormStore.canUpdateUserInfor'))
       .value;
 
-  final _$isForgotPasswordStateAtom =
-      Atom(name: '_UserInforEditorFormStore.isForgotPasswordState');
+  late final _$isForgotPasswordStateAtom = Atom(
+      name: '_UserInforEditorFormStore.isForgotPasswordState',
+      context: context);
 
   @override
   bool get isForgotPasswordState {
@@ -34,7 +35,8 @@ mixin _$UserInforEditorFormStore on _UserInforEditorFormStore, Store {
     });
   }
 
-  final _$nameAtom = Atom(name: '_UserInforEditorFormStore.name');
+  late final _$nameAtom =
+      Atom(name: '_UserInforEditorFormStore.name', context: context);
 
   @override
   String get name {
@@ -49,7 +51,8 @@ mixin _$UserInforEditorFormStore on _UserInforEditorFormStore, Store {
     });
   }
 
-  final _$birthdayAtom = Atom(name: '_UserInforEditorFormStore.birthday');
+  late final _$birthdayAtom =
+      Atom(name: '_UserInforEditorFormStore.birthday', context: context);
 
   @override
   DateTime get birthday {
@@ -64,7 +67,8 @@ mixin _$UserInforEditorFormStore on _UserInforEditorFormStore, Store {
     });
   }
 
-  final _$phoneAtom = Atom(name: '_UserInforEditorFormStore.phone');
+  late final _$phoneAtom =
+      Atom(name: '_UserInforEditorFormStore.phone', context: context);
 
   @override
   String get phone {
@@ -79,7 +83,8 @@ mixin _$UserInforEditorFormStore on _UserInforEditorFormStore, Store {
     });
   }
 
-  final _$avatarAtom = Atom(name: '_UserInforEditorFormStore.avatar');
+  late final _$avatarAtom =
+      Atom(name: '_UserInforEditorFormStore.avatar', context: context);
 
   @override
   String get avatar {
@@ -94,7 +99,8 @@ mixin _$UserInforEditorFormStore on _UserInforEditorFormStore, Store {
     });
   }
 
-  final _$successAtom = Atom(name: '_UserInforEditorFormStore.success');
+  late final _$successAtom =
+      Atom(name: '_UserInforEditorFormStore.success', context: context);
 
   @override
   bool get success {
@@ -109,7 +115,8 @@ mixin _$UserInforEditorFormStore on _UserInforEditorFormStore, Store {
     });
   }
 
-  final _$loadingAtom = Atom(name: '_UserInforEditorFormStore.loading');
+  late final _$loadingAtom =
+      Atom(name: '_UserInforEditorFormStore.loading', context: context);
 
   @override
   bool get loading {
@@ -124,8 +131,8 @@ mixin _$UserInforEditorFormStore on _UserInforEditorFormStore, Store {
     });
   }
 
-  final _$_UserInforEditorFormStoreActionController =
-      ActionController(name: '_UserInforEditorFormStore');
+  late final _$_UserInforEditorFormStoreActionController =
+      ActionController(name: '_UserInforEditorFormStore', context: context);
 
   @override
   void setName(String name) {
@@ -239,7 +246,8 @@ mixin _$FormErrorStore on _FormErrorStore, Store {
               name: '_FormErrorStore.hasErrors'))
           .value;
 
-  final _$errorOnNameAtom = Atom(name: '_FormErrorStore.errorOnName');
+  late final _$errorOnNameAtom =
+      Atom(name: '_FormErrorStore.errorOnName', context: context);
 
   @override
   String? get errorOnName {
@@ -254,7 +262,8 @@ mixin _$FormErrorStore on _FormErrorStore, Store {
     });
   }
 
-  final _$errorOnBirthdayAtom = Atom(name: '_FormErrorStore.errorOnBirthday');
+  late final _$errorOnBirthdayAtom =
+      Atom(name: '_FormErrorStore.errorOnBirthday', context: context);
 
   @override
   String? get errorOnBirthday {
@@ -269,7 +278,8 @@ mixin _$FormErrorStore on _FormErrorStore, Store {
     });
   }
 
-  final _$errorOnPhoneAtom = Atom(name: '_FormErrorStore.errorOnPhone');
+  late final _$errorOnPhoneAtom =
+      Atom(name: '_FormErrorStore.errorOnPhone', context: context);
 
   @override
   String? get errorOnPhone {
@@ -284,7 +294,8 @@ mixin _$FormErrorStore on _FormErrorStore, Store {
     });
   }
 
-  final _$errorOnAvatarAtom = Atom(name: '_FormErrorStore.errorOnAvatar');
+  late final _$errorOnAvatarAtom =
+      Atom(name: '_FormErrorStore.errorOnAvatar', context: context);
 
   @override
   String? get errorOnAvatar {

@@ -6,10 +6,39 @@ class Dimens {
   Dimens._();
 
   //for all screens
+  /// small horizontal padding value: 6.0
+  static const double small_horizontal_padding = 6.0;
+
+  /// normal horizontal padding value: 12.0
   static const double horizontal_padding = 12.0;
+
+  /// large horizontal padding value: 12.0
+  static const double large_horizontal_padding = 20.0;
+
+  /// small horizontal padding value: 6.0
+  static const double small_vertical_padding = 6.0;
+
+  /// nomal horizontal padding value: 12.0
   static const double vertical_padding = 12.0;
+
+  // margin
+  /// small horizontal margin value: 6.0
   static const double horizontal_margin = 6.0;
+
+  /// medium horizontal margin value: 12.0
+  static const double medium_horizontal_margin = 12.0;
+
+  /// large horizontal margin value: 12.0
+  static const double large_horizontal_margin = 15.0;
+
+  /// small vertical margin value: 6.0
   static const double vertical_margin = 6.0;
+
+  /// medium vertical margin value: 12.0
+  static const double medium_vertical_margin = 12.0;
+
+  /// large vertical margin value: 12.0
+  static const double large_vertical_margin = 15.0;
 
   /// Text dimens
   /// return size 15
@@ -44,8 +73,18 @@ class Dimens {
   static const double horizontal_space = 25.0;
 
   // BorderRadius
+  /// return radius value = 5.0
   static const double kBorderRadiusValue = 5.0;
+
+  /// return max radius value = 20.0
   static const double kBorderMaxRadiusValue = 20.0;
+
+  /// return ultra radius value = 20.0
+  static const double kBorderUltraRadiusValue = 40.0;
+
+  /// return border radius with value is 5.0
   static final BorderRadius kBorderRadius = BorderRadius.circular(5);
+
+  /// return border radius with max value is 20.0
   static final BorderRadius kMaxBorderRadius = BorderRadius.circular(20);
 }
