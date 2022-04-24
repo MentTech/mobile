@@ -51,6 +51,8 @@ abstract class _MentorStore with Store {
 
   String searchKey = "";
 
+  int mentorIndex = -1;
+
   // observable variables:------------------------------------------------------
   @observable
   bool success = false;
@@ -67,6 +69,9 @@ abstract class _MentorStore with Store {
   // computed:------------------------------------------------------------------
   @computed
   bool get isLoading => requestFuture.status == FutureStatus.pending;
+
+  @computed
+  MentorModel get getMentor => at(mentorIndex);
 
   // actions:-------------------------------------------------------------------
   @action
@@ -141,6 +146,10 @@ abstract class _MentorStore with Store {
   // general methods:-----------------------------------------------------------
   MentorModel at(int index) {
     return listMentors.elementAt(index);
+  }
+
+  void selectMentorAt(int index) {
+    mentorIndex = index;
   }
 
   int get length => listMentors.length;

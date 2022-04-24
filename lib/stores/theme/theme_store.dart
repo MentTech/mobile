@@ -30,6 +30,9 @@ abstract class _ThemeStore with Store {
   Color get textTitleColor =>
       _darkMode ? AppColors.darkTextTheme : AppColors.lightTextTheme;
 
+  Color get themeColor =>
+      _darkMode ? AppColors.darkTextTheme : AppColors.lightTextTheme;
+
   Color get textChoosed => Colors.orangeAccent.shade700;
   Color get textNotChoosed => Colors.grey.shade700;
 

@@ -10,6 +10,7 @@ import 'package:mobile/models/mentor/mentor.dart';
 import 'package:mobile/stores/mentor/mentor_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
+import 'package:mobile/ui/mentor_detail/mentor_profile.dart';
 import 'package:mobile/utils/application/application_utils.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
@@ -203,7 +204,14 @@ class _TutorPageState extends State<TutorPage> {
                           children: List.generate(_mentorStore.length, (i) => i)
                               .map(
                                 (i) => ShortImformationItem(
-                                    mentorModel: _mentorStore.at(i)),
+                                    mentorModel: _mentorStore.at(i),
+                                    onTapViewDetail: () {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                        builder: (context) => MentorProfile(
+                                            mentorModel: _mentorStore.at(i)),
+                                      ));
+                                    }),
                               )
                               .toList(),
                         ),
@@ -273,9 +281,12 @@ class ShortImformationItem extends StatelessWidget {
   ShortImformationItem({
     Key? key,
     required this.mentorModel,
+    required this.onTapViewDetail,
   }) : super(key: key);
 
   final MentorModel mentorModel;
+  final VoidCallback onTapViewDetail;
+
   final ThemeStore _themeStore = getIt<ThemeStore>();
 
   final double height = 200;
@@ -312,6 +323,7 @@ class ShortImformationItem extends StatelessWidget {
                     borderRadius: BorderRadius.circular(0.0),
                     alternativeUrl:
                         'https://images.unsplash.com/photo-1648615112483-aeed3ce1385e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=765&q=80',
+                    onTap: onTapViewDetail,
                   ),
                   Positioned(
                     top: 0,
@@ -351,9 +363,15 @@ class ShortImformationItem extends StatelessWidget {
             Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
-              child: Text(
-                mentorModel.name,
-                style: const TextStyle(fontWeight: FontWeight.w700),
+              child: InkWell(
+                borderRadius: Dimens.kMaxBorderRadius,
+                onTap: onTapViewDetail,
+                child: Text(
+                  mentorModel.name,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: Dimens.lightly_medium_text),
+                ),
               ),
             ),
             Padding(
@@ -364,12 +382,32 @@ class ShortImformationItem extends StatelessWidget {
                 style: const TextStyle(fontWeight: FontWeight.w400),
               ),
             ),
-            IconButton(
-                // Use the FaIcon Widget + FontAwesomeIcons class for the IconData
-                icon: const FaIcon(FontAwesomeIcons.gamepad),
-                onPressed: () {
-                  log(mentorModel.userMentor.linkedin ?? "No Linkedin");
-                })
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
+              child: Text(
+                "Major: ${mentorModel.userMentor.category.name}",
+                style: const TextStyle(fontWeight: FontWeight.w400),
+              ),
+            ),
+            mentorModel.userMentor.linkedin != null
+                ? Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: Dimens.small_vertical_padding,
+                            horizontal: Dimens.small_horizontal_padding),
+                        constraints: const BoxConstraints(),
+                        icon: FaIcon(
+                          FontAwesomeIcons.linkedinIn,
+                          color: _themeStore.themeColor,
+                          size: Dimens.small_text,
+                        ),
+                        onPressed: () {
+                          log(mentorModel.userMentor.linkedin ?? "No Linkedin");
+                        }),
+                  )
+                : const SizedBox(),
           ],
         ),
       ),

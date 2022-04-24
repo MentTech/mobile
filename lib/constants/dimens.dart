@@ -47,6 +47,9 @@ class Dimens {
   /// return size 15
   static const double small_text = 15;
 
+  /// return size 18
+  static const double lightly_medium_text = 18;
+
   /// return size 20
   static const double medium_text = 20;
 

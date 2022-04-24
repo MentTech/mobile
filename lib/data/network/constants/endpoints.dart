@@ -2,7 +2,7 @@ class Endpoints {
   Endpoints._();
 
   // base url
-  static const String baseUrl = "http://34.121.70.113/v1";
+  static const String baseUrl = "https://api.menttech.live/v1";
 
   // receiveTimeout
   static const int receiveTimeout = 15000;
