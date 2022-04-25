@@ -21,8 +21,8 @@ Map<String, dynamic> _$MentorModelListToJson(MentorModelList instance) =>
 MentorModel _$MentorModelFromJson(Map<String, dynamic> json) => MentorModel(
       id: json['id'] as int,
       name: json['name'] as String,
-      birthday: json['birthday'] as String,
-      avatar: json['avatar'] as String,
+      birthday: DateTime.parse(json['birthday'] as String),
+      avatar: json['avatar'] as String?,
       userMentor:
           UserMentor.fromJson(json['User_mentor'] as Map<String, dynamic>),
     );
@@ -31,7 +31,7 @@ Map<String, dynamic> _$MentorModelToJson(MentorModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'birthday': instance.birthday,
+      'birthday': instance.birthday.toIso8601String(),
       'avatar': instance.avatar,
       'User_mentor': instance.userMentor,
     };

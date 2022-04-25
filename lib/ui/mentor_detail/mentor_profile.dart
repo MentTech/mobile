@@ -1,11 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:mobile/constants/colors.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
+import 'package:mobile/models/categories/degree/degree.dart';
+import 'package:mobile/models/categories/experience/experience.dart';
+import 'package:mobile/models/categories/program/program.dart';
+import 'package:mobile/models/categories/skill/skill.dart';
 import 'package:mobile/models/mentor/mentor.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/utils/device/device_utils.dart';
@@ -60,7 +63,104 @@ class _MentorProfileState extends State<MentorProfile> {
                       Text(widget.mentorModel.userMentor.introduction),
                   spaceBetween: Dimens.vertical_margin * 2,
                   padding: const EdgeInsets.symmetric(
-                      horizontal: Dimens.horizontal_padding),
+                    horizontal: Dimens.horizontal_padding,
+                    vertical: Dimens.large_vertical_margin,
+                  ),
+                ),
+                DescriptionTitleContainer(
+                  titleWidget: const Text(
+                    "Program: ",
+                    style: TextStyle(
+                      fontSize: Dimens.lightly_medium_text,
+                    ),
+                  ),
+                  contentWidget: Column(
+                    children: [
+                      for (Program program
+                          in widget.mentorModel.userMentor.programs)
+                        SymbolsItem(
+                            symbol: const Icon(Icons.abc_rounded),
+                            child: Text(
+                              program.title,
+                            ))
+                    ],
+                  ),
+                  spaceBetween: Dimens.vertical_margin * 2,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Dimens.horizontal_padding,
+                    vertical: Dimens.large_vertical_margin,
+                  ),
+                ),
+                DescriptionTitleContainer(
+                  titleWidget: const Text(
+                    "Skill: ",
+                    style: TextStyle(
+                      fontSize: Dimens.lightly_medium_text,
+                    ),
+                  ),
+                  contentWidget: Column(
+                    children: [
+                      for (Skill skill in widget.mentorModel.userMentor.skills)
+                        SymbolsItem(
+                            symbol: const Icon(Icons.abc_rounded),
+                            child: Text(
+                              skill.description ?? "Unknown",
+                            ))
+                    ],
+                  ),
+                  spaceBetween: Dimens.vertical_margin * 2,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Dimens.horizontal_padding,
+                    vertical: Dimens.large_vertical_margin,
+                  ),
+                ),
+                DescriptionTitleContainer(
+                  titleWidget: const Text(
+                    "Degree: ",
+                    style: TextStyle(
+                      fontSize: Dimens.lightly_medium_text,
+                    ),
+                  ),
+                  contentWidget: Column(
+                    children: [
+                      for (Degree degree
+                          in widget.mentorModel.userMentor.degree)
+                        SymbolsItem(
+                            symbol: const Icon(Icons.abc_rounded),
+                            child: Text(
+                              degree.title,
+                            ))
+                    ],
+                  ),
+                  spaceBetween: Dimens.vertical_margin * 2,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Dimens.horizontal_padding,
+                    vertical: Dimens.large_vertical_margin,
+                  ),
+                ),
+                DescriptionTitleContainer(
+                  titleWidget: const Text(
+                    "Experience: ",
+                    style: TextStyle(
+                      fontSize: Dimens.lightly_medium_text,
+                    ),
+                  ),
+                  contentWidget: Column(
+                    children: [
+                      for (Experience experience
+                          in widget.mentorModel.userMentor.experiences)
+                        SymbolsItem(
+                            symbol: const Icon(Icons.abc_rounded),
+                            child: Text(
+                              experience.title ?? "Unknown",
+                            ))
+                    ],
+                  ),
+                  spaceBetween: Dimens.vertical_margin * 2,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Dimens.horizontal_padding,
+                    vertical: Dimens.large_vertical_margin,
+                  ),
                 ),
               ],
             ),
@@ -98,41 +198,82 @@ class MentorProfileSliverAppbarDelegate extends SliverPersistentHeaderDelegate {
       height: kToolbarHeight * 3,
       width: DeviceUtils.getScaledWidth(context, 1.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Text(
-                mentorModel.name,
-                style: TextStyle(
-                  color: _themeStore.textTitleColor,
-                  fontSize: Dimens.medium_text,
-                ),
-              ),
-              Text(
-                DateFormat("dd / MM / yyyy")
-                    .format(DateTime.parse(mentorModel.birthday)),
-                style: TextStyle(
-                  color: _themeStore.textTitleColor,
-                  fontSize: Dimens.small_text,
-                ),
-              ),
-              IconButton(
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  icon: FaIcon(
-                    FontAwesomeIcons.linkedinIn,
-                    color: _themeStore.themeColor,
-                    size: Dimens.small_text,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  mentorModel.name,
+                  style: TextStyle(
+                    color: _themeStore.textTitleColor,
+                    fontSize: Dimens.medium_text,
                   ),
-                  onPressed: () {
-                    // log(mentorModel.userMentor.linkedin ?? "No Linkedin");
-                  })
-            ],
+                ),
+                Text(
+                  "Age: ${mentorModel.age}",
+                  style: TextStyle(
+                    color: _themeStore.textTitleColor,
+                    fontSize: Dimens.small_text,
+                  ),
+                ),
+                Text(
+                  "Major: ${mentorModel.userMentor.category.name}",
+                  style: TextStyle(
+                    color: _themeStore.textTitleColor,
+                    fontSize: Dimens.small_text,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.star_rate_rounded,
+                          color: _themeStore.ratingColor,
+                          size: Dimens.medium_text,
+                        ),
+                        Text(
+                          " ${mentorModel.userMentor.rating}",
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: Dimens.small_text),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: Dimens.horizontal_margin,
+                          ),
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
+                            icon: FaIcon(
+                              FontAwesomeIcons.linkedinIn,
+                              color: _themeStore.themeColor,
+                              size: Dimens.small_text,
+                            ),
+                            onPressed: () {
+                              // log(mentorModel.userMentor.linkedin ?? "No Linkedin");
+                            },
+                          ),
+                        ),
+                        const SizedBox(
+                          width: Dimens.horizontal_margin,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          const NetworkImageWidget(url: null),
+          NetworkImageWidget(
+            url: mentorModel.avatar,
+          ),
         ],
       ),
     );
@@ -255,4 +396,36 @@ class FadingEffect extends CustomPainter {
 
   @override
   bool shouldRepaint(FadingEffect oldDelegate) => false;
+}
+
+class SymbolsItem extends StatelessWidget {
+  const SymbolsItem({
+    Key? key,
+    required this.symbol,
+    required this.child,
+    this.padding = EdgeInsets.zero,
+    this.spacing = 0,
+  }) : super(key: key);
+
+  final EdgeInsets padding;
+  final double spacing;
+
+  final Widget symbol;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: padding,
+      child: Row(
+        children: [
+          symbol,
+          SizedBox(
+            width: spacing,
+          ),
+          child,
+        ],
+      ),
+    );
+  }
 }

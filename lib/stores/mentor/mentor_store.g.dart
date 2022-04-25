@@ -15,6 +15,13 @@ mixin _$MentorStore on _MentorStore, Store {
   bool get isLoading => (_$isLoadingComputed ??=
           Computed<bool>(() => super.isLoading, name: '_MentorStore.isLoading'))
       .value;
+  Computed<MentorModel>? _$getMentorComputed;
+
+  @override
+  MentorModel get getMentor =>
+      (_$getMentorComputed ??= Computed<MentorModel>(() => super.getMentor,
+              name: '_MentorStore.getMentor'))
+          .value;
 
   late final _$successAtom =
       Atom(name: '_MentorStore.success', context: context);
@@ -119,7 +126,8 @@ success: ${success},
 page: ${page},
 requestFuture: ${requestFuture},
 listMentors: ${listMentors},
-isLoading: ${isLoading}
+isLoading: ${isLoading},
+getMentor: ${getMentor}
     ''';
   }
 }

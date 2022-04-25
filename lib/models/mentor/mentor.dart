@@ -30,8 +30,8 @@ class MentorModelList {
 class MentorModel {
   int id;
   String name;
-  String birthday;
-  String avatar;
+  DateTime birthday;
+  String? avatar;
   // bool? isPasswordSet;
 
   @JsonKey(name: "User_mentor")
@@ -44,12 +44,18 @@ class MentorModel {
     required this.avatar,
     // required this.isPasswordSet,
     required this.userMentor,
-  });
+  }) {
+    if (avatar == "avatar.png") {
+      avatar = null;
+    }
+  }
 
   factory MentorModel.fromJson(Map<String, dynamic> json) =>
       _$MentorModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$MentorModelToJson(this);
+
+  int get age => DateTime.now().year - birthday.year;
 }
 
 //:-----------------------------------------------------------------------------
