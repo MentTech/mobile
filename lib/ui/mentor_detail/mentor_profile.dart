@@ -43,128 +43,163 @@ class _MentorProfileState extends State<MentorProfile> {
               expandedHeight: DeviceUtils.getScaledHeight(context, .65),
               mentorModel: widget.mentorModel,
             ),
-            floating: true,
+            floating: false,
             pinned: true,
           ),
-          SliverFillRemaining(
-              child: CustomPaint(
-            foregroundPainter: FadingEffect(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          SliverToBoxAdapter(
+            child: _buildContentLayout(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContentLayout() {
+    return CustomPaint(
+      // foregroundPainter: FadingEffect(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          DescriptionTitleContainer(
+            titleWidget: const Text(
+              "Introduction: ",
+              style: TextStyle(
+                fontSize: Dimens.lightly_medium_text,
+              ),
+            ),
+            contentWidget: Text(
+              widget.mentorModel.userMentor.introduction,
+              style: const TextStyle(
+                fontSize: Dimens.small_text,
+              ),
+            ),
+            spaceBetween: Dimens.vertical_margin * 2,
+            padding: const EdgeInsets.symmetric(
+              horizontal: Dimens.horizontal_padding,
+              vertical: Dimens.large_vertical_margin,
+            ),
+          ),
+          DescriptionTitleContainer(
+            titleWidget: const Text(
+              "Program: ",
+              style: TextStyle(
+                fontSize: Dimens.lightly_medium_text,
+              ),
+            ),
+            contentWidget: Column(
               children: [
-                DescriptionTitleContainer(
-                  titleWidget: const Text(
-                    "Introduction: ",
-                    style: TextStyle(
-                      fontSize: Dimens.lightly_medium_text,
+                for (Program program in widget.mentorModel.userMentor.programs)
+                  SymbolsItem(
+                    symbol: const Icon(
+                      Icons.arrow_right_rounded,
+                      size: Dimens.large_text,
                     ),
-                  ),
-                  contentWidget:
-                      Text(widget.mentorModel.userMentor.introduction),
-                  spaceBetween: Dimens.vertical_margin * 2,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: Dimens.horizontal_padding,
-                    vertical: Dimens.large_vertical_margin,
-                  ),
-                ),
-                DescriptionTitleContainer(
-                  titleWidget: const Text(
-                    "Program: ",
-                    style: TextStyle(
-                      fontSize: Dimens.lightly_medium_text,
+                    child: Text(
+                      program.title,
+                      style: const TextStyle(
+                        fontSize: Dimens.small_text,
+                      ),
                     ),
-                  ),
-                  contentWidget: Column(
-                    children: [
-                      for (Program program
-                          in widget.mentorModel.userMentor.programs)
-                        SymbolsItem(
-                            symbol: const Icon(Icons.abc_rounded),
-                            child: Text(
-                              program.title,
-                            ))
-                    ],
-                  ),
-                  spaceBetween: Dimens.vertical_margin * 2,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: Dimens.horizontal_padding,
-                    vertical: Dimens.large_vertical_margin,
-                  ),
-                ),
-                DescriptionTitleContainer(
-                  titleWidget: const Text(
-                    "Skill: ",
-                    style: TextStyle(
-                      fontSize: Dimens.lightly_medium_text,
-                    ),
-                  ),
-                  contentWidget: Column(
-                    children: [
-                      for (Skill skill in widget.mentorModel.userMentor.skills)
-                        SymbolsItem(
-                            symbol: const Icon(Icons.abc_rounded),
-                            child: Text(
-                              skill.description ?? "Unknown",
-                            ))
-                    ],
-                  ),
-                  spaceBetween: Dimens.vertical_margin * 2,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: Dimens.horizontal_padding,
-                    vertical: Dimens.large_vertical_margin,
-                  ),
-                ),
-                DescriptionTitleContainer(
-                  titleWidget: const Text(
-                    "Degree: ",
-                    style: TextStyle(
-                      fontSize: Dimens.lightly_medium_text,
-                    ),
-                  ),
-                  contentWidget: Column(
-                    children: [
-                      for (Degree degree
-                          in widget.mentorModel.userMentor.degree)
-                        SymbolsItem(
-                            symbol: const Icon(Icons.abc_rounded),
-                            child: Text(
-                              degree.title,
-                            ))
-                    ],
-                  ),
-                  spaceBetween: Dimens.vertical_margin * 2,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: Dimens.horizontal_padding,
-                    vertical: Dimens.large_vertical_margin,
-                  ),
-                ),
-                DescriptionTitleContainer(
-                  titleWidget: const Text(
-                    "Experience: ",
-                    style: TextStyle(
-                      fontSize: Dimens.lightly_medium_text,
-                    ),
-                  ),
-                  contentWidget: Column(
-                    children: [
-                      for (Experience experience
-                          in widget.mentorModel.userMentor.experiences)
-                        SymbolsItem(
-                            symbol: const Icon(Icons.abc_rounded),
-                            child: Text(
-                              experience.title ?? "Unknown",
-                            ))
-                    ],
-                  ),
-                  spaceBetween: Dimens.vertical_margin * 2,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: Dimens.horizontal_padding,
-                    vertical: Dimens.large_vertical_margin,
-                  ),
-                ),
+                  )
               ],
             ),
-          )),
+            spaceBetween: Dimens.vertical_margin * 2,
+            padding: const EdgeInsets.symmetric(
+              horizontal: Dimens.horizontal_padding,
+              vertical: Dimens.large_vertical_margin,
+            ),
+          ),
+          DescriptionTitleContainer(
+            titleWidget: const Text(
+              "Skill: ",
+              style: TextStyle(
+                fontSize: Dimens.lightly_medium_text,
+              ),
+            ),
+            contentWidget: Column(
+              children: [
+                for (Skill skill in widget.mentorModel.userMentor.skills)
+                  SymbolsItem(
+                    symbol: const Icon(
+                      Icons.arrow_right_rounded,
+                      size: Dimens.large_text,
+                    ),
+                    child: Text(
+                      skill.description ?? "Unknown",
+                      style: const TextStyle(
+                        fontSize: Dimens.small_text,
+                      ),
+                    ),
+                  )
+              ],
+            ),
+            spaceBetween: Dimens.vertical_margin * 2,
+            padding: const EdgeInsets.symmetric(
+              horizontal: Dimens.horizontal_padding,
+              vertical: Dimens.large_vertical_margin,
+            ),
+          ),
+          DescriptionTitleContainer(
+            titleWidget: const Text(
+              "Degree: ",
+              style: TextStyle(
+                fontSize: Dimens.lightly_medium_text,
+              ),
+            ),
+            contentWidget: Column(
+              children: [
+                for (Degree degree in widget.mentorModel.userMentor.degree)
+                  SymbolsItem(
+                    symbol: const Icon(
+                      Icons.arrow_right_rounded,
+                      size: Dimens.large_text,
+                    ),
+                    child: Text(
+                      degree.title,
+                      style: const TextStyle(
+                        fontSize: Dimens.small_text,
+                      ),
+                    ),
+                  )
+              ],
+            ),
+            spaceBetween: Dimens.vertical_margin * 2,
+            padding: const EdgeInsets.symmetric(
+              horizontal: Dimens.horizontal_padding,
+              vertical: Dimens.large_vertical_margin,
+            ),
+          ),
+          DescriptionTitleContainer(
+            titleWidget: const Text(
+              "Experience: ",
+              style: TextStyle(
+                fontSize: Dimens.lightly_medium_text,
+              ),
+            ),
+            contentWidget: Column(
+              children: [
+                for (Experience experience
+                    in widget.mentorModel.userMentor.experiences)
+                  SymbolsItem(
+                    symbol: const Icon(
+                      Icons.arrow_right_rounded,
+                      size: Dimens.large_text,
+                    ),
+                    child: Text(
+                      experience.title ?? "Unknown",
+                      style: const TextStyle(
+                        fontSize: Dimens.small_text,
+                      ),
+                    ),
+                  )
+              ],
+            ),
+            spaceBetween: Dimens.vertical_margin * 2,
+            padding: const EdgeInsets.symmetric(
+              horizontal: Dimens.horizontal_padding,
+              vertical: Dimens.large_vertical_margin,
+            ),
+          ),
         ],
       ),
     );
@@ -387,8 +422,8 @@ class FadingEffect extends CustomPainter {
         end: Alignment.bottomCenter,
         colors: [
           //create 2 white colors, one transparent
-          Color.fromARGB(0, 255, 255, 255),
           Color.fromARGB(255, 255, 255, 255),
+          Color.fromARGB(0, 255, 255, 255),
         ]);
     Paint paint = Paint()..shader = lg.createShader(rect);
     canvas.drawRect(rect, paint);
