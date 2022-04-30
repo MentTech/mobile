@@ -1,9 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mobile/models/categories/category/category.dart';
-import 'package:mobile/models/categories/degree/degree.dart';
-import 'package:mobile/models/categories/experience/experience.dart';
-import 'package:mobile/models/categories/program/program.dart';
-import 'package:mobile/models/categories/skill/skill.dart';
+import 'package:mobile/models/common/category/category.dart';
+import 'package:mobile/models/common/degree/degree.dart';
+import 'package:mobile/models/common/experience/experience.dart';
+import 'package:mobile/models/common/program/program.dart';
+import 'package:mobile/models/common/skill/skill.dart';
+import 'package:validators/validators.dart';
 
 part 'mentor.g.dart';
 
@@ -45,7 +46,7 @@ class MentorModel {
     // required this.isPasswordSet,
     required this.userMentor,
   }) {
-    if (avatar == "avatar.png") {
+    if (!isURL(avatar) || avatar == "avatar.png") {
       avatar = null;
     }
   }

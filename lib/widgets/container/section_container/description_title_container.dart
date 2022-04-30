@@ -7,22 +7,27 @@ class DescriptionTitleContainer extends StatelessWidget {
     required this.titleWidget,
     required this.contentWidget,
     this.padding,
+    this.paddingTitle,
     this.spaceBetween = Dimens.vertical_margin,
   }) : super(key: key);
 
   final EdgeInsets? padding;
+  final EdgeInsets? paddingTitle;
   final double spaceBetween;
   final Widget titleWidget;
   final Widget contentWidget;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: padding,
+    return Padding(
+      padding: padding ?? EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          titleWidget,
+          Padding(
+            padding: paddingTitle ?? EdgeInsets.zero,
+            child: titleWidget,
+          ),
           SizedBox(
             height: spaceBetween,
           ),

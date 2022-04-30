@@ -1,22 +1,27 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:like_button/like_button.dart';
 import 'package:mobile/constants/colors.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
-import 'package:mobile/models/categories/degree/degree.dart';
-import 'package:mobile/models/categories/experience/experience.dart';
-import 'package:mobile/models/categories/program/program.dart';
-import 'package:mobile/models/categories/skill/skill.dart';
+import 'package:mobile/models/common/degree/degree.dart';
+import 'package:mobile/models/common/experience/experience.dart';
+import 'package:mobile/models/common/program/program.dart';
+import 'package:mobile/models/common/skill/skill.dart';
 import 'package:mobile/models/mentor/mentor.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/routes/routes.dart';
+import 'package:mobile/widgets/background_colorful/random_bubble_gradient_background.dart';
 import 'package:mobile/widgets/button_widgets/neumorphism_button.dart';
+import 'package:mobile/widgets/common_model_widgets/skill_widget.dart';
 import 'package:mobile/widgets/container/image_container/network_image_widget.dart';
 import 'package:mobile/widgets/container/section_container/description_title_container.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
+import 'package:mobile/widgets/item/session_ticket_item.dart';
+import 'package:readmore/readmore.dart';
 
 class MentorProfile extends StatefulWidget {
   const MentorProfile({
@@ -36,18 +41,29 @@ class _MentorProfileState extends State<MentorProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverPersistentHeader(
-            delegate: MentorProfileSliverAppbarDelegate(
-              expandedHeight: DeviceUtils.getScaledHeight(context, .65),
-              mentorModel: widget.mentorModel,
-            ),
-            floating: false,
-            pinned: true,
+      body: Stack(
+        children: [
+          RandomBubbleGradientBackground(
+            count: 8,
+            maxRadius: 100,
+            minRadius: 50,
+            gradientColor: const [Colors.orange, Colors.green],
           ),
-          SliverToBoxAdapter(
-            child: _buildContentLayout(),
+          CustomScrollView(
+            scrollDirection: Axis.vertical,
+            slivers: [
+              SliverPersistentHeader(
+                delegate: MentorProfileSliverAppbarDelegate(
+                  expandedHeight: DeviceUtils.getScaledHeight(context, .65),
+                  mentorModel: widget.mentorModel,
+                ),
+                floating: false,
+                pinned: true,
+              ),
+              SliverToBoxAdapter(
+                child: _buildContentLayout(),
+              ),
+            ],
           ),
         ],
       ),
@@ -55,153 +71,155 @@ class _MentorProfileState extends State<MentorProfile> {
   }
 
   Widget _buildContentLayout() {
-    return CustomPaint(
-      // foregroundPainter: FadingEffect(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          DescriptionTitleContainer(
-            titleWidget: const Text(
-              "Introduction: ",
-              style: TextStyle(
-                fontSize: Dimens.lightly_medium_text,
-              ),
-            ),
-            contentWidget: Text(
-              widget.mentorModel.userMentor.introduction,
-              style: const TextStyle(
-                fontSize: Dimens.small_text,
-              ),
-            ),
-            spaceBetween: Dimens.vertical_margin * 2,
-            padding: const EdgeInsets.symmetric(
-              horizontal: Dimens.horizontal_padding,
-              vertical: Dimens.large_vertical_margin,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        DescriptionTitleContainer(
+          titleWidget: const Text(
+            "Introduction: ",
+            style: TextStyle(
+              fontSize: Dimens.lightly_medium_text,
             ),
           ),
-          DescriptionTitleContainer(
-            titleWidget: const Text(
-              "Program: ",
-              style: TextStyle(
-                fontSize: Dimens.lightly_medium_text,
-              ),
+          contentWidget: ReadMoreText(
+            widget.mentorModel.userMentor.introduction,
+            style: const TextStyle(
+              fontSize: Dimens.small_text,
             ),
-            contentWidget: Column(
-              children: [
-                for (Program program in widget.mentorModel.userMentor.programs)
-                  SymbolsItem(
-                    symbol: const Icon(
-                      Icons.arrow_right_rounded,
-                      size: Dimens.large_text,
-                    ),
-                    child: Text(
-                      program.title,
-                      style: const TextStyle(
-                        fontSize: Dimens.small_text,
-                      ),
-                    ),
-                  )
-              ],
-            ),
-            spaceBetween: Dimens.vertical_margin * 2,
-            padding: const EdgeInsets.symmetric(
-              horizontal: Dimens.horizontal_padding,
-              vertical: Dimens.large_vertical_margin,
+            trimLines: 5,
+            trimLength: 300,
+          ),
+          spaceBetween: Dimens.vertical_margin * 2,
+          padding: const EdgeInsets.symmetric(
+            horizontal: Dimens.horizontal_padding,
+            vertical: Dimens.large_vertical_margin,
+          ),
+        ),
+        DescriptionTitleContainer(
+          titleWidget: const Text(
+            "Program: ",
+            style: TextStyle(
+              fontSize: Dimens.lightly_medium_text,
             ),
           ),
-          DescriptionTitleContainer(
-            titleWidget: const Text(
-              "Skill: ",
-              style: TextStyle(
-                fontSize: Dimens.lightly_medium_text,
-              ),
+          contentWidget: Column(
+            children: [
+              for (Program program in widget.mentorModel.userMentor.programs)
+                SessionTicketItem(
+                  program: program,
+                  margin: const EdgeInsets.only(
+                    top: Dimens.vertical_margin,
+                  ),
+                ),
+            ],
+          ),
+          spaceBetween: Dimens.vertical_margin,
+          padding: const EdgeInsets.symmetric(
+            horizontal: Dimens.horizontal_padding,
+            vertical: Dimens.large_vertical_margin,
+          ),
+        ),
+        DescriptionTitleContainer(
+          titleWidget: const Text(
+            "Skill: ",
+            style: TextStyle(
+              fontSize: Dimens.lightly_medium_text,
             ),
-            contentWidget: Column(
+          ),
+          contentWidget: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
               children: [
+                const SizedBox(
+                  width: Dimens.large_horizontal_margin,
+                ),
                 for (Skill skill in widget.mentorModel.userMentor.skills)
-                  SymbolsItem(
-                    symbol: const Icon(
-                      Icons.arrow_right_rounded,
-                      size: Dimens.large_text,
+                  SkillWidgetContainer(
+                    width: 130,
+                    skill: skill,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: Dimens.small_vertical_padding,
                     ),
-                    child: Text(
-                      skill.description ?? "Unknown",
-                      style: const TextStyle(
-                        fontSize: Dimens.small_text,
-                      ),
-                    ),
-                  )
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: Dimens.medium_horizontal_margin),
+                  ),
+                const SizedBox(
+                  width: Dimens.large_horizontal_margin,
+                ),
               ],
             ),
-            spaceBetween: Dimens.vertical_margin * 2,
-            padding: const EdgeInsets.symmetric(
-              horizontal: Dimens.horizontal_padding,
-              vertical: Dimens.large_vertical_margin,
+          ),
+          spaceBetween: Dimens.vertical_margin * 2,
+          padding: const EdgeInsets.symmetric(
+            vertical: Dimens.large_vertical_margin,
+          ),
+          paddingTitle: const EdgeInsets.symmetric(
+            horizontal: Dimens.horizontal_padding,
+          ),
+        ),
+        DescriptionTitleContainer(
+          titleWidget: const Text(
+            "Degree: ",
+            style: TextStyle(
+              fontSize: Dimens.lightly_medium_text,
             ),
           ),
-          DescriptionTitleContainer(
-            titleWidget: const Text(
-              "Degree: ",
-              style: TextStyle(
-                fontSize: Dimens.lightly_medium_text,
-              ),
-            ),
-            contentWidget: Column(
-              children: [
-                for (Degree degree in widget.mentorModel.userMentor.degree)
-                  SymbolsItem(
-                    symbol: const Icon(
-                      Icons.arrow_right_rounded,
-                      size: Dimens.large_text,
+          contentWidget: Column(
+            children: [
+              for (Degree degree in widget.mentorModel.userMentor.degree)
+                SymbolsItem(
+                  symbol: const Icon(
+                    Icons.arrow_right_rounded,
+                    size: Dimens.large_text,
+                  ),
+                  child: Text(
+                    degree.title,
+                    style: const TextStyle(
+                      fontSize: Dimens.small_text,
                     ),
-                    child: Text(
-                      degree.title,
-                      style: const TextStyle(
-                        fontSize: Dimens.small_text,
-                      ),
-                    ),
-                  )
-              ],
-            ),
-            spaceBetween: Dimens.vertical_margin * 2,
-            padding: const EdgeInsets.symmetric(
-              horizontal: Dimens.horizontal_padding,
-              vertical: Dimens.large_vertical_margin,
+                  ),
+                )
+            ],
+          ),
+          spaceBetween: Dimens.vertical_margin * 2,
+          padding: const EdgeInsets.symmetric(
+            horizontal: Dimens.horizontal_padding,
+            vertical: Dimens.large_vertical_margin,
+          ),
+        ),
+        DescriptionTitleContainer(
+          titleWidget: const Text(
+            "Experience: ",
+            style: TextStyle(
+              fontSize: Dimens.lightly_medium_text,
             ),
           ),
-          DescriptionTitleContainer(
-            titleWidget: const Text(
-              "Experience: ",
-              style: TextStyle(
-                fontSize: Dimens.lightly_medium_text,
-              ),
-            ),
-            contentWidget: Column(
-              children: [
-                for (Experience experience
-                    in widget.mentorModel.userMentor.experiences)
-                  SymbolsItem(
-                    symbol: const Icon(
-                      Icons.arrow_right_rounded,
-                      size: Dimens.large_text,
+          contentWidget: Column(
+            children: [
+              for (Experience experience
+                  in widget.mentorModel.userMentor.experiences)
+                SymbolsItem(
+                  symbol: const Icon(
+                    Icons.arrow_right_rounded,
+                    size: Dimens.large_text,
+                  ),
+                  child: Text(
+                    experience.title ?? "Unknown",
+                    style: const TextStyle(
+                      fontSize: Dimens.small_text,
                     ),
-                    child: Text(
-                      experience.title ?? "Unknown",
-                      style: const TextStyle(
-                        fontSize: Dimens.small_text,
-                      ),
-                    ),
-                  )
-              ],
-            ),
-            spaceBetween: Dimens.vertical_margin * 2,
-            padding: const EdgeInsets.symmetric(
-              horizontal: Dimens.horizontal_padding,
-              vertical: Dimens.large_vertical_margin,
-            ),
+                  ),
+                )
+            ],
           ),
-        ],
-      ),
+          spaceBetween: Dimens.vertical_margin * 2,
+          padding: const EdgeInsets.symmetric(
+            horizontal: Dimens.horizontal_padding,
+            vertical: Dimens.large_vertical_margin,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -365,21 +383,34 @@ class MentorProfileSliverAppbarDelegate extends SliverPersistentHeaderDelegate {
   Widget buildControlButton(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding:
-            const EdgeInsets.symmetric(horizontal: Dimens.horizontal_padding),
+        padding: const EdgeInsets.symmetric(
+          horizontal: Dimens.horizontal_padding,
+        ),
         child:
+            // Align(
+            //   child: LikeButton(
+            //     size: Dimens.extra_large_text,
+            //     onTap: (bool isCheck) {
+            //       return Future.value(!isCheck);
+            //     },
+            //   ),
+            // ),
+
+            Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.max,
+          children: [
             // Go back button
-            Align(
-          alignment: Alignment.topLeft,
-          child: NeumorphismButton(
-            child: Icon(
-              Icons.arrow_back_ios_new_rounded,
-              color: AppColors.darkBlue[700],
+            NeumorphismButton(
+              child: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: AppColors.darkBlue[700],
+              ),
+              onTap: () {
+                Routes.popRoute(context);
+              },
             ),
-            onTap: () {
-              Routes.popRoute(context);
-            },
-          ),
+          ],
         ),
       ),
     );
@@ -390,6 +421,7 @@ class MentorProfileSliverAppbarDelegate extends SliverPersistentHeaderDelegate {
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Stack(
       fit: StackFit.passthrough,
+      alignment: Alignment.topCenter,
       children: <Widget>[
         buildBackground(),
         Positioned(

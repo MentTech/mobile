@@ -104,6 +104,18 @@ dependencies:
   # more icon for application
   font_awesome_flutter: ^10.1.0
 
+  # to ago string
+  timeago: ^3.2.2
+
+  # favourite mentor button
+  like_button: ^2.0.4
+
+  # readmore text
+  readmore: ^2.1.0
+
+  # progress bar
+  circle_progress_bar: ^0.1.1
+
   flutter_localizations:
     sdk: flutter
 

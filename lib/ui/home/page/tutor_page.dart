@@ -19,6 +19,7 @@ import 'package:mobile/widgets/container/image_container/network_image_widget.da
 import 'package:mobile/widgets/textfield_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:readmore/readmore.dart';
 
 class TutorPage extends StatefulWidget {
   const TutorPage({Key? key}) : super(key: key);
@@ -376,16 +377,20 @@ class ShortImformationItem extends StatelessWidget {
               padding:
                   const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
               child: Text(
-                mentorModel.userMentor.introduction,
+                "Major: ${mentorModel.userMentor.category.name}",
                 style: const TextStyle(fontWeight: FontWeight.w400),
               ),
             ),
             Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
-              child: Text(
-                "Major: ${mentorModel.userMentor.category.name}",
-                style: const TextStyle(fontWeight: FontWeight.w400),
+              child: ReadMoreText(
+                mentorModel.userMentor.introduction,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w400,
+                ),
+                trimLines: 3,
+                trimLength: 50,
               ),
             ),
             mentorModel.userMentor.linkedin != null

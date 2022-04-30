@@ -9,7 +9,7 @@ class GlassmorphismContainer extends StatelessWidget {
     required this.blur,
     required this.opacity,
     this.radius = 20,
-    this.padding = const EdgeInsets.all(0),
+    this.padding = EdgeInsets.zero,
     this.height,
     this.width,
   }) : super(key: key);
