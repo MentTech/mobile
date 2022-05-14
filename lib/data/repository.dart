@@ -53,6 +53,16 @@ class Repository {
     });
   }
 
+  Future<Map<String, dynamic>?> fetchMentor(int mentorID) async {
+    return _mentorAPI
+        .fetchMentorInformation(mentorID: mentorID)
+        .catchError((error) {
+      return {
+        "onError": error.toString(),
+      };
+    });
+  }
+
   // Future<List<Post>> findPostById(int id) {
   //   //creating filter
   //   List<Filter> filters = [];

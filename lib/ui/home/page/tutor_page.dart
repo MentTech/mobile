@@ -210,7 +210,7 @@ class _TutorPageState extends State<TutorPage> {
                                       Navigator.of(context)
                                           .push(MaterialPageRoute(
                                         builder: (context) => MentorProfile(
-                                            mentorModel: _mentorStore.at(i)),
+                                            idMentor: _mentorStore.at(i).id),
                                       ));
                                     }),
                               )
@@ -329,7 +329,7 @@ class ShortImformationItem extends StatelessWidget {
                     right: 0,
                     child: Container(
                         decoration: BoxDecoration(
-                            color: Colors.grey.shade100.withOpacity(0.25),
+                            color: Colors.grey.shade600.withOpacity(0.65),
                             borderRadius: const BorderRadius.only(
                                 bottomLeft: Radius.circular(
                                     Dimens.kBorderUltraRadiusValue))),

@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:like_button/like_button.dart';
 import 'package:mobile/constants/colors.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
@@ -11,6 +11,7 @@ import 'package:mobile/models/common/experience/experience.dart';
 import 'package:mobile/models/common/program/program.dart';
 import 'package:mobile/models/common/skill/skill.dart';
 import 'package:mobile/models/mentor/mentor.dart';
+import 'package:mobile/stores/mentor/mentor_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/routes/routes.dart';
@@ -19,24 +20,43 @@ import 'package:mobile/widgets/button_widgets/neumorphism_button.dart';
 import 'package:mobile/widgets/common_model_widgets/skill_widget.dart';
 import 'package:mobile/widgets/container/image_container/network_image_widget.dart';
 import 'package:mobile/widgets/container/section_container/description_title_container.dart';
+import 'package:mobile/widgets/errors_widget/text_error.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:mobile/widgets/item/session_ticket_item.dart';
+import 'package:mobile/widgets/shimmer_loading_effect/profile_shimmer_loading_effect.dart';
+import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 
 class MentorProfile extends StatefulWidget {
   const MentorProfile({
     Key? key,
-    required this.mentorModel,
+    required this.idMentor,
   }) : super(key: key);
 
-  final MentorModel mentorModel;
+  final int idMentor;
 
   @override
   _MentorProfileState createState() => _MentorProfileState();
 }
 
 class _MentorProfileState extends State<MentorProfile> {
-  // Controller:----------------------------------------------------------------
+  // Store:---------------------------------------------------------------------
+  late final MentorStore _mentorStore;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _mentorStore = Provider.of<MentorStore>(context, listen: false);
+    _mentorStore.fetchAMentor(widget.idMentor);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _mentorStore.clearCurrentMentor();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,28 +69,41 @@ class _MentorProfileState extends State<MentorProfile> {
             minRadius: 50,
             gradientColor: const [Colors.orange, Colors.green],
           ),
-          CustomScrollView(
-            scrollDirection: Axis.vertical,
-            slivers: [
-              SliverPersistentHeader(
-                delegate: MentorProfileSliverAppbarDelegate(
-                  expandedHeight: DeviceUtils.getScaledHeight(context, .65),
-                  mentorModel: widget.mentorModel,
-                ),
-                floating: false,
-                pinned: true,
-              ),
-              SliverToBoxAdapter(
-                child: _buildContentLayout(),
-              ),
-            ],
+          Observer(
+            builder: (BuildContext context) {
+              if (_mentorStore.isLoading) {
+                return const ProfileShimmerLoadingEffect();
+              } else {
+                if (_mentorStore.hasMentor) {
+                  return CustomScrollView(
+                    scrollDirection: Axis.vertical,
+                    slivers: [
+                      SliverPersistentHeader(
+                        delegate: MentorProfileSliverAppbarDelegate(
+                          expandedHeight:
+                              DeviceUtils.getScaledHeight(context, .65),
+                          mentorModel: _mentorStore.getMentor!,
+                        ),
+                        floating: false,
+                        pinned: true,
+                      ),
+                      SliverToBoxAdapter(
+                        child: _buildContentLayout(_mentorStore.getMentor!),
+                      ),
+                    ],
+                  );
+                } else {
+                  return const TextShowingError();
+                }
+              }
+            },
           ),
         ],
       ),
     );
   }
 
-  Widget _buildContentLayout() {
+  Widget _buildContentLayout(MentorModel mentorModel) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -83,7 +116,7 @@ class _MentorProfileState extends State<MentorProfile> {
             ),
           ),
           contentWidget: ReadMoreText(
-            widget.mentorModel.userMentor.introduction,
+            mentorModel.userMentor.introduction,
             style: const TextStyle(
               fontSize: Dimens.small_text,
             ),
@@ -104,8 +137,9 @@ class _MentorProfileState extends State<MentorProfile> {
             ),
           ),
           contentWidget: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              for (Program program in widget.mentorModel.userMentor.programs)
+              for (Program program in mentorModel.userMentor.programs ?? [])
                 SessionTicketItem(
                   program: program,
                   margin: const EdgeInsets.only(
@@ -134,7 +168,7 @@ class _MentorProfileState extends State<MentorProfile> {
                 const SizedBox(
                   width: Dimens.large_horizontal_margin,
                 ),
-                for (Skill skill in widget.mentorModel.userMentor.skills)
+                for (Skill skill in mentorModel.userMentor.skills)
                   SkillWidgetContainer(
                     width: 130,
                     skill: skill,
@@ -167,7 +201,7 @@ class _MentorProfileState extends State<MentorProfile> {
           ),
           contentWidget: Column(
             children: [
-              for (Degree degree in widget.mentorModel.userMentor.degree)
+              for (Degree degree in mentorModel.userMentor.degree)
                 SymbolsItem(
                   symbol: const Icon(
                     Icons.arrow_right_rounded,
@@ -197,8 +231,7 @@ class _MentorProfileState extends State<MentorProfile> {
           ),
           contentWidget: Column(
             children: [
-              for (Experience experience
-                  in widget.mentorModel.userMentor.experiences)
+              for (Experience experience in mentorModel.userMentor.experiences)
                 SymbolsItem(
                   symbol: const Icon(
                     Icons.arrow_right_rounded,

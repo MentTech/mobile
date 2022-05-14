@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:mobile/constants/colors.dart';
 import 'package:mobile/constants/dimens.dart';
 
-class GlassmorphismButton extends StatelessWidget {
-  const GlassmorphismButton({
+class GlassmorphismTextButton extends StatelessWidget {
+  const GlassmorphismTextButton({
     Key? key,
     required this.text,
     required this.blur,
@@ -22,6 +22,7 @@ class GlassmorphismButton extends StatelessWidget {
     this.padding = const EdgeInsets.all(0),
     this.fontSizeText = Dimens.small_text,
     this.textColor = AppColors.lightTextTheme,
+    this.alignment = Alignment.topLeft,
     this.onTap,
   }) : super(key: key);
 
@@ -33,6 +34,7 @@ class GlassmorphismButton extends StatelessWidget {
   final double fontSizeText;
   final Color textColor;
   final Gradient gradientBorder;
+  final Alignment alignment;
   final Function()? onTap;
 
   @override
@@ -56,12 +58,17 @@ class GlassmorphismButton extends StatelessWidget {
                 color: Colors.white.withOpacity(opacity),
               ),
             ),
-            child: Text(text,
+            child: Align(
+              alignment: alignment,
+              child: Text(
+                text,
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: textColor,
                     letterSpacing: 0.2,
-                    fontSize: Dimens.small_text)),
+                    fontSize: Dimens.small_text),
+              ),
+            ),
           ),
         ),
       ),

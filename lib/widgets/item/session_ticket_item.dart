@@ -4,8 +4,9 @@ import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/common/program/program.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
-import 'package:mobile/ui/mentor_detail/mentor_profile.dart';
-import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
+import 'package:mobile/utils/device/device_utils.dart';
+import 'package:mobile/widgets/dialog_showing/slider_dialog.dart';
+import 'package:mobile/widgets/glassmorphism_widgets/glassmorphism_widget_button.dart';
 import 'package:readmore/readmore.dart';
 
 class SessionTicketItem extends StatelessWidget {
@@ -27,8 +28,18 @@ class SessionTicketItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: margin,
-      child: GlassmorphismContainer(
+      child: GlassmorphismWidgetButton(
         padding: padding,
+        onTap: () {
+          DialogPopupPresenter.showSlidePopupDialog<bool>(
+                  context,
+                  Container(),
+                  DeviceUtils.getScaledHeight(context, 0.8),
+                  DeviceUtils.getScaledWidth(context, 0.8))
+              .then((bool? result) {
+            //
+          });
+        },
         child: ListTile(
           title: Text(
             program.title,

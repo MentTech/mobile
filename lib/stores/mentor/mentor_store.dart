@@ -51,8 +51,6 @@ abstract class _MentorStore with Store {
 
   String searchKey = "";
 
-  int mentorIndex = -1;
-
   // observable variables:------------------------------------------------------
   @observable
   bool success = false;
@@ -66,12 +64,18 @@ abstract class _MentorStore with Store {
   @observable
   ObservableList<MentorModel> listMentors = ObservableList<MentorModel>();
 
+  @observable
+  MentorModel? mentorModel;
+
   // computed:------------------------------------------------------------------
   @computed
   bool get isLoading => requestFuture.status == FutureStatus.pending;
 
   @computed
-  MentorModel get getMentor => at(mentorIndex);
+  MentorModel? get getMentor => mentorModel;
+
+  @computed
+  bool get hasMentor => mentorModel != null;
 
   // actions:-------------------------------------------------------------------
   @action
@@ -143,13 +147,44 @@ abstract class _MentorStore with Store {
     });
   }
 
+  @action
+  Future<void> fetchAMentor(int mentorID) async {
+    String? accessToken = await _repository.authToken;
+
+    if (null == accessToken) {
+      messageStore.successMessage = "";
+      messageStore.errorMessage = "There are no AccessToken";
+      messageStore.notifyExpiredTokenStatus();
+
+      success = false;
+    }
+
+    final future = _repository.fetchMentor(mentorID);
+    requestFuture = ObservableFuture(future);
+
+    future.then((res) {
+      try {
+        mentorModel = MentorModel.fromJson(res!);
+
+        success = true;
+      } catch (e) {
+        // res['message']
+        messageStore.errorMessage = e.toString();
+        messageStore.successMessage = "";
+
+        success = false;
+      }
+    });
+  }
+
+  @action
+  void clearCurrentMentor() {
+    mentorModel = null;
+  }
+
   // general methods:-----------------------------------------------------------
   MentorModel at(int index) {
     return listMentors.elementAt(index);
-  }
-
-  void selectMentorAt(int index) {
-    mentorIndex = index;
   }
 
   int get length => listMentors.length;

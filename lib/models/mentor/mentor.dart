@@ -66,7 +66,7 @@ class UserMentor {
   String? linkedin;
   String introduction;
   int rating;
-  List<Program> programs;
+  List<Program>? programs;
   Category category;
   List<Skill> skills;
   List<Degree> degree;

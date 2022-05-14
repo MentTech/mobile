@@ -32,6 +32,9 @@ class Dimens {
   static const double large_horizontal_margin = 15.0;
 
   /// small vertical margin value: 6.0
+  static const double small_vertical_margin = 3.0;
+
+  /// small vertical margin value: 6.0
   static const double vertical_margin = 6.0;
 
   /// medium vertical margin value: 12.0
@@ -39,6 +42,9 @@ class Dimens {
 
   /// large vertical margin value: 12.0
   static const double large_vertical_margin = 15.0;
+
+  /// large vertical margin value: 20.0
+  static const double extra_large_vertical_margin = 20.0;
 
   /// Text dimens
   /// return size 15

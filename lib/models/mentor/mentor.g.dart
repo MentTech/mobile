@@ -40,8 +40,8 @@ UserMentor _$UserMentorFromJson(Map<String, dynamic> json) => UserMentor(
       linkedin: json['linkedin'] as String?,
       introduction: json['introduction'] as String,
       rating: json['rating'] as int,
-      programs: (json['programs'] as List<dynamic>)
-          .map((e) => Program.fromJson(e as Map<String, dynamic>))
+      programs: (json['programs'] as List<dynamic>?)
+          ?.map((e) => Program.fromJson(e as Map<String, dynamic>))
           .toList(),
       category: Category.fromJson(json['category'] as Map<String, dynamic>),
       skills: (json['skills'] as List<dynamic>)

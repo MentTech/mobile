@@ -84,7 +84,7 @@ dependencies:
 
   # A Flutter plugin for Google Sign In.
   # scope: https://developers.google.com/identity/protocols/oauth2/scopes
-  google_sign_in: ^5.2.4
+  google_sign_in: ^5.3.0
 
   # Authenticate for facebook
   # flutter_facebook_auth: ^4.1.2

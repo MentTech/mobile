@@ -15,13 +15,19 @@ mixin _$MentorStore on _MentorStore, Store {
   bool get isLoading => (_$isLoadingComputed ??=
           Computed<bool>(() => super.isLoading, name: '_MentorStore.isLoading'))
       .value;
-  Computed<MentorModel>? _$getMentorComputed;
+  Computed<MentorModel?>? _$getMentorComputed;
 
   @override
-  MentorModel get getMentor =>
-      (_$getMentorComputed ??= Computed<MentorModel>(() => super.getMentor,
+  MentorModel? get getMentor =>
+      (_$getMentorComputed ??= Computed<MentorModel?>(() => super.getMentor,
               name: '_MentorStore.getMentor'))
           .value;
+  Computed<bool>? _$hasMentorComputed;
+
+  @override
+  bool get hasMentor => (_$hasMentorComputed ??=
+          Computed<bool>(() => super.hasMentor, name: '_MentorStore.hasMentor'))
+      .value;
 
   late final _$successAtom =
       Atom(name: '_MentorStore.success', context: context);
@@ -86,12 +92,36 @@ mixin _$MentorStore on _MentorStore, Store {
     });
   }
 
+  late final _$mentorModelAtom =
+      Atom(name: '_MentorStore.mentorModel', context: context);
+
+  @override
+  MentorModel? get mentorModel {
+    _$mentorModelAtom.reportRead();
+    return super.mentorModel;
+  }
+
+  @override
+  set mentorModel(MentorModel? value) {
+    _$mentorModelAtom.reportWrite(value, super.mentorModel, () {
+      super.mentorModel = value;
+    });
+  }
+
   late final _$searchMentorsAsyncAction =
       AsyncAction('_MentorStore.searchMentors', context: context);
 
   @override
   Future<void> searchMentors() {
     return _$searchMentorsAsyncAction.run(() => super.searchMentors());
+  }
+
+  late final _$fetchAMentorAsyncAction =
+      AsyncAction('_MentorStore.fetchAMentor', context: context);
+
+  @override
+  Future<void> fetchAMentor(int mentorID) {
+    return _$fetchAMentorAsyncAction.run(() => super.fetchAMentor(mentorID));
   }
 
   late final _$_MentorStoreActionController =
@@ -120,14 +150,27 @@ mixin _$MentorStore on _MentorStore, Store {
   }
 
   @override
+  void clearCurrentMentor() {
+    final _$actionInfo = _$_MentorStoreActionController.startAction(
+        name: '_MentorStore.clearCurrentMentor');
+    try {
+      return super.clearCurrentMentor();
+    } finally {
+      _$_MentorStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 success: ${success},
 page: ${page},
 requestFuture: ${requestFuture},
 listMentors: ${listMentors},
+mentorModel: ${mentorModel},
 isLoading: ${isLoading},
-getMentor: ${getMentor}
+getMentor: ${getMentor},
+hasMentor: ${hasMentor}
     ''';
   }
 }

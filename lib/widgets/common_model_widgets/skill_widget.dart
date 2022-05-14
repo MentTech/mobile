@@ -60,7 +60,7 @@ class SkillWidgetContainer extends StatelessWidget {
             Text(
               skill.description ?? "Unknown",
               style: TextStyle(
-                fontSize: Dimens.medium_text,
+                fontSize: Dimens.small_text,
                 fontWeight: FontWeight.w500,
                 color: _themeStore.themeColor,
               ),

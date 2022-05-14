@@ -42,6 +42,30 @@ class MentorAPI {
     }
   }
 
+  Future<Map<String, dynamic>?> fetchMentorInformation(
+      {required int mentorID}) async {
+    try {
+      final res = await _dioClient.get(
+        Endpoints.fetchMentorInfor.replaceAll(":id", "$mentorID"),
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) => true,
+          // headers: headers
+          // headers: {
+          //   'Content-Type': 'application/json; charset=utf-8',
+          //   "Authorization": "Bearer $authToken"
+          // },
+        ),
+      );
+
+      return res;
+      // return User.fromJson(res);
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
   // /// Returns list of post in response
   // Future<PostList> getPosts() async {
   //   try {

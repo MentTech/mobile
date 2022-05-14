@@ -1,25 +1,31 @@
 import 'package:flutter/material.dart';
 
 class AppIconWidget extends StatelessWidget {
-  // ignore: prefer_typing_uninitialized_variables
-  final image;
+  final String image;
+  final double? dimenImage;
 
   const AppIconWidget({
     Key? key,
-    this.image,
+    required this.image,
+    this.dimenImage,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    //getting screen size
-    var size = MediaQuery.of(context).size;
-
     //calculating container width
     double imageSize;
-    if (MediaQuery.of(context).orientation == Orientation.portrait) {
-      imageSize = (size.width * 0.20);
+
+    if (dimenImage == null) {
+      //getting screen size
+      var size = MediaQuery.of(context).size;
+
+      if (MediaQuery.of(context).orientation == Orientation.portrait) {
+        imageSize = (size.width * 0.20);
+      } else {
+        imageSize = (size.height * 0.20);
+      }
     } else {
-      imageSize = (size.height * 0.20);
+      imageSize = dimenImage!;
     }
 
     return Image.asset(

@@ -4,6 +4,7 @@ import 'package:mobile/effects/navigate/screen_transition.dart';
 import 'package:mobile/ui/authorization/authorization_screen.dart';
 import 'package:mobile/ui/home/home.dart';
 import 'package:mobile/ui/splash/splash.dart';
+import 'package:mobile/ui/token_user_profile/token_profile.dart';
 import 'package:mobile/ui/user_profile/user_profile.dart';
 
 class Routes {
@@ -14,6 +15,7 @@ class Routes {
   static const String login = '/login';
   static const String home = '/home';
   static const String profile = '/profile';
+  static const String tokenProfile = '/token_profile';
   // static const String mentorProfile = '/mentor_profile';
 
   static final routes = <String, WidgetBuilder>{
@@ -21,6 +23,7 @@ class Routes {
     login: (BuildContext context) => const AuthorizationScreen(),
     home: (BuildContext context) => const HomeScreen(),
     profile: (BuildContext context) => const UserProfile(),
+    tokenProfile: (BuildContext context) => TokenProfile(),
     // mentorProfile: (BuildContext context) => const MentorProfile(),
   };
 

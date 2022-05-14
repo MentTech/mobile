@@ -43,6 +43,9 @@ class Endpoints {
   /// Get List (paginate) of mentor information: /users/profile
   static const String searchMentorPagination = _mentorProxy + "/search";
 
+  /// Get specificed mentor information: /mentor/:id
+  static const String fetchMentorInfor = _mentorProxy + "/:id";
+
   //:---------------------------------------------------------------------------
 
 }
