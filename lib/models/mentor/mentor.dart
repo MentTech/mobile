@@ -65,7 +65,7 @@ class MentorModel {
 class UserMentor {
   String? linkedin;
   String introduction;
-  int rating;
+  double rating;
   List<Program>? programs;
   Category category;
   List<Skill> skills;

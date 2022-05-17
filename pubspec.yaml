@@ -116,6 +116,9 @@ dependencies:
   # progress bar
   circle_progress_bar: ^0.1.1
 
+  # slider stepper
+  introduction_screen: ^3.0.2
+
   flutter_localizations:
     sdk: flutter
 

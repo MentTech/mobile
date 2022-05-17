@@ -23,7 +23,9 @@ import 'package:mobile/widgets/container/section_container/description_title_con
 import 'package:mobile/widgets/errors_widget/text_error.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:mobile/widgets/item/session_ticket_item.dart';
+import 'package:mobile/widgets/popup_template/yes_no_popup.dart';
 import 'package:mobile/widgets/shimmer_loading_effect/profile_shimmer_loading_effect.dart';
+import 'package:mobile/widgets/star_widget/start_rate_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 
@@ -142,6 +144,9 @@ class _MentorProfileState extends State<MentorProfile> {
               for (Program program in mentorModel.userMentor.programs ?? [])
                 SessionTicketItem(
                   program: program,
+                  popupChild: YesNoPopup(
+                    child: Container(),
+                  ),
                   margin: const EdgeInsets.only(
                     top: Dimens.vertical_margin,
                   ),
@@ -314,19 +319,9 @@ class MentorProfileSliverAppbarDelegate extends SliverPersistentHeaderDelegate {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.star_rate_rounded,
-                          color: _themeStore.ratingColor,
-                          size: Dimens.medium_text,
-                        ),
-                        Text(
-                          " ${mentorModel.userMentor.rating}",
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: Dimens.small_text),
-                        ),
-                      ],
+                    StarRateWidget(
+                      rateColor: _themeStore.ratingColor,
+                      rating: mentorModel.userMentor.rating,
                     ),
                     Row(
                       children: [

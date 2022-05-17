@@ -20,13 +20,12 @@ class RoundedButtonWidget extends StatelessWidget {
     return TextButton(
       child: Container(
         padding: const EdgeInsets.symmetric(
-            vertical: Dimens.vertical_padding / 2,
+            vertical: Dimens.small_vertical_padding,
             horizontal: Dimens.horizontal_padding),
         decoration: ShapeDecoration(
           color: buttonColor,
           shape: StadiumBorder(
-              side:
-                  BorderSide(color: Colors.white.withOpacity(0.2), width: 1.5)),
+              side: BorderSide(color: textColor.withOpacity(0.5), width: 1.5)),
         ),
         child: Text(
           buttonText,

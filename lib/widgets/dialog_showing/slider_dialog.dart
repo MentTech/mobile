@@ -9,6 +9,34 @@ class DialogPopupPresenter {
     double height,
     double width,
   ) async {
+//     RawDialogRoute(
+
+//       pageBuilder: (_, __, ___) {
+//         return Center(
+//           child: SizedBox(
+//             height: height,
+//             width: width,
+//             child: GlassmorphismContainer(
+//               child: child,
+//               blur: Properties.blur_glass_morphism,
+//               opacity: Properties.opacity_glass_morphism,
+//             ),
+//           ),
+//         );
+//       },
+//     );
+
+// Navigator.of(context, rootNavigator: true)
+//         .push<T>(RawDialogRoute<T>(
+//       pageBuilder: pageBuilder,
+//       barrierDismissible: barrierDismissible,
+//       barrierLabel: barrierLabel,
+//       barrierColor: barrierColor,
+//       transitionDuration: transitionDuration,
+//       transitionBuilder: transitionBuilder,
+//       settings: routeSettings,
+//     ));
+
     return showGeneralDialog(
       context: context,
       barrierLabel: "Reviews",
@@ -44,6 +72,7 @@ class DialogPopupPresenter {
           ),
         );
       },
+      useRootNavigator: true,
     );
   }
 }
