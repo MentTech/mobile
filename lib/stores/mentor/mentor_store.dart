@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:mobile/data/repository.dart';
+import 'package:mobile/models/common/program/program.dart';
 import 'package:mobile/models/mentor/mentor.dart';
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
@@ -67,6 +68,9 @@ abstract class _MentorStore with Store {
   @observable
   MentorModel? mentorModel;
 
+  @observable
+  Program? program;
+
   // computed:------------------------------------------------------------------
   @computed
   bool get isLoading => requestFuture.status == FutureStatus.pending;
@@ -76,6 +80,12 @@ abstract class _MentorStore with Store {
 
   @computed
   bool get hasMentor => mentorModel != null;
+
+  @computed
+  Program? get getProgram => program;
+
+  @computed
+  bool get hasProgram => program != null;
 
   // actions:-------------------------------------------------------------------
   @action
@@ -157,6 +167,8 @@ abstract class _MentorStore with Store {
       messageStore.notifyExpiredTokenStatus();
 
       success = false;
+
+      return;
     }
 
     final future = _repository.fetchMentor(mentorID);
@@ -178,8 +190,55 @@ abstract class _MentorStore with Store {
   }
 
   @action
+  Future<void> fetchProgramOfMentor(int programID) async {
+    String? accessToken = await _repository.authToken;
+
+    if (null == accessToken) {
+      messageStore.successMessage = "";
+      messageStore.errorMessage = "There are no AccessToken";
+      messageStore.notifyExpiredTokenStatus();
+
+      success = false;
+
+      return;
+    }
+
+    if (null == mentorModel) {
+      messageStore.successMessage = "";
+      messageStore.errorMessage = "There are no MentorModel";
+      messageStore.notifyExpiredTokenStatus();
+
+      success = false;
+
+      return;
+    }
+
+    final future = _repository.fetchProgram(mentorModel!.id, programID);
+    requestFuture = ObservableFuture(future);
+
+    future.then((res) {
+      try {
+        program = Program.fromJson(res!);
+
+        success = true;
+      } catch (e) {
+        // res['message']
+        messageStore.errorMessage = e.toString();
+        messageStore.successMessage = "";
+
+        success = false;
+      }
+    });
+  }
+
+  @action
   void clearCurrentMentor() {
     mentorModel = null;
+  }
+
+  @action
+  void clearCurrentProgram() {
+    program = null;
   }
 
   // general methods:-----------------------------------------------------------

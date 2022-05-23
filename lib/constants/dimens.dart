@@ -47,7 +47,7 @@ class Dimens {
   static const double extra_large_vertical_margin = 20.0;
 
   /// Text dimens
-  /// return size 15
+  /// return size 12
   static const double more_small_text = 12;
 
   /// return size 15

@@ -4,7 +4,6 @@ import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/common/program/program.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
-import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/glassmorphism_widget_button.dart';
 import 'package:mobile/widgets/star_widget/start_rate_widget.dart';
 import 'package:readmore/readmore.dart';
@@ -13,17 +12,17 @@ class SessionTicketItem extends StatelessWidget {
   SessionTicketItem({
     Key? key,
     required this.program,
-    required this.popupChild,
+    this.callback,
     this.padding = EdgeInsets.zero,
     this.margin = EdgeInsets.zero,
   }) : super(key: key);
 
   final Program program;
 
-  final Widget popupChild;
-
   final EdgeInsets padding;
   final EdgeInsets margin;
+
+  final VoidCallback? callback;
 
   final ThemeStore _themeStore = getIt<ThemeStore>();
 
@@ -34,7 +33,7 @@ class SessionTicketItem extends StatelessWidget {
       child: GlassmorphismWidgetButton(
         padding: padding,
         onTap: () {
-          Routes.navigatorSupporter(context, Routes.programRegister);
+          callback?.call();
         },
         child: ListTile(
           title: Column(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 
 import 'page/home_page.dart';
 import 'page/settings_page.dart';
@@ -57,31 +56,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      name: 'main-observer',
-      builder: (_) => Scaffold(
-        backgroundColor: Colors.white,
-        extendBody: true,
-        bottomNavigationBar: Theme(
-          data: Theme.of(context)
-              .copyWith(iconTheme: const IconThemeData(color: Colors.white)),
-          child: CurvedNavigationBar(
-            key: _bottomNavigationKey,
-            color: Theme.of(context).primaryColor,
-            height: sizeBottomButton * 2,
-            backgroundColor: Colors.transparent,
-            index: _initButtonIndex,
-            animationCurve: curveEffect,
-            animationDuration: durationEffect,
-            items: _listCurveButtonIcon,
-            onTap: onBottomChanged,
-          ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      extendBody: true,
+      bottomNavigationBar: Theme(
+        data: Theme.of(context)
+            .copyWith(iconTheme: const IconThemeData(color: Colors.white)),
+        child: CurvedNavigationBar(
+          key: _bottomNavigationKey,
+          color: Theme.of(context).primaryColor,
+          height: sizeBottomButton * 2,
+          backgroundColor: Colors.transparent,
+          index: _initButtonIndex,
+          animationCurve: curveEffect,
+          animationDuration: durationEffect,
+          items: _listCurveButtonIcon,
+          onTap: onBottomChanged,
         ),
-        body: PageView(
-          children: pageList,
-          controller: pageController,
-          physics: const NeverScrollableScrollPhysics(),
-        ),
+      ),
+      body: PageView(
+        children: pageList,
+        controller: pageController,
+        physics: const NeverScrollableScrollPhysics(),
       ),
     );
   }

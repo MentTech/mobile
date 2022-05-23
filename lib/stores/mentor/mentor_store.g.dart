@@ -28,6 +28,20 @@ mixin _$MentorStore on _MentorStore, Store {
   bool get hasMentor => (_$hasMentorComputed ??=
           Computed<bool>(() => super.hasMentor, name: '_MentorStore.hasMentor'))
       .value;
+  Computed<Program?>? _$getProgramComputed;
+
+  @override
+  Program? get getProgram =>
+      (_$getProgramComputed ??= Computed<Program?>(() => super.getProgram,
+              name: '_MentorStore.getProgram'))
+          .value;
+  Computed<bool>? _$hasProgramComputed;
+
+  @override
+  bool get hasProgram =>
+      (_$hasProgramComputed ??= Computed<bool>(() => super.hasProgram,
+              name: '_MentorStore.hasProgram'))
+          .value;
 
   late final _$successAtom =
       Atom(name: '_MentorStore.success', context: context);
@@ -108,6 +122,22 @@ mixin _$MentorStore on _MentorStore, Store {
     });
   }
 
+  late final _$programAtom =
+      Atom(name: '_MentorStore.program', context: context);
+
+  @override
+  Program? get program {
+    _$programAtom.reportRead();
+    return super.program;
+  }
+
+  @override
+  set program(Program? value) {
+    _$programAtom.reportWrite(value, super.program, () {
+      super.program = value;
+    });
+  }
+
   late final _$searchMentorsAsyncAction =
       AsyncAction('_MentorStore.searchMentors', context: context);
 
@@ -122,6 +152,15 @@ mixin _$MentorStore on _MentorStore, Store {
   @override
   Future<void> fetchAMentor(int mentorID) {
     return _$fetchAMentorAsyncAction.run(() => super.fetchAMentor(mentorID));
+  }
+
+  late final _$fetchProgramOfMentorAsyncAction =
+      AsyncAction('_MentorStore.fetchProgramOfMentor', context: context);
+
+  @override
+  Future<void> fetchProgramOfMentor(int programID) {
+    return _$fetchProgramOfMentorAsyncAction
+        .run(() => super.fetchProgramOfMentor(programID));
   }
 
   late final _$_MentorStoreActionController =
@@ -168,9 +207,12 @@ page: ${page},
 requestFuture: ${requestFuture},
 listMentors: ${listMentors},
 mentorModel: ${mentorModel},
+program: ${program},
 isLoading: ${isLoading},
 getMentor: ${getMentor},
-hasMentor: ${hasMentor}
+hasMentor: ${hasMentor},
+getProgram: ${getProgram},
+hasProgram: ${hasProgram}
     ''';
   }
 }

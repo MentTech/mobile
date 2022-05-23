@@ -26,7 +26,7 @@ class Routes {
     home: (BuildContext context) => const HomeScreen(),
     profile: (BuildContext context) => const UserProfile(),
     tokenProfile: (BuildContext context) => TokenProfile(),
-    programRegister: (BuildContext context) => const ProgramRegisterScreen(),
+    programRegister: (BuildContext context) => ProgramRegisterScreen(),
     // mentorProfile: (BuildContext context) => const MentorProfile(),
   };
 
@@ -58,9 +58,17 @@ class Routes {
   }
 
   ///
-  /// easy way to navigate
+  /// easy way to navigate with Replacment
+  ///
+  static void navigatorReplacementSupporter(
+      BuildContext context, String routeString) {
+    Navigator.of(context).pushReplacementNamed(routeString);
+  }
+
+  ///
+  /// easy way to navigate with adding stack
   ///
   static void navigatorSupporter(BuildContext context, String routeString) {
-    Navigator.of(context).pushReplacementNamed(routeString);
+    Navigator.of(context).pushNamed(routeString);
   }
 }

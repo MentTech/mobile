@@ -46,6 +46,10 @@ class Endpoints {
   /// Get specificed mentor information: /mentor/:id
   static const String fetchMentorInfor = _mentorProxy + "/:id";
 
+  /// Get specificed program information: /mentor/:id/program/:programid
+  static const String fetchProgramInfor =
+      _mentorProxy + "/:id/program/:programid";
+
   //:---------------------------------------------------------------------------
 
 }
