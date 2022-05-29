@@ -208,7 +208,7 @@ class _TutorPageState extends State<TutorPage> {
                                     mentorModel: _mentorStore.at(i),
                                     onTapViewDetail: () {
                                       Navigator.of(context)
-                                          .push(MaterialPageRoute(
+                                          .pushReplacement(MaterialPageRoute(
                                         builder: (context) => MentorProfile(
                                             idMentor: _mentorStore.at(i).id),
                                       ));

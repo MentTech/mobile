@@ -92,6 +92,66 @@ class MentorAPI {
     }
   }
 
+  Future<Map<String, dynamic>?> fetchProgramRateList({
+    required int mentorID,
+    required int programID,
+    required Map<String, dynamic> query,
+  }) async {
+    try {
+      final res = await _dioClient.get(
+        Endpoints.fetchProgramInfor
+            .replaceAll(":mentorId", "$mentorID")
+            .replaceAll(":id", "$programID"),
+        queryParameters: query,
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) => true,
+          // headers: headers
+          // headers: {
+          //   'Content-Type': 'application/json; charset=utf-8',
+          //   "Authorization": "Bearer $authToken"
+          // },
+        ),
+      );
+
+      return res;
+      // return User.fromJson(res);
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>?> registerProgram({
+    required int mentorID,
+    required int programID,
+    required Map<String, dynamic> body,
+  }) async {
+    try {
+      final res = await _dioClient.post(
+        Endpoints.fetchProgramInfor
+            .replaceAll(":mentorId", "$mentorID")
+            .replaceAll(":id", "$programID"),
+        data: body,
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) => true,
+          // headers: headers
+          // headers: {
+          //   'Content-Type': 'application/json; charset=utf-8',
+          //   "Authorization": "Bearer $authToken"
+          // },
+        ),
+      );
+
+      return res;
+      // return User.fromJson(res);
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
   // /// Returns list of post in response
   // Future<PostList> getPosts() async {
   //   try {

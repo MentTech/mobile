@@ -30,7 +30,7 @@ class Program {
 
 @JsonSerializable()
 class AverageRating {
-  int average;
+  double average;
   int count;
 
   AverageRating({

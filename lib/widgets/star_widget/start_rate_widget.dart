@@ -9,6 +9,7 @@ class StarRateWidget extends StatelessWidget {
     this.sizeStar = Dimens.medium_text,
     this.sizeText = Dimens.small_text,
     this.rating = 0.0,
+    this.count = 0,
   }) : super(key: key);
 
   final Color rateColor;
@@ -18,6 +19,8 @@ class StarRateWidget extends StatelessWidget {
   final double sizeText;
 
   final double rating;
+
+  final int count;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +33,7 @@ class StarRateWidget extends StatelessWidget {
           size: sizeStar,
         ),
         Text(
-          " $rating",
+          " $rating" + (count != 0 ? "($count reviews)" : ""),
           style: TextStyle(
             color: Colors.white,
             fontSize: sizeText,

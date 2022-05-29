@@ -200,6 +200,17 @@ mixin _$MentorStore on _MentorStore, Store {
   }
 
   @override
+  void clearCurrentProgram() {
+    final _$actionInfo = _$_MentorStoreActionController.startAction(
+        name: '_MentorStore.clearCurrentProgram');
+    try {
+      return super.clearCurrentProgram();
+    } finally {
+      _$_MentorStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 success: ${success},

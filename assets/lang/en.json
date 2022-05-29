@@ -29,5 +29,12 @@
   "load_failed": "Load Failed!",
   "load_canloading": "release to load more",
   "load_else": "No more Data",
-  "refresher_status_end": "-------------------------------------------------------------------------"
+  "refresher_status_end": "-------------------------------------------------------------------------",
+  "full_name": "Your full name",
+  "email": "Your Email",
+  "your_description": "Description about yourself",
+  "your_note": "Your note about this program",
+  "your_expectation": "Your expectation for this program",
+  "your_goal": "Your goal you want in this session",
+  "common_end": "-----------------------------------------------------------------------------------"
 }

@@ -1,5 +1,11 @@
+import 'package:intl/intl.dart';
+
 extension DateTimeExtension on DateTime {
   DateTime subtractYear({required int year}) {
     return DateTime(this.year - year, month, day);
+  }
+
+  String toFulltimeString() {
+    return DateFormat("hh:mm:ss, dd/MM/yyyy").format(this);
   }
 }

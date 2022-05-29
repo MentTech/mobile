@@ -133,15 +133,16 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
                   children: [
                     _buildBanner(),
                     SafeArea(
-                        child: Center(
-                      child: GlassmorphismContainer(
-                        blur: Properties.blur_glass_morphism,
-                        opacity: Properties.opacity_glass_morphism,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: Dimens.vertical_padding * 2),
-                        child: _buildContent(),
+                      child: Center(
+                        child: GlassmorphismContainer(
+                          blur: Properties.blur_glass_morphism,
+                          opacity: Properties.opacity_glass_morphism,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: Dimens.vertical_padding * 2),
+                          child: _buildContent(),
+                        ),
                       ),
-                    )),
+                    ),
                   ],
                 ),
           Observer(

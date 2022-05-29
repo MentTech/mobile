@@ -55,6 +55,7 @@ class ProgramRegisterScreen extends StatelessWidget {
             globalBackgroundColor: Colors.transparent,
             pages: [
               PageViewModel(
+                useScrollView: false,
                 titleWidget: const SizedBox(),
                 bodyWidget: Observer(builder: (BuildContext _) {
                   MentorStore mentorStore =
@@ -63,9 +64,14 @@ class ProgramRegisterScreen extends StatelessWidget {
                   if (mentorStore.isLoading && !mentorStore.hasProgram) {
                     return const ProgramShimmerLoading();
                   } else {
-                    return ProgramDetailContainer(
-                      programDetail: mentorStore.getProgram!,
-                      mentorModel: mentorStore.getMentor!,
+                    return Container(
+                      color: Colors.red,
+                      child: Expanded(
+                        child: ProgramDetailContainer(
+                          programDetail: mentorStore.getProgram!,
+                          mentorModel: mentorStore.getMentor!,
+                        ),
+                      ),
                     );
                   }
                 }),

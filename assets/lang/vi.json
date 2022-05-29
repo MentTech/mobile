@@ -29,5 +29,12 @@
   "load_failed": "Tải thất bại!",
   "load_canloading": "Thả để tải",
   "load_else": "Đã tải trang cuối cùng",
-  "refresher_status_end": "-------------------------------------------------------------------------"
+  "refresher_status_end": "-------------------------------------------------------------------------",
+  "full_name": "Họ và tên",
+  "email": "Email",
+  "your_description": "Mô tả về bản thân",
+  "your_note": "Chú thích về chương trình này",
+  "your_expectation": "Mong đợi của bạn khi đăng kí chương trình",
+  "your_goal": "Mục tiêu bạn muốn trở thành khi hoàn tất chương trình",
+  "common_end": "-----------------------------------------------------------------------------------"
 }

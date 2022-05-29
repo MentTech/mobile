@@ -74,6 +74,39 @@ class Repository {
     });
   }
 
+  Future<Map<String, dynamic>?> fetchProgramRateList({
+    required int mentorID,
+    required int programID,
+    required Map<String, dynamic> query,
+  }) async {
+    return _mentorAPI
+        .fetchProgramRateList(
+            mentorID: mentorID, programID: programID, query: query)
+        .catchError((error) {
+      return {
+        "onError": "[fetchProgramRateList]: " + error.toString(),
+      };
+    });
+  }
+
+  Future<Map<String, dynamic>?> registerProgram({
+    required int mentorID,
+    required int programID,
+    required Map<String, dynamic> body,
+  }) async {
+    return _mentorAPI
+        .registerProgram(
+      mentorID: mentorID,
+      programID: programID,
+      body: body,
+    )
+        .catchError((error) {
+      return {
+        "onError": "[registerProgram]: " + error.toString(),
+      };
+    });
+  }
+
   // Future<List<Post>> findPostById(int id) {
   //   //creating filter
   //   List<Filter> filters = [];

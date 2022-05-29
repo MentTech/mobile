@@ -31,7 +31,7 @@ Map<String, dynamic> _$ProgramToJson(Program instance) => <String, dynamic>{
 
 AverageRating _$AverageRatingFromJson(Map<String, dynamic> json) =>
     AverageRating(
-      average: json['average'] as int,
+      average: (json['average'] as num).toDouble(),
       count: json['count'] as int,
     );
 

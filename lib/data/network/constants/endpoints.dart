@@ -50,6 +50,14 @@ class Endpoints {
   static const String fetchProgramInfor =
       _mentorProxy + "/:id/program/:programid";
 
+  /// Get all rates of a mentor's program
+  static const String fetchProgramRateList =
+      _mentorProxy + "/:mentorId/program/:id/rating";
+
+  /// Register a mentor's program
+  static const String registerProgram =
+      _mentorProxy + "/:mentorId/program/:id/register";
+
   //:---------------------------------------------------------------------------
 
 }
