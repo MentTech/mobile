@@ -12,7 +12,9 @@ Program _$ProgramFromJson(Map<String, dynamic> json) => Program(
       title: json['title'] as String,
       detail: json['detail'] as String,
       credit: json['credit'] as int,
-      createAt: DateTime.parse(json['createAt'] as String),
+      createAt: json['createAt'] == null
+          ? null
+          : DateTime.parse(json['createAt'] as String),
       averageRating: json['averageRating'] == null
           ? null
           : AverageRating.fromJson(
@@ -25,7 +27,7 @@ Map<String, dynamic> _$ProgramToJson(Program instance) => <String, dynamic>{
       'title': instance.title,
       'detail': instance.detail,
       'credit': instance.credit,
-      'createAt': instance.createAt.toIso8601String(),
+      'createAt': instance.createAt?.toIso8601String(),
       'averageRating': instance.averageRating,
     };
 

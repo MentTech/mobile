@@ -9,7 +9,7 @@ class Program {
   String title;
   String detail;
   int credit;
-  DateTime createAt;
+  DateTime? createAt;
   AverageRating? averageRating;
 
   Program({
@@ -18,7 +18,7 @@ class Program {
     required this.title,
     required this.detail,
     required this.credit,
-    required this.createAt,
+    this.createAt,
     this.averageRating,
   });
 

@@ -13,11 +13,19 @@ class SessionTicketItem extends StatelessWidget {
     Key? key,
     required this.program,
     this.callback,
+    this.textColor,
     this.padding = EdgeInsets.zero,
     this.margin = EdgeInsets.zero,
+    this.blur = Properties.blur_glass_morphism,
+    this.opacity = Properties.opacity_glass_morphism,
   }) : super(key: key);
 
   final Program program;
+
+  final double blur;
+  final double opacity;
+
+  final Color? textColor;
 
   final EdgeInsets padding;
   final EdgeInsets margin;
@@ -43,7 +51,9 @@ class SessionTicketItem extends StatelessWidget {
               Text(
                 program.title,
                 style: TextStyle(
-                  color: _themeStore.themeColor,
+                  color: Color.alphaBlend(
+                      (textColor ?? _themeStore.themeColor).withAlpha(150),
+                      Colors.white),
                   fontSize: Dimens.small_text,
                   fontWeight: FontWeight.w500,
                 ),
@@ -57,7 +67,7 @@ class SessionTicketItem extends StatelessWidget {
           subtitle: ReadMoreText(
             program.detail,
             style: TextStyle(
-              color: _themeStore.themeColor,
+              color: textColor ?? _themeStore.themeColor,
               fontSize: Dimens.small_text,
             ),
             trimLines: 1,
@@ -66,7 +76,7 @@ class SessionTicketItem extends StatelessWidget {
           leading: Icon(
             Icons.loyalty_outlined,
             size: Dimens.large_text,
-            color: _themeStore.themeColor,
+            color: textColor ?? _themeStore.themeColor,
           ),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
@@ -74,20 +84,20 @@ class SessionTicketItem extends StatelessWidget {
               Text(
                 "${program.credit} ",
                 style: TextStyle(
-                  color: _themeStore.themeColor,
+                  color: textColor ?? _themeStore.themeColor,
                   fontSize: Dimens.small_text,
                 ),
               ),
               Icon(
                 Icons.token_rounded,
                 size: Dimens.medium_text,
-                color: _themeStore.themeColor,
+                color: textColor ?? _themeStore.themeColor,
               ),
             ],
           ),
         ),
-        blur: Properties.blur_glass_morphism,
-        opacity: Properties.opacity_glass_morphism,
+        blur: blur,
+        opacity: opacity,
       ),
     );
   }

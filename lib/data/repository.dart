@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:mobile/data/network/apis/auth/auth_api.dart';
+import 'package:mobile/data/network/apis/mentee/mentee_api.dart';
 import 'package:mobile/data/network/apis/mentor/mentor_api.dart';
 import 'package:mobile/data/sharedpref/shared_preference_helper.dart';
 
@@ -12,6 +13,7 @@ class Repository {
   // api objects
   final AuthAPI _authApi;
   final MentorAPI _mentorAPI;
+  final MenteeAPI _menteeAPI;
 
   // shared pref object
   final SharedPreferenceHelper _sharedPrefsHelper;
@@ -20,6 +22,7 @@ class Repository {
   Repository(
     this._authApi,
     this._mentorAPI,
+    this._menteeAPI,
     this._sharedPrefsHelper,
     // this._postDataSource,
   );
@@ -32,6 +35,23 @@ class Repository {
         "Authorization": "Bearer $authToken"
       },
     ).then((resVal) {
+      return resVal;
+    }).catchError((error) {
+      log("Fetch Userinfor failing");
+      return null;
+    });
+  }
+
+  Future<Map<String, dynamic>?> fetchSessionsOfUser({
+    required String authToken,
+    // required Map<String, dynamic> parameters,
+  }) async {
+    return await _menteeAPI
+        .fetchSessionsOfUser(
+      authToken: authToken,
+      // parameters: parameters,
+    )
+        .then((resVal) {
       return resVal;
     }).catchError((error) {
       log("Fetch Userinfor failing");

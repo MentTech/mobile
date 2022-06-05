@@ -5,7 +5,7 @@ import 'package:mobile/ui/authorization/authorization_screen.dart';
 import 'package:mobile/ui/home/home.dart';
 import 'package:mobile/ui/program_register/program_register_screen.dart';
 import 'package:mobile/ui/splash/splash.dart';
-import 'package:mobile/ui/token_user_profile/token_profile.dart';
+import 'package:mobile/ui/token_user_profile/balanced_profile.dart';
 import 'package:mobile/ui/user_profile/user_profile.dart';
 
 class Routes {
@@ -25,7 +25,7 @@ class Routes {
     login: (BuildContext context) => const AuthorizationScreen(),
     home: (BuildContext context) => const HomeScreen(),
     profile: (BuildContext context) => const UserProfile(),
-    tokenProfile: (BuildContext context) => TokenProfile(),
+    tokenProfile: (BuildContext context) => const BalancedProfile(),
     programRegister: (BuildContext context) => ProgramRegisterScreen(),
     // mentorProfile: (BuildContext context) => const MentorProfile(),
   };

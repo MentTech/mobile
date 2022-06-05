@@ -91,14 +91,16 @@ class ProgramDetailContainer extends StatelessWidget {
               ),
             ],
           ),
-          Text(
-            "Created at ${programDetail.createAt.toFulltimeString()}",
-            style: const TextStyle(
-              fontSize: Dimens.small_text,
-              color: Colors.white70,
-              height: 1.5,
-            ),
-          ),
+          programDetail.createAt != null
+              ? Text(
+                  "Created at ${programDetail.createAt!.toFulltimeString()}",
+                  style: const TextStyle(
+                    fontSize: Dimens.small_text,
+                    color: Colors.white70,
+                    height: 1.5,
+                  ),
+                )
+              : const SizedBox(),
           ReadMoreText(
             programDetail.detail,
             style: const TextStyle(

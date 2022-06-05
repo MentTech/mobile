@@ -21,6 +21,9 @@ class Dimens {
   /// nomal horizontal padding value: 12.0
   static const double vertical_padding = 12.0;
 
+  /// nomal horizontal padding value: 18.0
+  static const double large_vertical_padding = 18.0;
+
   // margin
   /// small horizontal margin value: 6.0
   static const double horizontal_margin = 6.0;
@@ -36,6 +39,9 @@ class Dimens {
 
   /// small vertical margin value: 6.0
   static const double vertical_margin = 6.0;
+
+  /// medium vertical margin value: 9.0
+  static const double lightly_medium_vertical_margin = 9.0;
 
   /// medium vertical margin value: 12.0
   static const double medium_vertical_margin = 12.0;
@@ -64,6 +70,9 @@ class Dimens {
 
   /// return size 30
   static const double extra_large_text = 30;
+
+  /// return size 40
+  static const double ultra_large_text = 40;
 
   static const double text_field_height = 50.0;
 

@@ -60,4 +60,13 @@ class Endpoints {
 
   //:---------------------------------------------------------------------------
 
+  /// Mentee APIs
+  /// Private Mentee proxy
+  static const String _menteeProxy = baseUrl + "/mentee";
+
+  /// Get all sessions which is registered by user
+  static const String sessionRegisterProgram = _menteeProxy + "/mysession";
+
+  //:---------------------------------------------------------------------------
+
 }
