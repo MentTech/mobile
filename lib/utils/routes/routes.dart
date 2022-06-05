@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/effects/navigate/screen_transition.dart';
+import 'package:mobile/ui/advanced_settings/advanced_settings.dart';
 import 'package:mobile/ui/authorization/authorization_screen.dart';
 import 'package:mobile/ui/home/home.dart';
 import 'package:mobile/ui/program_register/program_register_screen.dart';
@@ -18,6 +19,7 @@ class Routes {
   static const String profile = '/profile';
   static const String tokenProfile = '/token_profile';
   static const String programRegister = '/program_register';
+  static const String advancedSettings = '/advanced_settings';
   // static const String mentorProfile = '/mentor_profile';
 
   static final routes = <String, WidgetBuilder>{
@@ -27,6 +29,7 @@ class Routes {
     profile: (BuildContext context) => const UserProfile(),
     tokenProfile: (BuildContext context) => const BalancedProfile(),
     programRegister: (BuildContext context) => ProgramRegisterScreen(),
+    advancedSettings: (BuildContext context) => AdvancedSettings(),
     // mentorProfile: (BuildContext context) => const MentorProfile(),
   };
 

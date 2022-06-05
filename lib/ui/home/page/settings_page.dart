@@ -135,7 +135,7 @@ class SettingsPage extends StatelessWidget {
                     namedContainer: "Settings",
                     children: <Widget>[
                       GlassmorphismTextButton(
-                        text: AppLocalizations.of(context).translate('logout'),
+                        text: "Advanced Settings",
                         blur: Properties.blur_glass_morphism,
                         opacity: Properties.opacity_glass_morphism,
                         padding: const EdgeInsets.symmetric(
@@ -143,40 +143,10 @@ class SettingsPage extends StatelessWidget {
                           vertical: Dimens.vertical_padding,
                         ),
                         radius: 15,
-                        onTap: () {},
-                      ),
-                      GlassmorphismTextButton(
-                        text: AppLocalizations.of(context).translate('logout'),
-                        blur: Properties.blur_glass_morphism,
-                        opacity: Properties.opacity_glass_morphism,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: Dimens.horizontal_padding,
-                          vertical: Dimens.vertical_padding,
-                        ),
-                        radius: 15,
-                        onTap: () {},
-                      ),
-                      GlassmorphismTextButton(
-                        text: AppLocalizations.of(context).translate('logout'),
-                        blur: Properties.blur_glass_morphism,
-                        opacity: Properties.opacity_glass_morphism,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: Dimens.horizontal_padding,
-                          vertical: Dimens.vertical_padding,
-                        ),
-                        radius: 15,
-                        onTap: () {},
-                      ),
-                      GlassmorphismTextButton(
-                        text: AppLocalizations.of(context).translate('logout'),
-                        blur: Properties.blur_glass_morphism,
-                        opacity: Properties.opacity_glass_morphism,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: Dimens.horizontal_padding,
-                          vertical: Dimens.vertical_padding,
-                        ),
-                        radius: 15,
-                        onTap: () {},
+                        onTap: () {
+                          Routes.navigatorSupporter(
+                              context, Routes.advancedSettings);
+                        },
                       ),
                     ],
                   ),

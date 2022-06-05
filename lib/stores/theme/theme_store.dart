@@ -25,6 +25,8 @@ abstract class _ThemeStore with Store {
   // getters:-------------------------------------------------------------------
   bool get darkMode => _darkMode;
 
+  String get modeName => _darkMode ? "Dark mode" : "Light mode";
+
   double get opacityTheme => _darkMode ? 0.9 : 0.75;
 
   Color get textTitleColor =>
