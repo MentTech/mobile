@@ -24,19 +24,25 @@ class AdvancedSettings extends StatelessWidget {
             colors: [
               _themeStore.themeColor,
               Colors.black
-                  .withGreen((_themeStore.themeColor.green * 0.2).round())
-                  .withBlue((_themeStore.themeColor.blue * 0.2).round()),
+                  .withGreen((_themeStore.themeColor.green * 0.7).round())
+                  .withBlue((_themeStore.themeColor.blue * 0.7).round()),
+              Colors.black
+                  .withGreen((_themeStore.themeColor.green * 0.35).round())
+                  .withBlue((_themeStore.themeColor.blue * 0.35).round()),
             ],
-            stops: const [0, 0.5],
+            stops: const [0, 0.35, 0.7],
           ),
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: <Widget>[
-                  _buildLanguageSession(context),
                   const SizedBox(
                     height: Dimens.vertical_margin,
+                  ),
+                  _buildLanguageSession(context),
+                  const SizedBox(
+                    height: Dimens.large_vertical_margin,
                   ),
                   _buildThemeSession(context),
                 ],

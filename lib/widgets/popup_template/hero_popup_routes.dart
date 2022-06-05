@@ -116,7 +116,7 @@ class HeroDialogRoute<T> extends PageRoute<T> {
   bool get opaque => false; // is not show background
 
   @override
-  Color? get barrierColor => Colors.black38; // color behide popup
+  Color? get barrierColor => Colors.black12; // color behide popup
 
   @override
   bool get barrierDismissible => true; // dismiss when tap outside
