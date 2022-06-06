@@ -14,6 +14,7 @@ class SessionTicketItem extends StatelessWidget {
     required this.program,
     this.callback,
     this.textColor,
+    this.statusColor,
     this.padding = EdgeInsets.zero,
     this.margin = EdgeInsets.zero,
     this.blur = Properties.blur_glass_morphism,
@@ -26,6 +27,7 @@ class SessionTicketItem extends StatelessWidget {
   final double opacity;
 
   final Color? textColor;
+  final Color? statusColor;
 
   final EdgeInsets padding;
   final EdgeInsets margin;
@@ -39,6 +41,8 @@ class SessionTicketItem extends StatelessWidget {
     return Container(
       margin: margin,
       child: GlassmorphismWidgetButton(
+        border: statusColor ?? Colors.white,
+        background: statusColor ?? Colors.white,
         padding: padding,
         onTap: () {
           callback?.call();
@@ -76,7 +80,7 @@ class SessionTicketItem extends StatelessWidget {
           leading: Icon(
             Icons.loyalty_outlined,
             size: Dimens.large_text,
-            color: textColor ?? _themeStore.themeColor,
+            color: statusColor ?? textColor ?? Colors.white70,
           ),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,

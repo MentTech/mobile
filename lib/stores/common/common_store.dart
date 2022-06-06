@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:mobile/data/repository.dart';
+import 'package:mobile/models/common/session/session.dart';
 import 'package:mobile/models/rate/rate.dart';
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
@@ -59,12 +60,18 @@ abstract class _CommonStore with Store {
   @observable
   ObservableList<RateModel> rateModels = ObservableList<RateModel>();
 
+  @observable
+  Session? session;
+
   // computed:------------------------------------------------------------------
   @computed
   bool get isLoading => requestFuture.status == FutureStatus.pending;
 
   @computed
-  get programLengthList => rateModels.length;
+  int get programLengthList => rateModels.length;
+
+  @computed
+  Session? get sessionObserver => session;
 
   // actions:-------------------------------------------------------------------
   @action
@@ -176,6 +183,127 @@ abstract class _CommonStore with Store {
     return true;
   }
 
+  @action
+  Future<void> unregisterSessionOfProgram({
+    VoidCallback? callback,
+  }) async {
+    String? accessToken = await _repository.authToken;
+
+    if (null == accessToken) {
+      messageStore.successMessage = "";
+      messageStore.errorMessage = "There are no AccessToken";
+      messageStore.notifyExpiredTokenStatus();
+
+      success = false;
+
+      return;
+    }
+
+    final future = _repository.unregisterASessionOfProgram(
+      mentorID: session!.program.mentorId,
+      programID: session!.program.id,
+      sessionID: session!.id,
+      authToken: accessToken,
+    );
+    requestFuture = ObservableFuture(future);
+
+    future.then(
+      (res) {
+        try {
+          callback?.call();
+          success = true;
+        } catch (e) {
+          // res['message']
+          messageStore.errorMessage = e.toString();
+          messageStore.successMessage = "";
+
+          success = false;
+        }
+      },
+    );
+  }
+
+  @action
+  Future<void> markSessionOfProgramAsDone() async {
+    String? accessToken = await _repository.authToken;
+
+    if (null == accessToken) {
+      messageStore.successMessage = "";
+      messageStore.errorMessage = "There are no AccessToken";
+      messageStore.notifyExpiredTokenStatus();
+
+      success = false;
+
+      return;
+    }
+
+    final future = _repository.markSessionOfProgramAsDone(
+      mentorID: session!.program.mentorId,
+      programID: session!.program.id,
+      sessionID: session!.id,
+      authToken: accessToken,
+    );
+    requestFuture = ObservableFuture(future);
+
+    future.then(
+      (res) {
+        try {
+          success = true;
+        } catch (e) {
+          // res['message']
+          messageStore.errorMessage = e.toString();
+          messageStore.successMessage = "";
+
+          success = false;
+        }
+      },
+    );
+  }
+
+  @action
+  Future<void> reviewSessionOfProgram(ReviewModel reviewModel) async {
+    String? accessToken = await _repository.authToken;
+
+    if (null == accessToken) {
+      messageStore.successMessage = "";
+      messageStore.errorMessage = "There are no AccessToken";
+      messageStore.notifyExpiredTokenStatus();
+
+      success = false;
+
+      return;
+    }
+
+    final future = _repository.reviewSessionOfProgram(
+      mentorID: session!.program.mentorId,
+      programID: session!.program.id,
+      sessionID: session!.id,
+      authToken: accessToken,
+      rate: reviewModel.rate,
+      comment: reviewModel.comment,
+    );
+    requestFuture = ObservableFuture(future);
+
+    future.then(
+      (res) {
+        try {
+          success = true;
+        } catch (e) {
+          // res['message']
+          messageStore.errorMessage = e.toString();
+          messageStore.successMessage = "";
+
+          success = false;
+        }
+      },
+    );
+  }
+
+  @action
+  void setSessionObserver(Session session) {
+    this.session = session;
+  }
+
   // general methods:-----------------------------------------------------------
 
   RateModel getProgramAt(int index) => rateModels.elementAt(index);
@@ -185,4 +313,9 @@ abstract class _CommonStore with Store {
       d();
     }
   }
+}
+
+class ReviewModel {
+  int rate = 0;
+  String comment = "";
 }

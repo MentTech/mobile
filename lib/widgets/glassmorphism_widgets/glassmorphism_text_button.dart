@@ -35,7 +35,7 @@ class GlassmorphismTextButton extends StatelessWidget {
   final Color textColor;
   final Gradient gradientBorder;
   final Alignment alignment;
-  final Function()? onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {

@@ -127,6 +127,70 @@ class Repository {
     });
   }
 
+  Future<Map<String, dynamic>?> unregisterASessionOfProgram({
+    required mentorID,
+    required int programID,
+    required int sessionID,
+    required String authToken,
+  }) async {
+    return _mentorAPI
+        .unregisterSession(
+      mentorID: mentorID,
+      programID: programID,
+      sessionID: sessionID,
+      authToken: authToken,
+    )
+        .catchError((error) {
+      return {
+        "onError": error.toString(),
+      };
+    });
+  }
+
+  Future<Map<String, dynamic>?> markSessionOfProgramAsDone({
+    required mentorID,
+    required int programID,
+    required int sessionID,
+    required String authToken,
+  }) async {
+    return _mentorAPI
+        .markSessionOfProgramAsDone(
+      mentorID: mentorID,
+      programID: programID,
+      sessionID: sessionID,
+      authToken: authToken,
+    )
+        .catchError((error) {
+      return {
+        "onError": error.toString(),
+      };
+    });
+  }
+
+  Future<Map<String, dynamic>?> reviewSessionOfProgram({
+    required mentorID,
+    required int programID,
+    required int sessionID,
+    required String authToken,
+    required int rate,
+    required String comment,
+  }) async {
+    return _mentorAPI
+        .reviewSessionOfProgram(
+      mentorID: mentorID,
+      programID: programID,
+      sessionID: sessionID,
+      authToken: authToken,
+      rate: rate,
+      comment: comment,
+    )
+        .catchError((error) {
+      return {
+        "onError": error.toString(),
+      };
+    });
+  }
+
   // Future<List<Post>> findPostById(int id) {
   //   //creating filter
   //   List<Filter> filters = [];

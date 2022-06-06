@@ -18,6 +18,8 @@ class GlassmorphismWidgetButton extends StatelessWidget {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     ),
+    this.background = Colors.white,
+    this.border = Colors.white,
     this.radius = 20,
     this.width = 150,
     this.padding = const EdgeInsets.all(0),
@@ -35,6 +37,8 @@ class GlassmorphismWidgetButton extends StatelessWidget {
   final Widget child;
   final double fontSizeText;
   final Color textColor;
+  final Color background;
+  final Color border;
   final Gradient gradientBorder;
   final Alignment alignment;
   final Function()? onTap;
@@ -55,10 +59,10 @@ class GlassmorphismWidgetButton extends StatelessWidget {
             padding: padding,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(radius),
-              color: Colors.white.withOpacity(opacity),
+              color: background.withOpacity(opacity),
               border: Border.all(
                 width: 1.5,
-                color: Colors.white.withOpacity(opacity),
+                color: border.withOpacity(opacity),
               ),
             ),
             child: Align(

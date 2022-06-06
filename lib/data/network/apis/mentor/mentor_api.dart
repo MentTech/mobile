@@ -152,6 +152,105 @@ class MentorAPI {
     }
   }
 
+  Future<Map<String, dynamic>?> unregisterSession({
+    required mentorID,
+    required int programID,
+    required int sessionID,
+    required String authToken,
+  }) async {
+    try {
+      final res = await _dioClient.delete(
+        Endpoints.unregisterProgram
+            .replaceAll(":mentorId", "$mentorID")
+            .replaceAll(":programId", "$programID")
+            .replaceAll("sessionId", "$sessionID"),
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) => true,
+          // headers: headers
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            "Authorization": "Bearer $authToken"
+          },
+        ),
+      );
+
+      return res;
+      // return User.fromJson(res);
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>?> markSessionOfProgramAsDone({
+    required mentorID,
+    required int programID,
+    required int sessionID,
+    required String authToken,
+  }) async {
+    try {
+      final res = await _dioClient.patch(
+        Endpoints.markAsDoneSessionProgram
+            .replaceAll(":mentorId", "$mentorID")
+            .replaceAll(":programId", "$programID")
+            .replaceAll("sessionId", "$sessionID"),
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) => true,
+          // headers: headers
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            "Authorization": "Bearer $authToken"
+          },
+        ),
+      );
+
+      return res;
+      // return User.fromJson(res);
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>?> reviewSessionOfProgram({
+    required mentorID,
+    required int programID,
+    required int sessionID,
+    required String authToken,
+    required int rate,
+    required String comment,
+  }) async {
+    try {
+      final res = await _dioClient.delete(
+        Endpoints.reviewSessionProgram
+            .replaceAll(":mentorId", "$mentorID")
+            .replaceAll(":programId", "$programID")
+            .replaceAll("sessionId", "$sessionID"),
+        data: {
+          "rating": rate,
+          "comment": comment,
+        },
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) => true,
+          // headers: headers
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            "Authorization": "Bearer $authToken"
+          },
+        ),
+      );
+
+      return res;
+      // return User.fromJson(res);
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
   // /// Returns list of post in response
   // Future<PostList> getPosts() async {
   //   try {

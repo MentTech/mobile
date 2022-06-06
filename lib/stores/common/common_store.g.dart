@@ -15,12 +15,19 @@ mixin _$CommonStore on _CommonStore, Store {
   bool get isLoading => (_$isLoadingComputed ??=
           Computed<bool>(() => super.isLoading, name: '_CommonStore.isLoading'))
       .value;
-  Computed<dynamic>? _$programLengthListComputed;
+  Computed<int>? _$programLengthListComputed;
 
   @override
-  dynamic get programLengthList => (_$programLengthListComputed ??=
-          Computed<dynamic>(() => super.programLengthList,
-              name: '_CommonStore.programLengthList'))
+  int get programLengthList => (_$programLengthListComputed ??= Computed<int>(
+          () => super.programLengthList,
+          name: '_CommonStore.programLengthList'))
+      .value;
+  Computed<Session?>? _$sessionObserverComputed;
+
+  @override
+  Session? get sessionObserver => (_$sessionObserverComputed ??=
+          Computed<Session?>(() => super.sessionObserver,
+              name: '_CommonStore.sessionObserver'))
       .value;
 
   late final _$successAtom =
@@ -71,6 +78,22 @@ mixin _$CommonStore on _CommonStore, Store {
     });
   }
 
+  late final _$sessionAtom =
+      Atom(name: '_CommonStore.session', context: context);
+
+  @override
+  Session? get session {
+    _$sessionAtom.reportRead();
+    return super.session;
+  }
+
+  @override
+  set session(Session? value) {
+    _$sessionAtom.reportWrite(value, super.session, () {
+      super.session = value;
+    });
+  }
+
   late final _$fetchProgramRateListAsyncAction =
       AsyncAction('_CommonStore.fetchProgramRateList', context: context);
 
@@ -91,6 +114,33 @@ mixin _$CommonStore on _CommonStore, Store {
     return _$registerProgramOfMentorAsyncAction.run(() => super
         .registerProgramOfMentor(
             mentorID: mentorID, programID: programID, body: body));
+  }
+
+  late final _$unregisterSessionOfProgramAsyncAction =
+      AsyncAction('_CommonStore.unregisterSessionOfProgram', context: context);
+
+  @override
+  Future<void> unregisterSessionOfProgram({VoidCallback? callback}) {
+    return _$unregisterSessionOfProgramAsyncAction
+        .run(() => super.unregisterSessionOfProgram(callback: callback));
+  }
+
+  late final _$markSessionOfProgramAsDoneAsyncAction =
+      AsyncAction('_CommonStore.markSessionOfProgramAsDone', context: context);
+
+  @override
+  Future<void> markSessionOfProgramAsDone() {
+    return _$markSessionOfProgramAsDoneAsyncAction
+        .run(() => super.markSessionOfProgramAsDone());
+  }
+
+  late final _$reviewSessionOfProgramAsyncAction =
+      AsyncAction('_CommonStore.reviewSessionOfProgram', context: context);
+
+  @override
+  Future<void> reviewSessionOfProgram(ReviewModel reviewModel) {
+    return _$reviewSessionOfProgramAsyncAction
+        .run(() => super.reviewSessionOfProgram(reviewModel));
   }
 
   late final _$_CommonStoreActionController =
@@ -119,13 +169,26 @@ mixin _$CommonStore on _CommonStore, Store {
   }
 
   @override
+  void setSessionObserver(Session session) {
+    final _$actionInfo = _$_CommonStoreActionController.startAction(
+        name: '_CommonStore.setSessionObserver');
+    try {
+      return super.setSessionObserver(session);
+    } finally {
+      _$_CommonStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 success: ${success},
 requestFuture: ${requestFuture},
 rateModels: ${rateModels},
+session: ${session},
 isLoading: ${isLoading},
-programLengthList: ${programLengthList}
+programLengthList: ${programLengthList},
+sessionObserver: ${sessionObserver}
     ''';
   }
 }

@@ -4,6 +4,7 @@ import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/common/program/program.dart';
 import 'package:mobile/models/mentor/mentor.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
+import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/widgets/container/image_container/network_image_widget.dart';
 import 'package:mobile/widgets/star_widget/start_rate_widget.dart';
 import 'package:readmore/readmore.dart';
@@ -17,7 +18,7 @@ class ProgramDetailContainer extends StatelessWidget {
   }) : super(key: key);
 
   final Program programDetail;
-  final MentorModel mentorModel;
+  final MentorModel? mentorModel;
 
   final ThemeStore _themeStore = getIt<ThemeStore>();
 
@@ -44,7 +45,9 @@ class ProgramDetailContainer extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      programDetail.title + " with " + mentorModel.name,
+                      programDetail.title +
+                          "\n${AppLocalizations.of(context).translate('with_translate')} " +
+                          (mentorModel?.name ?? ""),
                       style: const TextStyle(
                         fontSize: Dimens.large_text,
                         color: Colors.white,
@@ -56,7 +59,7 @@ class ProgramDetailContainer extends StatelessWidget {
               ),
               Expanded(
                 flex: 1,
-                child: NetworkImageWidget(url: mentorModel.avatar),
+                child: NetworkImageWidget(url: mentorModel?.avatar),
               ),
             ],
           ),
@@ -82,7 +85,7 @@ class ProgramDetailContainer extends StatelessWidget {
               //   opacity: Properties.blur_glass_morphism,
               // ),
               Text(
-                mentorModel.userMentor.category.name,
+                mentorModel?.userMentor.category.name ?? "",
                 style: const TextStyle(
                   fontSize: Dimens.lightly_medium_text,
                   color: Colors.white70,
@@ -93,7 +96,7 @@ class ProgramDetailContainer extends StatelessWidget {
           ),
           programDetail.createAt != null
               ? Text(
-                  "Created at ${programDetail.createAt!.toFulltimeString()}",
+                  "${AppLocalizations.of(context).translate('create_at_translate')} ${programDetail.createAt!.toFulltimeString()}",
                   style: const TextStyle(
                     fontSize: Dimens.small_text,
                     color: Colors.white70,
@@ -128,9 +131,9 @@ class ProgramDetailContainer extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      const Text(
-                        "Discusstion",
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(context).translate("discusstion"),
+                        style: const TextStyle(
                           fontSize: Dimens.lightly_medium_text,
                           fontWeight: FontWeight.w600,
                           color: Colors.white70,
@@ -148,8 +151,8 @@ class ProgramDetailContainer extends StatelessWidget {
                     ],
                   ),
                   StarRateWidget(
-                    rating: programDetail.averageRating!.average,
-                    count: programDetail.averageRating!.count,
+                    rating: programDetail.averageRating?.average ?? 0.0,
+                    count: programDetail.averageRating?.count ?? 0,
                   ),
                 ],
               ),

@@ -19,6 +19,7 @@ class Routes {
   static const String profile = '/profile';
   static const String tokenProfile = '/token_profile';
   static const String programRegister = '/program_register';
+  // static const String sessionDetail = '/session_detail';
   static const String advancedSettings = '/advanced_settings';
   // static const String mentorProfile = '/mentor_profile';
 
@@ -29,7 +30,9 @@ class Routes {
     profile: (BuildContext context) => const UserProfile(),
     tokenProfile: (BuildContext context) => const BalancedProfile(),
     programRegister: (BuildContext context) => ProgramRegisterScreen(),
+    // sessionDetail: (BuildContext context) => SesstionDetail(),
     advancedSettings: (BuildContext context) => AdvancedSettings(),
+
     // mentorProfile: (BuildContext context) => const MentorProfile(),
   };
 
@@ -73,5 +76,18 @@ class Routes {
   ///
   static void navigatorSupporter(BuildContext context, String routeString) {
     Navigator.of(context).pushNamed(routeString);
+  }
+
+  ///
+  /// Navigator.of(context).pushReplacementNamed(Routes.login);
+  ///
+  static void route<T>(BuildContext context, Widget stateNavigate) {
+    Navigator.pushReplacement(
+      context,
+      CustomFadeTransitionPageRoute(
+        timeCast: Properties.delayTimeInSecond,
+        child: stateNavigate,
+      ),
+    );
   }
 }

@@ -58,6 +58,18 @@ class Endpoints {
   static const String registerProgram =
       _mentorProxy + "/:mentorId/program/:id/register";
 
+  /// UnRegister a mentor's session
+  static const String unregisterProgram =
+      _mentorProxy + "/:mentorId/program/:programId/register/:sessionId";
+
+  /// Mark a mentor's session as done
+  static const String markAsDoneSessionProgram =
+      _mentorProxy + "/:mentorId/program/:programId/register/:sessionId/done";
+
+  /// Review a mentor's session
+  static const String reviewSessionProgram =
+      _mentorProxy + "/:mentorId/program/:programId/register/:sessionId/rating";
+
   //:---------------------------------------------------------------------------
 
   /// Mentee APIs

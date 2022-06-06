@@ -206,6 +206,18 @@ class SessionFetchingData {
     }
   }
 
+  static SessionStatus parseSessionStatus(Session session) {
+    if (session.isCanceled) {
+      return SessionStatus.canceled;
+    } else if (session.done) {
+      return SessionStatus.completed;
+    } else if (session.isAccepted) {
+      return SessionStatus.confirmed;
+    } else {
+      return SessionStatus.waiting;
+    }
+  }
+
   bool checkSameStatus(Session session) {
     return (isAll) ||
         (isCanceled == session.isCanceled &&

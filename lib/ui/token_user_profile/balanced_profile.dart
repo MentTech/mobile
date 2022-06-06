@@ -8,7 +8,9 @@ import 'package:mobile/models/common/session/session.dart';
 import 'package:mobile/stores/enum/session_status_enum.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
+import 'package:mobile/ui/session_detail/session_detail.dart';
 import 'package:mobile/utils/device/device_utils.dart';
+import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/app_icon_widget.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/glassmorphism_widget_button.dart';
@@ -204,12 +206,21 @@ class _BalancedProfileState extends State<BalancedProfile> {
                                   ),
                                   child: SessionTicketItem(
                                     program: session.program,
+                                    statusColor: decideColorOfSession(session),
                                     textColor: Colors.white70,
                                     margin: const EdgeInsets.only(
                                       top: Dimens.vertical_margin,
                                     ),
                                     blur: Properties.blur_glass_morphism,
                                     opacity: Properties.opacity_glass_morphism,
+                                    callback: () {
+                                      Routes.route(
+                                        context,
+                                        SesstionDetail(
+                                          session: session,
+                                        ),
+                                      );
+                                    },
                                   ),
                                 );
                               },
@@ -227,6 +238,24 @@ class _BalancedProfileState extends State<BalancedProfile> {
         ],
       ),
     );
+  }
+
+  Color decideColorOfSession(Session session) {
+    SessionStatus sessionStatus =
+        SessionFetchingData.parseSessionStatus(session);
+
+    switch (sessionStatus) {
+      case SessionStatus.waiting:
+        return Colors.yellow;
+      case SessionStatus.confirmed:
+        return Colors.green;
+      case SessionStatus.completed:
+        return Colors.blue;
+      case SessionStatus.canceled:
+        return Colors.red;
+      default:
+        return Colors.white;
+    }
   }
 
   Widget _buildMainWidget() {
