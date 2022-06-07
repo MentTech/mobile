@@ -5,8 +5,10 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mobile/constants/colors.dart';
 import 'package:mobile/constants/dimens.dart';
+import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/mentor/mentor.dart';
+import 'package:mobile/stores/common/common_store.dart';
 import 'package:mobile/stores/mentor/mentor_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
@@ -16,6 +18,8 @@ import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/widgets/button_widgets/neumorphism_button.dart';
 import 'package:mobile/widgets/container/image_container/network_image_widget.dart';
+import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
+import 'package:mobile/widgets/popup_template/hero_popup_routes.dart';
 import 'package:mobile/widgets/textfield_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -37,13 +41,16 @@ class _TutorPageState extends State<TutorPage> {
 
   // store:---------------------------------------------------------------------
   final ThemeStore _themeStore = getIt<ThemeStore>();
-  late MentorStore _mentorStore;
+
+  late final MentorStore _mentorStore;
+  late final CommonStore _commonStore;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    _mentorStore = Provider.of<MentorStore>(context);
+    _mentorStore = Provider.of<MentorStore>(context, listen: false);
+    _commonStore = Provider.of<CommonStore>(context, listen: false);
   }
 
   @override
@@ -137,19 +144,34 @@ class _TutorPageState extends State<TutorPage> {
                       FilterButtonTag(
                         text: "Category",
                         isFilted: true,
+                        selectedTitleItems: _commonStore.fetchedCategories
+                            .map(
+                              (item) =>
+                                  TitleItem(id: item.id, title: item.name),
+                            )
+                            .toList(),
+                        titleItems: _commonStore.selectedCategory != null
+                            ? [
+                                TitleItem(
+                                  id: _commonStore.selectedCategory!.id,
+                                  title: _commonStore.selectedCategory!.name,
+                                )
+                              ]
+                            : [],
+                        callback: () {},
                       ),
-                      FilterButtonTag(
-                        text: "Skill",
-                        isFilted: false,
-                      ),
-                      FilterButtonTag(
-                        text: "OrderBy",
-                        isFilted: true,
-                      ),
-                      FilterButtonTag(
-                        text: "Sort",
-                        isFilted: false,
-                      ),
+                      // FilterButtonTag(
+                      //   text: "Skill",
+                      //   isFilted: false,
+                      // ),
+                      // FilterButtonTag(
+                      //   text: "OrderBy",
+                      //   isFilted: true,
+                      // ),
+                      // FilterButtonTag(
+                      //   text: "Sort",
+                      //   isFilted: false,
+                      // ),
                     ],
                   ),
                 ),
@@ -205,14 +227,16 @@ class _TutorPageState extends State<TutorPage> {
                           children: List.generate(_mentorStore.length, (i) => i)
                               .map(
                                 (i) => ShortImformationItem(
-                                    mentorModel: _mentorStore.at(i),
-                                    onTapViewDetail: () {
-                                      Navigator.of(context)
-                                          .pushReplacement(MaterialPageRoute(
+                                  mentorModel: _mentorStore.at(i),
+                                  onTapViewDetail: () {
+                                    Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
                                         builder: (context) => MentorProfile(
                                             idMentor: _mentorStore.at(i).id),
-                                      ));
-                                    }),
+                                      ),
+                                    );
+                                  },
+                                ),
                               )
                               .toList(),
                         ),
@@ -234,46 +258,70 @@ class FilterButtonTag extends StatelessWidget {
     Key? key,
     required this.text,
     required this.isFilted,
+    required this.titleItems,
+    required this.selectedTitleItems,
+    this.callback,
   }) : super(key: key);
 
   final String text;
   final bool isFilted;
+  final List<TitleItem> titleItems;
+  final List<TitleItem> selectedTitleItems;
+  final VoidCallback? callback;
 
   //store:----------------------------------------------------------------------
   final ThemeStore _themeStore = getIt<ThemeStore>();
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {},
-      child: Container(
-        padding: const EdgeInsets.all(8.0),
-        width: DeviceUtils.getScaledWidth(context, 0.25),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              text,
-              style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: Dimens.small_text,
-                  color: isFilted
-                      ? _themeStore.textChoosed
-                      : _themeStore.textNotChoosed),
-            ),
-            const SizedBox(
-              height: Dimens.vertical_margin,
-            ),
-            Icon(
-              Icons.fiber_manual_record,
-              color: isFilted
-                  ? _themeStore.textChoosed
-                  : _themeStore.textNotChoosed,
-              size: Dimens.small_text,
-            ),
-          ],
+    return HeroPopupRoute<TitleItem>(
+      colorSourceCard: Colors.transparent,
+      colorDestinationCard: Colors.transparent,
+      sourceChild: GlassmorphismContainer(
+        child: Container(
+          padding: const EdgeInsets.all(8.0),
+          width: DeviceUtils.getScaledWidth(context, 0.25),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                text,
+                style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: Dimens.small_text,
+                    color: isFilted
+                        ? _themeStore.textChoosed
+                        : _themeStore.textNotChoosed),
+              ),
+              const SizedBox(
+                height: Dimens.vertical_margin,
+              ),
+              Icon(
+                Icons.fiber_manual_record,
+                color: isFilted
+                    ? _themeStore.textChoosed
+                    : _themeStore.textNotChoosed,
+                size: Dimens.small_text,
+              ),
+            ],
+          ),
         ),
+        blur: Properties.hevily_blur_glass_morphism,
+        opacity: Properties.hevily_opacity_glass_morphism,
       ),
+      destinationChild: ListFilterPopup<TitleItem>(
+        title: text,
+        filters: titleItems,
+        selectedFilter: selectedTitleItems,
+        selectedFilterColor: Colors.orange,
+        unselectedFilterColor: Colors.grey,
+      ),
+      callback: (item) {
+        if (item != null) {
+          // _languageStore.changeLanguage(lang.locale!);
+          callback?.call();
+        }
+      },
     );
   }
 }
@@ -413,6 +461,114 @@ class ShortImformationItem extends StatelessWidget {
                 : const SizedBox(),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class TitleItem {
+  final int id;
+  final String title;
+
+  TitleItem({
+    required this.id,
+    required this.title,
+  });
+
+  @override
+  String toString() {
+    return title;
+  }
+
+  @override
+  bool operator ==(covariant TitleItem other) =>
+      other.title.compareTo(other.title) == 0;
+
+  @override
+  int get hashCode => super.hashCode + title.length;
+}
+
+class ListFilterPopup<T> extends StatelessWidget {
+  const ListFilterPopup({
+    Key? key,
+    required this.title,
+    required this.filters,
+    required this.selectedFilter,
+    required this.selectedFilterColor,
+    required this.unselectedFilterColor,
+  }) : super(key: key);
+
+  final String title;
+  final List<T> filters;
+  final List<T> selectedFilter;
+  final Color selectedFilterColor;
+  final Color unselectedFilterColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return GlassmorphismContainer(
+      blur: Properties.blur_glass_morphism,
+      opacity: Properties.opacity_glass_morphism,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Container(
+            margin:
+                const EdgeInsets.symmetric(vertical: Dimens.vertical_padding),
+            padding:
+                const EdgeInsets.symmetric(horizontal: Dimens.vertical_padding),
+            child: Flexible(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.translate,
+                    color: selectedFilterColor,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    title,
+                    style: TextStyle(
+                        color: selectedFilterColor,
+                        fontSize: Dimens.medium_text,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Divider(
+            thickness: 0.5,
+            color: Color.alphaBlend(
+                selectedFilterColor.withAlpha(100), Colors.white),
+          ),
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: filters
+                  .map(
+                    (object) => ListTile(
+                      dense: true,
+                      title: Text(
+                        object.toString(),
+                        style: TextStyle(
+                          fontSize: Dimens.small_text,
+                          color: selectedFilter.contains(object)
+                              ? selectedFilterColor
+                              : unselectedFilterColor,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.of(context).maybePop<T?>(object);
+                      },
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+        ],
       ),
     );
   }

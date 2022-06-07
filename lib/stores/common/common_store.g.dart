@@ -29,6 +29,34 @@ mixin _$CommonStore on _CommonStore, Store {
           Computed<Session?>(() => super.sessionObserver,
               name: '_CommonStore.sessionObserver'))
       .value;
+  Computed<List<Skill>>? _$fetchedSkillsComputed;
+
+  @override
+  List<Skill> get fetchedSkills => (_$fetchedSkillsComputed ??=
+          Computed<List<Skill>>(() => super.fetchedSkills,
+              name: '_CommonStore.fetchedSkills'))
+      .value;
+  Computed<List<Category>>? _$fetchedCategoriesComputed;
+
+  @override
+  List<Category> get fetchedCategories => (_$fetchedCategoriesComputed ??=
+          Computed<List<Category>>(() => super.fetchedCategories,
+              name: '_CommonStore.fetchedCategories'))
+      .value;
+  Computed<List<Skill>>? _$selectedSkillsComputed;
+
+  @override
+  List<Skill> get selectedSkills => (_$selectedSkillsComputed ??=
+          Computed<List<Skill>>(() => super.selectedSkills,
+              name: '_CommonStore.selectedSkills'))
+      .value;
+  Computed<Category?>? _$selectedCategoryComputed;
+
+  @override
+  Category? get selectedCategory => (_$selectedCategoryComputed ??=
+          Computed<Category?>(() => super.selectedCategory,
+              name: '_CommonStore.selectedCategory'))
+      .value;
 
   late final _$successAtom =
       Atom(name: '_CommonStore.success', context: context);
@@ -94,6 +122,23 @@ mixin _$CommonStore on _CommonStore, Store {
     });
   }
 
+  late final _$searchingFilterModuleAtom =
+      Atom(name: '_CommonStore.searchingFilterModule', context: context);
+
+  @override
+  SearchingFilterModule get searchingFilterModule {
+    _$searchingFilterModuleAtom.reportRead();
+    return super.searchingFilterModule;
+  }
+
+  @override
+  set searchingFilterModule(SearchingFilterModule value) {
+    _$searchingFilterModuleAtom.reportWrite(value, super.searchingFilterModule,
+        () {
+      super.searchingFilterModule = value;
+    });
+  }
+
   late final _$fetchProgramRateListAsyncAction =
       AsyncAction('_CommonStore.fetchProgramRateList', context: context);
 
@@ -143,6 +188,23 @@ mixin _$CommonStore on _CommonStore, Store {
         .run(() => super.reviewSessionOfProgram(reviewModel));
   }
 
+  late final _$fetchAllSkillsAsyncAction =
+      AsyncAction('_CommonStore.fetchAllSkills', context: context);
+
+  @override
+  Future<void> fetchAllSkills() {
+    return _$fetchAllSkillsAsyncAction.run(() => super.fetchAllSkills());
+  }
+
+  late final _$fetchAllCategoriesAsyncAction =
+      AsyncAction('_CommonStore.fetchAllCategories', context: context);
+
+  @override
+  Future<void> fetchAllCategories() {
+    return _$fetchAllCategoriesAsyncAction
+        .run(() => super.fetchAllCategories());
+  }
+
   late final _$_CommonStoreActionController =
       ActionController(name: '_CommonStore', context: context);
 
@@ -186,9 +248,14 @@ success: ${success},
 requestFuture: ${requestFuture},
 rateModels: ${rateModels},
 session: ${session},
+searchingFilterModule: ${searchingFilterModule},
 isLoading: ${isLoading},
 programLengthList: ${programLengthList},
-sessionObserver: ${sessionObserver}
+sessionObserver: ${sessionObserver},
+fetchedSkills: ${fetchedSkills},
+fetchedCategories: ${fetchedCategories},
+selectedSkills: ${selectedSkills},
+selectedCategory: ${selectedCategory}
     ''';
   }
 }

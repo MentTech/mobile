@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:mobile/data/network/apis/auth/auth_api.dart';
+import 'package:mobile/data/network/apis/common/common_api.dart';
 import 'package:mobile/data/network/apis/mentee/mentee_api.dart';
 import 'package:mobile/data/network/apis/mentor/mentor_api.dart';
 import 'package:mobile/data/sharedpref/shared_preference_helper.dart';
@@ -14,6 +15,7 @@ class Repository {
   final AuthAPI _authApi;
   final MentorAPI _mentorAPI;
   final MenteeAPI _menteeAPI;
+  final CommonAPI _commonAPI;
 
   // shared pref object
   final SharedPreferenceHelper _sharedPrefsHelper;
@@ -23,6 +25,7 @@ class Repository {
     this._authApi,
     this._mentorAPI,
     this._menteeAPI,
+    this._commonAPI,
     this._sharedPrefsHelper,
     // this._postDataSource,
   );
@@ -185,6 +188,24 @@ class Repository {
       comment: comment,
     )
         .catchError((error) {
+      return {
+        "onError": error.toString(),
+      };
+    });
+  }
+
+  // CommonAPI:-----------------------------------------------------------------
+
+  Future<Map<String, dynamic>?> fetchAllSkills() async {
+    return _commonAPI.fetchAllSkills().catchError((error) {
+      return {
+        "onError": error.toString(),
+      };
+    });
+  }
+
+  Future<Map<String, dynamic>?> fetchAllCategories() async {
+    return _commonAPI.fetchAllCategories().catchError((error) {
       return {
         "onError": error.toString(),
       };

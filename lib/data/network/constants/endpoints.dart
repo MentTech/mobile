@@ -81,4 +81,14 @@ class Endpoints {
 
   //:---------------------------------------------------------------------------
 
+  /// Common APIs
+
+  /// Get all skills in Server
+  static const String fetchAllSkill = baseUrl + "/skill";
+
+  /// Get all categories in Server
+  static const String fetchAllCategory = baseUrl + "/category";
+
+  //:---------------------------------------------------------------------------
+
 }
