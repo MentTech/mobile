@@ -42,5 +42,13 @@
   "unregister_translate": "Hủy đăng kí",
   "review_about_session_translate": "Đánh giá Session",
   "mark_as_done_translate": "Đánh dấu hoàn thành",
-  "common_end": "-----------------------------------------------------------------------------------"
+  "common_end": "-----------------------------------------------------------------------------------",
+  "change_password": "Đổi mật khẩu",
+  "current_password": "Mật khẩu hiện tại",
+  "recurrent_password": "Nhập lại Mật khẩu hiện tại",
+  "new_password": "Mật khẩu mới",
+  "change_password_end": "--------------------------------------------------------------------------",
+  "missing_field": "Bạn cần điền đủ các trường",
+  "not_match_password": "Mật khẩu xác nhận đang không khớp",
+  "error_end": "------------------------------------------------------------------------------------"
 }

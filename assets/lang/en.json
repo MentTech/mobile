@@ -42,5 +42,13 @@
   "unregister_translate": "Unregister",
   "review_about_session_translate": "Review this Session",
   "mark_as_done_translate": "Mark as done",
-  "common_end": "-----------------------------------------------------------------------------------"
+  "common_end": "-----------------------------------------------------------------------------------",
+  "change_password": "Change Password",
+  "current_password": "Current password",
+  "recurrent_password": "Retype current password",
+  "new_password": "New password",
+  "change_password_end": "--------------------------------------------------------------------------",
+  "missing_field": "Please fill in all fields",
+  "not_match_password": "Retype password is not matched with password",
+  "error_end": "------------------------------------------------------------------------------------"
 }

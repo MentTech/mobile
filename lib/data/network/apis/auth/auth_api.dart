@@ -100,6 +100,31 @@ class AuthAPI {
     }
   }
 
+  Future<Map<String, dynamic>?> changePassword({
+    required String authToken,
+    required Map<String, dynamic> body,
+  }) async {
+    try {
+      final res = await _dioClient.post(
+        Endpoints.changePassword,
+        data: body,
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) => true,
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            "Authorization": "Bearer $authToken"
+          },
+        ),
+      );
+
+      return res;
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
   // /// Returns list of post in response
   // Future<PostList> getPosts() async {
   //   try {

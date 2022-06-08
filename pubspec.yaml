@@ -113,6 +113,9 @@ dependencies:
   # readmore text
   readmore: ^2.1.0
 
+  # Being able to compare objects in Dart often involves having to override the == operator as well as hashCode.
+  equatable: ^2.0.3
+
   # progress bar
   circle_progress_bar: ^0.1.1
 

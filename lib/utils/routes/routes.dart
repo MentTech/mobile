@@ -4,6 +4,7 @@ import 'package:mobile/effects/navigate/screen_transition.dart';
 import 'package:mobile/ui/advanced_settings/advanced_settings.dart';
 import 'package:mobile/ui/authorization/authorization_screen.dart';
 import 'package:mobile/ui/home/home.dart';
+import 'package:mobile/ui/password_changer/password_changer.dart';
 import 'package:mobile/ui/program_register/program_register_screen.dart';
 import 'package:mobile/ui/splash/splash.dart';
 import 'package:mobile/ui/token_user_profile/balanced_profile.dart';
@@ -21,6 +22,7 @@ class Routes {
   static const String programRegister = '/program_register';
   // static const String sessionDetail = '/session_detail';
   static const String advancedSettings = '/advanced_settings';
+  static const String changePasswordSettings = '/change_password_settings';
   // static const String mentorProfile = '/mentor_profile';
 
   static final routes = <String, WidgetBuilder>{
@@ -32,7 +34,8 @@ class Routes {
     programRegister: (BuildContext context) => ProgramRegisterScreen(),
     // sessionDetail: (BuildContext context) => SesstionDetail(),
     advancedSettings: (BuildContext context) => AdvancedSettings(),
-
+    changePasswordSettings: (BuildContext context) =>
+        const PasswordChangerScreen(),
     // mentorProfile: (BuildContext context) => const MentorProfile(),
   };
 

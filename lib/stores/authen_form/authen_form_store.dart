@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/authen/authen_store.dart';
+import 'package:mobile/stores/enum/form_validation_status.dart';
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:validators/validators.dart';
@@ -38,6 +39,7 @@ abstract class _AuthenticatorFormStore with Store {
       reaction((_) => userEmail, validateUserEmail),
       reaction((_) => password, validatePassword),
       reaction((_) => confirmPassword, validateConfirmPassword),
+      reaction((_) => newPassword, validateNewPassword),
       reaction((_) => name, validateName),
     ];
   }
@@ -57,6 +59,9 @@ abstract class _AuthenticatorFormStore with Store {
 
   @observable
   String confirmPassword = '';
+
+  @observable
+  String newPassword = '';
 
   @observable
   String name = '';
@@ -88,6 +93,24 @@ abstract class _AuthenticatorFormStore with Store {
   bool get canForgetPassword =>
       !formErrorStore.hasErrorInForgotPassword && userEmail.isNotEmpty;
 
+  @computed
+  bool get canChangePassword =>
+      !formErrorStore.hasErrorInRenewPassword &&
+      password.isNotEmpty &&
+      confirmPassword.isNotEmpty &&
+      newPassword.isNotEmpty;
+
+  @computed
+  FormStatus get renewPasswordStatus {
+    if (password.isEmpty || confirmPassword.isEmpty || newPassword.isEmpty) {
+      return FormStatus.missingField;
+    }
+    if (confirmPassword.compareTo(password) != 0) {
+      return FormStatus.notMatchPassword;
+    }
+    return FormStatus.allValidated; // canChangePassword
+  }
+
   // actions:-------------------------------------------------------------------
   @action
   void setUserId(String value) {
@@ -102,6 +125,11 @@ abstract class _AuthenticatorFormStore with Store {
   @action
   void setConfirmPassword(String value) {
     confirmPassword = value;
+  }
+
+  @action
+  void setNewPassword(String value) {
+    newPassword = value;
   }
 
   @action
@@ -146,6 +174,18 @@ abstract class _AuthenticatorFormStore with Store {
       formErrorStore.password = "Password must be at-least 6 characters long";
     } else {
       formErrorStore.password = null;
+    }
+  }
+
+  @action
+  void validateNewPassword(String value) {
+    if (value.isEmpty) {
+      formErrorStore.newPassword = "RePassword can't be empty";
+    } else if (value.length < 6) {
+      formErrorStore.newPassword =
+          "RePassword must be at-least 6 characters long";
+    } else {
+      formErrorStore.newPassword = null;
     }
   }
 
@@ -252,6 +292,32 @@ abstract class _AuthenticatorFormStore with Store {
   }
 
   @action
+  Future changePassword() async {
+    loading = true;
+    success = false;
+
+    authenStore.changePassword(password, newPassword).then((future) {
+      loading = false;
+
+      if (future != null) {
+        messageStore.errorMessage = future;
+        success = false;
+      } else {
+        messageStore.successMessage = "You are change password successfully";
+        success = true;
+        logined = true;
+      }
+    }).catchError((e) {
+      loading = false;
+      success = false;
+      messageStore.errorMessage = e.toString().contains("ERROR_USER_NOT_FOUND")
+          ? "Username and password doesn't match"
+          : "Something went wrong, please check your internet connection and try again";
+      log(e.toString());
+    });
+  }
+
+  @action
   Future forgotPassword() async {
     loading = true;
   }
@@ -289,6 +355,9 @@ abstract class _FormErrorStore with Store {
   String? confirmPassword;
 
   @observable
+  String? newPassword;
+
+  @observable
   String? name;
 
   @computed
@@ -303,4 +372,8 @@ abstract class _FormErrorStore with Store {
 
   @computed
   bool get hasErrorInForgotPassword => userEmail != null;
+
+  @computed
+  bool get hasErrorInRenewPassword =>
+      password != null || confirmPassword != null || newPassword != null;
 }

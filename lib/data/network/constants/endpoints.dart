@@ -22,6 +22,9 @@ class Endpoints {
   /// Login User: /auth/signin
   static const String loginUser = _authProxy + "/signin";
 
+  /// Change password
+  static const String changePassword = _authProxy + "/changepassword";
+
   /// Google Token: /auth/google/token
   static const String googleAuth = _authProxy + "/google/token";
 

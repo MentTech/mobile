@@ -158,8 +158,8 @@ class SettingsPage extends StatelessWidget {
                         ),
                         radius: 15,
                         onTap: () {
-                          // Routes.navigatorSupporter(
-                          //     context, Routes.advancedSettings);
+                          Routes.navigatorSupporter(
+                              context, Routes.changePasswordSettings);
                         },
                       ),
                     ],

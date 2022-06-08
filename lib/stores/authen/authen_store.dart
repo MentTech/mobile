@@ -182,6 +182,48 @@ abstract class _AuthenStore with Store {
     }
   }
 
+  @action
+  Future<String?> changePassword(String oldPassword, String newPassword) async {
+    String? accessToken = await _repository.authToken;
+
+    if (null == accessToken) {
+      success = false;
+
+      return "No access token";
+    }
+
+    final future = _repository.changePassword(
+      authToken: accessToken,
+      body: {
+        "oldPassword": oldPassword,
+        "newPassword": newPassword,
+      },
+    );
+
+    loginFuture = ObservableFuture(future);
+
+    String? message;
+
+    await future.then((mapJson) async {
+      if (mapJson["message"] == null) {
+        success = true;
+
+        final token = mapJson["accessToken"];
+        await _repository.saveAuthToken(token);
+        accessToken = token;
+      }
+
+      message = mapJson['message'];
+    }).catchError((e) {
+      log(e.toString());
+      accessToken = null;
+      success = false;
+      throw e;
+    });
+
+    return Future.value(message);
+  }
+
   // getter:--------------------------------------------------------------------
   bool get isLoggedIn => accessToken != null;
 

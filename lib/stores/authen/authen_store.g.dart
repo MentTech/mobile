@@ -97,6 +97,15 @@ mixin _$AuthenStore on _AuthenStore, Store {
         .run(() => super.googleAuthenticator());
   }
 
+  late final _$changePasswordAsyncAction =
+      AsyncAction('_AuthenStore.changePassword', context: context);
+
+  @override
+  Future<String?> changePassword(String oldPassword, String newPassword) {
+    return _$changePasswordAsyncAction
+        .run(() => super.changePassword(oldPassword, newPassword));
+  }
+
   @override
   String toString() {
     return '''

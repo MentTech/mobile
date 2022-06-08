@@ -30,6 +30,20 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
           () => super.canForgetPassword,
           name: '_AuthenticatorFormStore.canForgetPassword'))
       .value;
+  Computed<bool>? _$canChangePasswordComputed;
+
+  @override
+  bool get canChangePassword => (_$canChangePasswordComputed ??= Computed<bool>(
+          () => super.canChangePassword,
+          name: '_AuthenticatorFormStore.canChangePassword'))
+      .value;
+  Computed<FormStatus>? _$renewPasswordStatusComputed;
+
+  @override
+  FormStatus get renewPasswordStatus => (_$renewPasswordStatusComputed ??=
+          Computed<FormStatus>(() => super.renewPasswordStatus,
+              name: '_AuthenticatorFormStore.renewPasswordStatus'))
+      .value;
 
   late final _$stateAuthenAtom =
       Atom(name: '_AuthenticatorFormStore.stateAuthen', context: context);
@@ -109,6 +123,22 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
   set confirmPassword(String value) {
     _$confirmPasswordAtom.reportWrite(value, super.confirmPassword, () {
       super.confirmPassword = value;
+    });
+  }
+
+  late final _$newPasswordAtom =
+      Atom(name: '_AuthenticatorFormStore.newPassword', context: context);
+
+  @override
+  String get newPassword {
+    _$newPasswordAtom.reportRead();
+    return super.newPassword;
+  }
+
+  @override
+  set newPassword(String value) {
+    _$newPasswordAtom.reportWrite(value, super.newPassword, () {
+      super.newPassword = value;
     });
   }
 
@@ -202,6 +232,14 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
         .run(() => super.googleAuthenticator());
   }
 
+  late final _$changePasswordAsyncAction =
+      AsyncAction('_AuthenticatorFormStore.changePassword', context: context);
+
+  @override
+  Future<dynamic> changePassword() {
+    return _$changePasswordAsyncAction.run(() => super.changePassword());
+  }
+
   late final _$forgotPasswordAsyncAction =
       AsyncAction('_AuthenticatorFormStore.forgotPassword', context: context);
 
@@ -249,6 +287,17 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
         name: '_AuthenticatorFormStore.setConfirmPassword');
     try {
       return super.setConfirmPassword(value);
+    } finally {
+      _$_AuthenticatorFormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setNewPassword(String value) {
+    final _$actionInfo = _$_AuthenticatorFormStoreActionController.startAction(
+        name: '_AuthenticatorFormStore.setNewPassword');
+    try {
+      return super.setNewPassword(value);
     } finally {
       _$_AuthenticatorFormStoreActionController.endAction(_$actionInfo);
     }
@@ -321,6 +370,17 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
   }
 
   @override
+  void validateNewPassword(String value) {
+    final _$actionInfo = _$_AuthenticatorFormStoreActionController.startAction(
+        name: '_AuthenticatorFormStore.validateNewPassword');
+    try {
+      return super.validateNewPassword(value);
+    } finally {
+      _$_AuthenticatorFormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void validateConfirmPassword(String value) {
     final _$actionInfo = _$_AuthenticatorFormStoreActionController.startAction(
         name: '_AuthenticatorFormStore.validateConfirmPassword');
@@ -350,13 +410,16 @@ isForgotPasswordState: ${isForgotPasswordState},
 userEmail: ${userEmail},
 password: ${password},
 confirmPassword: ${confirmPassword},
+newPassword: ${newPassword},
 name: ${name},
 success: ${success},
 logined: ${logined},
 loading: ${loading},
 canLogin: ${canLogin},
 canRegister: ${canRegister},
-canForgetPassword: ${canForgetPassword}
+canForgetPassword: ${canForgetPassword},
+canChangePassword: ${canChangePassword},
+renewPasswordStatus: ${renewPasswordStatus}
     ''';
   }
 }
@@ -382,6 +445,13 @@ mixin _$FormErrorStore on _FormErrorStore, Store {
   bool get hasErrorInForgotPassword => (_$hasErrorInForgotPasswordComputed ??=
           Computed<bool>(() => super.hasErrorInForgotPassword,
               name: '_FormErrorStore.hasErrorInForgotPassword'))
+      .value;
+  Computed<bool>? _$hasErrorInRenewPasswordComputed;
+
+  @override
+  bool get hasErrorInRenewPassword => (_$hasErrorInRenewPasswordComputed ??=
+          Computed<bool>(() => super.hasErrorInRenewPassword,
+              name: '_FormErrorStore.hasErrorInRenewPassword'))
       .value;
 
   late final _$userEmailAtom =
@@ -432,6 +502,22 @@ mixin _$FormErrorStore on _FormErrorStore, Store {
     });
   }
 
+  late final _$newPasswordAtom =
+      Atom(name: '_FormErrorStore.newPassword', context: context);
+
+  @override
+  String? get newPassword {
+    _$newPasswordAtom.reportRead();
+    return super.newPassword;
+  }
+
+  @override
+  set newPassword(String? value) {
+    _$newPasswordAtom.reportWrite(value, super.newPassword, () {
+      super.newPassword = value;
+    });
+  }
+
   late final _$nameAtom = Atom(name: '_FormErrorStore.name', context: context);
 
   @override
@@ -453,10 +539,12 @@ mixin _$FormErrorStore on _FormErrorStore, Store {
 userEmail: ${userEmail},
 password: ${password},
 confirmPassword: ${confirmPassword},
+newPassword: ${newPassword},
 name: ${name},
 hasErrorsInLogin: ${hasErrorsInLogin},
 hasErrorsInRegister: ${hasErrorsInRegister},
-hasErrorInForgotPassword: ${hasErrorInForgotPassword}
+hasErrorInForgotPassword: ${hasErrorInForgotPassword},
+hasErrorInRenewPassword: ${hasErrorInRenewPassword}
     ''';
   }
 }

@@ -62,6 +62,20 @@ class Repository {
     });
   }
 
+  Future<Map<String, dynamic>> changePassword({
+    required String authToken,
+    required Map<String, dynamic> body,
+  }) async {
+    return await _authApi
+        .changePassword(authToken: authToken, body: body)
+        .then((resVal) {
+      return resVal!;
+    }).catchError((error) {
+      log("Fetch Userinfor failing");
+      return {"error": "Fetch fail"};
+    });
+  }
+
   // Mentor: -------------------------------------------------------------------
   Future<Map<String, dynamic>?> searchMentor(
       Map<String, dynamic> parameters) async {
