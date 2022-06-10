@@ -374,7 +374,7 @@ abstract class _CommonStore with Store {
 
   // general methods:-----------------------------------------------------------
 
-  RateModel getProgramAt(int index) => rateModels.elementAt(index);
+  RateModel getRateCommentAt(int index) => rateModels.elementAt(index);
 
   void dispose() {
     for (final d in _disposers) {
@@ -384,8 +384,13 @@ abstract class _CommonStore with Store {
 }
 
 class ReviewModel {
-  int rate = 0;
-  String comment = "";
+  final int rate;
+  final String comment;
+
+  ReviewModel({
+    required this.rate,
+    required this.comment,
+  });
 }
 
 class SearchingFilterModule implements Equatable {

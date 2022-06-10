@@ -84,8 +84,21 @@ class Routes {
   ///
   /// Navigator.of(context).pushReplacementNamed(Routes.login);
   ///
-  static void route<T>(BuildContext context, Widget stateNavigate) {
+  static void routeReplacement<T>(BuildContext context, Widget stateNavigate) {
     Navigator.pushReplacement(
+      context,
+      CustomFadeTransitionPageRoute(
+        timeCast: Properties.delayTimeInSecond,
+        child: stateNavigate,
+      ),
+    );
+  }
+
+  ///
+  /// Navigator.of(context).push(Routes.login);
+  ///
+  static void route<T>(BuildContext context, Widget stateNavigate) {
+    Navigator.push(
       context,
       CustomFadeTransitionPageRoute(
         timeCast: Properties.delayTimeInSecond,

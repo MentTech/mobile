@@ -6,6 +6,9 @@ class Dimens {
   Dimens._();
 
   //for all screens
+  /// more small horizontal padding value: 3.0
+  static const double more_small_horizontal_padding = 3.0;
+
   /// small horizontal padding value: 6.0
   static const double small_horizontal_padding = 6.0;
 
@@ -14,6 +17,9 @@ class Dimens {
 
   /// large horizontal padding value: 12.0
   static const double large_horizontal_padding = 20.0;
+
+  /// more small horizontal padding value: 3.0
+  static const double more_small_vertical_padding = 3.0;
 
   /// small horizontal padding value: 6.0
   static const double small_vertical_padding = 6.0;

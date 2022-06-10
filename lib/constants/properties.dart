@@ -16,11 +16,17 @@ class Properties {
   /// return normal opacity = 0.2
   static const double opacity_glass_morphism = 0.2;
 
-  /// return heavily blur = 15
+  /// return heavily blur = 20
   static const double hevily_blur_glass_morphism = 20;
 
-  /// return heavily opacity = 0.2
+  /// return heavily opacity = 0.3
   static const double hevily_opacity_glass_morphism = 0.3;
+
+  /// return heavily blur = 10
+  static const double lightly_blur_glass_morphism = 5;
+
+  /// return heavily opacity = 0.1
+  static const double lightly_opacity_glass_morphism = 0.1;
 }
 
 // static field Singleton

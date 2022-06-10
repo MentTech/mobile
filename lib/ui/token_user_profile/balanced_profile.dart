@@ -36,10 +36,16 @@ class _BalancedProfileState extends State<BalancedProfile> {
   late double deviceHeight;
 
   @override
+  void initState() {
+    super.initState();
+
+    _userStore = Provider.of<UserStore>(context, listen: false);
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    _userStore = Provider.of<UserStore>(context, listen: false);
     _userStore.fetchUserSessions();
 
     deviceHeight = DeviceUtils.getScaledHeight(context, 1.0);

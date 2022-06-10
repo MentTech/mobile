@@ -22,40 +22,43 @@ class YesNoPopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: Dimens.large_horizontal_padding,
-        vertical: Dimens.vertical_padding,
-      ),
-      child: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: child,
+    return Material(
+      color: Colors.transparent,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: Dimens.large_horizontal_padding,
+          vertical: Dimens.vertical_padding,
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: child,
+              ),
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              RoundedButtonWidget(
-                buttonText: agreeText,
-                buttonColor: Colors.transparent,
-                textColor: textAgreeColor,
-                onPressed: () {
-                  Navigator.of(context, rootNavigator: true).pop(true);
-                },
-              ),
-              RoundedButtonWidget(
-                buttonText: disagreeText,
-                buttonColor: Colors.transparent,
-                textColor: textDisagreeColor,
-                onPressed: () {
-                  Navigator.of(context, rootNavigator: true).pop(false);
-                },
-              ),
-            ],
-          )
-        ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                RoundedButtonWidget(
+                  buttonText: agreeText,
+                  buttonColor: Colors.transparent,
+                  textColor: textAgreeColor,
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop(true);
+                  },
+                ),
+                RoundedButtonWidget(
+                  buttonText: disagreeText,
+                  buttonColor: Colors.transparent,
+                  textColor: textDisagreeColor,
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop(false);
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

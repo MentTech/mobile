@@ -50,5 +50,11 @@
   "change_password_end": "--------------------------------------------------------------------------",
   "missing_field": "Bạn cần điền đủ các trường",
   "not_match_password": "Mật khẩu xác nhận đang không khớp",
-  "error_end": "------------------------------------------------------------------------------------"
+  "error_end": "------------------------------------------------------------------------------------",
+  "mark_session_as_done": "Đặt phiên này là hoàn thành",
+  "unregister_session": "Hủy phiên này",
+  "want_to_change_question": "Bạn có muốn áp dụng thay đổi?",
+  "review_title": "Để lại đánh giá cho phiên",
+  "your_review": "Cảm nhận của bạn về phiên này",
+  "popup_translate_end": "--------------------------------------------------------------------------"
 }

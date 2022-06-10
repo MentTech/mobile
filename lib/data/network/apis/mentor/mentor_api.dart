@@ -99,18 +99,13 @@ class MentorAPI {
   }) async {
     try {
       final res = await _dioClient.get(
-        Endpoints.fetchProgramInfor
+        Endpoints.fetchProgramRateList
             .replaceAll(":mentorId", "$mentorID")
             .replaceAll(":id", "$programID"),
         queryParameters: query,
         options: Options(
           followRedirects: false,
           validateStatus: (status) => true,
-          // headers: headers
-          // headers: {
-          //   'Content-Type': 'application/json; charset=utf-8',
-          //   "Authorization": "Bearer $authToken"
-          // },
         ),
       );
 

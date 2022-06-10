@@ -50,5 +50,11 @@
   "change_password_end": "--------------------------------------------------------------------------",
   "missing_field": "Please fill in all fields",
   "not_match_password": "Retype password is not matched with password",
-  "error_end": "------------------------------------------------------------------------------------"
+  "error_end": "------------------------------------------------------------------------------------",
+  "mark_session_as_done": "Mark this session as done",
+  "unregister_session": "Unregister this session",
+  "want_to_change_question": "Do you want to apply change?",
+  "review_title": "Leave a review for this session",
+  "your_review": "Your review about this session",
+  "popup_translate_end": "--------------------------------------------------------------------------"
 }

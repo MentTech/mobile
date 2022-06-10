@@ -13,11 +13,12 @@ class TextFieldWidget extends StatelessWidget {
   final Color iconColor;
   final FocusNode? focusNode;
   final ValueChanged? onFieldSubmitted;
-  final ValueChanged? onChanged;
+  final ValueChanged<String>? onChanged;
   final bool autoFocus;
   final TextInputAction? inputAction;
   final InputDecoration? inputDecoration;
   final TextStyle? textStyle;
+  final int numberLines;
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +32,13 @@ class TextFieldWidget extends StatelessWidget {
         autofocus: autoFocus,
         textInputAction: inputAction,
         obscureText: isObscure,
-        maxLength: 25,
+        minLines: numberLines,
+        maxLines: numberLines,
         keyboardType: inputType,
         style: textStyle ?? Theme.of(context).textTheme.bodyText1,
         decoration: inputDecoration ??
             InputDecoration(
+                focusColor: Colors.white70,
                 hintText: hint,
                 hintStyle: Theme.of(context)
                     .textTheme
@@ -67,5 +70,6 @@ class TextFieldWidget extends StatelessWidget {
     this.inputAction,
     this.inputDecoration,
     this.textStyle,
+    this.numberLines = 1,
   }) : super(key: key);
 }

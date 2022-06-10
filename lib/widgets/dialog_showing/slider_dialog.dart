@@ -7,36 +7,10 @@ class DialogPopupPresenter {
     BuildContext context,
     Widget child,
     double height,
-    double width,
-  ) async {
-//     RawDialogRoute(
-
-//       pageBuilder: (_, __, ___) {
-//         return Center(
-//           child: SizedBox(
-//             height: height,
-//             width: width,
-//             child: GlassmorphismContainer(
-//               child: child,
-//               blur: Properties.blur_glass_morphism,
-//               opacity: Properties.opacity_glass_morphism,
-//             ),
-//           ),
-//         );
-//       },
-//     );
-
-// Navigator.of(context, rootNavigator: true)
-//         .push<T>(RawDialogRoute<T>(
-//       pageBuilder: pageBuilder,
-//       barrierDismissible: barrierDismissible,
-//       barrierLabel: barrierLabel,
-//       barrierColor: barrierColor,
-//       transitionDuration: transitionDuration,
-//       transitionBuilder: transitionBuilder,
-//       settings: routeSettings,
-//     ));
-
+    double width, {
+    double blur = Properties.blur_glass_morphism,
+    double opacity = Properties.opacity_glass_morphism,
+  }) async {
     return showGeneralDialog(
       context: context,
       barrierLabel: "Reviews",
@@ -50,8 +24,8 @@ class DialogPopupPresenter {
             width: width,
             child: GlassmorphismContainer(
               child: child,
-              blur: Properties.blur_glass_morphism,
-              opacity: Properties.opacity_glass_morphism,
+              blur: blur,
+              opacity: opacity,
             ),
           ),
         );
