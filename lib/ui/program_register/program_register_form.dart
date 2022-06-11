@@ -3,11 +3,13 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
+import 'package:mobile/stores/common/common_store.dart';
 import 'package:mobile/stores/form/program_register_form_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:mobile/widgets/textfield_widget.dart';
+import 'package:provider/provider.dart';
 
 class ProgramRegisterForm extends StatefulWidget {
   const ProgramRegisterForm({Key? key}) : super(key: key);
@@ -27,7 +29,15 @@ class _ProgramRegisterFormState extends State<ProgramRegisterForm> {
 
   final ThemeStore _themeStore = getIt<ThemeStore>();
 
-  final ProgramRegisterFormStore _formStore = ProgramRegisterFormStore();
+  late final ProgramRegisterFormStore _formStore;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _formStore = ProgramRegisterFormStore(
+        Provider.of<CommonStore>(context, listen: false));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +85,7 @@ class _ProgramRegisterFormState extends State<ProgramRegisterForm> {
           return TextFieldWidget(
             hint: AppLocalizations.of(context).translate('full_name'),
             inputType: TextInputType.text,
-            icon: Icons.person,
+            iconData: Icons.person,
             iconColor: _themeStore.themeColor,
             textController: _nameController,
             inputAction: TextInputAction.done,
@@ -102,7 +112,7 @@ class _ProgramRegisterFormState extends State<ProgramRegisterForm> {
           return TextFieldWidget(
             hint: AppLocalizations.of(context).translate('email'),
             inputType: TextInputType.text,
-            icon: Icons.person,
+            iconData: Icons.person,
             iconColor: _themeStore.themeColor,
             textController: _emailController,
             inputAction: TextInputAction.done,
@@ -129,7 +139,7 @@ class _ProgramRegisterFormState extends State<ProgramRegisterForm> {
           return TextFieldWidget(
             hint: AppLocalizations.of(context).translate('your_description'),
             inputType: TextInputType.text,
-            icon: Icons.person,
+            iconData: Icons.person,
             iconColor: _themeStore.themeColor,
             textController: _descriptionController,
             inputAction: TextInputAction.done,
@@ -156,7 +166,7 @@ class _ProgramRegisterFormState extends State<ProgramRegisterForm> {
           return TextFieldWidget(
             hint: AppLocalizations.of(context).translate('your_note'),
             inputType: TextInputType.text,
-            icon: Icons.person,
+            iconData: Icons.person,
             iconColor: _themeStore.themeColor,
             textController: _noteController,
             inputAction: TextInputAction.done,
@@ -183,7 +193,7 @@ class _ProgramRegisterFormState extends State<ProgramRegisterForm> {
           return TextFieldWidget(
             hint: AppLocalizations.of(context).translate('your_expectation'),
             inputType: TextInputType.text,
-            icon: Icons.person,
+            iconData: Icons.person,
             iconColor: _themeStore.themeColor,
             textController: _expectationController,
             inputAction: TextInputAction.done,
@@ -210,7 +220,7 @@ class _ProgramRegisterFormState extends State<ProgramRegisterForm> {
           return TextFieldWidget(
             hint: AppLocalizations.of(context).translate('your_goal'),
             inputType: TextInputType.text,
-            icon: Icons.person,
+            iconData: Icons.person,
             iconColor: _themeStore.themeColor,
             textController: _goalController,
             inputAction: TextInputAction.done,

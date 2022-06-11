@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/common/common_store.dart';
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
@@ -18,9 +17,9 @@ abstract class _ProgramRegisterFormStore with Store {
   final MessageStore messageStore = MessageStore();
 
   // store for handling authenticators
-  final CommonStore commonStore = getIt<CommonStore>();
+  final CommonStore commonStore; // = getIt<CommonStore>();
 
-  _ProgramRegisterFormStore() {
+  _ProgramRegisterFormStore(this.commonStore) {
     _setupValidations();
   }
 

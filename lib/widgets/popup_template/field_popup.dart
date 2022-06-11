@@ -110,7 +110,7 @@ class _FieldPopupTemplateState extends State<FieldPopupTemplate> {
       child: TextFieldWidget(
         hint: textFieldContent.hint,
         inputType: textFieldContent.textInputType,
-        icon: textFieldContent.iconData,
+        iconData: textFieldContent.iconData,
         isObscure: textFieldContent.isObscure,
         iconColor: themeStore.textTitleColor,
         textController: textFieldContent.textEditingController,

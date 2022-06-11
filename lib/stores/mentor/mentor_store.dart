@@ -50,8 +50,6 @@ abstract class _MentorStore with Store {
 
   int totalPage = 0;
 
-  String searchKey = "";
-
   // observable variables:------------------------------------------------------
   @observable
   bool success = false;
@@ -115,7 +113,12 @@ abstract class _MentorStore with Store {
   }
 
   @action
-  Future<void> searchMentors() async {
+  Future resetPage() async {
+    page = 0;
+  }
+
+  @action
+  Future<void> searchMentors(Map<String, dynamic> parameterQuery) async {
     String? accessToken = await _repository.authToken;
 
     if (null == accessToken) {
@@ -126,17 +129,12 @@ abstract class _MentorStore with Store {
       success = false;
     }
 
-    Map<String, dynamic> param = {
-      "order": "desc",
+    parameterQuery.addAll({
       "page": page,
       "limit": perPage,
-    };
+    });
 
-    if (searchKey.isNotEmpty) {
-      param["keyword"] = searchKey;
-    }
-
-    final future = _repository.searchMentor(param);
+    final future = _repository.searchMentor(parameterQuery);
     requestFuture = ObservableFuture(future);
 
     future.then((res) {

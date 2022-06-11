@@ -64,21 +64,25 @@ class _HeroPopupRouteState<T> extends State<HeroPopupRoute<T>> {
       child: GestureDetector(
         onTap: () async {
           await Navigator.of(context)
-              .push(HeroDialogRoute<T>(
-                  builder: (context) => Padding(
-                      padding: widget._marginDestinationCard,
-                      child: Hero(
-                          tag: _uniqueKey,
-                          createRectTween: (begin, end) =>
-                              CustomRectTween(begin: begin!, end: end!),
-                          child: Material(
-                            color: widget._colorDestinationCard,
-                            elevation: widget._elelvationDestinationCard,
-                            shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    widget._borderRadiusDestinationCard),
-                            child: widget.destinationChild,
-                          )))))
+              .push(
+            HeroDialogRoute<T>(
+              builder: (context) => Padding(
+                padding: widget._marginDestinationCard,
+                child: Hero(
+                  tag: _uniqueKey,
+                  createRectTween: (begin, end) =>
+                      CustomRectTween(begin: begin!, end: end!),
+                  child: Material(
+                    color: widget._colorDestinationCard,
+                    elevation: widget._elelvationDestinationCard,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: widget._borderRadiusDestinationCard),
+                    child: widget.destinationChild,
+                  ),
+                ),
+              ),
+            ),
+          )
               .then((index) {
             widget.callback.call(index);
           });

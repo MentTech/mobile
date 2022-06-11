@@ -231,7 +231,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
           return TextFieldWidget(
             hint: AppLocalizations.of(context).translate('login_et_user_email'),
             inputType: TextInputType.emailAddress,
-            icon: Icons.person,
+            iconData: Icons.person,
             iconColor: AppColors.darkTextTheme,
             textController: _userEmailController,
             inputAction: TextInputAction.done,
@@ -263,8 +263,8 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
                     hint: AppLocalizations.of(context)
                         .translate('login_et_user_password'),
                     isObscure: true,
-                    padding: const EdgeInsets.only(top: 16.0),
-                    icon: Icons.lock,
+                    margin: const EdgeInsets.only(top: 16.0),
+                    iconData: Icons.lock,
                     iconColor: AppColors.darkTextTheme,
                     textController: _passwordController,
                     focusNode: _passwordFocusNode,
@@ -293,8 +293,8 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
                     hint: AppLocalizations.of(context)
                         .translate('login_reet_user_password'),
                     isObscure: true,
-                    padding: const EdgeInsets.only(top: 16.0),
-                    icon: Icons.lock,
+                    margin: const EdgeInsets.only(top: 16.0),
+                    iconData: Icons.lock,
                     iconColor: AppColors.darkTextTheme,
                     textController: _confirmPasswordController,
                     errorText: _store.formErrorStore.confirmPassword,
@@ -322,8 +322,8 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
                   return TextFieldWidget(
                     hint: AppLocalizations.of(context)
                         .translate('login_et_user_name'),
-                    padding: const EdgeInsets.only(top: 16.0),
-                    icon: Icons.badge,
+                    margin: const EdgeInsets.only(top: 16.0),
+                    iconData: Icons.badge,
                     iconColor: AppColors.darkTextTheme,
                     textController: _nameController,
                     errorText: _store.formErrorStore.name,

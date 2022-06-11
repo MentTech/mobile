@@ -52,7 +52,7 @@ class _UserEditablePopupState extends State<UserEditablePopup> {
           return TextFieldWidget(
             hint: AppLocalizations.of(context).translate('login_et_user_email'),
             inputType: TextInputType.emailAddress,
-            icon: Icons.person,
+            iconData: Icons.person,
             iconColor: themeStore.textTitleColor,
             textController: _nameEditingController,
             inputAction: TextInputAction.done,
@@ -76,7 +76,7 @@ class _UserEditablePopupState extends State<UserEditablePopup> {
           return TextFieldWidget(
             hint: AppLocalizations.of(context).translate('login_et_user_email'),
             inputType: TextInputType.phone,
-            icon: Icons.phone_android_rounded,
+            iconData: Icons.phone_android_rounded,
             iconColor: themeStore.textTitleColor,
             textController: _phoneEditingController,
             inputAction: TextInputAction.done,
@@ -100,7 +100,7 @@ class _UserEditablePopupState extends State<UserEditablePopup> {
           return TextFieldWidget(
             hint: AppLocalizations.of(context).translate('login_et_user_email'),
             inputType: TextInputType.datetime,
-            icon: Icons.person,
+            iconData: Icons.person,
             iconColor: themeStore.textTitleColor,
             textController: _birthdayEditingController,
             inputAction: TextInputAction.done,

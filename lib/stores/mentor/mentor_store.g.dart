@@ -138,12 +138,21 @@ mixin _$MentorStore on _MentorStore, Store {
     });
   }
 
+  late final _$resetPageAsyncAction =
+      AsyncAction('_MentorStore.resetPage', context: context);
+
+  @override
+  Future<dynamic> resetPage() {
+    return _$resetPageAsyncAction.run(() => super.resetPage());
+  }
+
   late final _$searchMentorsAsyncAction =
       AsyncAction('_MentorStore.searchMentors', context: context);
 
   @override
-  Future<void> searchMentors() {
-    return _$searchMentorsAsyncAction.run(() => super.searchMentors());
+  Future<void> searchMentors(Map<String, dynamic> parameterQuery) {
+    return _$searchMentorsAsyncAction
+        .run(() => super.searchMentors(parameterQuery));
   }
 
   late final _$fetchAMentorAsyncAction =

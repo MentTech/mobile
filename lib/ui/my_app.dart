@@ -8,6 +8,7 @@ import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/common/common_store.dart';
 import 'package:mobile/stores/language/language_store.dart';
 import 'package:mobile/stores/mentor/mentor_store.dart';
+import 'package:mobile/stores/search_store.dart/search_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/ui/splash/splash.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
   final UserStore _userStore = UserStore(getIt<Repository>());
   final MentorStore _mentorStore = MentorStore(getIt<Repository>());
   final CommonStore _commonStore = CommonStore(getIt<Repository>());
+  final SearchStore _searchStore = SearchStore(getIt<Repository>());
 
   final ThemeStore _themeStore = getIt<ThemeStore>();
   final LanguageStore _languageStore = getIt<LanguageStore>();
@@ -37,6 +39,7 @@ class MyApp extends StatelessWidget {
         Provider<UserStore>(create: (_) => _userStore),
         Provider<MentorStore>(create: (_) => _mentorStore),
         Provider<CommonStore>(create: (_) => _commonStore),
+        Provider<SearchStore>(create: (_) => _searchStore),
       ],
       child: Observer(
         name: 'global-observer',
