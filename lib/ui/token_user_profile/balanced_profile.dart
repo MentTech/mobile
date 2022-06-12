@@ -109,7 +109,7 @@ class _BalancedProfileState extends State<BalancedProfile> {
                         bottom: Dimens.large_vertical_margin,
                       ),
                       decoration: BoxDecoration(
-                        color: _themeStore.lightThemeColor,
+                        color: _themeStore.reverseThemeColor,
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
@@ -355,7 +355,7 @@ class _BalancedProfileState extends State<BalancedProfile> {
     required bool isSelected,
   }) {
     final Color statusColor =
-        isSelected ? _themeStore.lightThemeColor : Colors.white70;
+        isSelected ? _themeStore.themeColorfulColor : Colors.white70;
 
     return SizedBox(
       height: DeviceUtils.getScaledWidth(context, 0.16),

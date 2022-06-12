@@ -37,8 +37,11 @@ class Dimens {
   /// medium horizontal margin value: 12.0
   static const double medium_horizontal_margin = 12.0;
 
-  /// large horizontal margin value: 12.0
+  /// large horizontal margin value: 15.0
   static const double large_horizontal_margin = 15.0;
+
+  /// extra large horizontal margin value: 20.0
+  static const double extra_large_horizontal_margin = 20.0;
 
   /// small vertical margin value: 6.0
   static const double small_vertical_margin = 3.0;
@@ -46,17 +49,20 @@ class Dimens {
   /// small vertical margin value: 6.0
   static const double vertical_margin = 6.0;
 
-  /// medium vertical margin value: 9.0
+  /// lightly medium vertical margin value: 9.0
   static const double lightly_medium_vertical_margin = 9.0;
 
   /// medium vertical margin value: 12.0
   static const double medium_vertical_margin = 12.0;
 
-  /// large vertical margin value: 12.0
+  /// large vertical margin value: 15.0
   static const double large_vertical_margin = 15.0;
 
-  /// large vertical margin value: 20.0
+  /// extra large vertical margin value: 20.0
   static const double extra_large_vertical_margin = 20.0;
+
+  /// ultra extra large vertical margin value: 30.0
+  static const double ultra_extra_large_vertical_margin = 30.0;
 
   /// Text dimens
   /// return size 12

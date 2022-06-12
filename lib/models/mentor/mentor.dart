@@ -31,7 +31,7 @@ class MentorModelList {
 class MentorModel {
   int id;
   String name;
-  DateTime birthday;
+  DateTime? birthday;
   String? avatar;
   // bool? isPasswordSet;
 
@@ -41,8 +41,8 @@ class MentorModel {
   MentorModel({
     required this.id,
     required this.name,
-    required this.birthday,
-    required this.avatar,
+    this.birthday,
+    this.avatar,
     // required this.isPasswordSet,
     required this.userMentor,
   }) {
@@ -56,7 +56,7 @@ class MentorModel {
 
   Map<String, dynamic> toJson() => _$MentorModelToJson(this);
 
-  int get age => DateTime.now().year - birthday.year;
+  int get age => DateTime.now().year - (birthday?.year ?? DateTime.now().year);
 }
 
 //:-----------------------------------------------------------------------------
@@ -64,8 +64,8 @@ class MentorModel {
 @JsonSerializable()
 class UserMentor {
   String? linkedin;
-  String introduction;
-  double rating;
+  String? introduction;
+  double? rating;
   List<Program>? programs;
   Category category;
   List<Skill> skills;
@@ -78,9 +78,9 @@ class UserMentor {
     required this.rating,
     required this.programs,
     required this.category,
-    required this.skills,
-    required this.degree,
-    required this.experiences,
+    this.skills = const <Skill>[],
+    this.degree = const <Degree>[],
+    this.experiences = const <Experience>[],
   });
 
   factory UserMentor.fromJson(Map<String, dynamic> json) =>

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:mobile/di/components/service_locator.dart';
+import 'package:mobile/stores/theme/theme_store.dart';
 
 import 'page/home_page.dart';
 import 'page/settings_page.dart';
@@ -47,6 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final int _initButtonIndex = 1;
 
   // init stores:---------------------------------------------------------------
+  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   // general function
   void onBottomChanged(int index) {
@@ -57,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: _themeStore.themeColor,
       extendBody: true,
       bottomNavigationBar: Theme(
         data: Theme.of(context)

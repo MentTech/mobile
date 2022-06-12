@@ -77,6 +77,10 @@ abstract class _UserStore with Store {
   @observable
   ObservableList<Session> sessions = ObservableList();
 
+  List<int> favouriteMentorIdList = [];
+
+  // computed:------------------------------------------------------------------
+
   @computed
   bool get isLoading => requestFuture.status == FutureStatus.pending;
 
@@ -86,6 +90,8 @@ abstract class _UserStore with Store {
   SessionStatus get currentSessionFetchStatus => sessionStatus;
 
   Session getSessionAt(int index) => sessions.elementAt(index);
+
+  int getFavIdAt(int index) => favouriteMentorIdList.elementAt(index);
 
   // actions:-------------------------------------------------------------------
   @action
@@ -137,10 +143,9 @@ abstract class _UserStore with Store {
 
     final future = _repository.fetchFavouriteMentors(authToken: accessToken!);
 
-    future.then((res) {
+    await future.then((res) {
+      favouriteMentorIdList.addAll(res!["ids"]!.cast<int>());
       try {
-        // listMentors = ObservableList.of(MentorModelList.fromJson(res).list);
-
         success = true;
       } catch (e) {
         success = false;

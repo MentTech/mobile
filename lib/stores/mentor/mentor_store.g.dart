@@ -28,6 +28,20 @@ mixin _$MentorStore on _MentorStore, Store {
   bool get hasMentor => (_$hasMentorComputed ??=
           Computed<bool>(() => super.hasMentor, name: '_MentorStore.hasMentor'))
       .value;
+  Computed<bool>? _$hasRecommendedMentorsComputed;
+
+  @override
+  bool get hasRecommendedMentors => (_$hasRecommendedMentorsComputed ??=
+          Computed<bool>(() => super.hasRecommendedMentors,
+              name: '_MentorStore.hasRecommendedMentors'))
+      .value;
+  Computed<bool>? _$hasFavouriteMentorsComputed;
+
+  @override
+  bool get hasFavouriteMentors => (_$hasFavouriteMentorsComputed ??=
+          Computed<bool>(() => super.hasFavouriteMentors,
+              name: '_MentorStore.hasFavouriteMentors'))
+      .value;
   Computed<Program?>? _$getProgramComputed;
 
   @override
@@ -211,6 +225,15 @@ mixin _$MentorStore on _MentorStore, Store {
         .run(() => super.fetchRecommendMentors());
   }
 
+  late final _$fetchFavouriteMentorsAsyncAction =
+      AsyncAction('_MentorStore.fetchFavouriteMentors', context: context);
+
+  @override
+  Future<void> fetchFavouriteMentors(List<int> ids) {
+    return _$fetchFavouriteMentorsAsyncAction
+        .run(() => super.fetchFavouriteMentors(ids));
+  }
+
   late final _$fetchAMentorAsyncAction =
       AsyncAction('_MentorStore.fetchAMentor', context: context);
 
@@ -289,6 +312,8 @@ program: ${program},
 isLoading: ${isLoading},
 getMentor: ${getMentor},
 hasMentor: ${hasMentor},
+hasRecommendedMentors: ${hasRecommendedMentors},
+hasFavouriteMentors: ${hasFavouriteMentors},
 getProgram: ${getProgram},
 hasProgram: ${hasProgram},
 recommendedLength: ${recommendedLength},

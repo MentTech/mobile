@@ -41,11 +41,11 @@ class ProgramRegisterScreen extends StatelessWidget {
             colors: [
               _themeStore.themeColor,
               Color.alphaBlend(
-                _themeStore.lightThemeColor.withOpacity(0.1),
+                _themeStore.themeColorfulColor.withOpacity(0.1),
                 _themeStore.themeColor,
               ),
               Color.alphaBlend(
-                _themeStore.lightThemeColor.withOpacity(0.3),
+                _themeStore.themeColorfulColor.withOpacity(0.3),
                 _themeStore.themeColor,
               ),
             ],
@@ -112,7 +112,7 @@ class ProgramRegisterScreen extends StatelessWidget {
             ),
             dotsDecorator: DotsDecorator(
               color: _themeStore.themeColor,
-              activeColor: _themeStore.lightThemeColor,
+              activeColor: _themeStore.themeColorfulColor,
               size: const Size(10, 10),
               activeSize: const Size(15, 10),
               activeShape: RoundedRectangleBorder(

@@ -112,7 +112,7 @@ class _FieldPopupTemplateState extends State<FieldPopupTemplate> {
         inputType: textFieldContent.textInputType,
         iconData: textFieldContent.iconData,
         isObscure: textFieldContent.isObscure,
-        iconColor: themeStore.textTitleColor,
+        iconColor: themeStore.reverseThemeColor,
         textController: textFieldContent.textEditingController,
         inputAction: TextInputAction.done,
         autoFocus: false,

@@ -119,6 +119,22 @@ class Repository {
     });
   }
 
+  Future<Map<String, dynamic>?> fetchMultipleMentorsByIds({
+    required String authToken,
+    required List<int> ids,
+  }) async {
+    return _mentorAPI
+        .fetchMultipleMentorsByIds(
+      authToken: authToken,
+      ids: ids,
+    )
+        .catchError((error) {
+      return {
+        "onError": error.toString(),
+      };
+    });
+  }
+
   Future<Map<String, dynamic>?> fetchProgram(
       int mentorID, int programID) async {
     return _mentorAPI

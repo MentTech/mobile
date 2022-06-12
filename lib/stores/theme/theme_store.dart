@@ -23,27 +23,63 @@ abstract class _ThemeStore with Store {
   bool _darkMode = false;
 
   // getters:-------------------------------------------------------------------
+  @computed
   bool get darkMode => _darkMode;
 
+  @computed
   String get modeName => _darkMode ? "Dark mode" : "Light mode";
 
-  double get opacityTheme => _darkMode ? 0.9 : 0.75;
+  @computed
+  double get opacityTheme => _darkMode ? 0.65 : 0.75;
 
-  Color get textTitleColor =>
+  @computed
+  Color get themeColorfulColor =>
       _darkMode ? AppColors.darkTextTheme : AppColors.lightTextTheme;
 
-  Color get themeColor =>
-      _darkMode ? AppColors.darkTextTheme : AppColors.lightTextTheme;
-
-  Color get lightThemeColor =>
+  @computed
+  Color get reverseThemeColorfulColor =>
       _darkMode ? AppColors.lightTextTheme : AppColors.darkTextTheme;
 
-  Color get textChoosed => Colors.orangeAccent.shade700;
-  Color get textNotChoosed => Colors.grey.shade700;
+  @computed
+  Color get themeColor => _darkMode ? dark : light;
 
-  Color get firstGradientColor => Colors.black54;
-  Color get secondGradientColor => Colors.white70;
+  @computed
+  Color get themeThemeColor => _darkMode ? darkTheme : lightTheme;
 
+  @computed
+  Color get reverseThemeColor => _darkMode ? light : dark;
+
+  @computed
+  List<Color> get linearGradientColors => [
+        Color.alphaBlend(
+          themeThemeColor,
+          themeColorfulColor,
+        ),
+        Color.alphaBlend(
+          themeThemeColor
+              .withRed((themeColor.red * 0.7).round())
+              .withGreen((themeColor.green * 0.7).round())
+              .withBlue((themeColor.blue * 0.7).round()),
+          themeColorfulColor,
+        ),
+        Color.alphaBlend(
+          themeThemeColor
+              .withRed((themeColor.red * 0.45).round())
+              .withGreen((themeColor.green * 0.45).round())
+              .withBlue((themeColor.blue * 0.45).round()),
+          themeColorfulColor,
+        ),
+      ];
+
+  @computed
+  Color get textChoosed => _darkMode
+      ? Colors.orangeAccent.shade400
+      : Color.alphaBlend(
+          Colors.orangeAccent.shade700,
+          darkTheme,
+        );
+
+  @computed
   Color get ratingColor =>
       _darkMode ? Colors.yellow.shade800 : Colors.yellow.shade300;
 
@@ -60,6 +96,17 @@ abstract class _ThemeStore with Store {
   }
 
   // general methods:-----------------------------------------------------------
+
+  List<double> get linearGradientStops => const [0, 0.35, 0.7];
+
+  Color get textNotChoosed => Colors.grey.shade700;
+
+  Color get darkTheme => Colors.black54;
+  Color get lightTheme => Colors.white60;
+
+  Color get dark => Colors.black87;
+  Color get light => Colors.white70;
+
   Future init() async {
     _darkMode = _repository.isDarkMode;
   }

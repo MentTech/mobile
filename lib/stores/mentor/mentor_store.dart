@@ -88,6 +88,12 @@ abstract class _MentorStore with Store {
   bool get hasMentor => mentorModel != null;
 
   @computed
+  bool get hasRecommendedMentors => recommendedMentorList.isNotEmpty;
+
+  @computed
+  bool get hasFavouriteMentors => favouriteMentorList.isNotEmpty;
+
+  @computed
   Program? get getProgram => program;
 
   @computed
@@ -188,6 +194,38 @@ abstract class _MentorStore with Store {
         recommendedMentorList =
             ObservableList.of(MentorModelList.fromJson(res!).list);
 
+        success = true;
+      } catch (e) {
+        // res['message']
+        messageStore.errorMessage = e.toString();
+        messageStore.successMessage = "";
+
+        success = false;
+      }
+    });
+  }
+
+  @action
+  Future<void> fetchFavouriteMentors(List<int> ids) async {
+    String? accessToken = await _repository.authToken;
+
+    if (null == accessToken) {
+      messageStore.successMessage = "";
+      messageStore.errorMessage = "There are no AccessToken";
+      messageStore.notifyExpiredTokenStatus();
+
+      success = false;
+    }
+
+    final future = _repository.fetchMultipleMentorsByIds(
+      authToken: accessToken!,
+      ids: ids,
+    );
+
+    future.then((res) {
+      favouriteMentorList =
+          ObservableList.of(MentorModelList.fromJson(res!).list);
+      try {
         success = true;
       } catch (e) {
         // res['message']

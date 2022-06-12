@@ -5,6 +5,7 @@ import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/language/language.dart';
 import 'package:mobile/stores/language/language_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
+import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:mobile/widgets/popup_template/hero_popup_routes.dart';
@@ -21,16 +22,8 @@ class AdvancedSettings extends StatelessWidget {
       body: Stack(
         children: [
           LinearGradientBackground(
-            colors: [
-              _themeStore.themeColor,
-              Colors.black
-                  .withGreen((_themeStore.themeColor.green * 0.7).round())
-                  .withBlue((_themeStore.themeColor.blue * 0.7).round()),
-              Colors.black
-                  .withGreen((_themeStore.themeColor.green * 0.35).round())
-                  .withBlue((_themeStore.themeColor.blue * 0.35).round()),
-            ],
-            stops: const [0, 0.35, 0.7],
+            colors: _themeStore.linearGradientColors,
+            stops: _themeStore.linearGradientStops,
           ),
           SafeArea(
             child: Padding(
@@ -62,23 +55,24 @@ class AdvancedSettings extends StatelessWidget {
         child: ListTile(
           contentPadding:
               const EdgeInsets.symmetric(horizontal: Dimens.horizontal_padding),
-          leading: const Icon(
+          leading: Icon(
             Icons.translate,
-            color: Colors.white,
+            color: _themeStore.reverseThemeColor,
           ),
-          title: const Text(
-            "Change Languages",
+          title: Text(
+            AppLocalizations.of(context).translate("home_tv_choose_language"),
             style: TextStyle(
               fontSize: Dimens.lightly_medium_text,
-              color: Colors.white,
+              color: _themeStore.reverseThemeColor,
               fontWeight: FontWeight.w500,
             ),
           ),
           subtitle: Text(
-            _languageStore.getLanguage() ?? "Unknown",
-            style: const TextStyle(
+            _languageStore.getLanguage() ??
+                AppLocalizations.of(context).translate("unknown_translate"),
+            style: TextStyle(
               fontSize: Dimens.small_text,
-              color: Colors.white70,
+              color: _themeStore.reverseThemeColor,
             ),
           ),
         ),
@@ -106,23 +100,23 @@ class AdvancedSettings extends StatelessWidget {
         child: ListTile(
           contentPadding:
               const EdgeInsets.symmetric(horizontal: Dimens.horizontal_padding),
-          leading: const Icon(
+          leading: Icon(
             Icons.settings_display_outlined,
-            color: Colors.white,
+            color: _themeStore.reverseThemeColor,
           ),
-          title: const Text(
-            "Change Theme",
+          title: Text(
+            AppLocalizations.of(context).translate("home_tv_choose_theme"),
             style: TextStyle(
               fontSize: Dimens.lightly_medium_text,
-              color: Colors.white,
+              color: _themeStore.reverseThemeColor,
               fontWeight: FontWeight.w500,
             ),
           ),
           subtitle: Text(
             _themeStore.modeName,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: Dimens.small_text,
-              color: Colors.white70,
+              color: _themeStore.reverseThemeColor,
             ),
           ),
         ),
@@ -146,7 +140,7 @@ class AdvancedSettings extends StatelessWidget {
 }
 
 class LanguagePopup extends StatelessWidget {
-  const LanguagePopup({
+  LanguagePopup({
     Key? key,
     required this.spLangs,
     required this.selectLocale,
@@ -156,6 +150,8 @@ class LanguagePopup extends StatelessWidget {
   final List<Language> spLangs;
   final String selectLocale;
   final bool darkMode;
+
+  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -172,20 +168,22 @@ class LanguagePopup extends StatelessWidget {
                 const EdgeInsets.symmetric(horizontal: Dimens.vertical_padding),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: const [
+              children: [
                 Icon(
                   Icons.translate,
-                  color: Colors.white,
+                  color: _themeStore.reverseThemeColor,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 Text(
-                  "Change Languages",
+                  AppLocalizations.of(context)
+                      .translate("home_tv_choose_language"),
                   style: TextStyle(
-                      color: Colors.white,
-                      fontSize: Dimens.medium_text,
-                      fontWeight: FontWeight.w500),
+                    color: _themeStore.reverseThemeColor,
+                    fontSize: Dimens.medium_text,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),
@@ -193,7 +191,9 @@ class LanguagePopup extends StatelessWidget {
           Divider(
             thickness: 0.5,
             color: Color.alphaBlend(
-                Theme.of(context).primaryColor.withAlpha(100), Colors.white),
+              Theme.of(context).primaryColor.withAlpha(100),
+              _themeStore.reverseThemeColor,
+            ),
           ),
           Expanded(
             child: ListView(
@@ -207,10 +207,8 @@ class LanguagePopup extends StatelessWidget {
                         style: TextStyle(
                           fontSize: Dimens.small_text,
                           color: selectLocale == object.locale
-                              ? Colors.white
-                              : darkMode
-                                  ? Colors.grey.shade300
-                                  : Colors.grey.shade500,
+                              ? _themeStore.reverseThemeColor
+                              : _themeStore.themeColor,
                         ),
                       ),
                       onTap: () {
@@ -238,7 +236,7 @@ class ThemeModeItem {
 }
 
 class ThemePopup extends StatelessWidget {
-  const ThemePopup({
+  ThemePopup({
     Key? key,
     required this.spThemes,
     required this.selectTheme,
@@ -246,6 +244,8 @@ class ThemePopup extends StatelessWidget {
 
   final List<ThemeModeItem> spThemes;
   final bool selectTheme;
+
+  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -262,27 +262,31 @@ class ThemePopup extends StatelessWidget {
                   horizontal: Dimens.vertical_padding),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
+                children: [
                   Icon(
                     Icons.settings_display_outlined,
-                    color: Colors.white,
+                    color: _themeStore.reverseThemeColor,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Text(
-                    "Change Theme",
+                    AppLocalizations.of(context)
+                        .translate("home_tv_choose_theme"),
                     style: TextStyle(
-                        color: Colors.white,
-                        fontSize: Dimens.medium_text,
-                        fontWeight: FontWeight.w500),
+                      color: _themeStore.reverseThemeColor,
+                      fontSize: Dimens.medium_text,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ],
               )),
           Divider(
             thickness: 0.5,
             color: Color.alphaBlend(
-                Theme.of(context).primaryColor.withAlpha(100), Colors.white),
+              Theme.of(context).primaryColor.withAlpha(100),
+              _themeStore.reverseThemeColor,
+            ),
           ),
           Expanded(
             child: ListView(
@@ -295,10 +299,8 @@ class ThemePopup extends StatelessWidget {
                         object.mode!,
                         style: TextStyle(
                           color: selectTheme == object.val
-                              ? Colors.white
-                              : selectTheme
-                                  ? Colors.grey.shade300
-                                  : Colors.grey.shade500,
+                              ? _themeStore.reverseThemeColor
+                              : _themeStore.themeColor,
                         ),
                       ),
                       onTap: () {

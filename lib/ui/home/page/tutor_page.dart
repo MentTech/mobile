@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -46,8 +44,8 @@ class _TutorPageState extends State<TutorPage> {
   late final SearchStore _searchStore;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
 
     _mentorStore = Provider.of<MentorStore>(context, listen: false);
     _searchStore = Provider.of<SearchStore>(context, listen: false);
@@ -67,13 +65,8 @@ class _TutorPageState extends State<TutorPage> {
       child: Stack(
         children: [
           LinearGradientBackground(
-            colors: [
-              _themeStore.themeColor,
-              Colors.black
-                  .withGreen((_themeStore.themeColor.green * 0.2).round())
-                  .withBlue((_themeStore.themeColor.blue * 0.2).round()),
-            ],
-            stops: const [0, 0.35],
+            colors: _themeStore.linearGradientColors,
+            stops: _themeStore.linearGradientStops,
           ),
           SafeArea(
             bottom: false,
@@ -91,12 +84,16 @@ class _TutorPageState extends State<TutorPage> {
                       bottom: Dimens.large_vertical_margin,
                     ),
                     textController: _searchController,
-                    textStyle: const TextStyle(fontSize: Dimens.small_text),
+                    textStyle: TextStyle(
+                      fontSize: Dimens.small_text,
+                      color: _themeStore.reverseThemeColor,
+                    ),
                     hint:
                         AppLocalizations.of(context).translate('mentor_search'),
-                    icon: const Icon(
+                    hintColor: _themeStore.reverseThemeColor,
+                    icon: Icon(
                       Icons.search_rounded,
-                      color: Colors.white70,
+                      color: _themeStore.reverseThemeColor,
                     ),
                     hasBorder: true,
                     onChanged: (String value) {
@@ -111,6 +108,7 @@ class _TutorPageState extends State<TutorPage> {
                     },
                   ),
                   SingleChildScrollView(
+                    clipBehavior: Clip.none,
                     physics: const BouncingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -173,15 +171,21 @@ class _TutorPageState extends State<TutorPage> {
                               selectedTitleItems: _searchStore.selectedSkillList
                                   .map(
                                     (item) => TitleItem(
-                                        id: item.id,
-                                        title: item.description ?? "Unknown"),
+                                      id: item.id,
+                                      title: item.description ??
+                                          AppLocalizations.of(context)
+                                              .translate("unknown_translate"),
+                                    ),
                                   )
                                   .toList(),
                               titleItems: _searchStore.skillList
                                   .map(
                                     (item) => TitleItem(
-                                        id: item.id,
-                                        title: item.description ?? "Unknown"),
+                                      id: item.id,
+                                      title: item.description ??
+                                          AppLocalizations.of(context)
+                                              .translate("unknown_translate"),
+                                    ),
                                   )
                                   .toList(),
                               onValueChange: (item) {
@@ -190,8 +194,11 @@ class _TutorPageState extends State<TutorPage> {
                                 return _searchStore.selectedSkillList
                                     .map(
                                       (item) => TitleItem(
-                                          id: item.id,
-                                          title: item.description ?? "Unknown"),
+                                        id: item.id,
+                                        title: item.description ??
+                                            AppLocalizations.of(context)
+                                                .translate("unknown_translate"),
+                                      ),
                                     )
                                     .toList();
                               },
@@ -431,17 +438,22 @@ class FilterButtonTag extends StatelessWidget {
             children: <Widget>[
               Text(
                 text,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                     fontWeight: FontWeight.w800,
                     fontSize: Dimens.small_text,
-                    color: isFilted ? Colors.orange : Colors.white70),
+                    color: isFilted
+                        ? _themeStore.textChoosed
+                        : _themeStore.reverseThemeColor),
               ),
               const SizedBox(
                 height: Dimens.vertical_margin,
               ),
               Icon(
                 Icons.fiber_manual_record,
-                color: isFilted ? Colors.orange : Colors.white70,
+                color: isFilted
+                    ? _themeStore.textChoosed
+                    : _themeStore.reverseThemeColor,
                 size: Dimens.small_text,
               ),
             ],
@@ -454,8 +466,8 @@ class FilterButtonTag extends StatelessWidget {
         title: text,
         filters: titleItems,
         selectedFilter: selectedTitleItems,
-        selectedFilterColor: Colors.orange,
-        unselectedFilterColor: Colors.white70,
+        selectedFilterColor: _themeStore.textChoosed,
+        unselectedFilterColor: _themeStore.reverseThemeColor,
         onValueChange: (itemSelect) {
           return onValueChange?.call(itemSelect) ?? [];
         },
@@ -492,14 +504,16 @@ class ShortImformationItem extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            _themeStore.firstGradientColor,
-            _themeStore.secondGradientColor,
+            _themeStore.reverseThemeColorfulColor,
+            _themeStore.themeColorfulColor,
           ],
         ),
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(
-            vertical: width * 0.05, horizontal: width * 0.05),
+          vertical: width * 0.05,
+          horizontal: width * 0.05,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -538,8 +552,8 @@ class ShortImformationItem extends StatelessWidget {
                             ),
                             Text(
                               " ${mentorModel.userMentor.rating}",
-                              style: const TextStyle(
-                                  color: Colors.white,
+                              style: TextStyle(
+                                  color: _themeStore.reverseThemeColor,
                                   fontSize: Dimens.small_text),
                             ),
                           ],
@@ -566,7 +580,7 @@ class ShortImformationItem extends StatelessWidget {
               padding:
                   const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
               child: Text(
-                "Major: ${mentorModel.userMentor.category.name}",
+                "${AppLocalizations.of(context).translate("major_translate")}: ${mentorModel.userMentor.category.name}",
                 style: const TextStyle(fontWeight: FontWeight.w400),
               ),
             ),
@@ -574,7 +588,7 @@ class ShortImformationItem extends StatelessWidget {
               padding:
                   const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
               child: ReadMoreText(
-                mentorModel.userMentor.introduction,
+                mentorModel.userMentor.introduction ?? "",
                 style: const TextStyle(
                   fontWeight: FontWeight.w400,
                 ),
@@ -596,7 +610,7 @@ class ShortImformationItem extends StatelessWidget {
                           size: Dimens.small_text,
                         ),
                         onPressed: () {
-                          log(mentorModel.userMentor.linkedin ?? "No Linkedin");
+                          // log(mentorModel.userMentor.linkedin ?? "No Linkedin");
                         }),
                   )
                 : const SizedBox(),
@@ -651,6 +665,8 @@ class ListFilterPopup extends StatefulWidget {
 class _ListFilterPopupState extends State<ListFilterPopup> {
   late List<TitleItem> selectedFilter;
 
+  final ThemeStore _themeStore = getIt<ThemeStore>();
+
   @override
   void initState() {
     super.initState();
@@ -682,7 +698,9 @@ class _ListFilterPopupState extends State<ListFilterPopup> {
           Divider(
             thickness: 0.5,
             color: Color.alphaBlend(
-                widget.selectedFilterColor.withAlpha(100), Colors.white),
+              widget.selectedFilterColor.withAlpha(100),
+              _themeStore.reverseThemeColor,
+            ),
           ),
           Expanded(
             child: ListView(

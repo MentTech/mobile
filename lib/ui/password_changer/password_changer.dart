@@ -1,7 +1,6 @@
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:mobile/constants/colors.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/constants/strings.dart';
@@ -54,16 +53,8 @@ class _PasswordChangerScreenState extends State<PasswordChangerScreen> {
       body: Stack(
         children: <Widget>[
           LinearGradientBackground(
-            colors: [
-              _themeStore.themeColor,
-              Colors.black
-                  .withGreen((_themeStore.themeColor.green * 0.7).round())
-                  .withBlue((_themeStore.themeColor.blue * 0.7).round()),
-              Colors.black
-                  .withGreen((_themeStore.themeColor.green * 0.35).round())
-                  .withBlue((_themeStore.themeColor.blue * 0.35).round()),
-            ],
-            stops: const [0, 0.35, 0.7],
+            colors: _themeStore.linearGradientColors,
+            stops: _themeStore.linearGradientStops,
           ),
           SafeArea(
             child: Center(
@@ -141,10 +132,11 @@ class _PasswordChangerScreenState extends State<PasswordChangerScreen> {
           inputType: TextInputType.text,
           isObscure: true,
           iconData: Icons.key,
-          iconColor: AppColors.darkTextTheme,
+          iconColor: _themeStore.reverseThemeColorfulColor,
           textController: _currentPasswordController,
           inputAction: TextInputAction.done,
           autoFocus: false,
+          hintColor: _themeStore.reverseThemeColor,
           onChanged: (value) {
             _formStore.setPassword(_currentPasswordController.text);
           },
@@ -164,10 +156,11 @@ class _PasswordChangerScreenState extends State<PasswordChangerScreen> {
           inputType: TextInputType.text,
           isObscure: true,
           iconData: Icons.key,
-          iconColor: AppColors.darkTextTheme,
+          iconColor: _themeStore.reverseThemeColorfulColor,
           textController: _recurrentPasswordController,
           inputAction: TextInputAction.done,
           autoFocus: false,
+          hintColor: _themeStore.reverseThemeColor,
           onChanged: (value) {
             _formStore.setConfirmPassword(_recurrentPasswordController.text);
           },
@@ -187,10 +180,11 @@ class _PasswordChangerScreenState extends State<PasswordChangerScreen> {
           inputType: TextInputType.text,
           isObscure: true,
           iconData: Icons.key,
-          iconColor: AppColors.darkTextTheme,
+          iconColor: _themeStore.reverseThemeColorfulColor,
           textController: _newPasswordController,
           inputAction: TextInputAction.done,
           autoFocus: false,
+          hintColor: _themeStore.reverseThemeColor,
           onChanged: (value) {
             _formStore.setNewPassword(_newPasswordController.text);
           },
@@ -208,7 +202,7 @@ class _PasswordChangerScreenState extends State<PasswordChangerScreen> {
       child: RoundedButtonWidget(
         buttonText: AppLocalizations.of(context).translate("change_password"),
         buttonColor: Colors.transparent,
-        textColor: AppColors.darkTextTheme,
+        textColor: _themeStore.reverseThemeColorfulColor,
         onPressed: () async {
           DeviceUtils.hideKeyboard(context);
           FormStatus formStatus = _formStore.renewPasswordStatus;

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
@@ -49,6 +50,35 @@ class MentorAPI {
         options: Options(
           followRedirects: false,
           validateStatus: (status) => true,
+        ),
+      );
+
+      return {
+        "data": res,
+      };
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>?> fetchMultipleMentorsByIds({
+    required String authToken,
+    required List<int> ids,
+  }) async {
+    try {
+      final res = await _dioClient.get(
+        Endpoints.fetchMultipleMentors,
+        queryParameters: {
+          "ids": ids.join("&ids="),
+        },
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) => true,
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            "Authorization": "Bearer $authToken"
+          },
         ),
       );
 

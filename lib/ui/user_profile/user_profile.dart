@@ -146,21 +146,21 @@ class CustomSliverAppbarDelegate extends SliverPersistentHeaderDelegate {
                   Text(
                     authenInfor.user?.name ?? "",
                     style: TextStyle(
-                      color: themeStore.textTitleColor,
+                      color: themeStore.reverseThemeColor,
                       fontSize: Dimens.medium_text,
                     ),
                   ),
                   Text(
                     authenInfor.user?.email ?? "",
                     style: TextStyle(
-                      color: themeStore.textTitleColor,
+                      color: themeStore.reverseThemeColor,
                       fontSize: Dimens.small_text,
                     ),
                   ),
                   Text(
                     "Token: ${authenInfor.user?.coin ?? 0}",
                     style: TextStyle(
-                      color: themeStore.textTitleColor,
+                      color: themeStore.reverseThemeColor,
                       fontSize: Dimens.small_text,
                     ),
                   ),

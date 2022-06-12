@@ -44,6 +44,7 @@ class TextFieldWidget extends StatelessWidget {
             InputDecoration(
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: Dimens.horizontal_padding,
+                vertical: Dimens.vertical_padding,
               ),
               enabledBorder: hasBorder
                   ? OutlineInputBorder(
@@ -67,7 +68,7 @@ class TextFieldWidget extends StatelessWidget {
                       gapPadding: 0,
                     )
                   : null,
-              focusColor: Colors.white70,
+              focusColor: hintColor,
               hintText: hint,
               hintStyle: Theme.of(context)
                   .textTheme

@@ -14,6 +14,7 @@ class GlassmorphismContainer extends StatelessWidget {
     this.border = Colors.white,
     this.height,
     this.width,
+    this.alignmentGeometry,
   }) : super(key: key);
 
   final double blur;
@@ -28,6 +29,8 @@ class GlassmorphismContainer extends StatelessWidget {
   final double? width;
   final double? height;
 
+  final AlignmentGeometry? alignmentGeometry;
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -41,6 +44,7 @@ class GlassmorphismContainer extends StatelessWidget {
           width: width,
           height: height,
           padding: padding,
+          alignment: alignmentGeometry,
           decoration: BoxDecoration(
               color: background.withOpacity(opacity),
               border: Border.all(

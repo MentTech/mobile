@@ -19,8 +19,8 @@ class AppColors {
   static final Color lightThemeColor = darkBlue[200]!;
   static final Color darkThemeColor = darkBlue[700]!;
 
-  static const Color lightTextTheme = Color(0xFF013D35);
-  static const Color darkTextTheme = Color(0xFF00BFA6);
+  static const Color darkTextTheme = Color(0xFF013D35);
+  static const Color lightTextTheme = Color(0xFF00BFA6);
 
   static final Color firstGradientBackgroundTheme = darkBlue[600]!;
   static const Color secondGradientBackgroundTheme = lightTextTheme;

@@ -1,7 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mobile/constants/assets.dart';
 import 'package:mobile/constants/colors.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
@@ -14,8 +14,9 @@ import 'package:mobile/models/mentor/mentor.dart';
 import 'package:mobile/stores/mentor/mentor_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/utils/device/device_utils.dart';
+import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
-import 'package:mobile/widgets/background_colorful/random_bubble_gradient_background.dart';
+import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
 import 'package:mobile/widgets/button_widgets/neumorphism_button.dart';
 import 'package:mobile/widgets/common_model_widgets/skill_widget.dart';
 import 'package:mobile/widgets/container/image_container/network_image_widget.dart';
@@ -43,6 +44,7 @@ class MentorProfile extends StatefulWidget {
 class _MentorProfileState extends State<MentorProfile> {
   // Store:---------------------------------------------------------------------
   late final MentorStore _mentorStore;
+  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   @override
   void didChangeDependencies() {
@@ -64,11 +66,9 @@ class _MentorProfileState extends State<MentorProfile> {
     return Scaffold(
       body: Stack(
         children: [
-          RandomBubbleGradientBackground(
-            count: 8,
-            maxRadius: 100,
-            minRadius: 50,
-            gradientColor: const [Colors.orange, Colors.green],
+          LinearGradientBackground(
+            colors: _themeStore.linearGradientColors,
+            stops: _themeStore.linearGradientStops,
           ),
           Observer(
             builder: (BuildContext context) {
@@ -110,14 +110,14 @@ class _MentorProfileState extends State<MentorProfile> {
       mainAxisSize: MainAxisSize.min,
       children: [
         DescriptionTitleContainer(
-          titleWidget: const Text(
-            "Introduction: ",
-            style: TextStyle(
+          titleWidget: Text(
+            "${AppLocalizations.of(context).translate("introduction_translate")}: ",
+            style: const TextStyle(
               fontSize: Dimens.lightly_medium_text,
             ),
           ),
           contentWidget: ReadMoreText(
-            mentorModel.userMentor.introduction,
+            mentorModel.userMentor.introduction ?? "",
             style: const TextStyle(
               fontSize: Dimens.small_text,
             ),
@@ -131,9 +131,9 @@ class _MentorProfileState extends State<MentorProfile> {
           ),
         ),
         DescriptionTitleContainer(
-          titleWidget: const Text(
-            "Program: ",
-            style: TextStyle(
+          titleWidget: Text(
+            "${AppLocalizations.of(context).translate("program_translate")}: ",
+            style: const TextStyle(
               fontSize: Dimens.lightly_medium_text,
             ),
           ),
@@ -162,9 +162,9 @@ class _MentorProfileState extends State<MentorProfile> {
           ),
         ),
         DescriptionTitleContainer(
-          titleWidget: const Text(
-            "Skill: ",
-            style: TextStyle(
+          titleWidget: Text(
+            "${AppLocalizations.of(context).translate("skill_translate")}: ",
+            style: const TextStyle(
               fontSize: Dimens.lightly_medium_text,
             ),
           ),
@@ -200,9 +200,9 @@ class _MentorProfileState extends State<MentorProfile> {
           ),
         ),
         DescriptionTitleContainer(
-          titleWidget: const Text(
-            "Degree: ",
-            style: TextStyle(
+          titleWidget: Text(
+            "${AppLocalizations.of(context).translate("degree_translate")}: ",
+            style: const TextStyle(
               fontSize: Dimens.lightly_medium_text,
             ),
           ),
@@ -230,9 +230,9 @@ class _MentorProfileState extends State<MentorProfile> {
           ),
         ),
         DescriptionTitleContainer(
-          titleWidget: const Text(
-            "Experience: ",
-            style: TextStyle(
+          titleWidget: Text(
+            "${AppLocalizations.of(context).translate("experience_translate")}: ",
+            style: const TextStyle(
               fontSize: Dimens.lightly_medium_text,
             ),
           ),
@@ -245,7 +245,9 @@ class _MentorProfileState extends State<MentorProfile> {
                     size: Dimens.large_text,
                   ),
                   child: Text(
-                    experience.title ?? "Unknown",
+                    experience.title ??
+                        AppLocalizations.of(context)
+                            .translate("unknown_translate"),
                     style: const TextStyle(
                       fontSize: Dimens.small_text,
                     ),
@@ -300,21 +302,21 @@ class MentorProfileSliverAppbarDelegate extends SliverPersistentHeaderDelegate {
                 Text(
                   mentorModel.name,
                   style: TextStyle(
-                    color: _themeStore.textTitleColor,
+                    color: _themeStore.reverseThemeColor,
                     fontSize: Dimens.medium_text,
                   ),
                 ),
                 Text(
-                  "Age: ${mentorModel.age}",
+                  "${AppLocalizations.of(context).translate("age_translate")}: ${mentorModel.age}",
                   style: TextStyle(
-                    color: _themeStore.textTitleColor,
+                    color: _themeStore.reverseThemeColor,
                     fontSize: Dimens.small_text,
                   ),
                 ),
                 Text(
-                  "Major: ${mentorModel.userMentor.category.name}",
+                  "${AppLocalizations.of(context).translate("major_translate")}: ${mentorModel.userMentor.category.name}",
                   style: TextStyle(
-                    color: _themeStore.textTitleColor,
+                    color: _themeStore.reverseThemeColor,
                     fontSize: Dimens.small_text,
                   ),
                 ),
@@ -323,7 +325,7 @@ class MentorProfileSliverAppbarDelegate extends SliverPersistentHeaderDelegate {
                   children: [
                     StarRateWidget(
                       rateColor: _themeStore.ratingColor,
-                      rating: mentorModel.userMentor.rating,
+                      rating: mentorModel.userMentor.rating ?? 0.0,
                     ),
                     Row(
                       children: [
@@ -369,41 +371,29 @@ class MentorProfileSliverAppbarDelegate extends SliverPersistentHeaderDelegate {
           children: [
             Opacity(
               opacity: 0.3,
-              child: CachedNetworkImage(
-                imageUrl:
-                    "https://images.unsplash.com/photo-1649217708305-685a96a98279?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8",
-                fit: BoxFit.fill,
-                placeholder: (context, url) => const Center(
-                  child: CircularProgressIndicator(),
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: const AssetImage(
+                      Assets.settingsBackgroundAssets,
+                    ),
+                    fit: BoxFit.fitHeight,
+                    opacity: _themeStore.opacityTheme,
+                  ),
                 ),
-                errorWidget: (BuildContext context, String url, dynamic error) {
-                  if (error.statusCode == 403) {
-                    // Code to handle 403 error corrections on the database.
-                    // Not implemented when experiencing this issue.
-                  } else if (error.statusCode == 404) {
-                    // log("File Not Found");
-                  }
-                  return const Icon(Icons.error_outline);
-                },
               ),
             ),
             Center(
-              child: CachedNetworkImage(
-                imageUrl:
-                    "https://images.unsplash.com/photo-1649217708305-685a96a98279?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8",
-                fit: BoxFit.fitHeight,
-                placeholder: (context, url) => const Center(
-                  child: CircularProgressIndicator(),
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: const AssetImage(
+                      Assets.settingsBackgroundAssets,
+                    ),
+                    fit: BoxFit.fitHeight,
+                    opacity: _themeStore.opacityTheme,
+                  ),
                 ),
-                errorWidget: (BuildContext context, String url, dynamic error) {
-                  if (error.statusCode == 403) {
-                    // Code to handle 403 error corrections on the database.
-                    // Not implemented when experiencing this issue.
-                  } else if (error.statusCode == 404) {
-                    // log("File Not Found");
-                  }
-                  return const Icon(Icons.error_outline);
-                },
               ),
             ),
           ],

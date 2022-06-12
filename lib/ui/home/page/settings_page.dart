@@ -28,13 +28,14 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          image: DecorationImage(
-        image: const AssetImage(
-          Assets.settingsBackgroundAssets,
+        image: DecorationImage(
+          image: const AssetImage(
+            Assets.settingsBackgroundAssets,
+          ),
+          fit: BoxFit.fitHeight,
+          opacity: themeStore.opacityTheme,
         ),
-        fit: BoxFit.fitHeight,
-        opacity: themeStore.opacityTheme,
-      )),
+      ),
       padding: const EdgeInsets.symmetric(
         horizontal: Dimens.horizontal_padding,
       ),
@@ -59,7 +60,7 @@ class SettingsPage extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: Dimens.lightly_medium_text,
-                        color: themeStore.textTitleColor,
+                        color: themeStore.reverseThemeColor,
                       ),
                     ),
                   ),
@@ -68,7 +69,7 @@ class SettingsPage extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.w800,
                       fontSize: Dimens.extra_large_text,
-                      color: themeStore.textTitleColor,
+                      color: themeStore.reverseThemeColor,
                     ),
                   ),
                   trailing: NetworkImageWidget(
@@ -81,147 +82,159 @@ class SettingsPage extends StatelessWidget {
           Expanded(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  WrapNamedListWidget(
-                    namedContainer: "Programs",
-                    margin: const EdgeInsets.symmetric(
-                      vertical: Dimens.large_vertical_margin,
-                    ),
+              child: Observer(
+                builder: (_) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      GlassmorphismWidgetButton(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.dashboard,
-                              color: themeStore.themeColor,
-                              size: Dimens.large_text,
+                      WrapNamedListWidget(
+                        themeColor: themeStore.reverseThemeColor,
+                        namedContainer: "Programs",
+                        margin: const EdgeInsets.symmetric(
+                          vertical: Dimens.large_vertical_margin,
+                        ),
+                        children: <Widget>[
+                          GlassmorphismWidgetButton(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.dashboard,
+                                  color: themeStore.reverseThemeColor,
+                                  size: Dimens.large_text,
+                                ),
+                                const SizedBox(
+                                  height: Dimens.vertical_margin,
+                                ),
+                                Text(
+                                  "Sessions",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: themeStore.reverseThemeColor,
+                                      letterSpacing: 0.2,
+                                      fontSize: Dimens.small_text),
+                                ),
+                              ],
                             ),
+                            alignment: Alignment.center,
+                            width: 100,
+                            blur: Properties.blur_glass_morphism,
+                            opacity: Properties.opacity_glass_morphism,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Dimens.horizontal_padding,
+                              vertical: Dimens.vertical_padding,
+                            ),
+                            radius: 15,
+                            onTap: () {
+                              screenRoute(
+                                context: context,
+                                routeNamed: Routes.tokenProfile,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      LinearNamedListWidget(
+                        themeColor: themeStore.reverseThemeColor,
+                        namedContainer: "Settings",
+                        children: <Widget>[
+                          GlassmorphismTextButton(
+                            text: "Advanced Settings",
+                            textColor: themeStore.reverseThemeColor,
+                            blur: Properties.blur_glass_morphism,
+                            opacity: Properties.opacity_glass_morphism,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Dimens.horizontal_padding,
+                              vertical: Dimens.vertical_padding,
+                            ),
+                            radius: 15,
+                            onTap: () {
+                              Routes.navigatorSupporter(
+                                  context, Routes.advancedSettings);
+                            },
+                          ),
+                          GlassmorphismTextButton(
+                            text: "Change password",
+                            textColor: themeStore.reverseThemeColor,
+                            blur: Properties.blur_glass_morphism,
+                            opacity: Properties.opacity_glass_morphism,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Dimens.horizontal_padding,
+                              vertical: Dimens.vertical_padding,
+                            ),
+                            radius: 15,
+                            onTap: () {
+                              Routes.navigatorSupporter(
+                                  context, Routes.changePasswordSettings);
+                            },
+                          ),
+                        ],
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(
+                          top: Dimens.extra_large_vertical_margin,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            DeviceUtils.packageInfo != null
+                                ? RichText(
+                                    textAlign: TextAlign.right,
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                            text:
+                                                '${AppLocalizations.of(context).translate("settings_ver")}:  ',
+                                            style: TextStyle(
+                                              color:
+                                                  themeStore.reverseThemeColor,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: Dimens.more_small_text,
+                                            )),
+                                        TextSpan(
+                                            text: DeviceUtils
+                                                .packageInfo!.version,
+                                            style: TextStyle(
+                                              fontSize: Dimens.small_text,
+                                              fontWeight: FontWeight.w900,
+                                              color:
+                                                  themeStore.reverseThemeColor,
+                                            ))
+                                      ],
+                                    ),
+                                  )
+                                : const SizedBox(),
                             const SizedBox(
                               height: Dimens.vertical_margin,
                             ),
-                            Text(
-                              "Sessions",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: themeStore.themeColor,
-                                  letterSpacing: 0.2,
-                                  fontSize: Dimens.small_text),
+                            GlassmorphismTextButton(
+                              text: AppLocalizations.of(context)
+                                  .translate('logout'),
+                              textColor: themeStore.reverseThemeColor,
+                              blur: Properties.blur_glass_morphism,
+                              opacity: Properties.opacity_glass_morphism,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: Dimens.horizontal_padding,
+                                vertical: Dimens.vertical_padding,
+                              ),
+                              radius: 15,
+                              onTap: () {
+                                authenStore.logout().then((_) {
+                                  Routes.unauthenticatedRoute(context);
+                                });
+                              },
                             ),
                           ],
                         ),
-                        alignment: Alignment.center,
-                        width: 100,
-                        blur: Properties.blur_glass_morphism,
-                        opacity: Properties.opacity_glass_morphism,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: Dimens.horizontal_padding,
-                          vertical: Dimens.vertical_padding,
-                        ),
-                        radius: 15,
-                        onTap: () {
-                          screenRoute(
-                            context: context,
-                            routeNamed: Routes.tokenProfile,
-                          );
-                        },
                       ),
+                      const SizedBox(
+                        height: kBottomNavigationBarHeight,
+                      )
                     ],
-                  ),
-                  LinearNamedListWidget(
-                    namedContainer: "Settings",
-                    children: <Widget>[
-                      GlassmorphismTextButton(
-                        text: "Advanced Settings",
-                        blur: Properties.blur_glass_morphism,
-                        opacity: Properties.opacity_glass_morphism,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: Dimens.horizontal_padding,
-                          vertical: Dimens.vertical_padding,
-                        ),
-                        radius: 15,
-                        onTap: () {
-                          Routes.navigatorSupporter(
-                              context, Routes.advancedSettings);
-                        },
-                      ),
-                      GlassmorphismTextButton(
-                        text: "Change password",
-                        blur: Properties.blur_glass_morphism,
-                        opacity: Properties.opacity_glass_morphism,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: Dimens.horizontal_padding,
-                          vertical: Dimens.vertical_padding,
-                        ),
-                        radius: 15,
-                        onTap: () {
-                          Routes.navigatorSupporter(
-                              context, Routes.changePasswordSettings);
-                        },
-                      ),
-                    ],
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(
-                      top: Dimens.extra_large_vertical_margin,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        DeviceUtils.packageInfo != null
-                            ? RichText(
-                                textAlign: TextAlign.right,
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                        text:
-                                            '${AppLocalizations.of(context).translate("settings_ver")}:  ',
-                                        style: TextStyle(
-                                          color: themeStore.themeColor,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: Dimens.more_small_text,
-                                        )),
-                                    TextSpan(
-                                        text: DeviceUtils.packageInfo!.version,
-                                        style: TextStyle(
-                                          fontSize: Dimens.small_text,
-                                          fontWeight: FontWeight.w900,
-                                          color: themeStore.themeColor,
-                                        ))
-                                  ],
-                                ),
-                              )
-                            : const SizedBox(),
-                        const SizedBox(
-                          height: Dimens.vertical_margin,
-                        ),
-                        GlassmorphismTextButton(
-                          text:
-                              AppLocalizations.of(context).translate('logout'),
-                          blur: Properties.blur_glass_morphism,
-                          opacity: Properties.opacity_glass_morphism,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: Dimens.horizontal_padding,
-                            vertical: Dimens.vertical_padding,
-                          ),
-                          radius: 15,
-                          onTap: () {
-                            authenStore.logout().then((_) {
-                              Routes.unauthenticatedRoute(context);
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: kBottomNavigationBarHeight,
-                  )
-                ],
+                  );
+                },
               ),
             ),
           )

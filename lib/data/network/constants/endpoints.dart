@@ -76,6 +76,9 @@ class Endpoints {
   static const String reviewSessionProgram =
       _mentorProxy + "/:mentorId/program/:programId/register/:sessionId/rating";
 
+  /// Fetch multiple mentors
+  static const String fetchMultipleMentors = _mentorProxy + "/multiple";
+
   //:---------------------------------------------------------------------------
 
   /// Mentee APIs

@@ -40,7 +40,7 @@ class _RateReviewState extends State<RateReview> {
     super.initState();
 
     rate = widget.rate;
-    choosenColor = widget.chooseColor ?? _themeStore.lightThemeColor;
+    choosenColor = widget.chooseColor ?? _themeStore.ratingColor;
   }
 
   @override

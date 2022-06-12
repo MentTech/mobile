@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:like_button/like_button.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
@@ -7,6 +10,7 @@ import 'package:mobile/models/mentor/mentor.dart';
 import 'package:mobile/stores/mentor/mentor_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
+import 'package:mobile/ui/mentor_detail/mentor_profile.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
@@ -25,6 +29,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   // controller:----------------------------------------------------------------
+  final ScrollController _scrollControllerFavList = ScrollController();
 
   // store:---------------------------------------------------------------------
   final ThemeStore _themeStore = getIt<ThemeStore>();
@@ -40,7 +45,12 @@ class _HomePageState extends State<HomePage> {
     _mentorStore.fetchRecommendMentors();
 
     _userStore = Provider.of<UserStore>(context, listen: false);
-    _userStore.fetchFavouriteMentors();
+    _userStore.fetchFavouriteMentors().then((_) {
+      _mentorStore.fetchFavouriteMentors(_userStore.favouriteMentorIdList);
+    });
+
+    // build lazy loading in future
+    _scrollControllerFavList.addListener(_scrollFavouriteListListener);
   }
 
   @override
@@ -49,13 +59,8 @@ class _HomePageState extends State<HomePage> {
       fit: StackFit.expand,
       children: [
         LinearGradientBackground(
-          colors: [
-            _themeStore.themeColor,
-            Colors.black
-                .withGreen((_themeStore.themeColor.green * 0.2).round())
-                .withBlue((_themeStore.themeColor.blue * 0.2).round()),
-          ],
-          stops: const [0, 0.35],
+          colors: _themeStore.linearGradientColors,
+          stops: _themeStore.linearGradientStops,
         ),
         SafeArea(
           bottom: false,
@@ -81,15 +86,15 @@ class _HomePageState extends State<HomePage> {
                               Text(
                                 AppLocalizations.of(context)
                                     .translate("greeting"),
-                                style: const TextStyle(
-                                  color: Colors.white70,
+                                style: TextStyle(
+                                  color: _themeStore.reverseThemeColor,
                                   fontSize: Dimens.lightly_medium_text,
                                 ),
                               ),
                               Text(
                                 _userStore.user!.name,
-                                style: const TextStyle(
-                                  color: Colors.white70,
+                                style: TextStyle(
+                                  color: _themeStore.reverseThemeColor,
                                   fontSize: Dimens.large_text,
                                 ),
                               ),
@@ -105,8 +110,6 @@ class _HomePageState extends State<HomePage> {
                               padding: EdgeInsets.zero,
                               child: NetworkImageWidget(
                                 url: _userStore.user!.avatar,
-                                alternativeUrl:
-                                    'https://images.unsplash.com/photo-1648615112483-aeed3ce1385e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=765&q=80',
                                 radius:
                                     DeviceUtils.getScaledHeight(context, 0.04),
                                 borderRadius: BorderRadius.circular(0.0),
@@ -132,27 +135,34 @@ class _HomePageState extends State<HomePage> {
                         Text(
                           AppLocalizations.of(context)
                               .translate("home_favourite_list"),
-                          style: const TextStyle(
-                            color: Colors.white70,
+                          style: TextStyle(
+                            color: _themeStore.reverseThemeColor,
                             fontSize: Dimens.lightly_medium_text,
                           ),
                         ),
-                        SizedBox(
-                          height: DeviceUtils.getScaledHeight(context, 0.4),
-                          child: Observer(
-                            builder: (_) {
-                              return ListView.builder(
-                                padding: EdgeInsets.zero,
-                                scrollDirection: Axis.horizontal,
-                                physics: const BouncingScrollPhysics(),
-                                itemBuilder: (context, index) =>
-                                    HomeSuggestMentorItem(
-                                  mentorModel: _mentorStore.favouriteAt(index),
-                                ),
-                                itemCount: _mentorStore.favouriteLength,
-                              );
-                            },
-                          ),
+                        Observer(
+                          builder: (_) {
+                            return _mentorStore.hasFavouriteMentors
+                                ? SizedBox(
+                                    height: DeviceUtils.getScaledHeight(
+                                        context, 0.3),
+                                    child: ListView.builder(
+                                      controller: _scrollControllerFavList,
+                                      clipBehavior: Clip.none,
+                                      padding: EdgeInsets.zero,
+                                      scrollDirection: Axis.horizontal,
+                                      physics: const BouncingScrollPhysics(),
+                                      itemBuilder: (context, index) =>
+                                          HomeSuggestMentorItem(
+                                        mentorModel:
+                                            _mentorStore.favouriteAt(index),
+                                        isShowLiked: true,
+                                      ),
+                                      itemCount: _mentorStore.favouriteLength,
+                                    ),
+                                  )
+                                : const SizedBox();
+                          },
                         ),
                         const SizedBox(
                           height: Dimens.large_vertical_margin,
@@ -160,28 +170,33 @@ class _HomePageState extends State<HomePage> {
                         Text(
                           AppLocalizations.of(context)
                               .translate("home_recommended_list"),
-                          style: const TextStyle(
-                            color: Colors.white70,
+                          style: TextStyle(
+                            color: _themeStore.reverseThemeColor,
                             fontSize: Dimens.lightly_medium_text,
                           ),
                         ),
-                        SizedBox(
-                          height: DeviceUtils.getScaledHeight(context, 0.4),
-                          child: Observer(
-                            builder: (_) {
-                              return ListView.builder(
-                                padding: EdgeInsets.zero,
-                                scrollDirection: Axis.horizontal,
-                                physics: const BouncingScrollPhysics(),
-                                itemBuilder: (context, index) =>
-                                    HomeSuggestMentorItem(
-                                  mentorModel:
-                                      _mentorStore.recommendedAt(index),
-                                ),
-                                itemCount: _mentorStore.recommendedLength,
-                              );
-                            },
-                          ),
+                        Observer(
+                          builder: (_) {
+                            return _mentorStore.hasRecommendedMentors
+                                ? SizedBox(
+                                    height: DeviceUtils.getScaledHeight(
+                                        context, 0.3),
+                                    child: ListView.builder(
+                                      clipBehavior: Clip.none,
+                                      padding: EdgeInsets.zero,
+                                      scrollDirection: Axis.horizontal,
+                                      physics: const BouncingScrollPhysics(),
+                                      itemBuilder: (context, index) =>
+                                          HomeSuggestMentorItem(
+                                        mentorModel:
+                                            _mentorStore.recommendedAt(index),
+                                        isShowLiked: false,
+                                      ),
+                                      itemCount: _mentorStore.recommendedLength,
+                                    ),
+                                  )
+                                : const SizedBox();
+                          },
                         ),
                         const SizedBox(
                           height: kBottomNavigationBarHeight,
@@ -197,29 +212,157 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
+
+  void _scrollFavouriteListListener() {
+    log("messenger: ${_scrollControllerFavList.position.extentAfter}");
+    // if (controller.position.extentAfter < 500) {
+    //   setState(() {
+    //     items.addAll(List.generate(42, (index) => 'Inserted $index'));
+    //   });
+    // }
+  }
 }
 
 class HomeSuggestMentorItem extends StatelessWidget {
-  const HomeSuggestMentorItem({
+  HomeSuggestMentorItem({
     Key? key,
     required this.mentorModel,
+    required this.isShowLiked,
   }) : super(key: key);
 
   final MentorModel mentorModel;
+  final bool isShowLiked;
+
+  // store:---------------------------------------------------------------------
+  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        GlassmorphismContainer(
-          child: Text(
-            mentorModel.name,
-            style: const TextStyle(color: Colors.white),
+    return Container(
+      margin: const EdgeInsets.only(
+        left: Dimens.extra_large_horizontal_margin,
+        top: Dimens.ultra_extra_large_vertical_margin,
+        right: Dimens.extra_large_horizontal_margin,
+        bottom: Dimens.extra_large_vertical_margin,
+      ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          GlassmorphismContainer(
+            height: DeviceUtils.getScaledWidth(context, 0.45),
+            width: DeviceUtils.getScaledWidth(context, 0.45),
+            padding: const EdgeInsets.symmetric(
+              horizontal: Dimens.horizontal_padding,
+              vertical: Dimens.vertical_padding,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: DeviceUtils.getScaledWidth(context, 0.15),
+                  ),
+                  Text(
+                    mentorModel.name,
+                    style: TextStyle(
+                      color: _themeStore.reverseThemeColor,
+                      fontSize: Dimens.lightly_medium_text,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: Dimens.vertical_margin,
+                  ),
+                  Text(
+                    "${AppLocalizations.of(context).translate("major_translate")}: ${mentorModel.userMentor.category.name}",
+                    style: TextStyle(
+                      color: _themeStore.reverseThemeColor,
+                      fontSize: Dimens.small_text,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            blur: Properties.blur_glass_morphism,
+            opacity: Properties.opacity_glass_morphism,
           ),
-          blur: Properties.blur_glass_morphism,
-          opacity: Properties.opacity_glass_morphism,
-        ),
-      ],
+          Positioned(
+            top: -20,
+            right: -20,
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        MentorProfile(idMentor: mentorModel.id),
+                  ),
+                );
+              },
+              child: Container(
+                width: DeviceUtils.getScaledWidth(context, 0.25),
+                height: DeviceUtils.getScaledWidth(context, 0.25),
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: _themeStore.reverseThemeColorfulColor,
+                      blurRadius: 12,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                  color: _themeStore.reverseThemeColorfulColor,
+                  shape: BoxShape.circle,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(3), // border width
+                  child: ClipOval(
+                    child: NetworkImageWidget(url: mentorModel.avatar),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          isShowLiked
+              ? Positioned(
+                  left: -5,
+                  bottom: 5,
+                  child: LikeButton(
+                    isLiked: true,
+                    size: Dimens.large_text,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    padding: EdgeInsets.zero,
+                    likeBuilder: (islike) {
+                      return Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Color.alphaBlend(
+                              Colors.red.shade200, Colors.white),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.alphaBlend(
+                                  Colors.red.shade200, Colors.white),
+                              blurRadius: 3,
+                              spreadRadius: 3,
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          Icons.favorite,
+                          size: Dimens.medium_text,
+                          color: islike ? Colors.red.shade400 : Colors.white54,
+                        ),
+                      );
+                    },
+                    onTap: (isLiked) {
+                      // fav mentors
+                      return Future.value(!isLiked);
+                    },
+                  ),
+                )
+              : const SizedBox(),
+        ],
+      ),
     );
   }
 }
