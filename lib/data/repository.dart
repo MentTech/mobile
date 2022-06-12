@@ -62,6 +62,17 @@ class Repository {
     });
   }
 
+  Future<Map<String, dynamic>?> fetchFavouriteMentors(
+      {required String authToken}) async {
+    return _menteeAPI
+        .fetchFavouriteMentors(authToken: authToken)
+        .catchError((error) {
+      return {
+        "onError": error.toString(),
+      };
+    });
+  }
+
   Future<Map<String, dynamic>> changePassword({
     required String authToken,
     required Map<String, dynamic> body,
@@ -94,6 +105,14 @@ class Repository {
     return _mentorAPI
         .fetchMentorInformation(mentorID: mentorID)
         .catchError((error) {
+      return {
+        "onError": error.toString(),
+      };
+    });
+  }
+
+  Future<Map<String, dynamic>?> fetchRecommendedMentors() async {
+    return _mentorAPI.fetchRecommendedMentors().catchError((error) {
       return {
         "onError": error.toString(),
       };

@@ -42,6 +42,25 @@ class MentorAPI {
     }
   }
 
+  Future<Map<String, dynamic>?> fetchRecommendedMentors() async {
+    try {
+      final res = await _dioClient.get(
+        Endpoints.fetchRecommendedMentors,
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) => true,
+        ),
+      );
+
+      return {
+        "data": res,
+      };
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
   Future<Map<String, dynamic>?> fetchMentorInformation(
       {required int mentorID}) async {
     try {

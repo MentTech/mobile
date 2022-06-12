@@ -42,6 +42,20 @@ mixin _$MentorStore on _MentorStore, Store {
       (_$hasProgramComputed ??= Computed<bool>(() => super.hasProgram,
               name: '_MentorStore.hasProgram'))
           .value;
+  Computed<int>? _$recommendedLengthComputed;
+
+  @override
+  int get recommendedLength => (_$recommendedLengthComputed ??= Computed<int>(
+          () => super.recommendedLength,
+          name: '_MentorStore.recommendedLength'))
+      .value;
+  Computed<int>? _$favouriteLengthComputed;
+
+  @override
+  int get favouriteLength =>
+      (_$favouriteLengthComputed ??= Computed<int>(() => super.favouriteLength,
+              name: '_MentorStore.favouriteLength'))
+          .value;
 
   late final _$successAtom =
       Atom(name: '_MentorStore.success', context: context);
@@ -106,6 +120,39 @@ mixin _$MentorStore on _MentorStore, Store {
     });
   }
 
+  late final _$favouriteMentorListAtom =
+      Atom(name: '_MentorStore.favouriteMentorList', context: context);
+
+  @override
+  ObservableList<MentorModel> get favouriteMentorList {
+    _$favouriteMentorListAtom.reportRead();
+    return super.favouriteMentorList;
+  }
+
+  @override
+  set favouriteMentorList(ObservableList<MentorModel> value) {
+    _$favouriteMentorListAtom.reportWrite(value, super.favouriteMentorList, () {
+      super.favouriteMentorList = value;
+    });
+  }
+
+  late final _$recommendedMentorListAtom =
+      Atom(name: '_MentorStore.recommendedMentorList', context: context);
+
+  @override
+  ObservableList<MentorModel> get recommendedMentorList {
+    _$recommendedMentorListAtom.reportRead();
+    return super.recommendedMentorList;
+  }
+
+  @override
+  set recommendedMentorList(ObservableList<MentorModel> value) {
+    _$recommendedMentorListAtom.reportWrite(value, super.recommendedMentorList,
+        () {
+      super.recommendedMentorList = value;
+    });
+  }
+
   late final _$mentorModelAtom =
       Atom(name: '_MentorStore.mentorModel', context: context);
 
@@ -153,6 +200,15 @@ mixin _$MentorStore on _MentorStore, Store {
   Future<void> searchMentors(Map<String, dynamic> parameterQuery) {
     return _$searchMentorsAsyncAction
         .run(() => super.searchMentors(parameterQuery));
+  }
+
+  late final _$fetchRecommendMentorsAsyncAction =
+      AsyncAction('_MentorStore.fetchRecommendMentors', context: context);
+
+  @override
+  Future<void> fetchRecommendMentors() {
+    return _$fetchRecommendMentorsAsyncAction
+        .run(() => super.fetchRecommendMentors());
   }
 
   late final _$fetchAMentorAsyncAction =
@@ -226,13 +282,17 @@ success: ${success},
 page: ${page},
 requestFuture: ${requestFuture},
 listMentors: ${listMentors},
+favouriteMentorList: ${favouriteMentorList},
+recommendedMentorList: ${recommendedMentorList},
 mentorModel: ${mentorModel},
 program: ${program},
 isLoading: ${isLoading},
 getMentor: ${getMentor},
 hasMentor: ${hasMentor},
 getProgram: ${getProgram},
-hasProgram: ${hasProgram}
+hasProgram: ${hasProgram},
+recommendedLength: ${recommendedLength},
+favouriteLength: ${favouriteLength}
     ''';
   }
 }

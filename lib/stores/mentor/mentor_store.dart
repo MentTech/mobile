@@ -64,6 +64,14 @@ abstract class _MentorStore with Store {
   ObservableList<MentorModel> listMentors = ObservableList<MentorModel>();
 
   @observable
+  ObservableList<MentorModel> favouriteMentorList =
+      ObservableList<MentorModel>();
+
+  @observable
+  ObservableList<MentorModel> recommendedMentorList =
+      ObservableList<MentorModel>();
+
+  @observable
   MentorModel? mentorModel;
 
   @observable
@@ -84,6 +92,12 @@ abstract class _MentorStore with Store {
 
   @computed
   bool get hasProgram => program != null;
+
+  @computed
+  int get recommendedLength => recommendedMentorList.length;
+
+  @computed
+  int get favouriteLength => favouriteMentorList.length;
 
   // actions:-------------------------------------------------------------------
   @action
@@ -143,6 +157,36 @@ abstract class _MentorStore with Store {
       try {
         totalPage = res!["totalPage"];
         listMentors = ObservableList.of(MentorModelList.fromJson(res).list);
+
+        success = true;
+      } catch (e) {
+        // res['message']
+        messageStore.errorMessage = e.toString();
+        messageStore.successMessage = "";
+
+        success = false;
+      }
+    });
+  }
+
+  @action
+  Future<void> fetchRecommendMentors() async {
+    String? accessToken = await _repository.authToken;
+
+    if (null == accessToken) {
+      messageStore.successMessage = "";
+      messageStore.errorMessage = "There are no AccessToken";
+      messageStore.notifyExpiredTokenStatus();
+
+      success = false;
+    }
+
+    final future = _repository.fetchRecommendedMentors();
+
+    future.then((res) {
+      try {
+        recommendedMentorList =
+            ObservableList.of(MentorModelList.fromJson(res!).list);
 
         success = true;
       } catch (e) {
@@ -242,6 +286,14 @@ abstract class _MentorStore with Store {
   // general methods:-----------------------------------------------------------
   MentorModel at(int index) {
     return listMentors.elementAt(index);
+  }
+
+  MentorModel recommendedAt(int index) {
+    return recommendedMentorList.elementAt(index);
+  }
+
+  MentorModel favouriteAt(int index) {
+    return favouriteMentorList.elementAt(index);
   }
 
   int get length => listMentors.length;

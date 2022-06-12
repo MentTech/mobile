@@ -8,19 +8,15 @@ import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/mentor/mentor.dart';
-import 'package:mobile/stores/common/common_store.dart';
 import 'package:mobile/stores/mentor/mentor_store.dart';
 import 'package:mobile/stores/search_store.dart/search_store.dart';
 import 'package:mobile/stores/search_store.dart/search_type_enum.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
-import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/ui/mentor_detail/mentor_profile.dart';
 import 'package:mobile/utils/application/application_utils.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
-import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
-import 'package:mobile/widgets/button_widgets/neumorphism_button.dart';
 import 'package:mobile/widgets/container/image_container/network_image_widget.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:mobile/widgets/popup_template/hero_popup_routes.dart';
@@ -47,8 +43,6 @@ class _TutorPageState extends State<TutorPage> {
   final ThemeStore _themeStore = getIt<ThemeStore>();
 
   late final MentorStore _mentorStore;
-  late final CommonStore _commonStore;
-  late final UserStore _userStore;
   late final SearchStore _searchStore;
 
   @override
@@ -56,8 +50,6 @@ class _TutorPageState extends State<TutorPage> {
     super.didChangeDependencies();
 
     _mentorStore = Provider.of<MentorStore>(context, listen: false);
-    _commonStore = Provider.of<CommonStore>(context, listen: false);
-    _userStore = Provider.of<UserStore>(context, listen: false);
     _searchStore = Provider.of<SearchStore>(context, listen: false);
   }
 
@@ -92,32 +84,6 @@ class _TutorPageState extends State<TutorPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: Dimens.horizontal_padding),
-                      child: Observer(
-                        builder: (context) {
-                          return NeumorphismButton(
-                            padding: EdgeInsets.zero,
-                            child: NetworkImageWidget(
-                              url: _userStore.user!.avatar,
-                              alternativeUrl:
-                                  'https://images.unsplash.com/photo-1648615112483-aeed3ce1385e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=765&q=80',
-                              radius:
-                                  DeviceUtils.getScaledHeight(context, 0.04),
-                              borderRadius: BorderRadius.circular(0.0),
-                            ),
-                            onTap: () {
-                              Routes.navigatorSupporter(
-                                  context, Routes.profile);
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ),
                   TextFieldWidget(
                     isObscure: false,
                     margin: const EdgeInsets.only(

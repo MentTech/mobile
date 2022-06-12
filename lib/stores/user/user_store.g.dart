@@ -125,6 +125,15 @@ mixin _$UserStore on _UserStore, Store {
     return _$fetchUserInforAsyncAction.run(() => super.fetchUserInfor());
   }
 
+  late final _$fetchFavouriteMentorsAsyncAction =
+      AsyncAction('_UserStore.fetchFavouriteMentors', context: context);
+
+  @override
+  Future<void> fetchFavouriteMentors() {
+    return _$fetchFavouriteMentorsAsyncAction
+        .run(() => super.fetchFavouriteMentors());
+  }
+
   late final _$fetchUserSessionsAsyncAction =
       AsyncAction('_UserStore.fetchUserSessions', context: context);
 

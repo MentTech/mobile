@@ -43,8 +43,11 @@ class Endpoints {
   /// Private Mentor proxy
   static const String _mentorProxy = baseUrl + "/mentor";
 
-  /// Get List (paginate) of mentor information: /users/profile
+  /// Get List (paginate) of mentor information: /mentor/search
   static const String searchMentorPagination = _mentorProxy + "/search";
+
+  /// Get List (paginate) of mentor information: /mentor/suggest
+  static const String fetchRecommendedMentors = _mentorProxy + "/suggest";
 
   /// Get specificed mentor information: /mentor/:id
   static const String fetchMentorInfor = _mentorProxy + "/:id";
@@ -81,6 +84,9 @@ class Endpoints {
 
   /// Get all sessions which is registered by user
   static const String sessionRegisterProgram = _menteeProxy + "/mysession";
+
+  /// Fetch favourite mentor List: /users/profile
+  static const String fetchFavouriteMentors = _menteeProxy + "/favorite";
 
   //:---------------------------------------------------------------------------
 

@@ -128,6 +128,27 @@ abstract class _UserStore with Store {
   }
 
   @action
+  Future<void> fetchFavouriteMentors() async {
+    String? accessToken = await _repository.authToken;
+
+    if (null == accessToken) {
+      success = false;
+    }
+
+    final future = _repository.fetchFavouriteMentors(authToken: accessToken!);
+
+    future.then((res) {
+      try {
+        // listMentors = ObservableList.of(MentorModelList.fromJson(res).list);
+
+        success = true;
+      } catch (e) {
+        success = false;
+      }
+    });
+  }
+
+  @action
   Future<bool> fetchUserSessions() async {
     String? accessToken = await _repository.authToken;
 
