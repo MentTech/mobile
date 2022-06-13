@@ -232,7 +232,7 @@ class _PasswordChangerScreenState extends State<PasswordChangerScreen> {
   _showErrorMessage(String message,
       {int duration = Properties.delayTimeInSecond}) {
     if (message.isNotEmpty) {
-      WidgetsBinding.instance?.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         FlushbarHelper.createError(
           message: message,
           title: AppLocalizations.of(context).translate('missing_field'),
@@ -247,7 +247,7 @@ class _PasswordChangerScreenState extends State<PasswordChangerScreen> {
   _showSuccessMessage(String message,
       {int duration = Properties.delayTimeInSecond}) {
     if (message.isNotEmpty) {
-      WidgetsBinding.instance?.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         FlushbarHelper.createSuccess(
           message: message,
           title: AppLocalizations.of(context).translate('missing_field'),

@@ -6,7 +6,9 @@ import 'package:mobile/constants/colors.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/constants/strings.dart';
+import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/authen_form/authen_form_store.dart';
+import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
@@ -39,6 +41,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
   //stores:---------------------------------------------------------------------
   late final UserStore _userStore;
   final _store = AuthenticatorFormStore();
+  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   //focus node:-----------------------------------------------------------------
   final FocusNode _passwordFocusNode = FocusNode();
@@ -88,7 +91,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
     _userStore = Provider.of<UserStore>(context, listen: false);
     _userStore.callback = (result) {
       if (result) {
-        WidgetsBinding.instance?.addPostFrameCallback((_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           FlushbarHelper.createSuccess(
             message: _store.messageStore.successMessage,
             title: AppLocalizations.of(context).translate('home_tv_success'),
@@ -199,9 +202,10 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Hero(
-                tag: Strings.authorizeHeroTag,
-                child: AppIconWidget(image: 'assets/icons/ic_appicon.png')),
+            Hero(
+              tag: Strings.authorizeHeroTag,
+              child: AppIconWidget(image: _themeStore.appIcon),
+            ),
             const SizedBox(height: Dimens.horizontal_padding * 2),
             _buildUserIdField(),
             _buildPasswordField(),
@@ -484,7 +488,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
   _showErrorMessage(String message,
       {int duration = Properties.delayTimeInSecond}) {
     if (message.isNotEmpty) {
-      WidgetsBinding.instance?.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         FlushbarHelper.createError(
           message: message,
           title: AppLocalizations.of(context).translate('home_tv_error'),

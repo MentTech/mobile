@@ -21,6 +21,12 @@ mixin _$ThemeStore on _ThemeStore, Store {
   String get modeName => (_$modeNameComputed ??=
           Computed<String>(() => super.modeName, name: '_ThemeStore.modeName'))
       .value;
+  Computed<String>? _$appIconComputed;
+
+  @override
+  String get appIcon => (_$appIconComputed ??=
+          Computed<String>(() => super.appIcon, name: '_ThemeStore.appIcon'))
+      .value;
   Computed<double>? _$opacityThemeComputed;
 
   @override
@@ -116,6 +122,7 @@ mixin _$ThemeStore on _ThemeStore, Store {
     return '''
 darkMode: ${darkMode},
 modeName: ${modeName},
+appIcon: ${appIcon},
 opacityTheme: ${opacityTheme},
 themeColorfulColor: ${themeColorfulColor},
 reverseThemeColorfulColor: ${reverseThemeColorfulColor},

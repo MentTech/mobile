@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:mobile/constants/assets.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
@@ -278,9 +277,9 @@ class _BalancedProfileState extends State<BalancedProfile> {
             children: [
               Row(
                 children: <Widget>[
-                  const AppIconWidget(
+                  AppIconWidget(
                     dimenImage: Dimens.extra_large_text,
-                    image: Assets.appLogo,
+                    image: _themeStore.appIcon,
                   ),
                   Text(
                     DeviceUtils.packageInfo!.appName,

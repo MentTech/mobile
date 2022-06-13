@@ -33,94 +33,94 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
+  cupertino_icons: 
 
   # A powerful Http client for Dart
-  dio: ^4.0.4
+  dio: 
 
   # MobX is a library for reactively managing the state of your applications. Use the power of
   # observables, actions, and reactions to supercharge your Dart and Flutter apps.
-  mobx: ^2.0.6+1
-  flutter_mobx: ^2.0.4
+  mobx: 
+  flutter_mobx: 
 
   # An helper to easily exposes a value using InheritedWidget without having to write one.
-  provider: ^6.0.2
+  provider: 
 
   # String validation and sanitization for Dart. Dart 2-compatible version of validator
-  validators: ^3.0.0
+  validators: 
 
   # The following adds the shared pref as a dependency in your application
-  shared_preferences: ^2.0.13
+  shared_preferences: 
 
   # A composable, Future-based library for making HTTP requests.
-  http: ^0.13.4
+  http: 
 
   # A flexible widget for user notification. Customize your text, button, duration, animations
   # and much more. For Android devs, it is made to replace Snackbars and Toasts.
   another_flushbar: ^1.10.28
 
   # Material Dialog
-  material_dialogs: ^1.1.1
+  material_dialogs: 
 
   # This package provides internationalization and localization facilities, including message
   # translation, plurals and genders, date/number formatting and parsing, and bidirectional text.
-  intl: ^0.17.0
+  intl: 
 
   # XXTEA is a fast and secure encryption algorithm. This is a XXTEA library for Dart.
-  xxtea: ^2.1.0
+  xxtea: 
 
   # An helper to easily exposes a value using InheritedWidget without having to write one.
-  # sembast: ^3.1.0+2
-  path_provider: ^2.0.9
+  # sembast: 
+  path_provider: 
 
   # for dependency injection
-  get_it: ^7.2.0
+  get_it: 
 
   #this lib is for build 'JSON and serialization'
-  json_annotation: ^4.4.0
+  json_annotation: 
 
   # Draw SVG (and some Android VectorDrawable (XML)) files on a Flutter Widget.
-  flutter_svg: ^1.0.3
+  flutter_svg: 
 
   # A Flutter plugin for Google Sign In.
   # scope: https://developers.google.com/identity/protocols/oauth2/scopes
-  google_sign_in: ^5.3.0
+  google_sign_in: 
 
   # Authenticate for facebook
-  # flutter_facebook_auth: ^4.1.2
+  # flutter_facebook_auth: 
 
   # A Flutter package for easy implementation of curved navigation bar.
-  curved_navigation_bar: ^1.0.3
+  curved_navigation_bar: 
 
   # a widget provided to the flutter scroll component drop-down refresh and pull up load.
-  pull_to_refresh: ^2.0.0
+  pull_to_refresh: 
 
   # A flutter library to show images from the internet and keep them in the cache directory.
-  cached_network_image: ^3.2.0
+  cached_network_image: 
 
   # This Flutter plugin provides an API for querying information about an application package.
-  package_info_plus: ^1.4.0
+  package_info_plus: 
 
   # more icon for application
-  font_awesome_flutter: ^10.1.0
+  font_awesome_flutter: 
 
   # to ago string
-  timeago: ^3.2.2
+  timeago: 
 
   # favourite mentor button
-  like_button: ^2.0.4
+  like_button: 
 
   # readmore text
-  readmore: ^2.1.0
+  readmore: 
 
   # Being able to compare objects in Dart often involves having to override the == operator as well as hashCode.
-  equatable: ^2.0.3
+  equatable: 
 
   # progress bar
-  circle_progress_bar: ^0.1.1
+  circle_progress_bar: 
 
   # slider stepper
-  introduction_screen: ^3.0.2
+  introduction_screen: 
 
   flutter_localizations:
     sdk: flutter
@@ -141,15 +141,20 @@ dev_dependencies:
   # flutter packages get
   # flutter packages pub run flutter_launcher_icons:main
   # build app icon with statement: `flutter clean && flutter pub get && flutter pub run flutter_launcher_icons:main` in terminal
-  flutter_launcher_icons: ^0.9.2
-  mobx_codegen: ^2.0.5+2
-  json_serializable: ^6.1.4 # for create json builder
-  build_runner: ^2.1.7
+  flutter_launcher_icons: 
+  mobx_codegen: 
+  json_serializable:  # for create json builder
+  build_runner: 
   # use command `flutter pub run build_runner build --delete-conflicting-outputs` to run 
-  analyzer: ^3.2.0
+  analyzer: 
 
 
-  
+flutter_icons:
+  image_path: "assets/icons/ic_appicon.png"
+  android: true
+  ios: true
+  remove_alpha_ios: true
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

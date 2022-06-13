@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/constants/assets.dart';
 import 'package:mobile/constants/colors.dart';
 import 'package:mobile/data/repository.dart';
 import 'package:mobile/stores/message/message_store.dart';
@@ -28,6 +29,9 @@ abstract class _ThemeStore with Store {
 
   @computed
   String get modeName => _darkMode ? "Dark mode" : "Light mode";
+
+  @computed
+  String get appIcon => _darkMode ? Assets.appLogoDark : Assets.appLogoLight;
 
   @computed
   double get opacityTheme => _darkMode ? 0.65 : 0.75;

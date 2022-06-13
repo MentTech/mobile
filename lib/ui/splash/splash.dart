@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:mobile/constants/assets.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/constants/strings.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/authen/authen_store.dart';
+import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/routes/routes.dart';
@@ -23,6 +23,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   // stores:--------------------------------------------------------------------
   UserStore? userStore;
+  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   @override
   void initState() {
@@ -46,11 +47,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Material(
+    return Material(
       child: Center(
           child: Hero(
         tag: Strings.authorizeHeroTag,
-        child: AppIconWidget(image: Assets.appLogo),
+        child: AppIconWidget(image: _themeStore.appIcon),
       )),
     );
   }
