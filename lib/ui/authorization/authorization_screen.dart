@@ -8,6 +8,7 @@ import 'package:mobile/constants/properties.dart';
 import 'package:mobile/constants/strings.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/authen_form/authen_form_store.dart';
+import 'package:mobile/stores/search_store.dart/search_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/utils/device/device_utils.dart';
@@ -91,13 +92,17 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
     _userStore = Provider.of<UserStore>(context, listen: false);
     _userStore.callback = (result) {
       if (result) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          FlushbarHelper.createSuccess(
-            message: _store.messageStore.successMessage,
-            title: AppLocalizations.of(context).translate('home_tv_success'),
-            duration: const Duration(seconds: Properties.delayTimeInSecond),
-          ).show(context).then((_) {
-            Routes.authenticatedRoute(context);
+        Provider.of<SearchStore>(context, listen: false)
+            .initializeDatabase()
+            .then((_) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            FlushbarHelper.createSuccess(
+              message: _store.messageStore.successMessage,
+              title: AppLocalizations.of(context).translate('home_tv_success'),
+              duration: const Duration(seconds: Properties.delayTimeInSecond),
+            ).show(context).then((_) {
+              Routes.authenticatedRoute(context);
+            });
           });
         });
       } else {

@@ -21,9 +21,6 @@ abstract class _SearchStore with Store {
   _SearchStore(Repository repository) : _repository = repository {
     // setting up disposers
     _setupDisposers();
-
-    fetchAllCategories();
-    fetchAllSkills();
   }
 
   // disposers:-----------------------------------------------------------------
@@ -44,6 +41,11 @@ abstract class _SearchStore with Store {
   // database
   late final List<Category> categories;
   late final List<Skill> skills;
+
+  Future initializeDatabase() async {
+    await fetchAllCategories();
+    await fetchAllSkills();
+  }
 
   // observable variables:------------------------------------------------------
   @observable
@@ -135,12 +137,10 @@ abstract class _SearchStore with Store {
   }
 
   // init database:-------------------------------------------------------------
-  Future<void> fetchAllSkills() async {
+  Future fetchAllSkills() async {
     final future = _repository.fetchAllSkills();
 
-    requestFuture = ObservableFuture(future);
-
-    future.then(
+    await future.then(
       (res) {
         try {
           skills = SkillList.fromJson(res!).skills;
@@ -156,12 +156,10 @@ abstract class _SearchStore with Store {
     );
   }
 
-  Future<void> fetchAllCategories() async {
+  Future fetchAllCategories() async {
     final future = _repository.fetchAllCategories();
 
-    requestFuture = ObservableFuture(future);
-
-    future.then(
+    await future.then(
       (res) {
         try {
           categories = CategoryList.fromJson(res!).categories;

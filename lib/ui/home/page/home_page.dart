@@ -287,8 +287,8 @@ class HomeSuggestMentorItem extends StatelessWidget {
             opacity: Properties.opacity_glass_morphism,
           ),
           Positioned(
-            top: -20,
-            right: -20,
+            top: -25,
+            right: -25,
             child: InkWell(
               onTap: () {
                 Navigator.of(context).push(
@@ -299,8 +299,8 @@ class HomeSuggestMentorItem extends StatelessWidget {
                 );
               },
               child: Container(
-                width: DeviceUtils.getScaledWidth(context, 0.25),
-                height: DeviceUtils.getScaledWidth(context, 0.25),
+                width: DeviceUtils.getScaledWidth(context, 0.23),
+                height: DeviceUtils.getScaledWidth(context, 0.23),
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(

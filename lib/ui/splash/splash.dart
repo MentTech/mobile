@@ -5,6 +5,7 @@ import 'package:mobile/constants/properties.dart';
 import 'package:mobile/constants/strings.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/authen/authen_store.dart';
+import 'package:mobile/stores/search_store.dart/search_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/utils/device/device_utils.dart';
@@ -38,7 +39,13 @@ class _SplashScreenState extends State<SplashScreen> {
     userStore = Provider.of<UserStore>(context, listen: false);
     userStore!.callback = (result) {
       if (result) {
-        Routes.authenticatedRoute(context);
+        Provider.of<SearchStore>(context, listen: false)
+            .initializeDatabase()
+            .then(
+          (_) {
+            Routes.authenticatedRoute(context);
+          },
+        );
       } else {
         Routes.unauthenticatedRoute(context);
       }

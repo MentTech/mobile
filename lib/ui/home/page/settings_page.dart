@@ -89,7 +89,8 @@ class SettingsPage extends StatelessWidget {
                     children: <Widget>[
                       WrapNamedListWidget(
                         themeColor: themeStore.reverseThemeColor,
-                        namedContainer: "Programs",
+                        namedContainer: AppLocalizations.of(context)
+                            .translate("programs_translate"),
                         margin: const EdgeInsets.symmetric(
                           vertical: Dimens.large_vertical_margin,
                         ),
@@ -108,7 +109,9 @@ class SettingsPage extends StatelessWidget {
                                   height: Dimens.vertical_margin,
                                 ),
                                 Text(
-                                  "Sessions",
+                                  AppLocalizations.of(context)
+                                      .translate("sessions_translate"),
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       color: themeStore.reverseThemeColor,
@@ -135,27 +138,17 @@ class SettingsPage extends StatelessWidget {
                           ),
                         ],
                       ),
+                      const SizedBox(
+                        height: Dimens.vertical_margin,
+                      ),
                       LinearNamedListWidget(
                         themeColor: themeStore.reverseThemeColor,
-                        namedContainer: "Settings",
+                        namedContainer: AppLocalizations.of(context)
+                            .translate("account_settings_translate"),
                         children: <Widget>[
                           GlassmorphismTextButton(
-                            text: "Advanced Settings",
-                            textColor: themeStore.reverseThemeColor,
-                            blur: Properties.blur_glass_morphism,
-                            opacity: Properties.opacity_glass_morphism,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: Dimens.horizontal_padding,
-                              vertical: Dimens.vertical_padding,
-                            ),
-                            radius: 15,
-                            onTap: () {
-                              Routes.navigatorSupporter(
-                                  context, Routes.advancedSettings);
-                            },
-                          ),
-                          GlassmorphismTextButton(
-                            text: "Change password",
+                            text: AppLocalizations.of(context)
+                                .translate("change_password_translate"),
                             textColor: themeStore.reverseThemeColor,
                             blur: Properties.blur_glass_morphism,
                             opacity: Properties.opacity_glass_morphism,
@@ -167,6 +160,32 @@ class SettingsPage extends StatelessWidget {
                             onTap: () {
                               Routes.navigatorSupporter(
                                   context, Routes.changePasswordSettings);
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: Dimens.vertical_margin,
+                      ),
+                      LinearNamedListWidget(
+                        themeColor: themeStore.reverseThemeColor,
+                        namedContainer: AppLocalizations.of(context)
+                            .translate("application_translate"),
+                        children: <Widget>[
+                          GlassmorphismTextButton(
+                            text: AppLocalizations.of(context)
+                                .translate("advanced_settings_translate"),
+                            textColor: themeStore.reverseThemeColor,
+                            blur: Properties.blur_glass_morphism,
+                            opacity: Properties.opacity_glass_morphism,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Dimens.horizontal_padding,
+                              vertical: Dimens.vertical_padding,
+                            ),
+                            radius: 15,
+                            onTap: () {
+                              Routes.navigatorSupporter(
+                                  context, Routes.advancedSettings);
                             },
                           ),
                         ],
