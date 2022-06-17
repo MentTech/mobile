@@ -188,6 +188,21 @@ class SettingsPage extends StatelessWidget {
                                   context, Routes.advancedSettings);
                             },
                           ),
+                          GlassmorphismTextButton(
+                            text: "text ui",
+                            textColor: themeStore.reverseThemeColor,
+                            blur: Properties.blur_glass_morphism,
+                            opacity: Properties.opacity_glass_morphism,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Dimens.horizontal_padding,
+                              vertical: Dimens.vertical_padding,
+                            ),
+                            radius: 15,
+                            onTap: () {
+                              Routes.navigatorSupporter(
+                                  context, Routes.testScreen);
+                            },
+                          ),
                         ],
                       ),
                       Container(

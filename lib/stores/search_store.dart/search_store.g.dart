@@ -6,7 +6,7 @@ part of 'search_store.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$SearchStore on _SearchStore, Store {
   Computed<bool>? _$isLoadingComputed;
@@ -154,19 +154,36 @@ mixin _$SearchStore on _SearchStore, Store {
     });
   }
 
-  late final _$requestFutureAtom =
-      Atom(name: '_SearchStore.requestFuture', context: context);
+  late final _$requestCategoriesFutureAtom =
+      Atom(name: '_SearchStore.requestCategoriesFuture', context: context);
 
   @override
-  ObservableFuture<Map<String, dynamic>?> get requestFuture {
-    _$requestFutureAtom.reportRead();
-    return super.requestFuture;
+  ObservableFuture<Map<String, dynamic>?> get requestCategoriesFuture {
+    _$requestCategoriesFutureAtom.reportRead();
+    return super.requestCategoriesFuture;
   }
 
   @override
-  set requestFuture(ObservableFuture<Map<String, dynamic>?> value) {
-    _$requestFutureAtom.reportWrite(value, super.requestFuture, () {
-      super.requestFuture = value;
+  set requestCategoriesFuture(ObservableFuture<Map<String, dynamic>?> value) {
+    _$requestCategoriesFutureAtom
+        .reportWrite(value, super.requestCategoriesFuture, () {
+      super.requestCategoriesFuture = value;
+    });
+  }
+
+  late final _$requestSkillsFutureAtom =
+      Atom(name: '_SearchStore.requestSkillsFuture', context: context);
+
+  @override
+  ObservableFuture<Map<String, dynamic>?> get requestSkillsFuture {
+    _$requestSkillsFutureAtom.reportRead();
+    return super.requestSkillsFuture;
+  }
+
+  @override
+  set requestSkillsFuture(ObservableFuture<Map<String, dynamic>?> value) {
+    _$requestSkillsFutureAtom.reportWrite(value, super.requestSkillsFuture, () {
+      super.requestSkillsFuture = value;
     });
   }
 
@@ -264,7 +281,8 @@ orderType: ${orderType},
 orderByType: ${orderByType},
 category: ${category},
 selectedSkills: ${selectedSkills},
-requestFuture: ${requestFuture},
+requestCategoriesFuture: ${requestCategoriesFuture},
+requestSkillsFuture: ${requestSkillsFuture},
 listMentors: ${listMentors},
 isLoading: ${isLoading},
 categoryList: ${categoryList},

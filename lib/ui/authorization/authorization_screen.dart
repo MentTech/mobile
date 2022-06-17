@@ -2,7 +2,6 @@ import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/assets.dart';
-import 'package:mobile/constants/colors.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/constants/strings.dart';
@@ -15,6 +14,7 @@ import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/app_icon_widget.dart';
+import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
 import 'package:mobile/widgets/button_widgets/sgv_button_widget.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:mobile/widgets/progress_indicator_widget.dart';
@@ -41,6 +41,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
 
   //stores:---------------------------------------------------------------------
   late final UserStore _userStore;
+  late final SearchStore _searchStore;
   final _store = AuthenticatorFormStore();
   final ThemeStore _themeStore = getIt<ThemeStore>();
 
@@ -90,19 +91,16 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
     _forgotPassowrdAnimationController.value = 1.0;
 
     _userStore = Provider.of<UserStore>(context, listen: false);
+    _searchStore = Provider.of<SearchStore>(context, listen: false);
     _userStore.callback = (result) {
       if (result) {
-        Provider.of<SearchStore>(context, listen: false)
-            .initializeDatabase()
-            .then((_) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            FlushbarHelper.createSuccess(
-              message: _store.messageStore.successMessage,
-              title: AppLocalizations.of(context).translate('home_tv_success'),
-              duration: const Duration(seconds: Properties.delayTimeInSecond),
-            ).show(context).then((_) {
-              Routes.authenticatedRoute(context);
-            });
+        _searchStore.initializeDatabase().then((_) {
+          FlushbarHelper.createSuccess(
+            message: _store.messageStore.successMessage,
+            title: AppLocalizations.of(context).translate('home_tv_success'),
+            duration: const Duration(seconds: Properties.delayTimeInSecond),
+          ).show(context).then((_) {
+            Routes.authenticatedRoute(context);
           });
         });
       } else {
@@ -142,12 +140,18 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
                     _buildBanner(),
                     SafeArea(
                       child: Center(
-                        child: GlassmorphismContainer(
-                          blur: Properties.blur_glass_morphism,
-                          opacity: Properties.opacity_glass_morphism,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: Dimens.vertical_padding * 2),
-                          child: _buildContent(),
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: Dimens.horizontal_margin,
+                          ),
+                          child: GlassmorphismContainer(
+                            blur: Properties.blur_glass_morphism,
+                            opacity: Properties.opacity_glass_morphism,
+                            padding: const EdgeInsets.symmetric(
+                              vertical: Dimens.large_vertical_padding,
+                            ),
+                            child: _buildContent(),
+                          ),
                         ),
                       ),
                     ),
@@ -165,7 +169,9 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
           Observer(
             builder: (context) {
               return Visibility(
-                visible: _store.loading || _userStore.isLoading,
+                visible: _store.loading ||
+                    _userStore.isLoading ||
+                    _searchStore.isLoading,
                 child: const CustomProgressIndicatorWidget(),
               );
             },
@@ -175,33 +181,27 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
     );
   }
 
+  // [
+  //   // AppColors.firstGradientBackgroundTheme,
+  //   // AppColors.secondGradientBackgroundTheme,
+  //   // AppColors.firstGradientBackgroundTheme,
+  // ],
   Widget _buildBanner() {
-    return SizedBox.expand(
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              AppColors.firstGradientBackgroundTheme,
-              AppColors.secondGradientBackgroundTheme,
-              AppColors.firstGradientBackgroundTheme,
-            ],
-          ),
-          // Image.asset(
-          //   Assets.loginBackground,
-          //   fit: BoxFit.cover,
-          // ),
-        ),
-      ),
+    return LinearGradientBackground(
+      colors: _themeStore.lineToLineGradientColors,
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      stops: null,
     );
   }
 
   Widget _buildContent() {
     return SingleChildScrollView(
+      clipBehavior: Clip.none,
       child: Padding(
         padding: const EdgeInsets.symmetric(
-            horizontal: Dimens.horizontal_padding * 2),
+          horizontal: Dimens.large_horizontal_padding,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -211,11 +211,16 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
               tag: Strings.authorizeHeroTag,
               child: AppIconWidget(image: _themeStore.appIcon),
             ),
-            const SizedBox(height: Dimens.horizontal_padding * 2),
+            const SizedBox(
+              height: Dimens.extra_large_vertical_margin,
+            ),
             _buildUserIdField(),
             _buildPasswordField(),
             _buildConfirmPasswordField(),
             _buildNameField(),
+            const SizedBox(
+              height: Dimens.vertical_margin,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -233,15 +238,18 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
 
   Widget _buildUserIdField() {
     return Container(
+      clipBehavior: Clip.none,
       alignment: Alignment.center,
       height: Dimens.text_field_height,
       child: Observer(
         builder: (_) {
           return TextFieldWidget(
             hint: AppLocalizations.of(context).translate('login_et_user_email'),
+            hintColor: _themeStore.reverseThemeColor,
+
             inputType: TextInputType.emailAddress,
             iconData: Icons.person,
-            iconColor: AppColors.darkTextTheme,
+            iconColor: _themeStore.reverseThemeColor,
             textController: _userEmailController,
             inputAction: TextInputAction.done,
             autoFocus: false,
@@ -260,6 +268,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
 
   Widget _buildPasswordField() {
     return Container(
+      clipBehavior: Clip.none,
       alignment: Alignment.center,
       height:
           _forgotPassowrdAnimationController.value * Dimens.text_field_height,
@@ -271,10 +280,13 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
                   return TextFieldWidget(
                     hint: AppLocalizations.of(context)
                         .translate('login_et_user_password'),
+                    hintColor: _themeStore.reverseThemeColor,
                     isObscure: true,
-                    margin: const EdgeInsets.only(top: 16.0),
+                    margin: const EdgeInsets.symmetric(
+                      vertical: Dimens.vertical_margin,
+                    ),
                     iconData: Icons.lock,
-                    iconColor: AppColors.darkTextTheme,
+                    iconColor: _themeStore.reverseThemeColor,
                     textController: _passwordController,
                     focusNode: _passwordFocusNode,
                     errorText: _store.formErrorStore.password,
@@ -291,6 +303,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
 
   Widget _buildConfirmPasswordField() {
     return Container(
+      clipBehavior: Clip.none,
       alignment: Alignment.center,
       height: _authenAnimationController.value * Dimens.text_field_height,
       child: _authenAnimationController.value >= 0.3
@@ -301,10 +314,11 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
                   return TextFieldWidget(
                     hint: AppLocalizations.of(context)
                         .translate('login_reet_user_password'),
+                    hintColor: _themeStore.reverseThemeColor,
                     isObscure: true,
                     margin: const EdgeInsets.only(top: 16.0),
                     iconData: Icons.lock,
-                    iconColor: AppColors.darkTextTheme,
+                    iconColor: _themeStore.reverseThemeColor,
                     textController: _confirmPasswordController,
                     errorText: _store.formErrorStore.confirmPassword,
                     onChanged: (value) {
@@ -321,6 +335,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
 
   Widget _buildNameField() {
     return Container(
+      clipBehavior: Clip.none,
       alignment: Alignment.center,
       height: _authenAnimationController.value * Dimens.text_field_height,
       child: _authenAnimationController.value >= 0.3
@@ -331,9 +346,10 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
                   return TextFieldWidget(
                     hint: AppLocalizations.of(context)
                         .translate('login_et_user_name'),
+                    hintColor: _themeStore.reverseThemeColor,
                     margin: const EdgeInsets.only(top: 16.0),
                     iconData: Icons.badge,
-                    iconColor: AppColors.darkTextTheme,
+                    iconColor: _themeStore.reverseThemeColor,
                     textController: _nameController,
                     errorText: _store.formErrorStore.name,
                     onChanged: (value) {
@@ -353,10 +369,10 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
       child: TextButton(
         child: Text(
           AppLocalizations.of(context).translate('btn_forgot_password'),
-          style: Theme.of(context)
-              .textTheme
-              .caption
-              ?.copyWith(color: AppColors.darkTextTheme),
+          style: Theme.of(context).textTheme.caption?.copyWith(
+                color: _themeStore.reverseThemeColor,
+                fontSize: Dimens.small_text,
+              ),
         ),
         onPressed: () {
           _store.setForgotPassword();
@@ -377,10 +393,10 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
             return TextButton(
               child: Text(
                 AppLocalizations.of(context).translate('signup_btn_sign_up'),
-                style: Theme.of(context)
-                    .textTheme
-                    .caption
-                    ?.copyWith(color: AppColors.darkTextTheme),
+                style: Theme.of(context).textTheme.caption?.copyWith(
+                      color: _themeStore.reverseThemeColor,
+                      fontSize: Dimens.small_text,
+                    ),
               ),
               onPressed: () {
                 _store.setSignup();
@@ -392,10 +408,10 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
             return TextButton(
               child: Text(
                 AppLocalizations.of(context).translate('login_btn_sign_in'),
-                style: Theme.of(context)
-                    .textTheme
-                    .caption
-                    ?.copyWith(color: AppColors.darkTextTheme),
+                style: Theme.of(context).textTheme.caption?.copyWith(
+                      color: _themeStore.reverseThemeColor,
+                      fontSize: Dimens.small_text,
+                    ),
               ),
               onPressed: () {
                 _store.setSignin();
@@ -430,7 +446,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
     return RoundedButtonWidget(
       buttonText: AppLocalizations.of(context).translate(keyTranslate),
       buttonColor: Colors.transparent,
-      textColor: AppColors.darkTextTheme,
+      textColor: _themeStore.reverseThemeColor,
       onPressed: () async {
         if (_store.isForgotPasswordState) {
           conditional = _store.canForgetPassword;
@@ -445,7 +461,9 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
           DeviceUtils.hideKeyboard(context);
           signFunction();
         } else {
-          _showErrorMessage('Please fill in all fields');
+          _showErrorMessage(
+            AppLocalizations.of(context).translate("missing_field"),
+          );
         }
       },
     );
@@ -456,7 +474,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
       children: [
         TextWidget(
           text: AppLocalizations.of(context).translate('login_others_ways'),
-          textColor: AppColors.darkTextTheme,
+          textColor: _themeStore.reverseThemeColor,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -467,7 +485,8 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
               assetName: Assets.facebookSVGLogo,
               ontap: () {
                 FlushbarHelper.createInformation(
-                  message: "This feature will be in next update.",
+                  message: AppLocalizations.of(context)
+                      .translate("upcomming_feature_translate"),
                   title:
                       AppLocalizations.of(context).translate('home_tv_infor'),
                   duration:

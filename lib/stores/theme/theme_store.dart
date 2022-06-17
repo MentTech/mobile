@@ -76,6 +76,36 @@ abstract class _ThemeStore with Store {
       ];
 
   @computed
+  List<Color> get lineToLineGradientColors =>
+      darkMode ? _lineToLineGradientColorsDark : _lineToLineGradientColorsLight;
+
+  @computed
+  List<Color> get _lineToLineGradientColorsDark => [
+        Color.alphaBlend(
+          themeThemeColor.withAlpha(150),
+          themeColorfulColor,
+        ),
+        themeColorfulColor,
+        Color.alphaBlend(
+          themeThemeColor.withAlpha(150),
+          themeColorfulColor,
+        ),
+      ];
+
+  @computed
+  List<Color> get _lineToLineGradientColorsLight => [
+        Color.alphaBlend(
+          themeThemeColor,
+          themeColorfulColor,
+        ),
+        themeColorfulColor,
+        Color.alphaBlend(
+          themeThemeColor,
+          themeColorfulColor,
+        ),
+      ];
+
+  @computed
   Color get textChoosed => _darkMode
       ? Colors.orangeAccent.shade400
       : Color.alphaBlend(

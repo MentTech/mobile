@@ -6,7 +6,7 @@ part of 'theme_store.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$ThemeStore on _ThemeStore, Store {
   Computed<bool>? _$darkModeComputed;
@@ -77,6 +77,30 @@ mixin _$ThemeStore on _ThemeStore, Store {
           Computed<List<Color>>(() => super.linearGradientColors,
               name: '_ThemeStore.linearGradientColors'))
       .value;
+  Computed<List<Color>>? _$lineToLineGradientColorsComputed;
+
+  @override
+  List<Color> get lineToLineGradientColors =>
+      (_$lineToLineGradientColorsComputed ??= Computed<List<Color>>(
+              () => super.lineToLineGradientColors,
+              name: '_ThemeStore.lineToLineGradientColors'))
+          .value;
+  Computed<List<Color>>? _$_lineToLineGradientColorsDarkComputed;
+
+  @override
+  List<Color> get _lineToLineGradientColorsDark =>
+      (_$_lineToLineGradientColorsDarkComputed ??= Computed<List<Color>>(
+              () => super._lineToLineGradientColorsDark,
+              name: '_ThemeStore._lineToLineGradientColorsDark'))
+          .value;
+  Computed<List<Color>>? _$_lineToLineGradientColorsLightComputed;
+
+  @override
+  List<Color> get _lineToLineGradientColorsLight =>
+      (_$_lineToLineGradientColorsLightComputed ??= Computed<List<Color>>(
+              () => super._lineToLineGradientColorsLight,
+              name: '_ThemeStore._lineToLineGradientColorsLight'))
+          .value;
   Computed<Color>? _$textChoosedComputed;
 
   @override
@@ -130,6 +154,7 @@ themeColor: ${themeColor},
 themeThemeColor: ${themeThemeColor},
 reverseThemeColor: ${reverseThemeColor},
 linearGradientColors: ${linearGradientColors},
+lineToLineGradientColors: ${lineToLineGradientColors},
 textChoosed: ${textChoosed},
 ratingColor: ${ratingColor}
     ''';

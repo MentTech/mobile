@@ -17,7 +17,7 @@ class LinearGradientBackground extends StatelessWidget {
   final Alignment end;
 
   final List<Color> colors;
-  final List<double> stops;
+  final List<double>? stops;
 
   @override
   Widget build(BuildContext context) {

@@ -7,6 +7,7 @@ import 'package:mobile/ui/home/home.dart';
 import 'package:mobile/ui/password_changer/password_changer.dart';
 import 'package:mobile/ui/program_register/program_register_screen.dart';
 import 'package:mobile/ui/splash/splash.dart';
+import 'package:mobile/ui/test_screen/test_screen.dart';
 import 'package:mobile/ui/token_user_profile/balanced_profile.dart';
 import 'package:mobile/ui/user_profile/user_profile.dart';
 
@@ -24,6 +25,7 @@ class Routes {
   static const String advancedSettings = '/advanced_settings';
   static const String changePasswordSettings = '/change_password_settings';
   // static const String mentorProfile = '/mentor_profile';
+  static const String testScreen = '/test_screen';
 
   static final routes = <String, WidgetBuilder>{
     splash: (BuildContext context) => const SplashScreen(),
@@ -37,6 +39,7 @@ class Routes {
     changePasswordSettings: (BuildContext context) =>
         const PasswordChangerScreen(),
     // mentorProfile: (BuildContext context) => const MentorProfile(),
+    testScreen: (BuildContext context) => const TestScreen(),
   };
 
   ///

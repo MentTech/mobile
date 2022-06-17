@@ -67,14 +67,20 @@ abstract class _SearchStore with Store {
   ObservableList<Skill> selectedSkills = ObservableList<Skill>();
 
   @observable
-  ObservableFuture<Map<String, dynamic>?> requestFuture = emptyResponse;
+  ObservableFuture<Map<String, dynamic>?> requestCategoriesFuture =
+      emptyResponse;
+
+  @observable
+  ObservableFuture<Map<String, dynamic>?> requestSkillsFuture = emptyResponse;
 
   @observable
   ObservableList<MentorModel> listMentors = ObservableList<MentorModel>();
 
   // computed:------------------------------------------------------------------
   @computed
-  bool get isLoading => requestFuture.status == FutureStatus.pending;
+  bool get isLoading =>
+      (requestCategoriesFuture.status == FutureStatus.pending) ||
+      (requestSkillsFuture.status == FutureStatus.pending);
 
   @computed
   List<Category> get categoryList => categories;

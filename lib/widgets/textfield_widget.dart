@@ -56,7 +56,12 @@ class TextFieldWidget extends StatelessWidget {
                       ),
                       gapPadding: 0,
                     )
-                  : null,
+                  : UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: hintColor,
+                      ),
+                      borderRadius: Dimens.kBorderRadius,
+                    ),
               focusedBorder: hasBorder
                   ? OutlineInputBorder(
                       borderSide: BorderSide(
@@ -67,7 +72,13 @@ class TextFieldWidget extends StatelessWidget {
                       ),
                       gapPadding: 0,
                     )
-                  : null,
+                  : UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: hintColor,
+                        width: 3,
+                      ),
+                      borderRadius: Dimens.kBorderRadius,
+                    ),
               focusColor: hintColor,
               hintText: hint,
               hintStyle: Theme.of(context)

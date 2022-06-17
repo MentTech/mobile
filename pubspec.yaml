@@ -122,6 +122,8 @@ dependencies:
   # slider stepper
   introduction_screen: 
 
+  shimmer: 
+
   flutter_localizations:
     sdk: flutter
 
