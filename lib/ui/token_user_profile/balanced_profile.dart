@@ -9,6 +9,7 @@ import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/ui/session_detail/session_detail.dart';
 import 'package:mobile/utils/device/device_utils.dart';
+import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/app_icon_widget.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
@@ -62,13 +63,8 @@ class _BalancedProfileState extends State<BalancedProfile> {
         fit: StackFit.expand,
         children: <Widget>[
           LinearGradientBackground(
-            colors: [
-              _themeStore.themeColor,
-              Colors.black
-                  .withGreen((_themeStore.themeColor.green * 0.2).round())
-                  .withBlue((_themeStore.themeColor.blue * 0.2).round()),
-            ],
-            stops: const [0, 0.35],
+            colors: _themeStore.lineToLineGradientColors,
+            stops: null,
           ),
           SafeArea(
             child: Column(
@@ -85,9 +81,12 @@ class _BalancedProfileState extends State<BalancedProfile> {
             builder: (_, scrollController) {
               return Material(
                 elevation: 10,
-                color: Colors.black
-                    .withGreen((_themeStore.themeColor.green * 0.5).round())
-                    .withBlue((_themeStore.themeColor.blue * 0.5).round()),
+                color: _themeStore.themeColor
+                    .withGreen(
+                        (_themeStore.themeColorfulColor.green * 0.5).round())
+                    .withBlue(
+                        (_themeStore.themeColorfulColor.blue * 0.5).round())
+                    .withOpacity(_themeStore.opacityTheme),
                 shape: const RoundedRectangleBorder(
                   side: BorderSide(
                     color: Colors.white12,
@@ -120,7 +119,8 @@ class _BalancedProfileState extends State<BalancedProfile> {
                           children: [
                             _buildSelectedButton(
                               iconData: Icons.clear_all,
-                              text: "All",
+                              text: AppLocalizations.of(context)
+                                  .translate("all_translate"),
                               isSelected:
                                   _userStore.currentSessionFetchStatus ==
                                       SessionStatus.all,
@@ -131,7 +131,8 @@ class _BalancedProfileState extends State<BalancedProfile> {
                             ),
                             _buildSelectedButton(
                               iconData: Icons.pending_actions,
-                              text: "Waiting",
+                              text: AppLocalizations.of(context)
+                                  .translate("waiting_translate"),
                               isSelected:
                                   _userStore.currentSessionFetchStatus ==
                                       SessionStatus.waiting,
@@ -142,7 +143,8 @@ class _BalancedProfileState extends State<BalancedProfile> {
                             ),
                             _buildSelectedButton(
                               iconData: Icons.recommend,
-                              text: "Confirmed",
+                              text: AppLocalizations.of(context)
+                                  .translate("confirmed_translate"),
                               isSelected:
                                   _userStore.currentSessionFetchStatus ==
                                       SessionStatus.confirmed,
@@ -153,7 +155,8 @@ class _BalancedProfileState extends State<BalancedProfile> {
                             ),
                             _buildSelectedButton(
                               iconData: Icons.fact_check,
-                              text: "Completed",
+                              text: AppLocalizations.of(context)
+                                  .translate("completed_translate"),
                               isSelected:
                                   _userStore.currentSessionFetchStatus ==
                                       SessionStatus.completed,
@@ -164,7 +167,8 @@ class _BalancedProfileState extends State<BalancedProfile> {
                             ),
                             _buildSelectedButton(
                               iconData: Icons.disabled_visible,
-                              text: "Canceled",
+                              text: AppLocalizations.of(context)
+                                  .translate("canceled_translate"),
                               isSelected:
                                   _userStore.currentSessionFetchStatus ==
                                       SessionStatus.canceled,

@@ -59,8 +59,8 @@ class _HomePageState extends State<HomePage> {
       fit: StackFit.expand,
       children: [
         LinearGradientBackground(
-          colors: _themeStore.linearGradientColors,
-          stops: _themeStore.linearGradientStops,
+          colors: _themeStore.lineToLineGradientColors,
+          stops: null,
         ),
         SafeArea(
           bottom: false,

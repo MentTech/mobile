@@ -65,8 +65,8 @@ class _TutorPageState extends State<TutorPage> {
       child: Stack(
         children: [
           LinearGradientBackground(
-            colors: _themeStore.linearGradientColors,
-            stops: _themeStore.linearGradientStops,
+            colors: _themeStore.lineToLineGradientColors,
+            stops: null,
           ),
           SafeArea(
             bottom: false,

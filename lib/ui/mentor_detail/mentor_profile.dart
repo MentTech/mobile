@@ -67,8 +67,8 @@ class _MentorProfileState extends State<MentorProfile> {
       body: Stack(
         children: [
           LinearGradientBackground(
-            colors: _themeStore.linearGradientColors,
-            stops: _themeStore.linearGradientStops,
+            colors: _themeStore.lineToLineGradientColors,
+            stops: null,
           ),
           Observer(
             builder: (BuildContext context) {
