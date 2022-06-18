@@ -109,16 +109,20 @@ class _BalancedProfileState extends State<BalancedProfile> {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Container(
-          height: 5,
-          width: 50,
-          margin: const EdgeInsets.only(
-            top: Dimens.lightly_medium_vertical_margin,
-            bottom: Dimens.large_vertical_margin,
-          ),
-          decoration: BoxDecoration(
-            color: _themeStore.reverseThemeColor,
-            borderRadius: BorderRadius.circular(20),
+        SingleChildScrollView(
+          controller: scrollController,
+          child: SizedBox(
+            height: 20,
+            child: Center(
+              child: Container(
+                height: 5,
+                width: 50,
+                decoration: BoxDecoration(
+                  color: _themeStore.reverseThemeColor,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+            ),
           ),
         ),
         Observer(
@@ -135,15 +139,13 @@ class _BalancedProfileState extends State<BalancedProfile> {
                   right: Dimens.horizontal_padding,
                   left: Dimens.horizontal_padding,
                 ),
-                controller: scrollController,
                 itemBuilder: (context, index) {
                   Session? session = _userStore.getSessionAt(index);
-                  return _buildSessionItemInBottomSheet(null, context);
+                  return _buildSessionItemInBottomSheet(session, context);
                 },
-                itemCount: 5,
-                // !_userStore.isSessionLoading
-                //     ? _userStore.sizeSessionList
-                //     : 5,
+                itemCount: !_userStore.isSessionLoading
+                    ? _userStore.sizeSessionList
+                    : 5,
               );
             },
           ),

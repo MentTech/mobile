@@ -46,18 +46,6 @@ class SessionTicketItem extends StatelessWidget {
     return _buildShimmerSessionTicketItem();
   }
 
-  Widget _buildShimmerSessionTicketItem() {
-    return Shimmer.fromColors(
-      child: Container(
-        height: 100,
-        width: double.infinity,
-        color: Colors.grey,
-      ),
-      baseColor: _themeStore.light,
-      highlightColor: _themeStore.themeColorfulColor,
-    );
-  }
-
   Container _buildAvailableItem(Program program) {
     return Container(
       margin: margin,
@@ -124,6 +112,143 @@ class SessionTicketItem extends StatelessWidget {
         blur: blur,
         opacity: opacity,
       ),
+    );
+  }
+
+  Widget _buildShimmerSessionTicketItem() {
+    return Shimmer.fromColors(
+      child: Container(
+        margin: margin,
+        child: GlassmorphismWidgetButton(
+          border: statusColor ?? Colors.white,
+          background: statusColor ?? Colors.white,
+          padding: const EdgeInsets.symmetric(
+              vertical: Dimens.small_vertical_padding),
+          onTap: () {
+            callbackIfProgramNotNull?.call();
+          },
+          child: ListTile(
+            dense: false,
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: Dimens.medium_text,
+                  decoration: BoxDecoration(
+                    color: Colors.black45,
+                    borderRadius: Dimens.kMaxBorderRadius,
+                  ),
+                ),
+                const SizedBox(height: Dimens.vertical_margin),
+                Container(
+                  width: 80,
+                  height: Dimens.medium_text,
+                  decoration: BoxDecoration(
+                    color: Colors.black45,
+                    borderRadius: Dimens.kMaxBorderRadius,
+                  ),
+                ),
+              ],
+            ),
+            subtitle: Container(
+              width: double.infinity,
+              margin: const EdgeInsets.only(top: Dimens.large_vertical_margin),
+              height: Dimens.medium_text,
+              decoration: BoxDecoration(
+                color: Colors.black45,
+                borderRadius: Dimens.kMaxBorderRadius,
+              ),
+            ),
+            leading: Icon(
+              Icons.loyalty_outlined,
+              size: Dimens.large_text,
+              color: statusColor ?? textColor ?? Colors.white70,
+            ),
+            trailing: Container(
+              width: 40,
+              height: Dimens.large_text,
+              decoration: BoxDecoration(
+                color: Colors.black45,
+                borderRadius: Dimens.kMaxBorderRadius,
+              ),
+            ),
+          ),
+          blur: blur,
+          opacity: opacity,
+        ),
+      ),
+      baseColor: _themeStore.light,
+      highlightColor: _themeStore.themeColorfulColor,
+      direction: ShimmerDirection.ltr,
+    );
+  }
+}
+
+class CardListItem extends StatelessWidget {
+  const CardListItem({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildImage(),
+          const SizedBox(height: 16),
+          _buildText(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImage() {
+    return AspectRatio(
+      aspectRatio: 16 / 9,
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: Image.network(
+            'https://flutter'
+            '.dev/docs/cookbook/img-files/effects/split-check/Food1.jpg',
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildText() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: double.infinity,
+          height: 24,
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Container(
+          width: 250,
+          height: 24,
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+      ],
     );
   }
 }
