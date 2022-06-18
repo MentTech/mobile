@@ -73,143 +73,152 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                Observer(
-                  builder: (_) {
-                    return Stack(
-                      children: <Widget>[
-                        Center(
-                          heightFactor: 1.5,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                AppLocalizations.of(context)
-                                    .translate("greeting"),
-                                style: TextStyle(
-                                  color: _themeStore.reverseThemeColor,
-                                  fontSize: Dimens.lightly_medium_text,
-                                ),
-                              ),
-                              Text(
-                                _userStore.user!.name,
-                                style: TextStyle(
-                                  color: _themeStore.reverseThemeColor,
-                                  fontSize: Dimens.large_text,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: Dimens.horizontal_padding),
-                            child: NeumorphismButton(
-                              padding: EdgeInsets.zero,
-                              child: NetworkImageWidget(
-                                url: _userStore.user!.avatar,
-                                radius:
-                                    DeviceUtils.getScaledHeight(context, 0.04),
-                                borderRadius: BorderRadius.circular(0.0),
-                              ),
-                              onTap: () {
-                                Routes.navigatorSupporter(
-                                    context, Routes.profile);
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // try to lazy loading for favourite mentor
-                        Text(
-                          AppLocalizations.of(context)
-                              .translate("home_favourite_list"),
-                          style: TextStyle(
-                            color: _themeStore.reverseThemeColor,
-                            fontSize: Dimens.lightly_medium_text,
-                          ),
-                        ),
-                        Observer(
-                          builder: (_) {
-                            return _mentorStore.hasFavouriteMentors
-                                ? SizedBox(
-                                    height: DeviceUtils.getScaledHeight(
-                                        context, 0.3),
-                                    child: ListView.builder(
-                                      controller: _scrollControllerFavList,
-                                      clipBehavior: Clip.none,
-                                      padding: EdgeInsets.zero,
-                                      scrollDirection: Axis.horizontal,
-                                      physics: const BouncingScrollPhysics(),
-                                      itemBuilder: (context, index) =>
-                                          HomeSuggestMentorItem(
-                                        mentorModel:
-                                            _mentorStore.favouriteAt(index),
-                                        isShowLiked: true,
-                                      ),
-                                      itemCount: _mentorStore.favouriteLength,
-                                    ),
-                                  )
-                                : const SizedBox();
-                          },
-                        ),
-                        const SizedBox(
-                          height: Dimens.large_vertical_margin,
-                        ),
-                        Text(
-                          AppLocalizations.of(context)
-                              .translate("home_recommended_list"),
-                          style: TextStyle(
-                            color: _themeStore.reverseThemeColor,
-                            fontSize: Dimens.lightly_medium_text,
-                          ),
-                        ),
-                        Observer(
-                          builder: (_) {
-                            return _mentorStore.hasRecommendedMentors
-                                ? SizedBox(
-                                    height: DeviceUtils.getScaledHeight(
-                                        context, 0.3),
-                                    child: ListView.builder(
-                                      clipBehavior: Clip.none,
-                                      padding: EdgeInsets.zero,
-                                      scrollDirection: Axis.horizontal,
-                                      physics: const BouncingScrollPhysics(),
-                                      itemBuilder: (context, index) =>
-                                          HomeSuggestMentorItem(
-                                        mentorModel:
-                                            _mentorStore.recommendedAt(index),
-                                        isShowLiked: false,
-                                      ),
-                                      itemCount: _mentorStore.recommendedLength,
-                                    ),
-                                  )
-                                : const SizedBox();
-                          },
-                        ),
-                        const SizedBox(
-                          height: kBottomNavigationBarHeight,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                _buildHomePageHeader(),
+                _buildHomePageContent(),
               ],
             ),
           ),
         ),
       ],
+    );
+  }
+
+  Observer _buildHomePageHeader() {
+    return Observer(
+      builder: (_) {
+        return Stack(
+          children: <Widget>[
+            Center(
+              heightFactor: 1.5,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    AppLocalizations.of(context).translate("greeting"),
+                    style: TextStyle(
+                      color: _themeStore.reverseThemeColor,
+                      fontSize: Dimens.lightly_medium_text,
+                    ),
+                  ),
+                  Text(
+                    _userStore.user!.name,
+                    style: TextStyle(
+                      color: _themeStore.reverseThemeColor,
+                      fontSize: Dimens.large_text,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: Dimens.horizontal_padding),
+                child: NeumorphismButton(
+                  padding: EdgeInsets.zero,
+                  child: NetworkImageWidget(
+                    url: _userStore.user!.avatar,
+                    radius: DeviceUtils.getScaledHeight(context, 0.04),
+                    borderRadius: BorderRadius.circular(0.0),
+                  ),
+                  onTap: () {
+                    Routes.navigatorSupporter(context, Routes.profile);
+                  },
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Expanded _buildHomePageContent() {
+    return Expanded(
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // try to lazy loading for favourite mentor
+            Text(
+              AppLocalizations.of(context).translate("home_favourite_list"),
+              style: TextStyle(
+                color: _themeStore.reverseThemeColor,
+                fontSize: Dimens.lightly_medium_text,
+              ),
+            ),
+            _buildFavouriteContent(),
+            const SizedBox(
+              height: Dimens.extra_large_vertical_margin,
+            ),
+            Text(
+              AppLocalizations.of(context).translate("home_recommended_list"),
+              style: TextStyle(
+                color: _themeStore.reverseThemeColor,
+                fontSize: Dimens.lightly_medium_text,
+              ),
+            ),
+            _buildRecommendedContent(),
+            const SizedBox(
+              height: kBottomNavigationBarHeight,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Observer _buildRecommendedContent() {
+    return Observer(
+      builder: (_) {
+        return _mentorStore.hasRecommendedMentors
+            ? Container(
+                height: DeviceUtils.getScaledHeight(context, 0.3),
+                margin:
+                    const EdgeInsets.only(top: Dimens.large_vertical_margin),
+                child: ListView.builder(
+                  clipBehavior: Clip.none,
+                  padding: EdgeInsets.zero,
+                  scrollDirection: Axis.horizontal,
+                  physics: const BouncingScrollPhysics(),
+                  itemBuilder: (context, index) => HomeMentorItem(
+                    mentorModel: _mentorStore.recommendedAt(index),
+                    isShowLiked: false,
+                  ),
+                  itemCount: _mentorStore.recommendedLength,
+                ),
+              )
+            : const SizedBox();
+      },
+    );
+  }
+
+  Observer _buildFavouriteContent() {
+    return Observer(
+      builder: (_) {
+        return _mentorStore.hasFavouriteMentors
+            ? Container(
+                height: DeviceUtils.getScaledHeight(context, 0.3),
+                margin:
+                    const EdgeInsets.only(top: Dimens.large_vertical_margin),
+                child: ListView.builder(
+                  controller: _scrollControllerFavList,
+                  clipBehavior: Clip.none,
+                  padding: EdgeInsets.zero,
+                  scrollDirection: Axis.horizontal,
+                  physics: const BouncingScrollPhysics(),
+                  itemBuilder: (context, index) => HomeMentorItem(
+                    mentorModel: _mentorStore.favouriteAt(index),
+                    isShowLiked: true,
+                  ),
+                  itemCount: _mentorStore.favouriteLength,
+                ),
+              )
+            : const SizedBox();
+      },
     );
   }
 
@@ -223,8 +232,8 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class HomeSuggestMentorItem extends StatelessWidget {
-  HomeSuggestMentorItem({
+class HomeMentorItem extends StatelessWidget {
+  HomeMentorItem({
     Key? key,
     required this.mentorModel,
     required this.isShowLiked,
@@ -248,48 +257,114 @@ class HomeSuggestMentorItem extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          GlassmorphismContainer(
-            height: DeviceUtils.getScaledWidth(context, 0.45),
-            width: DeviceUtils.getScaledWidth(context, 0.45),
-            padding: const EdgeInsets.symmetric(
-              horizontal: Dimens.horizontal_padding,
-              vertical: Dimens.vertical_padding,
+          _buildContent(context),
+          _buildAvatar(context),
+          _buildFavButton(),
+        ],
+      ),
+    );
+  }
+
+  Positioned _buildFavButton() {
+    return Positioned(
+      top: 15,
+      right: 15,
+      child: LikeButton(
+        isLiked: true,
+        size: Dimens.large_text,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        padding: EdgeInsets.zero,
+        likeBuilder: (islike) {
+          return Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color.alphaBlend(Colors.red.shade200, Colors.white),
+              boxShadow: [
+                BoxShadow(
+                  color: Color.alphaBlend(Colors.red.shade200, Colors.white),
+                  blurRadius: 3,
+                  spreadRadius: 3,
+                ),
+              ],
             ),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: DeviceUtils.getScaledWidth(context, 0.15),
-                  ),
-                  Text(
-                    mentorModel.name,
-                    style: TextStyle(
-                      color: _themeStore.reverseThemeColor,
-                      fontSize: Dimens.lightly_medium_text,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: Dimens.vertical_margin,
-                  ),
-                  Text(
-                    "${AppLocalizations.of(context).translate("major_translate")}: ${mentorModel.userMentor.category.name}",
-                    style: TextStyle(
-                      color: _themeStore.reverseThemeColor,
-                      fontSize: Dimens.small_text,
-                    ),
-                  ),
-                ],
+            child: Icon(
+              Icons.favorite,
+              size: Dimens.medium_text,
+              color: islike ? Colors.red.shade400 : Colors.white54,
+            ),
+          );
+        },
+        onTap: (isLiked) {
+          // fav mentors
+          return Future.value(!isLiked);
+        },
+      ),
+    );
+  }
+
+  Positioned _buildAvatar(BuildContext context) {
+    return Positioned(
+      top: -25,
+      left: -15,
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => MentorProfile(idMentor: mentorModel.id),
+            ),
+          );
+        },
+        child: Container(
+          width: DeviceUtils.getScaledWidth(context, 0.23),
+          height: DeviceUtils.getScaledWidth(context, 0.23),
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: _themeStore.reverseThemeColorfulColor,
+                blurRadius: 12,
+                spreadRadius: 1,
               ),
-            ),
-            blur: Properties.blur_glass_morphism,
-            opacity: Properties.opacity_glass_morphism,
+            ],
+            color: _themeStore.reverseThemeColorfulColor,
+            shape: BoxShape.circle,
           ),
-          Positioned(
-            top: -25,
-            right: -25,
-            child: InkWell(
+          child: Padding(
+            padding: const EdgeInsets.all(3), // border width
+            child: ClipOval(
+              child: NetworkImageWidget(url: mentorModel.avatar),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  GlassmorphismContainer _buildContent(BuildContext context) {
+    return GlassmorphismContainer(
+      height: DeviceUtils.getScaledWidth(context, 0.45),
+      width: DeviceUtils.getScaledWidth(context, 0.45),
+      padding: const EdgeInsets.symmetric(
+        horizontal: Dimens.horizontal_padding,
+        vertical: Dimens.vertical_padding,
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: DeviceUtils.getScaledWidth(context, 0.15),
+            ),
+            InkWell(
+              child: Text(
+                mentorModel.name,
+                style: TextStyle(
+                  color: _themeStore.reverseThemeColor,
+                  fontSize: Dimens.lightly_medium_text,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -298,71 +373,22 @@ class HomeSuggestMentorItem extends StatelessWidget {
                   ),
                 );
               },
-              child: Container(
-                width: DeviceUtils.getScaledWidth(context, 0.23),
-                height: DeviceUtils.getScaledWidth(context, 0.23),
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: _themeStore.reverseThemeColorfulColor,
-                      blurRadius: 12,
-                      spreadRadius: 1,
-                    ),
-                  ],
-                  color: _themeStore.reverseThemeColorfulColor,
-                  shape: BoxShape.circle,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(3), // border width
-                  child: ClipOval(
-                    child: NetworkImageWidget(url: mentorModel.avatar),
-                  ),
-                ),
+            ),
+            const SizedBox(
+              height: Dimens.vertical_margin,
+            ),
+            Text(
+              "${AppLocalizations.of(context).translate("major_translate")}: ${mentorModel.userMentor.category.name}",
+              style: TextStyle(
+                color: _themeStore.reverseThemeColor,
+                fontSize: Dimens.small_text,
               ),
             ),
-          ),
-          isShowLiked
-              ? Positioned(
-                  left: -5,
-                  bottom: 5,
-                  child: LikeButton(
-                    isLiked: true,
-                    size: Dimens.large_text,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    padding: EdgeInsets.zero,
-                    likeBuilder: (islike) {
-                      return Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color.alphaBlend(
-                              Colors.red.shade200, Colors.white),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Color.alphaBlend(
-                                  Colors.red.shade200, Colors.white),
-                              blurRadius: 3,
-                              spreadRadius: 3,
-                            ),
-                          ],
-                        ),
-                        child: Icon(
-                          Icons.favorite,
-                          size: Dimens.medium_text,
-                          color: islike ? Colors.red.shade400 : Colors.white54,
-                        ),
-                      );
-                    },
-                    onTap: (isLiked) {
-                      // fav mentors
-                      return Future.value(!isLiked);
-                    },
-                  ),
-                )
-              : const SizedBox(),
-        ],
+          ],
+        ),
       ),
+      blur: Properties.blur_glass_morphism,
+      opacity: Properties.opacity_glass_morphism,
     );
   }
 }
