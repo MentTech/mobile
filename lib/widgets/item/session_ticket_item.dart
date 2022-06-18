@@ -65,7 +65,8 @@ class SessionTicketItem extends StatelessWidget {
                 program.title,
                 style: TextStyle(
                   color: Color.alphaBlend(
-                      (textColor ?? _themeStore.themeColor).withAlpha(150),
+                      (textColor ?? _themeStore.reverseThemeColor)
+                          .withAlpha(150),
                       Colors.white),
                   fontSize: Dimens.small_text,
                   fontWeight: FontWeight.w500,
@@ -80,11 +81,19 @@ class SessionTicketItem extends StatelessWidget {
           subtitle: ReadMoreText(
             program.detail,
             style: TextStyle(
-              color: textColor ?? _themeStore.themeColor,
+              color: textColor ?? _themeStore.reverseThemeColor,
               fontSize: Dimens.small_text,
             ),
             trimLines: 1,
             trimMode: TrimMode.Line,
+            moreStyle: TextStyle(
+              color: textColor ?? _themeStore.reverseThemeColor,
+              fontSize: Dimens.small_text,
+            ),
+            lessStyle: TextStyle(
+              color: textColor ?? _themeStore.reverseThemeColor,
+              fontSize: Dimens.small_text,
+            ),
           ),
           leading: Icon(
             Icons.loyalty_outlined,
@@ -97,14 +106,14 @@ class SessionTicketItem extends StatelessWidget {
               Text(
                 "${program.credit} ",
                 style: TextStyle(
-                  color: textColor ?? _themeStore.themeColor,
+                  color: textColor ?? _themeStore.reverseThemeColor,
                   fontSize: Dimens.small_text,
                 ),
               ),
               Icon(
                 Icons.token_rounded,
                 size: Dimens.medium_text,
-                color: textColor ?? _themeStore.themeColor,
+                color: textColor ?? _themeStore.reverseThemeColor,
               ),
             ],
           ),

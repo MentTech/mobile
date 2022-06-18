@@ -293,6 +293,10 @@ abstract class _UserStore with Store {
   }
 
   // general methods:-----------------------------------------------------------
+  bool checkIsLikedMentor(int mentorId) {
+    return favouriteMentorIdList.contains(mentorId);
+  }
+
   void dispose() {
     for (final d in _disposers) {
       d();

@@ -41,6 +41,11 @@ abstract class _ThemeStore with Store {
       _darkMode ? AppColors.darkTextTheme : AppColors.lightTextTheme;
 
   @computed
+  Color get themeColorfulColorShimmer => _darkMode
+      ? AppColors.darkTextTheme.withOpacity(0.5)
+      : AppColors.lightTextTheme.withOpacity(0.5);
+
+  @computed
   Color get reverseThemeColorfulColor =>
       _darkMode ? AppColors.lightTextTheme : AppColors.darkTextTheme;
 

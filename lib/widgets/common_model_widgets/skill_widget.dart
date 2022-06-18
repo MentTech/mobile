@@ -40,8 +40,8 @@ class SkillWidgetContainer extends StatelessWidget {
                 vertical: Dimens.vertical_padding,
               ),
               child: CircleProgressBar(
-                foregroundColor: _themeStore.themeColor,
-                backgroundColor: _themeStore.themeColor.withOpacity(0.3),
+                foregroundColor: _themeStore.reverseThemeColor,
+                backgroundColor: _themeStore.reverseThemeColor.withOpacity(0.3),
                 value: skill.abilityPercent,
                 animationDuration: const Duration(
                   milliseconds: Properties.animatedTimeInMiliSecond,
@@ -51,7 +51,7 @@ class SkillWidgetContainer extends StatelessWidget {
                     NumberFormat(".##%").format(skill.abilityPercent),
                     style: TextStyle(
                       fontSize: Dimens.medium_text,
-                      color: _themeStore.themeColor,
+                      color: _themeStore.reverseThemeColor,
                     ),
                   ),
                 ),
@@ -59,10 +59,11 @@ class SkillWidgetContainer extends StatelessWidget {
             ),
             Text(
               skill.description ?? "Unknown",
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: Dimens.small_text,
                 fontWeight: FontWeight.w500,
-                color: _themeStore.themeColor,
+                color: _themeStore.reverseThemeColor,
               ),
             )
           ],

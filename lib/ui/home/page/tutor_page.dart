@@ -77,316 +77,322 @@ class _TutorPageState extends State<TutorPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  TextFieldWidget(
-                    isObscure: false,
-                    margin: const EdgeInsets.only(
-                      top: Dimens.extra_large_vertical_margin,
-                      bottom: Dimens.large_vertical_margin,
-                    ),
-                    textController: _searchController,
-                    textStyle: TextStyle(
-                      fontSize: Dimens.small_text,
-                      color: _themeStore.reverseThemeColor,
-                    ),
-                    hint:
-                        AppLocalizations.of(context).translate('mentor_search'),
-                    hintColor: _themeStore.reverseThemeColor,
-                    icon: Icon(
-                      Icons.search_rounded,
-                      color: _themeStore.reverseThemeColor,
-                    ),
-                    hasBorder: true,
-                    onChanged: (String value) {
-                      _searchStore.onChangeSearchKey(value);
-                    },
-                    onFieldSubmitted: (value) {
-                      _mentorStore.resetPage().then(
-                        (_) {
-                          _refreshController.requestRefresh();
-                        },
-                      );
-                    },
-                  ),
-                  SingleChildScrollView(
-                    clipBehavior: Clip.none,
-                    physics: const BouncingScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Observer(
-                          builder: (_) {
-                            return FilterButtonTag(
-                              text: AppLocalizations.of(context)
-                                  .translate("category_translate"),
-                              isFilted: _searchStore.selectedCategory != null,
-                              selectedTitleItems: _searchStore
-                                          .selectedCategory !=
-                                      null
-                                  ? [
-                                      TitleItem(
-                                        id: _searchStore.selectedCategory!.id,
-                                        title:
-                                            _searchStore.selectedCategory!.name,
-                                      )
-                                    ]
-                                  : [],
-                              titleItems: _searchStore.categoryList
-                                  .map(
-                                    (item) => TitleItem(
-                                        id: item.id, title: item.name),
-                                  )
-                                  .toList(),
-                              onValueChange: (item) {
-                                _searchStore.changeSelectedCategory(item.id);
-
-                                return _searchStore.selectedCategory != null
-                                    ? [
-                                        TitleItem(
-                                          id: _searchStore.selectedCategory!.id,
-                                          title: _searchStore
-                                              .selectedCategory!.name,
-                                        )
-                                      ]
-                                    : [];
-                              },
-                              callback: () {
-                                _mentorStore.resetPage().then(
-                                  (_) {
-                                    _refreshController.requestRefresh();
-                                  },
-                                );
-                              },
-                            );
-                          },
-                        ),
-                        Observer(
-                          builder: (_) {
-                            return FilterButtonTag(
-                              text: AppLocalizations.of(context)
-                                  .translate("skill_translate"),
-                              isFilted:
-                                  _searchStore.selectedSkillList.isNotEmpty,
-                              selectedTitleItems: _searchStore.selectedSkillList
-                                  .map(
-                                    (item) => TitleItem(
-                                      id: item.id,
-                                      title: item.description ??
-                                          AppLocalizations.of(context)
-                                              .translate("unknown_translate"),
-                                    ),
-                                  )
-                                  .toList(),
-                              titleItems: _searchStore.skillList
-                                  .map(
-                                    (item) => TitleItem(
-                                      id: item.id,
-                                      title: item.description ??
-                                          AppLocalizations.of(context)
-                                              .translate("unknown_translate"),
-                                    ),
-                                  )
-                                  .toList(),
-                              onValueChange: (item) {
-                                _searchStore.updateSelectedSkills(item.id);
-
-                                return _searchStore.selectedSkillList
-                                    .map(
-                                      (item) => TitleItem(
-                                        id: item.id,
-                                        title: item.description ??
-                                            AppLocalizations.of(context)
-                                                .translate("unknown_translate"),
-                                      ),
-                                    )
-                                    .toList();
-                              },
-                              callback: () {
-                                _mentorStore.resetPage().then(
-                                  (_) {
-                                    _refreshController.requestRefresh();
-                                  },
-                                );
-                              },
-                            );
-                          },
-                        ),
-                        Observer(
-                          builder: (_) {
-                            return FilterButtonTag(
-                              text: AppLocalizations.of(context)
-                                  .translate("orderby_translate"),
-                              isFilted: true,
-                              marginHeight:
-                                  DeviceUtils.getScaledHeight(context, 0.37),
-                              selectedTitleItems: [
-                                TitleItem(
-                                  id: _searchStore.sortType.index,
-                                  title: _searchStore.sortType
-                                      .toLocaleString(context),
-                                ),
-                              ],
-                              titleItems: OrderType.values
-                                  .map(
-                                    (item) => TitleItem(
-                                      id: item.index,
-                                      title: item.toLocaleString(context),
-                                    ),
-                                  )
-                                  .toList(),
-                              onValueChange: (item) {
-                                _searchStore
-                                    .setOrder(OrderType.values[item.id]);
-                                return [
-                                  TitleItem(
-                                    id: _searchStore.sortType.index,
-                                    title: _searchStore.sortType
-                                        .toLocaleString(context),
-                                  ),
-                                ];
-                              },
-                              callback: () {
-                                _mentorStore.resetPage().then(
-                                  (_) {
-                                    _refreshController.requestRefresh();
-                                  },
-                                );
-                              },
-                            );
-                          },
-                        ),
-                        Observer(
-                          builder: (_) {
-                            return FilterButtonTag(
-                              text: AppLocalizations.of(context)
-                                  .translate("sort_translate"),
-                              isFilted: true,
-                              marginHeight:
-                                  DeviceUtils.getScaledHeight(context, 0.37),
-                              selectedTitleItems: [
-                                TitleItem(
-                                  id: _searchStore.orderByType.index,
-                                  title: _searchStore.orderByType
-                                      .toLocaleString(context),
-                                ),
-                              ],
-                              titleItems: OrderByType.values
-                                  .map(
-                                    (item) => TitleItem(
-                                      id: item.index,
-                                      title: item.toLocaleString(context),
-                                    ),
-                                  )
-                                  .toList(),
-                              onValueChange: (item) {
-                                _searchStore
-                                    .setOrderBy(OrderByType.values[item.id]);
-
-                                return [
-                                  TitleItem(
-                                    id: _searchStore.orderByType.index,
-                                    title: _searchStore.orderByType
-                                        .toLocaleString(context),
-                                  ),
-                                ];
-                              },
-                              callback: () {
-                                _mentorStore.resetPage().then(
-                                  (_) {
-                                    _refreshController.requestRefresh();
-                                  },
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
+                  _buildSearchField(),
+                  _buildFilterButton(),
                   const SizedBox(
                     height: Dimens.large_vertical_margin,
                   ),
-                  Expanded(
-                    child: Observer(
-                      builder: (_) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(
-                              Dimens.kBorderMaxRadiusValue),
-                          child: SmartRefresher(
-                            controller: _refreshController,
-                            enablePullUp: true,
-                            enablePullDown: true,
-                            header: ApplicationUtils.fetchHeaderStatus(context),
-                            footer: ApplicationUtils.fetchFooterStatus(),
-                            onRefresh: () async {
-                              if (_mentorStore.prevPage()) {
-                                _mentorStore.callback =
-                                    () => _refreshController.refreshCompleted();
-
-                                await _mentorStore
-                                    .searchMentors(_searchStore.toJson())
-                                    .then((_) {
-                                  // if (tutorStore.isSearch) {
-                                  //   DeviceUtils.showSnackBar(
-                                  //       context,
-                                  //       AppLocalizations.of(context)
-                                  //           .translate("search_tutor_results")
-                                  //           .format([
-                                  //         tutorStore.countTutors.toString()
-                                  //       ]));
-                                  // }
-                                });
-                              } else {
-                                _refreshController.refreshCompleted();
-                              }
-                            },
-                            onLoading: () async {
-                              if (_mentorStore.nextPage()) {
-                                await _mentorStore
-                                    .searchMentors(_searchStore.toJson())
-                                    .then((_) {
-                                  //
-
-                                  _refreshController.loadComplete();
-                                });
-                              } else {
-                                _refreshController.loadComplete();
-                              }
-                            },
-                            child: Wrap(
-                              alignment: WrapAlignment.spaceAround,
-                              spacing: Dimens.vertical_space,
-                              runSpacing: Dimens.horizontal_space,
-                              direction: Axis.horizontal,
-                              children: List.generate(
-                                      _mentorStore.length, (i) => i)
-                                  .map(
-                                    (i) => ShortImformationItem(
-                                      mentorModel: _mentorStore.at(i),
-                                      onTapViewDetail: () {
-                                        Navigator.of(context).pushReplacement(
-                                          MaterialPageRoute(
-                                            builder: (context) => MentorProfile(
-                                                idMentor:
-                                                    _mentorStore.at(i).id),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  )
-                                  .toList(),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                  _buildListOfMentor(),
                 ],
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  TextFieldWidget _buildSearchField() {
+    return TextFieldWidget(
+      isObscure: false,
+      margin: const EdgeInsets.only(
+        top: Dimens.extra_large_vertical_margin,
+        bottom: Dimens.large_vertical_margin,
+      ),
+      textController: _searchController,
+      textStyle: TextStyle(
+        fontSize: Dimens.small_text,
+        color: _themeStore.reverseThemeColor,
+      ),
+      hint: AppLocalizations.of(context).translate('mentor_search'),
+      hintColor: _themeStore.reverseThemeColor,
+      icon: Icon(
+        Icons.search_rounded,
+        color: _themeStore.reverseThemeColor,
+      ),
+      hasBorder: true,
+      onChanged: (String value) {
+        _searchStore.onChangeSearchKey(value);
+      },
+      onFieldSubmitted: (value) {
+        _mentorStore.resetPage().then(
+          (_) {
+            _refreshController.requestRefresh();
+          },
+        );
+      },
+    );
+  }
+
+  SingleChildScrollView _buildFilterButton() {
+    return SingleChildScrollView(
+      clipBehavior: Clip.none,
+      physics: const BouncingScrollPhysics(),
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          _buildCategoryFilter(),
+          _buildSkillFilter(),
+          _buildOrderByFilter(),
+          _buildSortFilter(),
+        ],
+      ),
+    );
+  }
+
+  Observer _buildCategoryFilter() {
+    return Observer(
+      builder: (_) {
+        return FilterButtonTag(
+          text: AppLocalizations.of(context).translate("category_translate"),
+          isFilted: _searchStore.selectedCategory != null,
+          selectedTitleItems: _searchStore.selectedCategory != null
+              ? [
+                  TitleItem(
+                    id: _searchStore.selectedCategory!.id,
+                    title: _searchStore.selectedCategory!.name,
+                  )
+                ]
+              : [],
+          titleItems: _searchStore.categoryList
+              .map(
+                (item) => TitleItem(id: item.id, title: item.name),
+              )
+              .toList(),
+          onValueChange: (item) {
+            _searchStore.changeSelectedCategory(item.id);
+
+            return _searchStore.selectedCategory != null
+                ? [
+                    TitleItem(
+                      id: _searchStore.selectedCategory!.id,
+                      title: _searchStore.selectedCategory!.name,
+                    )
+                  ]
+                : [];
+          },
+          callback: () {
+            _mentorStore.resetPage().then(
+              (_) {
+                _refreshController.requestRefresh();
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Observer _buildSkillFilter() {
+    return Observer(
+      builder: (_) {
+        return FilterButtonTag(
+          text: AppLocalizations.of(context).translate("skill_translate"),
+          isFilted: _searchStore.selectedSkillList.isNotEmpty,
+          selectedTitleItems: _searchStore.selectedSkillList
+              .map(
+                (item) => TitleItem(
+                  id: item.id,
+                  title: item.description ??
+                      AppLocalizations.of(context)
+                          .translate("unknown_translate"),
+                ),
+              )
+              .toList(),
+          titleItems: _searchStore.skillList
+              .map(
+                (item) => TitleItem(
+                  id: item.id,
+                  title: item.description ??
+                      AppLocalizations.of(context)
+                          .translate("unknown_translate"),
+                ),
+              )
+              .toList(),
+          onValueChange: (item) {
+            _searchStore.updateSelectedSkills(item.id);
+
+            return _searchStore.selectedSkillList
+                .map(
+                  (item) => TitleItem(
+                    id: item.id,
+                    title: item.description ??
+                        AppLocalizations.of(context)
+                            .translate("unknown_translate"),
+                  ),
+                )
+                .toList();
+          },
+          callback: () {
+            _mentorStore.resetPage().then(
+              (_) {
+                _refreshController.requestRefresh();
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Observer _buildOrderByFilter() {
+    return Observer(
+      builder: (_) {
+        return FilterButtonTag(
+          text: AppLocalizations.of(context).translate("orderby_translate"),
+          isFilted: true,
+          marginHeight: DeviceUtils.getScaledHeight(context, 0.37),
+          selectedTitleItems: [
+            TitleItem(
+              id: _searchStore.sortType.index,
+              title: _searchStore.sortType.toLocaleString(context),
+            ),
+          ],
+          titleItems: OrderType.values
+              .map(
+                (item) => TitleItem(
+                  id: item.index,
+                  title: item.toLocaleString(context),
+                ),
+              )
+              .toList(),
+          onValueChange: (item) {
+            _searchStore.setOrder(OrderType.values[item.id]);
+            return [
+              TitleItem(
+                id: _searchStore.sortType.index,
+                title: _searchStore.sortType.toLocaleString(context),
+              ),
+            ];
+          },
+          callback: () {
+            _mentorStore.resetPage().then(
+              (_) {
+                _refreshController.requestRefresh();
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Observer _buildSortFilter() {
+    return Observer(
+      builder: (_) {
+        return FilterButtonTag(
+          text: AppLocalizations.of(context).translate("sort_translate"),
+          isFilted: true,
+          marginHeight: DeviceUtils.getScaledHeight(context, 0.37),
+          selectedTitleItems: [
+            TitleItem(
+              id: _searchStore.orderByType.index,
+              title: _searchStore.orderByType.toLocaleString(context),
+            ),
+          ],
+          titleItems: OrderByType.values
+              .map(
+                (item) => TitleItem(
+                  id: item.index,
+                  title: item.toLocaleString(context),
+                ),
+              )
+              .toList(),
+          onValueChange: (item) {
+            _searchStore.setOrderBy(OrderByType.values[item.id]);
+
+            return [
+              TitleItem(
+                id: _searchStore.orderByType.index,
+                title: _searchStore.orderByType.toLocaleString(context),
+              ),
+            ];
+          },
+          callback: () {
+            _mentorStore.resetPage().then(
+              (_) {
+                _refreshController.requestRefresh();
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildListOfMentor() {
+    return Expanded(
+      child: Observer(
+        builder: (_) {
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(Dimens.kBorderMaxRadiusValue),
+            child: SmartRefresher(
+              controller: _refreshController,
+              enablePullUp: true,
+              enablePullDown: true,
+              header: ApplicationUtils.fetchHeaderStatus(context),
+              footer: ApplicationUtils.fetchFooterStatus(),
+              onRefresh: () async {
+                if (_mentorStore.prevPage()) {
+                  _mentorStore.callback =
+                      () => _refreshController.refreshCompleted();
+
+                  await _mentorStore
+                      .searchMentors(_searchStore.toJson())
+                      .then((_) {
+                    // if (tutorStore.isSearch) {
+                    //   DeviceUtils.showSnackBar(
+                    //       context,
+                    //       AppLocalizations.of(context)
+                    //           .translate("search_tutor_results")
+                    //           .format([
+                    //         tutorStore.countTutors.toString()
+                    //       ]));
+                    // }
+                  });
+                } else {
+                  _refreshController.refreshCompleted();
+                }
+              },
+              onLoading: () async {
+                if (_mentorStore.nextPage()) {
+                  await _mentorStore
+                      .searchMentors(_searchStore.toJson())
+                      .then((_) {
+                    //
+
+                    _refreshController.loadComplete();
+                  });
+                } else {
+                  _refreshController.loadComplete();
+                }
+              },
+              child: Wrap(
+                alignment: WrapAlignment.spaceAround,
+                spacing: Dimens.vertical_space,
+                runSpacing: Dimens.horizontal_space,
+                direction: Axis.horizontal,
+                children: List.generate(_mentorStore.length, (i) => i)
+                    .map(
+                      (i) => ShortImformationItem(
+                        mentorModel: _mentorStore.at(i),
+                        onTapViewDetail: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => MentorProfile(
+                                  idMentor: _mentorStore.at(i).id),
+                            ),
+                          );
+                        },
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -606,7 +612,7 @@ class ShortImformationItem extends StatelessWidget {
                         constraints: const BoxConstraints(),
                         icon: FaIcon(
                           FontAwesomeIcons.linkedinIn,
-                          color: _themeStore.themeColor,
+                          color: _themeStore.reverseThemeColor,
                           size: Dimens.small_text,
                         ),
                         onPressed: () {

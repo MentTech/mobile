@@ -188,6 +188,8 @@ class _HomePageState extends State<HomePage> {
                     MentorModel mentorModel = _mentorStore.recommendedAt(index);
                     return HomeMentorItem(
                       mentorModel: mentorModel,
+                      isLikedMentor:
+                          _userStore.checkIsLikedMentor(mentorModel.id),
                       onCheckFavMentor: (isLiked) {
                         if (_userStore.isPushingFavMentorData) {
                           return Future.value(isLiked);
@@ -225,6 +227,8 @@ class _HomePageState extends State<HomePage> {
                     MentorModel mentorModel = _mentorStore.favouriteAt(index);
                     return HomeMentorItem(
                       mentorModel: mentorModel,
+                      isLikedMentor:
+                          _userStore.checkIsLikedMentor(mentorModel.id),
                       onCheckFavMentor: (isLiked) {
                         if (_userStore.isPushingFavMentorData) {
                           return Future.value(isLiked);
@@ -259,9 +263,11 @@ class HomeMentorItem extends StatelessWidget {
     Key? key,
     required this.mentorModel,
     required this.onCheckFavMentor,
+    required this.isLikedMentor,
   }) : super(key: key);
 
   final MentorModel mentorModel;
+  final bool isLikedMentor;
 
   final Future<bool> Function(bool) onCheckFavMentor;
 
@@ -293,7 +299,7 @@ class HomeMentorItem extends StatelessWidget {
       top: 15,
       right: 15,
       child: LikeButton(
-        isLiked: true,
+        isLiked: isLikedMentor,
         size: Dimens.large_text,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,

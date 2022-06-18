@@ -41,6 +41,14 @@ mixin _$ThemeStore on _ThemeStore, Store {
           Computed<Color>(() => super.themeColorfulColor,
               name: '_ThemeStore.themeColorfulColor'))
       .value;
+  Computed<Color>? _$themeColorfulColorShimmerComputed;
+
+  @override
+  Color get themeColorfulColorShimmer =>
+      (_$themeColorfulColorShimmerComputed ??= Computed<Color>(
+              () => super.themeColorfulColorShimmer,
+              name: '_ThemeStore.themeColorfulColorShimmer'))
+          .value;
   Computed<Color>? _$reverseThemeColorfulColorComputed;
 
   @override
@@ -149,6 +157,7 @@ modeName: ${modeName},
 appIcon: ${appIcon},
 opacityTheme: ${opacityTheme},
 themeColorfulColor: ${themeColorfulColor},
+themeColorfulColorShimmer: ${themeColorfulColorShimmer},
 reverseThemeColorfulColor: ${reverseThemeColorfulColor},
 themeColor: ${themeColor},
 themeThemeColor: ${themeThemeColor},

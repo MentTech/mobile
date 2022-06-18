@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:like_button/like_button.dart';
 import 'package:mobile/constants/assets.dart';
 import 'package:mobile/constants/colors.dart';
 import 'package:mobile/constants/dimens.dart';
@@ -13,11 +14,13 @@ import 'package:mobile/models/common/skill/skill.dart';
 import 'package:mobile/models/mentor/mentor.dart';
 import 'package:mobile/stores/mentor/mentor_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
+import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
 import 'package:mobile/widgets/button_widgets/neumorphism_button.dart';
+import 'package:mobile/widgets/common_model_widgets/experience_widget.dart';
 import 'package:mobile/widgets/common_model_widgets/skill_widget.dart';
 import 'package:mobile/widgets/container/image_container/network_image_widget.dart';
 import 'package:mobile/widgets/container/section_container/description_title_container.dart';
@@ -44,6 +47,7 @@ class MentorProfile extends StatefulWidget {
 class _MentorProfileState extends State<MentorProfile> {
   // Store:---------------------------------------------------------------------
   late final MentorStore _mentorStore;
+  late final UserStore _userStore;
   final ThemeStore _themeStore = getIt<ThemeStore>();
 
   @override
@@ -52,6 +56,8 @@ class _MentorProfileState extends State<MentorProfile> {
 
     _mentorStore = Provider.of<MentorStore>(context, listen: false);
     _mentorStore.fetchAMentor(widget.idMentor);
+
+    _userStore = Provider.of<UserStore>(context, listen: false);
   }
 
   @override
@@ -73,7 +79,7 @@ class _MentorProfileState extends State<MentorProfile> {
           Observer(
             builder: (BuildContext context) {
               if (_mentorStore.isLoading) {
-                return const ProfileShimmerLoadingEffect();
+                return ProfileShimmerLoadingEffect();
               } else {
                 if (_mentorStore.hasMentor) {
                   return CustomScrollView(
@@ -81,11 +87,21 @@ class _MentorProfileState extends State<MentorProfile> {
                     slivers: [
                       SliverPersistentHeader(
                         delegate: MentorProfileSliverAppbarDelegate(
-                          expandedHeight:
-                              DeviceUtils.getScaledHeight(context, .65),
-                          mentorModel: _mentorStore.getMentor!,
-                        ),
-                        floating: false,
+                            expandedHeight:
+                                DeviceUtils.getScaledHeight(context, .65),
+                            mentorModel: _mentorStore.getMentor!,
+                            isLikedMentor: _userStore.checkIsLikedMentor(
+                                _mentorStore.mentorModel!.id),
+                            onLikedMentor: (isLiked) {
+                              if (_userStore.isPushingFavMentorData) {
+                                return Future.value(isLiked);
+                              } else {
+                                _userStore.callUpdateFavMentor(
+                                    mentorID: _mentorStore.mentorModel!.id);
+                                return Future.value(!isLiked);
+                              }
+                            }),
+                        floating: true,
                         pinned: true,
                       ),
                       SliverToBoxAdapter(
@@ -109,159 +125,174 @@ class _MentorProfileState extends State<MentorProfile> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        DescriptionTitleContainer(
-          titleWidget: Text(
-            "${AppLocalizations.of(context).translate("introduction_translate")}: ",
-            style: const TextStyle(
-              fontSize: Dimens.lightly_medium_text,
-            ),
-          ),
-          contentWidget: ReadMoreText(
-            mentorModel.userMentor.introduction ?? "",
-            style: const TextStyle(
-              fontSize: Dimens.small_text,
-            ),
-            trimLines: 5,
-            trimLength: 300,
-          ),
-          spaceBetween: Dimens.vertical_margin * 2,
-          padding: const EdgeInsets.symmetric(
-            horizontal: Dimens.horizontal_padding,
-            vertical: Dimens.large_vertical_margin,
-          ),
-        ),
-        DescriptionTitleContainer(
-          titleWidget: Text(
-            "${AppLocalizations.of(context).translate("program_translate")}: ",
-            style: const TextStyle(
-              fontSize: Dimens.lightly_medium_text,
-            ),
-          ),
-          contentWidget: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              for (Program program in mentorModel.userMentor.programs ?? [])
-                SessionTicketItem(
-                  program: program,
-                  margin: const EdgeInsets.only(
-                    top: Dimens.vertical_margin,
-                  ),
-                  callbackIfProgramNotNull: () {
-                    _mentorStore.fetchProgramOfMentor(program.id).then((_) {
-                      Routes.navigatorSupporter(
-                          context, Routes.programRegister);
-                    });
-                  },
-                ),
-            ],
-          ),
-          spaceBetween: Dimens.vertical_margin,
-          padding: const EdgeInsets.symmetric(
-            horizontal: Dimens.horizontal_padding,
-            vertical: Dimens.large_vertical_margin,
-          ),
-        ),
-        DescriptionTitleContainer(
-          titleWidget: Text(
-            "${AppLocalizations.of(context).translate("skill_translate")}: ",
-            style: const TextStyle(
-              fontSize: Dimens.lightly_medium_text,
-            ),
-          ),
-          contentWidget: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                const SizedBox(
-                  width: Dimens.large_horizontal_margin,
-                ),
-                for (Skill skill in mentorModel.userMentor.skills)
-                  SkillWidgetContainer(
-                    width: 130,
-                    skill: skill,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: Dimens.small_vertical_padding,
-                    ),
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: Dimens.medium_horizontal_margin),
-                  ),
-                const SizedBox(
-                  width: Dimens.large_horizontal_margin,
-                ),
-              ],
-            ),
-          ),
-          spaceBetween: Dimens.vertical_margin * 2,
-          padding: const EdgeInsets.symmetric(
-            vertical: Dimens.large_vertical_margin,
-          ),
-          paddingTitle: const EdgeInsets.symmetric(
-            horizontal: Dimens.horizontal_padding,
-          ),
-        ),
-        DescriptionTitleContainer(
-          titleWidget: Text(
-            "${AppLocalizations.of(context).translate("degree_translate")}: ",
-            style: const TextStyle(
-              fontSize: Dimens.lightly_medium_text,
-            ),
-          ),
-          contentWidget: Column(
-            children: [
-              for (Degree degree in mentorModel.userMentor.degree)
-                SymbolsItem(
-                  symbol: const Icon(
-                    Icons.arrow_right_rounded,
-                    size: Dimens.large_text,
-                  ),
-                  child: Text(
-                    degree.title,
-                    style: const TextStyle(
-                      fontSize: Dimens.small_text,
-                    ),
-                  ),
-                )
-            ],
-          ),
-          spaceBetween: Dimens.vertical_margin * 2,
-          padding: const EdgeInsets.symmetric(
-            horizontal: Dimens.horizontal_padding,
-            vertical: Dimens.large_vertical_margin,
-          ),
-        ),
-        DescriptionTitleContainer(
-          titleWidget: Text(
-            "${AppLocalizations.of(context).translate("experience_translate")}: ",
-            style: const TextStyle(
-              fontSize: Dimens.lightly_medium_text,
-            ),
-          ),
-          contentWidget: Column(
-            children: [
-              for (Experience experience in mentorModel.userMentor.experiences)
-                SymbolsItem(
-                  symbol: const Icon(
-                    Icons.arrow_right_rounded,
-                    size: Dimens.large_text,
-                  ),
-                  child: Text(
-                    experience.title ??
-                        AppLocalizations.of(context)
-                            .translate("unknown_translate"),
-                    style: const TextStyle(
-                      fontSize: Dimens.small_text,
-                    ),
-                  ),
-                )
-            ],
-          ),
-          spaceBetween: Dimens.vertical_margin * 2,
-          padding: const EdgeInsets.symmetric(
-            horizontal: Dimens.horizontal_padding,
-            vertical: Dimens.large_vertical_margin,
-          ),
+        _buildIntroductionSection(mentorModel),
+        _buildProgramSection(mentorModel),
+        _buildSkillSection(mentorModel),
+        _buildDegreeSection(mentorModel),
+        _buildExperienceSection(mentorModel),
+        const SizedBox(
+          height: kBottomNavigationBarHeight,
         ),
       ],
+    );
+  }
+
+  DescriptionTitleContainer _buildExperienceSection(MentorModel mentorModel) {
+    return DescriptionTitleContainer(
+      titleWidget: Text(
+        "${AppLocalizations.of(context).translate("experience_translate")}: ",
+        style: const TextStyle(
+          fontSize: Dimens.lightly_medium_text,
+        ),
+      ),
+      contentWidget: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (Experience experience in mentorModel.userMentor.experiences)
+            ExperienceWidget(
+              experience: experience,
+              margin:
+                  const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
+            ),
+        ],
+      ),
+      spaceBetween: Dimens.vertical_margin * 2,
+      padding: const EdgeInsets.symmetric(
+        horizontal: Dimens.horizontal_padding,
+        vertical: Dimens.large_vertical_margin,
+      ),
+    );
+  }
+
+  DescriptionTitleContainer _buildDegreeSection(MentorModel mentorModel) {
+    return DescriptionTitleContainer(
+      titleWidget: Text(
+        "${AppLocalizations.of(context).translate("degree_translate")}: ",
+        style: const TextStyle(
+          fontSize: Dimens.lightly_medium_text,
+        ),
+      ),
+      contentWidget: Column(
+        children: [
+          for (Degree degree in mentorModel.userMentor.degree)
+            SymbolsItem(
+              symbol: const Icon(
+                Icons.arrow_right_rounded,
+                size: Dimens.large_text,
+              ),
+              child: Text(
+                degree.title,
+                style: const TextStyle(
+                  fontSize: Dimens.small_text,
+                ),
+              ),
+            )
+        ],
+      ),
+      spaceBetween: Dimens.vertical_margin * 2,
+      padding: const EdgeInsets.symmetric(
+        horizontal: Dimens.horizontal_padding,
+        vertical: Dimens.large_vertical_margin,
+      ),
+    );
+  }
+
+  DescriptionTitleContainer _buildSkillSection(MentorModel mentorModel) {
+    return DescriptionTitleContainer(
+      titleWidget: Text(
+        "${AppLocalizations.of(context).translate("skill_translate")}: ",
+        style: const TextStyle(
+          fontSize: Dimens.lightly_medium_text,
+        ),
+      ),
+      contentWidget: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            const SizedBox(
+              width: Dimens.large_horizontal_margin,
+            ),
+            for (Skill skill in mentorModel.userMentor.skills)
+              SkillWidgetContainer(
+                width: 130,
+                skill: skill,
+                padding: const EdgeInsets.symmetric(
+                  vertical: Dimens.small_vertical_padding,
+                ),
+                margin: const EdgeInsets.symmetric(
+                    horizontal: Dimens.medium_horizontal_margin),
+              ),
+            const SizedBox(
+              width: Dimens.large_horizontal_margin,
+            ),
+          ],
+        ),
+      ),
+      spaceBetween: Dimens.vertical_margin * 2,
+      padding: const EdgeInsets.symmetric(
+        vertical: Dimens.large_vertical_margin,
+      ),
+      paddingTitle: const EdgeInsets.symmetric(
+        horizontal: Dimens.horizontal_padding,
+      ),
+    );
+  }
+
+  DescriptionTitleContainer _buildProgramSection(MentorModel mentorModel) {
+    return DescriptionTitleContainer(
+      titleWidget: Text(
+        "${AppLocalizations.of(context).translate("program_translate")}: ",
+        style: const TextStyle(
+          fontSize: Dimens.lightly_medium_text,
+        ),
+      ),
+      contentWidget: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (Program program in mentorModel.userMentor.programs ?? [])
+            SessionTicketItem(
+              program: program,
+              margin: const EdgeInsets.only(
+                top: Dimens.vertical_margin,
+              ),
+              callbackIfProgramNotNull: () {
+                _mentorStore.fetchProgramOfMentor(program.id).then((_) {
+                  Routes.navigatorSupporter(context, Routes.programRegister);
+                });
+              },
+            ),
+        ],
+      ),
+      spaceBetween: Dimens.vertical_margin,
+      padding: const EdgeInsets.symmetric(
+        horizontal: Dimens.horizontal_padding,
+        vertical: Dimens.large_vertical_margin,
+      ),
+    );
+  }
+
+  DescriptionTitleContainer _buildIntroductionSection(MentorModel mentorModel) {
+    return DescriptionTitleContainer(
+      titleWidget: Text(
+        "${AppLocalizations.of(context).translate("introduction_translate")}: ",
+        style: const TextStyle(
+          fontSize: Dimens.lightly_medium_text,
+        ),
+      ),
+      contentWidget: ReadMoreText(
+        mentorModel.userMentor.introduction ?? "",
+        style: TextStyle(
+          fontSize: Dimens.small_text,
+          color: _themeStore.reverseThemeColor,
+        ),
+        trimLines: 5,
+        trimLength: 300,
+      ),
+      spaceBetween: Dimens.vertical_margin * 2,
+      padding: const EdgeInsets.symmetric(
+        horizontal: Dimens.horizontal_padding,
+        vertical: Dimens.large_vertical_margin,
+      ),
     );
   }
 }
@@ -269,12 +300,17 @@ class _MentorProfileState extends State<MentorProfile> {
 class MentorProfileSliverAppbarDelegate extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
   final MentorModel mentorModel;
+  final bool isLikedMentor;
 
   final ThemeStore _themeStore = getIt<ThemeStore>();
+
+  final Future<bool> Function(bool)? onLikedMentor;
 
   MentorProfileSliverAppbarDelegate({
     required this.expandedHeight,
     required this.mentorModel,
+    required this.isLikedMentor,
+    this.onLikedMentor,
   });
 
   double shrinkPerExpanded(double shrinkOffset) =>
@@ -338,7 +374,7 @@ class MentorProfileSliverAppbarDelegate extends SliverPersistentHeaderDelegate {
                             constraints: const BoxConstraints(),
                             icon: FaIcon(
                               FontAwesomeIcons.linkedinIn,
-                              color: _themeStore.themeColor,
+                              color: _themeStore.reverseThemeColor,
                               size: Dimens.small_text,
                             ),
                             onPressed: () {
@@ -406,19 +442,10 @@ class MentorProfileSliverAppbarDelegate extends SliverPersistentHeaderDelegate {
         padding: const EdgeInsets.symmetric(
           horizontal: Dimens.horizontal_padding,
         ),
-        child:
-            // Align(
-            //   child: LikeButton(
-            //     size: Dimens.extra_large_text,
-            //     onTap: (bool isCheck) {
-            //       return Future.value(!isCheck);
-            //     },
-            //   ),
-            // ),
-
-            Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Go back button
             NeumorphismButton(
@@ -429,6 +456,39 @@ class MentorProfileSliverAppbarDelegate extends SliverPersistentHeaderDelegate {
               onTap: () {
                 Routes.popRoute(context);
               },
+            ),
+            SizedBox(
+              height: Dimens.ultra_large_text,
+              child: LikeButton(
+                isLiked: isLikedMentor,
+                size: Dimens.extra_large_text,
+                likeBuilder: (islike) {
+                  return Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color:
+                          Color.alphaBlend(Colors.red.shade200, Colors.white),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color.alphaBlend(
+                              Colors.red.shade200, Colors.white),
+                          blurRadius: 3,
+                          spreadRadius: 3,
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      Icons.favorite,
+                      size: Dimens.medium_text,
+                      color: islike ? Colors.red.shade400 : Colors.white54,
+                    ),
+                  );
+                },
+                onTap: (bool isLiked) {
+                  return onLikedMentor?.call(isLiked) ?? Future.value(isLiked);
+                },
+              ),
             ),
           ],
         ),
