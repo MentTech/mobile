@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:mobile/data/repository.dart';
 import 'package:mobile/models/common/session/session.dart';
 import 'package:mobile/models/common/session/sessions.dart';
+import 'package:mobile/models/common/transaction/transaction.dart';
 import 'package:mobile/models/user/user.dart';
 import 'package:mobile/stores/enum/session_status_enum.dart';
 import 'package:mobx/mobx.dart';
@@ -68,6 +69,10 @@ abstract class _UserStore with Store {
       emptyLoginResponse;
 
   @observable
+  ObservableFuture<Map<String, dynamic>?> requestTransactionFuture =
+      emptyLoginResponse;
+
+  @observable
   UserModel? user;
 
   @observable
@@ -81,6 +86,9 @@ abstract class _UserStore with Store {
   @observable
   ObservableList<Session> sessions = ObservableList();
 
+  @observable
+  TransactionContent? _transactionContent;
+
   List<int> favouriteMentorIdList = [];
 
   // computed:------------------------------------------------------------------
@@ -93,13 +101,27 @@ abstract class _UserStore with Store {
       requestSessionFuture.status == FutureStatus.pending;
 
   @computed
+  bool get isTransactionLoading =>
+      requestTransactionFuture.status == FutureStatus.pending;
+
+  @computed
   int get sizeSessionList => sessions.length;
+
+  @computed
+  int get sizeTransactionList => _transactionContent?.transactions.length ?? 0;
 
   SessionStatus get currentSessionFetchStatus => sessionStatus;
 
   Session? getSessionAt(int index) {
     if (index < sessions.length) {
       return sessions.elementAt(index);
+    }
+    return null;
+  }
+
+  Transaction? getTransactionAt(int index) {
+    if (index < (_transactionContent?.transactions.length ?? 0)) {
+      return _transactionContent!.transactions.elementAt(index);
     }
     return null;
   }
@@ -144,6 +166,30 @@ abstract class _UserStore with Store {
     });
 
     return Future.value(false);
+  }
+
+  @action
+  Future<void> fetchMyTransactions() async {
+    String? accessToken = await _repository.authToken;
+
+    if (null == accessToken) {
+      return;
+    }
+
+    final future = _repository.fetchTransactions(authToken: accessToken);
+    requestFuture = ObservableFuture(future);
+
+    future.then((res) {
+      try {
+        _transactionContent = TransactionContent.fromJson(res!);
+        success = true;
+        return Future.value(true);
+      } catch (e) {
+        // res['message']
+        success = false;
+        return Future.value(false);
+      }
+    });
   }
 
   @action

@@ -31,3 +31,19 @@ class Transaction {
 
   Map<String, dynamic> toJson() => _$TransactionToJson(this);
 }
+
+@JsonSerializable()
+class TransactionContent {
+  final List<Transaction> transactions;
+  final int balance;
+
+  TransactionContent({
+    required this.balance,
+    required this.transactions,
+  });
+
+  factory TransactionContent.fromJson(Map<String, dynamic> json) =>
+      _$TransactionContentFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TransactionContentToJson(this);
+}

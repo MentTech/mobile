@@ -4,6 +4,7 @@ import 'package:mobile/data/network/apis/auth/auth_api.dart';
 import 'package:mobile/data/network/apis/common/common_api.dart';
 import 'package:mobile/data/network/apis/mentee/mentee_api.dart';
 import 'package:mobile/data/network/apis/mentor/mentor_api.dart';
+import 'package:mobile/data/network/apis/transaction/transaction_api.dart';
 import 'package:mobile/data/network/dio_client.dart';
 import 'package:mobile/data/network/rest_client.dart';
 import 'package:mobile/data/repository.dart';
@@ -63,6 +64,12 @@ Future<void> setupLocator() async {
     ),
   );
 
+  getIt.registerSingleton(
+    TransactionAPI(
+      getIt<DioClient>(),
+    ),
+  );
+
   // data sources
   // getIt.registerSingleton(PostDataSource(await getIt.getAsync<Database>()));
 
@@ -72,6 +79,7 @@ Future<void> setupLocator() async {
     getIt<MentorAPI>(),
     getIt<MenteeAPI>(),
     getIt<CommonAPI>(),
+    getIt<TransactionAPI>(),
     getIt<SharedPreferenceHelper>(),
     // getIt<PostDataSource>(),
   ));

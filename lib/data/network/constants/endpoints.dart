@@ -103,4 +103,9 @@ class Endpoints {
 
   //:---------------------------------------------------------------------------
 
+  /// Transaction APIS
+  ///
+
+  /// Get all transaction in Server
+  static const String fetchUserTransactions = baseUrl + "/transaction/balance";
 }

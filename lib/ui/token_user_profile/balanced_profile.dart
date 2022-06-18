@@ -4,6 +4,7 @@ import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/common/session/session.dart';
+import 'package:mobile/models/common/transaction/transaction.dart';
 import 'package:mobile/stores/enum/session_status_enum.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
@@ -15,6 +16,7 @@ import 'package:mobile/widgets/app_icon_widget.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/glassmorphism_widget_button.dart';
 import 'package:mobile/widgets/item/session_ticket_item.dart';
+import 'package:mobile/widgets/item/transaction_ticket_item.dart';
 import 'package:provider/provider.dart';
 
 class BalancedProfile extends StatefulWidget {
@@ -32,6 +34,8 @@ class _BalancedProfileState extends State<BalancedProfile> {
   // store:---------------------------------------------------------------------
   final ThemeStore _themeStore = getIt<ThemeStore>();
   late final UserStore _userStore;
+
+  // attribute:-----------------------------------------------------------------
   late double deviceHeight;
 
   @override
@@ -39,6 +43,7 @@ class _BalancedProfileState extends State<BalancedProfile> {
     super.initState();
 
     _userStore = Provider.of<UserStore>(context, listen: false);
+    _userStore.fetchMyTransactions();
   }
 
   @override
@@ -70,40 +75,84 @@ class _BalancedProfileState extends State<BalancedProfile> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 _buildMainWidget(),
+                _buildTransactionArea(),
               ],
             ),
           ),
-          DraggableScrollableSheet(
-            controller: _draggableScrollableController,
-            minChildSize: minChildSize,
-            maxChildSize: maxChildSize,
-            builder: (_, scrollController) {
-              return Material(
-                elevation: 10,
-                color: _themeStore.themeColor
-                    .withGreen(
-                        (_themeStore.themeColorfulColor.green * 0.5).round())
-                    .withBlue(
-                        (_themeStore.themeColorfulColor.blue * 0.5).round())
-                    .withOpacity(_themeStore.opacityTheme),
-                shape: const RoundedRectangleBorder(
-                  side: BorderSide(
-                    color: Colors.white12,
-                  ),
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(20),
-                  ),
-                ),
-                child: _buildDraggableBottomSheet(context, scrollController),
-              );
-            },
-          ),
+          _buildDraggableBottomSheet(minChildSize, maxChildSize, context),
         ],
       ),
     );
   }
 
-  Column _buildDraggableBottomSheet(
+  Expanded _buildTransactionArea() {
+    return Expanded(
+      child: Observer(
+        builder: (_) {
+          return ListView.builder(
+            padding: const EdgeInsets.only(
+              top: Dimens.large_vertical_padding,
+              right: Dimens.horizontal_padding,
+              left: Dimens.horizontal_padding,
+            ),
+            itemBuilder: (_, index) {
+              Transaction? transaction = _userStore.getTransactionAt(index);
+              return _buildTransactionItemInBottomSheet(transaction, context);
+            },
+            itemCount: !_userStore.isTransactionLoading
+                ? _userStore.sizeTransactionList
+                : 5,
+          );
+        },
+      ),
+    );
+  }
+
+  Container _buildTransactionItemInBottomSheet(
+      Transaction? transaction, BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(
+        bottom: Dimens.medium_vertical_margin,
+      ),
+      child: TransactionTicketItem(
+        transaction: transaction,
+        margin: const EdgeInsets.only(
+          top: Dimens.vertical_margin,
+        ),
+        blur: Properties.blur_glass_morphism,
+        opacity: Properties.opacity_glass_morphism,
+      ),
+    );
+  }
+
+  DraggableScrollableSheet _buildDraggableBottomSheet(
+      double minChildSize, double maxChildSize, BuildContext context) {
+    return DraggableScrollableSheet(
+      controller: _draggableScrollableController,
+      minChildSize: minChildSize,
+      maxChildSize: maxChildSize,
+      builder: (_, scrollController) {
+        return Material(
+          elevation: 10,
+          color: _themeStore.themeColor
+              .withGreen((_themeStore.themeColorfulColor.green * 0.5).round())
+              .withBlue((_themeStore.themeColorfulColor.blue * 0.5).round())
+              .withOpacity(_themeStore.opacityTheme),
+          shape: const RoundedRectangleBorder(
+            side: BorderSide(
+              color: Colors.white12,
+            ),
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(20),
+            ),
+          ),
+          child: _buildDraggableBottomSheetContent(context, scrollController),
+        );
+      },
+    );
+  }
+
+  Column _buildDraggableBottomSheetContent(
       BuildContext context, ScrollController scrollController) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -354,24 +403,6 @@ class _BalancedProfileState extends State<BalancedProfile> {
               ],
             ),
           ),
-          // Expanded(
-          //     child: Container(
-          //   color: Colors.red,
-          // )
-          //     // SingleChildScrollView(
-          //     //   child: ListView.builder(
-          //     //     physics: const NeverScrollableScrollPhysics(),
-          //     //     itemBuilder: (_, int intdex) {
-          //     //       return Container(
-          //     //         height: 100,
-          //     //         width: 100,
-          //     //         color: Colors.red,
-          //     //       );
-          //     //     },
-          //     //     itemCount: 5,
-          //     //   ),
-          //     // ),
-          //     ),
         ],
       ),
     );

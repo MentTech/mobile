@@ -22,6 +22,13 @@ mixin _$UserStore on _UserStore, Store {
           () => super.isSessionLoading,
           name: '_UserStore.isSessionLoading'))
       .value;
+  Computed<bool>? _$isTransactionLoadingComputed;
+
+  @override
+  bool get isTransactionLoading => (_$isTransactionLoadingComputed ??=
+          Computed<bool>(() => super.isTransactionLoading,
+              name: '_UserStore.isTransactionLoading'))
+      .value;
   Computed<int>? _$sizeSessionListComputed;
 
   @override
@@ -29,6 +36,13 @@ mixin _$UserStore on _UserStore, Store {
       (_$sizeSessionListComputed ??= Computed<int>(() => super.sizeSessionList,
               name: '_UserStore.sizeSessionList'))
           .value;
+  Computed<int>? _$sizeTransactionListComputed;
+
+  @override
+  int get sizeTransactionList => (_$sizeTransactionListComputed ??=
+          Computed<int>(() => super.sizeTransactionList,
+              name: '_UserStore.sizeTransactionList'))
+      .value;
 
   late final _$successAtom = Atom(name: '_UserStore.success', context: context);
 
@@ -75,6 +89,23 @@ mixin _$UserStore on _UserStore, Store {
     _$requestSessionFutureAtom.reportWrite(value, super.requestSessionFuture,
         () {
       super.requestSessionFuture = value;
+    });
+  }
+
+  late final _$requestTransactionFutureAtom =
+      Atom(name: '_UserStore.requestTransactionFuture', context: context);
+
+  @override
+  ObservableFuture<Map<String, dynamic>?> get requestTransactionFuture {
+    _$requestTransactionFutureAtom.reportRead();
+    return super.requestTransactionFuture;
+  }
+
+  @override
+  set requestTransactionFuture(ObservableFuture<Map<String, dynamic>?> value) {
+    _$requestTransactionFutureAtom
+        .reportWrite(value, super.requestTransactionFuture, () {
+      super.requestTransactionFuture = value;
     });
   }
 
@@ -141,12 +172,37 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
+  late final _$_transactionContentAtom =
+      Atom(name: '_UserStore._transactionContent', context: context);
+
+  @override
+  TransactionContent? get _transactionContent {
+    _$_transactionContentAtom.reportRead();
+    return super._transactionContent;
+  }
+
+  @override
+  set _transactionContent(TransactionContent? value) {
+    _$_transactionContentAtom.reportWrite(value, super._transactionContent, () {
+      super._transactionContent = value;
+    });
+  }
+
   late final _$fetchUserInforAsyncAction =
       AsyncAction('_UserStore.fetchUserInfor', context: context);
 
   @override
   Future<bool> fetchUserInfor() {
     return _$fetchUserInforAsyncAction.run(() => super.fetchUserInfor());
+  }
+
+  late final _$fetchMyTransactionsAsyncAction =
+      AsyncAction('_UserStore.fetchMyTransactions', context: context);
+
+  @override
+  Future<void> fetchMyTransactions() {
+    return _$fetchMyTransactionsAsyncAction
+        .run(() => super.fetchMyTransactions());
   }
 
   late final _$fetchFavouriteMentorsAsyncAction =
@@ -186,13 +242,16 @@ mixin _$UserStore on _UserStore, Store {
 success: ${success},
 requestFuture: ${requestFuture},
 requestSessionFuture: ${requestSessionFuture},
+requestTransactionFuture: ${requestTransactionFuture},
 user: ${user},
 sessionStatus: ${sessionStatus},
 sessionFetchingData: ${sessionFetchingData},
 sessions: ${sessions},
 isLoading: ${isLoading},
 isSessionLoading: ${isSessionLoading},
-sizeSessionList: ${sizeSessionList}
+isTransactionLoading: ${isTransactionLoading},
+sizeSessionList: ${sizeSessionList},
+sizeTransactionList: ${sizeTransactionList}
     ''';
   }
 }

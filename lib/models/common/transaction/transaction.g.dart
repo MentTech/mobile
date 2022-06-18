@@ -39,3 +39,17 @@ const _$StatusTypeEnumMap = {
   StatusType.FAILED: 'FAILED',
   StatusType.HOLD: 'HOLD',
 };
+
+TransactionContent _$TransactionContentFromJson(Map<String, dynamic> json) =>
+    TransactionContent(
+      balance: json['balance'] as int,
+      transactions: (json['transactions'] as List<dynamic>)
+          .map((e) => Transaction.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$TransactionContentToJson(TransactionContent instance) =>
+    <String, dynamic>{
+      'transactions': instance.transactions,
+      'balance': instance.balance,
+    };

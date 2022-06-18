@@ -8,4 +8,8 @@ extension DateTimeExtension on DateTime {
   String toFulltimeString() {
     return DateFormat("hh:mm:ss, dd/MM/yyyy").format(this);
   }
+
+  String toDateTimeDealString() {
+    return DateFormat("dd/MM/yyyy, hh:mm:ss a").format(this);
+  }
 }
