@@ -76,6 +76,28 @@ class Repository {
     });
   }
 
+  Future<Map<String, dynamic>?> addFavouriteMentor(
+      {required String authToken, required int mentorId}) async {
+    return _menteeAPI
+        .addFavouriteMentor(authToken: authToken, mentorId: mentorId)
+        .catchError((error) {
+      return {
+        "onError": error.toString(),
+      };
+    });
+  }
+
+  Future<Map<String, dynamic>?> removeFavouriteMentor(
+      {required String authToken, required int mentorId}) async {
+    return _menteeAPI
+        .removeFavouriteMentor(authToken: authToken, mentorId: mentorId)
+        .catchError((error) {
+      return {
+        "onError": error.toString(),
+      };
+    });
+  }
+
   Future<Map<String, dynamic>> changePassword({
     required String authToken,
     required Map<String, dynamic> body,
@@ -264,7 +286,7 @@ class Repository {
     });
   }
 
-  // Transaction
+  // Transaction:---------------------------------------------------------------
   Future<Map<String, dynamic>?> fetchTransactions({
     required String authToken,
   }) async {

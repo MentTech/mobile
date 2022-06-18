@@ -70,4 +70,55 @@ class MenteeAPI {
       rethrow;
     }
   }
+
+  Future<Map<String, dynamic>?> addFavouriteMentor(
+      {required String authToken, required int mentorId}) async {
+    try {
+      final res = await _dioClient.post(
+        Endpoints.addNewFavouriteMentor,
+        data: {
+          "mentorId": mentorId,
+        },
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) => true,
+          // headers: headers
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            "Authorization": "Bearer $authToken"
+          },
+        ),
+      );
+
+      return res;
+      // return User.fromJson(res);
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>?> removeFavouriteMentor(
+      {required String authToken, required int mentorId}) async {
+    try {
+      final res = await _dioClient.delete(
+        Endpoints.deleteFavouriteMentor.replaceAll(":mentorId", "$mentorId"),
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) => true,
+          // headers: headers
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            "Authorization": "Bearer $authToken"
+          },
+        ),
+      );
+
+      return res;
+      // return User.fromJson(res);
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
 }

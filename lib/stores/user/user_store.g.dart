@@ -15,6 +15,13 @@ mixin _$UserStore on _UserStore, Store {
   bool get isLoading => (_$isLoadingComputed ??=
           Computed<bool>(() => super.isLoading, name: '_UserStore.isLoading'))
       .value;
+  Computed<bool>? _$isPushingFavMentorDataComputed;
+
+  @override
+  bool get isPushingFavMentorData => (_$isPushingFavMentorDataComputed ??=
+          Computed<bool>(() => super.isPushingFavMentorData,
+              name: '_UserStore.isPushingFavMentorData'))
+      .value;
   Computed<bool>? _$isSessionLoadingComputed;
 
   @override
@@ -72,6 +79,23 @@ mixin _$UserStore on _UserStore, Store {
   set requestFuture(ObservableFuture<Map<String, dynamic>?> value) {
     _$requestFutureAtom.reportWrite(value, super.requestFuture, () {
       super.requestFuture = value;
+    });
+  }
+
+  late final _$requestFavEventFutureAtom =
+      Atom(name: '_UserStore.requestFavEventFuture', context: context);
+
+  @override
+  ObservableFuture<Map<String, dynamic>?> get requestFavEventFuture {
+    _$requestFavEventFutureAtom.reportRead();
+    return super.requestFavEventFuture;
+  }
+
+  @override
+  set requestFavEventFuture(ObservableFuture<Map<String, dynamic>?> value) {
+    _$requestFavEventFutureAtom.reportWrite(value, super.requestFavEventFuture,
+        () {
+      super.requestFavEventFuture = value;
     });
   }
 
@@ -222,6 +246,15 @@ mixin _$UserStore on _UserStore, Store {
     return _$fetchUserSessionsAsyncAction.run(() => super.fetchUserSessions());
   }
 
+  late final _$callUpdateFavMentorAsyncAction =
+      AsyncAction('_UserStore.callUpdateFavMentor', context: context);
+
+  @override
+  Future<bool> callUpdateFavMentor({required int mentorID}) {
+    return _$callUpdateFavMentorAsyncAction
+        .run(() => super.callUpdateFavMentor(mentorID: mentorID));
+  }
+
   late final _$_UserStoreActionController =
       ActionController(name: '_UserStore', context: context);
 
@@ -241,6 +274,7 @@ mixin _$UserStore on _UserStore, Store {
     return '''
 success: ${success},
 requestFuture: ${requestFuture},
+requestFavEventFuture: ${requestFavEventFuture},
 requestSessionFuture: ${requestSessionFuture},
 requestTransactionFuture: ${requestTransactionFuture},
 user: ${user},
@@ -248,6 +282,7 @@ sessionStatus: ${sessionStatus},
 sessionFetchingData: ${sessionFetchingData},
 sessions: ${sessions},
 isLoading: ${isLoading},
+isPushingFavMentorData: ${isPushingFavMentorData},
 isSessionLoading: ${isSessionLoading},
 isTransactionLoading: ${isTransactionLoading},
 sizeSessionList: ${sizeSessionList},

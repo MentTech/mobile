@@ -184,10 +184,21 @@ class _HomePageState extends State<HomePage> {
                   padding: EdgeInsets.zero,
                   scrollDirection: Axis.horizontal,
                   physics: const BouncingScrollPhysics(),
-                  itemBuilder: (context, index) => HomeMentorItem(
-                    mentorModel: _mentorStore.recommendedAt(index),
-                    isShowLiked: false,
-                  ),
+                  itemBuilder: (context, index) {
+                    MentorModel mentorModel = _mentorStore.recommendedAt(index);
+                    return HomeMentorItem(
+                      mentorModel: mentorModel,
+                      onCheckFavMentor: (isLiked) {
+                        if (_userStore.isPushingFavMentorData) {
+                          return Future.value(isLiked);
+                        } else {
+                          _userStore.callUpdateFavMentor(
+                              mentorID: mentorModel.id);
+                          return Future.value(!isLiked);
+                        }
+                      },
+                    );
+                  },
                   itemCount: _mentorStore.recommendedLength,
                 ),
               )
@@ -210,10 +221,21 @@ class _HomePageState extends State<HomePage> {
                   padding: EdgeInsets.zero,
                   scrollDirection: Axis.horizontal,
                   physics: const BouncingScrollPhysics(),
-                  itemBuilder: (context, index) => HomeMentorItem(
-                    mentorModel: _mentorStore.favouriteAt(index),
-                    isShowLiked: true,
-                  ),
+                  itemBuilder: (context, index) {
+                    MentorModel mentorModel = _mentorStore.favouriteAt(index);
+                    return HomeMentorItem(
+                      mentorModel: mentorModel,
+                      onCheckFavMentor: (isLiked) {
+                        if (_userStore.isPushingFavMentorData) {
+                          return Future.value(isLiked);
+                        } else {
+                          _userStore.callUpdateFavMentor(
+                              mentorID: mentorModel.id);
+                          return Future.value(!isLiked);
+                        }
+                      },
+                    );
+                  },
                   itemCount: _mentorStore.favouriteLength,
                 ),
               )
@@ -236,11 +258,12 @@ class HomeMentorItem extends StatelessWidget {
   HomeMentorItem({
     Key? key,
     required this.mentorModel,
-    required this.isShowLiked,
+    required this.onCheckFavMentor,
   }) : super(key: key);
 
   final MentorModel mentorModel;
-  final bool isShowLiked;
+
+  final Future<bool> Function(bool) onCheckFavMentor;
 
   // store:---------------------------------------------------------------------
   final ThemeStore _themeStore = getIt<ThemeStore>();
@@ -297,8 +320,7 @@ class HomeMentorItem extends StatelessWidget {
           );
         },
         onTap: (isLiked) {
-          // fav mentors
-          return Future.value(!isLiked);
+          return onCheckFavMentor(isLiked);
         },
       ),
     );
@@ -392,5 +414,3 @@ class HomeMentorItem extends StatelessWidget {
     );
   }
 }
-
-// wait loading: https://flutter.dev/docs/cookbook/effects/shimmer-loading

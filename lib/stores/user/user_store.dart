@@ -65,6 +65,10 @@ abstract class _UserStore with Store {
   ObservableFuture<Map<String, dynamic>?> requestFuture = emptyLoginResponse;
 
   @observable
+  ObservableFuture<Map<String, dynamic>?> requestFavEventFuture =
+      emptyLoginResponse;
+
+  @observable
   ObservableFuture<Map<String, dynamic>?> requestSessionFuture =
       emptyLoginResponse;
 
@@ -95,6 +99,10 @@ abstract class _UserStore with Store {
 
   @computed
   bool get isLoading => requestFuture.status == FutureStatus.pending;
+
+  @computed
+  bool get isPushingFavMentorData =>
+      requestFavEventFuture.status == FutureStatus.pending;
 
   @computed
   bool get isSessionLoading =>
@@ -177,7 +185,7 @@ abstract class _UserStore with Store {
     }
 
     final future = _repository.fetchTransactions(authToken: accessToken);
-    requestFuture = ObservableFuture(future);
+    requestTransactionFuture = ObservableFuture(future);
 
     future.then((res) {
       try {
@@ -240,6 +248,48 @@ abstract class _UserStore with Store {
     });
 
     return Future.value(false);
+  }
+
+  @action
+  Future<bool> callUpdateFavMentor({required int mentorID}) async {
+    String? accessToken = await _repository.authToken;
+
+    if (null == accessToken) {
+      return Future.value(false);
+    }
+
+    final Future<Map<String, dynamic>?> future;
+    final bool existedMentor;
+    if (favouriteMentorIdList.contains(mentorID)) {
+      existedMentor = true;
+      future = _repository.removeFavouriteMentor(
+          authToken: accessToken, mentorId: mentorID);
+    } else {
+      existedMentor = false;
+      future = _repository.addFavouriteMentor(
+          authToken: accessToken, mentorId: mentorID);
+    }
+
+    requestFavEventFuture = ObservableFuture(future);
+
+    await future.then((res) {
+      try {
+        if (existedMentor) {
+          favouriteMentorIdList.remove(mentorID);
+        } else {
+          favouriteMentorIdList.add(mentorID);
+        }
+
+        success = true;
+        return Future.value(true);
+      } catch (e) {
+        // res['message']
+        success = false;
+        return Future.value(false);
+      }
+    });
+
+    return Future.value(true);
   }
 
   // general methods:-----------------------------------------------------------

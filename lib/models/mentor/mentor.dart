@@ -1,10 +1,10 @@
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mobile/models/common/category/category.dart';
 import 'package:mobile/models/common/degree/degree.dart';
 import 'package:mobile/models/common/experience/experience.dart';
 import 'package:mobile/models/common/program/program.dart';
 import 'package:mobile/models/common/skill/skill.dart';
-import 'package:validators/validators.dart';
 
 part 'mentor.g.dart';
 
@@ -28,28 +28,24 @@ class MentorModelList {
 //:-----------------------------------------------------------------------------
 
 @JsonSerializable()
-class MentorModel {
-  int id;
-  String name;
-  DateTime? birthday;
-  String? avatar;
+class MentorModel extends Equatable {
+  final int id;
+  final String name;
+  final DateTime? birthday;
+  final String? avatar;
   // bool? isPasswordSet;
 
   @JsonKey(name: "User_mentor")
-  UserMentor userMentor;
+  final UserMentor userMentor;
 
-  MentorModel({
+  const MentorModel({
     required this.id,
     required this.name,
     this.birthday,
     this.avatar,
     // required this.isPasswordSet,
     required this.userMentor,
-  }) {
-    if (!isURL(avatar) || avatar == "avatar.png") {
-      avatar = null;
-    }
-  }
+  });
 
   factory MentorModel.fromJson(Map<String, dynamic> json) =>
       _$MentorModelFromJson(json);
@@ -57,6 +53,9 @@ class MentorModel {
   Map<String, dynamic> toJson() => _$MentorModelToJson(this);
 
   int get age => DateTime.now().year - (birthday?.year ?? DateTime.now().year);
+
+  @override
+  List<Object?> get props => [id];
 }
 
 //:-----------------------------------------------------------------------------

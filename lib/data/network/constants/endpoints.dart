@@ -88,8 +88,15 @@ class Endpoints {
   /// Get all sessions which is registered by user
   static const String sessionRegisterProgram = _menteeProxy + "/mysession";
 
-  /// Fetch favourite mentor List: /users/profile
+  /// Fetch favourite mentor List: /mentee/favorite
   static const String fetchFavouriteMentors = _menteeProxy + "/favorite";
+
+  /// Add a favorite mentor to server /mentee/favorite
+  static const String addNewFavouriteMentor = _menteeProxy + "/favorite";
+
+  /// Remove a favorite mentor in server mentee/favorite/:mentorId
+  static const String deleteFavouriteMentor =
+      _menteeProxy + "/favorite/:mentorId";
 
   //:---------------------------------------------------------------------------
 
