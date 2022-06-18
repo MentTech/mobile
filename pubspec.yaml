@@ -77,7 +77,7 @@ dependencies:
   get_it: 
 
   #this lib is for build 'JSON and serialization'
-  json_annotation: 
+  json_annotation: ^4.5.0
 
   # Draw SVG (and some Android VectorDrawable (XML)) files on a Flutter Widget.
   flutter_svg: 

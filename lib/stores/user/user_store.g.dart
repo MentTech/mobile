@@ -15,6 +15,13 @@ mixin _$UserStore on _UserStore, Store {
   bool get isLoading => (_$isLoadingComputed ??=
           Computed<bool>(() => super.isLoading, name: '_UserStore.isLoading'))
       .value;
+  Computed<bool>? _$isSessionLoadingComputed;
+
+  @override
+  bool get isSessionLoading => (_$isSessionLoadingComputed ??= Computed<bool>(
+          () => super.isSessionLoading,
+          name: '_UserStore.isSessionLoading'))
+      .value;
   Computed<int>? _$sizeSessionListComputed;
 
   @override
@@ -51,6 +58,23 @@ mixin _$UserStore on _UserStore, Store {
   set requestFuture(ObservableFuture<Map<String, dynamic>?> value) {
     _$requestFutureAtom.reportWrite(value, super.requestFuture, () {
       super.requestFuture = value;
+    });
+  }
+
+  late final _$requestSessionFutureAtom =
+      Atom(name: '_UserStore.requestSessionFuture', context: context);
+
+  @override
+  ObservableFuture<Map<String, dynamic>?> get requestSessionFuture {
+    _$requestSessionFutureAtom.reportRead();
+    return super.requestSessionFuture;
+  }
+
+  @override
+  set requestSessionFuture(ObservableFuture<Map<String, dynamic>?> value) {
+    _$requestSessionFutureAtom.reportWrite(value, super.requestSessionFuture,
+        () {
+      super.requestSessionFuture = value;
     });
   }
 
@@ -161,11 +185,13 @@ mixin _$UserStore on _UserStore, Store {
     return '''
 success: ${success},
 requestFuture: ${requestFuture},
+requestSessionFuture: ${requestSessionFuture},
 user: ${user},
 sessionStatus: ${sessionStatus},
 sessionFetchingData: ${sessionFetchingData},
 sessions: ${sessions},
 isLoading: ${isLoading},
+isSessionLoading: ${isSessionLoading},
 sizeSessionList: ${sizeSessionList}
     ''';
   }

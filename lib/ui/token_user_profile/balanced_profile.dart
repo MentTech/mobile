@@ -15,7 +15,6 @@ import 'package:mobile/widgets/app_icon_widget.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/glassmorphism_widget_button.dart';
 import 'package:mobile/widgets/item/session_ticket_item.dart';
-import 'package:mobile/widgets/shimmer_loading_effect/listtile_item_shimmer.dart';
 import 'package:provider/provider.dart';
 
 class BalancedProfile extends StatefulWidget {
@@ -95,152 +94,7 @@ class _BalancedProfileState extends State<BalancedProfile> {
                     top: Radius.circular(20),
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 5,
-                      width: 50,
-                      margin: const EdgeInsets.only(
-                        top: Dimens.lightly_medium_vertical_margin,
-                        bottom: Dimens.large_vertical_margin,
-                      ),
-                      decoration: BoxDecoration(
-                        color: _themeStore.reverseThemeColor,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    Observer(
-                      builder: (_) {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            _buildSelectedButton(
-                              iconData: Icons.clear_all,
-                              text: AppLocalizations.of(context)
-                                  .translate("all_translate"),
-                              isSelected:
-                                  _userStore.currentSessionFetchStatus ==
-                                      SessionStatus.all,
-                              ontap: () {
-                                _userStore
-                                    .updateSessionStatus(SessionStatus.all);
-                              },
-                            ),
-                            _buildSelectedButton(
-                              iconData: Icons.pending_actions,
-                              text: AppLocalizations.of(context)
-                                  .translate("waiting_translate"),
-                              isSelected:
-                                  _userStore.currentSessionFetchStatus ==
-                                      SessionStatus.waiting,
-                              ontap: () {
-                                _userStore
-                                    .updateSessionStatus(SessionStatus.waiting);
-                              },
-                            ),
-                            _buildSelectedButton(
-                              iconData: Icons.recommend,
-                              text: AppLocalizations.of(context)
-                                  .translate("confirmed_translate"),
-                              isSelected:
-                                  _userStore.currentSessionFetchStatus ==
-                                      SessionStatus.confirmed,
-                              ontap: () {
-                                _userStore.updateSessionStatus(
-                                    SessionStatus.confirmed);
-                              },
-                            ),
-                            _buildSelectedButton(
-                              iconData: Icons.fact_check,
-                              text: AppLocalizations.of(context)
-                                  .translate("completed_translate"),
-                              isSelected:
-                                  _userStore.currentSessionFetchStatus ==
-                                      SessionStatus.completed,
-                              ontap: () {
-                                _userStore.updateSessionStatus(
-                                    SessionStatus.completed);
-                              },
-                            ),
-                            _buildSelectedButton(
-                              iconData: Icons.disabled_visible,
-                              text: AppLocalizations.of(context)
-                                  .translate("canceled_translate"),
-                              isSelected:
-                                  _userStore.currentSessionFetchStatus ==
-                                      SessionStatus.canceled,
-                              ontap: () {
-                                _userStore.updateSessionStatus(
-                                    SessionStatus.canceled);
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                    Expanded(
-                      child: Observer(
-                        builder: (_) {
-                          if (_userStore.isLoading) {
-                            return ListView.builder(
-                              padding: const EdgeInsets.only(
-                                top: Dimens.large_vertical_padding,
-                                right: Dimens.horizontal_padding,
-                                left: Dimens.horizontal_padding,
-                              ),
-                              controller: scrollController,
-                              itemBuilder: (_, index) =>
-                                  const ListTileItemShimmer(
-                                height: 50,
-                              ),
-                              itemCount: 5,
-                            );
-                          } else {
-                            return ListView.builder(
-                              padding: const EdgeInsets.only(
-                                top: Dimens.large_vertical_padding,
-                                right: Dimens.horizontal_padding,
-                                left: Dimens.horizontal_padding,
-                              ),
-                              controller: scrollController,
-                              itemBuilder: (context, index) {
-                                Session session =
-                                    _userStore.getSessionAt(index);
-                                return Container(
-                                  margin: const EdgeInsets.only(
-                                    bottom: Dimens.medium_vertical_margin,
-                                  ),
-                                  child: SessionTicketItem(
-                                    program: session.program,
-                                    statusColor: decideColorOfSession(session),
-                                    textColor: Colors.white70,
-                                    margin: const EdgeInsets.only(
-                                      top: Dimens.vertical_margin,
-                                    ),
-                                    blur: Properties.blur_glass_morphism,
-                                    opacity: Properties.opacity_glass_morphism,
-                                    callback: () {
-                                      Routes.route(
-                                        context,
-                                        SesstionDetail(
-                                          session: session,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                              itemCount: _userStore.sizeSessionList,
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+                child: _buildDraggableBottomSheet(context, scrollController),
               );
             },
           ),
@@ -249,7 +103,140 @@ class _BalancedProfileState extends State<BalancedProfile> {
     );
   }
 
-  Color decideColorOfSession(Session session) {
+  Column _buildDraggableBottomSheet(
+      BuildContext context, ScrollController scrollController) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Container(
+          height: 5,
+          width: 50,
+          margin: const EdgeInsets.only(
+            top: Dimens.lightly_medium_vertical_margin,
+            bottom: Dimens.large_vertical_margin,
+          ),
+          decoration: BoxDecoration(
+            color: _themeStore.reverseThemeColor,
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+        Observer(
+          builder: (_) {
+            return _buildRowControllButtonOnBottomSheet(context);
+          },
+        ),
+        Expanded(
+          child: Observer(
+            builder: (_) {
+              return ListView.builder(
+                padding: const EdgeInsets.only(
+                  top: Dimens.large_vertical_padding,
+                  right: Dimens.horizontal_padding,
+                  left: Dimens.horizontal_padding,
+                ),
+                controller: scrollController,
+                itemBuilder: (context, index) {
+                  Session? session = _userStore.getSessionAt(index);
+                  return _buildSessionItemInBottomSheet(null, context);
+                },
+                itemCount: 5,
+                // !_userStore.isSessionLoading
+                //     ? _userStore.sizeSessionList
+                //     : 5,
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Container _buildSessionItemInBottomSheet(
+      Session? session, BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(
+        bottom: Dimens.medium_vertical_margin,
+      ),
+      child: SessionTicketItem(
+        program: session?.program,
+        statusColor: decideColorOfSession(session),
+        textColor: Colors.white70,
+        margin: const EdgeInsets.only(
+          top: Dimens.vertical_margin,
+        ),
+        blur: Properties.blur_glass_morphism,
+        opacity: Properties.opacity_glass_morphism,
+        callbackIfProgramNotNull: () {
+          Routes.route(
+            context,
+            SesstionDetail(
+              session: session!,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Row _buildRowControllButtonOnBottomSheet(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        _buildSelectedButton(
+          iconData: Icons.clear_all,
+          text: AppLocalizations.of(context).translate("all_translate"),
+          isSelected: _userStore.currentSessionFetchStatus == SessionStatus.all,
+          ontap: () {
+            _userStore.updateSessionStatus(SessionStatus.all);
+          },
+        ),
+        _buildSelectedButton(
+          iconData: Icons.pending_actions,
+          text: AppLocalizations.of(context).translate("waiting_translate"),
+          isSelected:
+              _userStore.currentSessionFetchStatus == SessionStatus.waiting,
+          ontap: () {
+            _userStore.updateSessionStatus(SessionStatus.waiting);
+          },
+        ),
+        _buildSelectedButton(
+          iconData: Icons.recommend,
+          text: AppLocalizations.of(context).translate("confirmed_translate"),
+          isSelected:
+              _userStore.currentSessionFetchStatus == SessionStatus.confirmed,
+          ontap: () {
+            _userStore.updateSessionStatus(SessionStatus.confirmed);
+          },
+        ),
+        _buildSelectedButton(
+          iconData: Icons.fact_check,
+          text: AppLocalizations.of(context).translate("completed_translate"),
+          isSelected:
+              _userStore.currentSessionFetchStatus == SessionStatus.completed,
+          ontap: () {
+            _userStore.updateSessionStatus(SessionStatus.completed);
+          },
+        ),
+        _buildSelectedButton(
+          iconData: Icons.disabled_visible,
+          text: AppLocalizations.of(context).translate("canceled_translate"),
+          isSelected:
+              _userStore.currentSessionFetchStatus == SessionStatus.canceled,
+          ontap: () {
+            _userStore.updateSessionStatus(SessionStatus.canceled);
+          },
+        ),
+      ],
+    );
+  }
+
+  Color decideColorOfSession(Session? session) {
+    if (null == session) {
+      return Colors.white;
+    }
+
     SessionStatus sessionStatus =
         SessionFetchingData.parseSessionStatus(session);
 
@@ -275,6 +262,7 @@ class _BalancedProfileState extends State<BalancedProfile> {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -325,27 +313,63 @@ class _BalancedProfileState extends State<BalancedProfile> {
               ),
             ],
           ),
-          const Padding(
-            padding: EdgeInsets.only(
+          Padding(
+            padding: const EdgeInsets.only(
               bottom: Dimens.large_vertical_margin,
               top: Dimens.extra_large_vertical_margin,
             ),
-            child: Text(
-              "Your balance",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: Dimens.lightly_medium_text,
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  AppLocalizations.of(context)
+                      .translate("your_balance_translate"),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: Dimens.lightly_medium_text,
+                  ),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.token_rounded,
+                      size: Dimens.large_text,
+                    ),
+                    const SizedBox(
+                      width: Dimens.horizontal_margin,
+                    ),
+                    Text(
+                      _userStore.user!.coin.toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: Dimens.large_text,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-          const Text(
-            "\$5000",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: Dimens.ultra_large_text,
-            ),
-          ),
-          // statices
+          // Expanded(
+          //     child: Container(
+          //   color: Colors.red,
+          // )
+          //     // SingleChildScrollView(
+          //     //   child: ListView.builder(
+          //     //     physics: const NeverScrollableScrollPhysics(),
+          //     //     itemBuilder: (_, int intdex) {
+          //     //       return Container(
+          //     //         height: 100,
+          //     //         width: 100,
+          //     //         color: Colors.red,
+          //     //       );
+          //     //     },
+          //     //     itemCount: 5,
+          //     //   ),
+          //     // ),
+          //     ),
         ],
       ),
     );
@@ -357,8 +381,12 @@ class _BalancedProfileState extends State<BalancedProfile> {
     required VoidCallback ontap,
     required bool isSelected,
   }) {
-    final Color statusColor =
-        isSelected ? _themeStore.themeColorfulColor : Colors.white70;
+    final Color statusColor = isSelected
+        ? _themeStore.reverseThemeColorfulColor
+        : Color.alphaBlend(
+            _themeStore.reverseThemeColor.withOpacity(0.7),
+            Colors.white70,
+          );
 
     return SizedBox(
       height: DeviceUtils.getScaledWidth(context, 0.16),

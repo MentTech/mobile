@@ -146,7 +146,7 @@ class _MentorProfileState extends State<MentorProfile> {
                   margin: const EdgeInsets.only(
                     top: Dimens.vertical_margin,
                   ),
-                  callback: () {
+                  callbackIfProgramNotNull: () {
                     _mentorStore.fetchProgramOfMentor(program.id).then((_) {
                       Routes.navigatorSupporter(
                           context, Routes.programRegister);

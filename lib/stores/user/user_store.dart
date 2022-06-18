@@ -64,6 +64,10 @@ abstract class _UserStore with Store {
   ObservableFuture<Map<String, dynamic>?> requestFuture = emptyLoginResponse;
 
   @observable
+  ObservableFuture<Map<String, dynamic>?> requestSessionFuture =
+      emptyLoginResponse;
+
+  @observable
   UserModel? user;
 
   @observable
@@ -85,11 +89,20 @@ abstract class _UserStore with Store {
   bool get isLoading => requestFuture.status == FutureStatus.pending;
 
   @computed
+  bool get isSessionLoading =>
+      requestSessionFuture.status == FutureStatus.pending;
+
+  @computed
   int get sizeSessionList => sessions.length;
 
   SessionStatus get currentSessionFetchStatus => sessionStatus;
 
-  Session getSessionAt(int index) => sessions.elementAt(index);
+  Session? getSessionAt(int index) {
+    if (index < sessions.length) {
+      return sessions.elementAt(index);
+    }
+    return null;
+  }
 
   int getFavIdAt(int index) => favouriteMentorIdList.elementAt(index);
 
@@ -165,7 +178,7 @@ abstract class _UserStore with Store {
       authToken: accessToken,
       // parameters: sessionFetchingData.toMapJson(),
     );
-    requestFuture = ObservableFuture(future);
+    requestSessionFuture = ObservableFuture(future);
 
     await future.then((res) {
       try {

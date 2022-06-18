@@ -141,6 +141,9 @@ abstract class _ThemeStore with Store {
   Color get dark => Colors.black87;
   Color get light => Colors.white70;
 
+  Color get darkColorful => AppColors.darkTextTheme;
+  Color get lightColorful => AppColors.lightTextTheme;
+
   Future init() async {
     _darkMode = _repository.isDarkMode;
   }

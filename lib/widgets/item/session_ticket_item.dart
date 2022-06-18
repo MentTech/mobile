@@ -7,12 +7,13 @@ import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/glassmorphism_widget_button.dart';
 import 'package:mobile/widgets/star_widget/start_rate_widget.dart';
 import 'package:readmore/readmore.dart';
+import 'package:shimmer/shimmer.dart';
 
 class SessionTicketItem extends StatelessWidget {
   SessionTicketItem({
     Key? key,
     required this.program,
-    this.callback,
+    this.callbackIfProgramNotNull,
     this.textColor,
     this.statusColor,
     this.padding = EdgeInsets.zero,
@@ -21,7 +22,7 @@ class SessionTicketItem extends StatelessWidget {
     this.opacity = Properties.opacity_glass_morphism,
   }) : super(key: key);
 
-  final Program program;
+  final Program? program;
 
   final double blur;
   final double opacity;
@@ -32,12 +33,32 @@ class SessionTicketItem extends StatelessWidget {
   final EdgeInsets padding;
   final EdgeInsets margin;
 
-  final VoidCallback? callback;
+  final VoidCallback? callbackIfProgramNotNull;
 
   final ThemeStore _themeStore = getIt<ThemeStore>();
 
   @override
   Widget build(BuildContext context) {
+    if (null != program) {
+      return _buildAvailableItem(program!);
+    }
+
+    return _buildShimmerSessionTicketItem();
+  }
+
+  Widget _buildShimmerSessionTicketItem() {
+    return Shimmer.fromColors(
+      child: Container(
+        height: 100,
+        width: double.infinity,
+        color: Colors.grey,
+      ),
+      baseColor: _themeStore.light,
+      highlightColor: _themeStore.themeColorfulColor,
+    );
+  }
+
+  Container _buildAvailableItem(Program program) {
     return Container(
       margin: margin,
       child: GlassmorphismWidgetButton(
@@ -45,7 +66,7 @@ class SessionTicketItem extends StatelessWidget {
         background: statusColor ?? Colors.white,
         padding: padding,
         onTap: () {
-          callback?.call();
+          callbackIfProgramNotNull?.call();
         },
         child: ListTile(
           title: Column(
