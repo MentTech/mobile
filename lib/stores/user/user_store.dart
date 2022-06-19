@@ -201,7 +201,7 @@ abstract class _UserStore with Store {
   }
 
   @action
-  Future<void> fetchFavouriteMentors() async {
+  Future<void> fetchFavouriteMentors({VoidCallback? callback}) async {
     String? accessToken = await _repository.authToken;
 
     if (null == accessToken) {
@@ -212,6 +212,8 @@ abstract class _UserStore with Store {
 
     await future.then((res) {
       favouriteMentorIdList.addAll(res!["ids"]!.cast<int>());
+
+      callback?.call();
       try {
         success = true;
       } catch (e) {

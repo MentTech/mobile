@@ -39,7 +39,6 @@ Map<String, dynamic> _$MentorModelToJson(MentorModel instance) =>
     };
 
 UserMentor _$UserMentorFromJson(Map<String, dynamic> json) => UserMentor(
-      linkedin: json['linkedin'] as String?,
       introduction: json['introduction'] as String?,
       rating: (json['rating'] as num?)?.toDouble(),
       programs: (json['programs'] as List<dynamic>?)
@@ -62,7 +61,6 @@ UserMentor _$UserMentorFromJson(Map<String, dynamic> json) => UserMentor(
 
 Map<String, dynamic> _$UserMentorToJson(UserMentor instance) =>
     <String, dynamic>{
-      'linkedin': instance.linkedin,
       'introduction': instance.introduction,
       'rating': instance.rating,
       'programs': instance.programs,

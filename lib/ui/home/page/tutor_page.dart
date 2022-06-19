@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
@@ -602,24 +601,24 @@ class ShortImformationItem extends StatelessWidget {
                 trimLength: 50,
               ),
             ),
-            mentorModel.userMentor.linkedin != null
-                ? Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: Dimens.small_vertical_padding,
-                            horizontal: Dimens.small_horizontal_padding),
-                        constraints: const BoxConstraints(),
-                        icon: FaIcon(
-                          FontAwesomeIcons.linkedinIn,
-                          color: _themeStore.reverseThemeColor,
-                          size: Dimens.small_text,
-                        ),
-                        onPressed: () {
-                          // log(mentorModel.userMentor.linkedin ?? "No Linkedin");
-                        }),
-                  )
-                : const SizedBox(),
+            // mentorModel.userMentor.linkedin != null
+            //     ? Align(
+            //         alignment: Alignment.centerRight,
+            //         child: IconButton(
+            //             padding: const EdgeInsets.symmetric(
+            //                 vertical: Dimens.small_vertical_padding,
+            //                 horizontal: Dimens.small_horizontal_padding),
+            //             constraints: const BoxConstraints(),
+            //             icon: FaIcon(
+            //               FontAwesomeIcons.linkedinIn,
+            //               color: _themeStore.reverseThemeColor,
+            //               size: Dimens.small_text,
+            //             ),
+            //             onPressed: () {
+            //               // log(mentorModel.userMentor.linkedin ?? "No Linkedin");
+            //             }),
+            //       )
+            //     : const SizedBox(),
           ],
         ),
       ),

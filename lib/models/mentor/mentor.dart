@@ -62,7 +62,7 @@ class MentorModel extends Equatable {
 
 @JsonSerializable()
 class UserMentor {
-  String? linkedin;
+  // String? linkedin;
   String? introduction;
   double? rating;
   List<Program>? programs;
@@ -72,7 +72,7 @@ class UserMentor {
   List<Experience> experiences;
 
   UserMentor({
-    required this.linkedin,
+    // required this.linkedin,
     required this.introduction,
     required this.rating,
     required this.programs,

@@ -69,7 +69,7 @@ class MentorAPI {
       final res = await _dioClient.get(
         Endpoints.fetchMultipleMentors,
         queryParameters: {
-          "ids": ids.join("&ids="),
+          "ids": ids,
         },
         options: Options(
           followRedirects: false,

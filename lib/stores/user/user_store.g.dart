@@ -233,9 +233,9 @@ mixin _$UserStore on _UserStore, Store {
       AsyncAction('_UserStore.fetchFavouriteMentors', context: context);
 
   @override
-  Future<void> fetchFavouriteMentors() {
+  Future<void> fetchFavouriteMentors({VoidCallback? callback}) {
     return _$fetchFavouriteMentorsAsyncAction
-        .run(() => super.fetchFavouriteMentors());
+        .run(() => super.fetchFavouriteMentors(callback: callback));
   }
 
   late final _$fetchUserSessionsAsyncAction =

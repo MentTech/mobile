@@ -42,11 +42,11 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     _mentorStore = Provider.of<MentorStore>(context, listen: false);
-    _mentorStore.fetchRecommendMentors();
 
     _userStore = Provider.of<UserStore>(context, listen: false);
-    _userStore.fetchFavouriteMentors().then((_) {
+    _userStore.fetchFavouriteMentors(callback: () {
       _mentorStore.fetchFavouriteMentors(_userStore.favouriteMentorIdList);
+      _mentorStore.fetchRecommendMentors();
     });
 
     // build lazy loading in future
