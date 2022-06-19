@@ -1,18 +1,19 @@
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mobile/models/common/program/program.dart';
 
 part 'session.g.dart';
 
 @JsonSerializable()
-class Session {
-  int id;
-  bool isAccepted;
-  bool done;
-  bool isCanceled;
-  DateTime? expectedDate;
-  Program program;
+class Session extends Equatable {
+  final int id;
+  final bool isAccepted;
+  final bool done;
+  final bool isCanceled;
+  final DateTime? expectedDate;
+  final Program program;
 
-  Session({
+  const Session({
     required this.id,
     required this.isAccepted,
     required this.isCanceled,
@@ -25,4 +26,7 @@ class Session {
       _$SessionFromJson(json);
 
   Map<String, dynamic> toJson() => _$SessionToJson(this);
+
+  @override
+  List<Object?> get props => [id];
 }

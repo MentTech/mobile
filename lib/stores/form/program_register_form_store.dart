@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
 
@@ -74,7 +72,6 @@ abstract class _ProgramRegisterFormStore with Store {
   // actions:-------------------------------------------------------------------
   @action
   void setName(String value) {
-    log("message name" + name);
     name = value;
   }
 

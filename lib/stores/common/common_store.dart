@@ -175,6 +175,7 @@ abstract class _CommonStore with Store {
     }
 
     final future = _repository.registerProgram(
+      authToken: accessToken,
       mentorID: mentorID,
       programID: programID,
       body: body,

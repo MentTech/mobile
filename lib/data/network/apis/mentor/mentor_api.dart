@@ -166,13 +166,14 @@ class MentorAPI {
   }
 
   Future<Map<String, dynamic>?> registerProgram({
+    required String authToken,
     required int mentorID,
     required int programID,
     required Map<String, dynamic> body,
   }) async {
     try {
       final res = await _dioClient.post(
-        Endpoints.fetchProgramInfor
+        Endpoints.registerProgram
             .replaceAll(":mentorId", "$mentorID")
             .replaceAll(":id", "$programID"),
         data: body,
@@ -180,10 +181,10 @@ class MentorAPI {
           followRedirects: false,
           validateStatus: (status) => true,
           // headers: headers
-          // headers: {
-          //   'Content-Type': 'application/json; charset=utf-8',
-          //   "Authorization": "Bearer $authToken"
-          // },
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            "Authorization": "Bearer $authToken"
+          },
         ),
       );
 
@@ -206,7 +207,7 @@ class MentorAPI {
         Endpoints.unregisterProgram
             .replaceAll(":mentorId", "$mentorID")
             .replaceAll(":programId", "$programID")
-            .replaceAll("sessionId", "$sessionID"),
+            .replaceAll(":sessionId", "$sessionID"),
         options: Options(
           followRedirects: false,
           validateStatus: (status) => true,
@@ -237,7 +238,7 @@ class MentorAPI {
         Endpoints.markAsDoneSessionProgram
             .replaceAll(":mentorId", "$mentorID")
             .replaceAll(":programId", "$programID")
-            .replaceAll("sessionId", "$sessionID"),
+            .replaceAll(":sessionId", "$sessionID"),
         options: Options(
           followRedirects: false,
           validateStatus: (status) => true,
@@ -270,7 +271,7 @@ class MentorAPI {
         Endpoints.reviewSessionProgram
             .replaceAll(":mentorId", "$mentorID")
             .replaceAll(":programId", "$programID")
-            .replaceAll("sessionId", "$sessionID"),
+            .replaceAll(":sessionId", "$sessionID"),
         data: {
           "rating": rate,
           "comment": comment,

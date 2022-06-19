@@ -189,7 +189,12 @@ abstract class _UserStore with Store {
 
     future.then((res) {
       try {
-        _transactionContent = TransactionContent.fromJson(res!);
+        TransactionContent transactionContent =
+            TransactionContent.fromJson(res!);
+        _transactionContent = TransactionContent(
+            balance: transactionContent.balance,
+            transactions: transactionContent.transactions.reversed.toList());
+
         success = true;
         return Future.value(true);
       } catch (e) {
@@ -239,7 +244,7 @@ abstract class _UserStore with Store {
     await future.then((res) {
       try {
         originSessions = Sessions.fromJson(res!).sessions;
-        sessions = ObservableList.of(originSessions);
+        sessions = ObservableList.of(originSessions.reversed.toList());
         success = true;
         return Future.value(true);
       } catch (e) {

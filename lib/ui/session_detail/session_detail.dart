@@ -62,16 +62,8 @@ class _SesstionDetailState extends State<SesstionDetail> {
       body: Stack(
         children: [
           LinearGradientBackground(
-            colors: [
-              _themeStore.themeColor,
-              Colors.black
-                  .withGreen((_themeStore.themeColor.green * 0.7).round())
-                  .withBlue((_themeStore.themeColor.blue * 0.7).round()),
-              Colors.black
-                  .withGreen((_themeStore.themeColor.green * 0.35).round())
-                  .withBlue((_themeStore.themeColor.blue * 0.35).round()),
-            ],
-            stops: const [0, 0.35, 0.7],
+            colors: _themeStore.lineToLineGradientColors,
+            stops: null,
           ),
           SafeArea(
             child: Padding(
@@ -84,6 +76,10 @@ class _SesstionDetailState extends State<SesstionDetail> {
                   Expanded(
                     child: Observer(
                       builder: (context) {
+                        if (!_mentorStore.hasMentor) {
+                          _mentorStore
+                              .fetchAMentor(widget.session.program.mentorId);
+                        }
                         return ProgramDetailContainer(
                           programDetail: widget.session.program,
                           mentorModel: _mentorStore.getMentor,

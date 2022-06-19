@@ -333,35 +333,35 @@ class _BalancedProfileState extends State<BalancedProfile> {
                   )
                 ],
               ),
-              Stack(
-                children: [
-                  const Icon(
-                    Icons.notifications_active_outlined,
-                    color: Colors.white,
-                    size: Dimens.extra_large_text,
-                  ),
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius:
-                            BorderRadius.circular(Dimens.kBorderRadiusValue),
-                      ),
-                      padding: const EdgeInsets.all(1.5),
-                      child: const Text(
-                        "13+",
-                        style: TextStyle(
-                          fontSize: Dimens.more_small_text,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              // Stack(
+              //   children: [
+              //     const Icon(
+              //       Icons.notifications_active_outlined,
+              //       color: Colors.white,
+              //       size: Dimens.extra_large_text,
+              //     ),
+              //     Positioned(
+              //       right: 0,
+              //       top: 0,
+              //       child: Container(
+              //         decoration: BoxDecoration(
+              //           color: Colors.red,
+              //           borderRadius:
+              //               BorderRadius.circular(Dimens.kBorderRadiusValue),
+              //         ),
+              //         padding: const EdgeInsets.all(1.5),
+              //         child: const Text(
+              //           "13+",
+              //           style: TextStyle(
+              //             fontSize: Dimens.more_small_text,
+              //             color: Colors.white,
+              //             fontWeight: FontWeight.bold,
+              //           ),
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
             ],
           ),
           Padding(

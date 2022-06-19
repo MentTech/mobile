@@ -187,12 +187,14 @@ class Repository {
   }
 
   Future<Map<String, dynamic>?> registerProgram({
+    required String authToken,
     required int mentorID,
     required int programID,
     required Map<String, dynamic> body,
   }) async {
     return _mentorAPI
         .registerProgram(
+      authToken: authToken,
       mentorID: mentorID,
       programID: programID,
       body: body,

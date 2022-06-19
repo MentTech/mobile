@@ -20,6 +20,7 @@ import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:readmore/readmore.dart';
 import 'package:mobile/utils/extension/datetime_extension.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ProgramDetailContainer extends StatefulWidget {
   const ProgramDetailContainer({
@@ -67,22 +68,15 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
             children: [
               Expanded(
                 flex: 3,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.programDetail.title +
-                          "\n${AppLocalizations.of(context).translate('with_translate')} " +
-                          (widget.mentorModel?.name ?? ""),
-                      style: const TextStyle(
-                        fontSize: Dimens.large_text,
-                        color: Colors.white,
-                        height: 1.5,
-                      ),
-                    )
-                  ],
+                child: Text(
+                  widget.programDetail.title +
+                      "\n${AppLocalizations.of(context).translate('with_translate')} " +
+                      (widget.mentorModel?.name ?? ""),
+                  style: const TextStyle(
+                    fontSize: Dimens.large_text,
+                    color: Colors.white,
+                    height: 1.5,
+                  ),
                 ),
               ),
               Expanded(
@@ -125,13 +119,26 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
                 const SizedBox(
                   width: Dimens.vertical_margin,
                 ),
-                Text(
-                  widget.mentorModel?.userMentor.category.name ?? "",
-                  style: const TextStyle(
-                    fontSize: Dimens.lightly_medium_text,
-                    color: Colors.white70,
-                  ),
-                ),
+                widget.mentorModel != null
+                    ? Text(
+                        widget.mentorModel?.userMentor.category.name ?? "",
+                        style: const TextStyle(
+                          fontSize: Dimens.lightly_medium_text,
+                          color: Colors.white70,
+                        ),
+                      )
+                    : _ShimmerSection(
+                        child: Container(
+                          height: Dimens.medium_text,
+                          width: 100,
+                          margin: const EdgeInsets.symmetric(
+                              vertical: Dimens.vertical_margin),
+                          decoration: BoxDecoration(
+                            color: Colors.black54,
+                            borderRadius: Dimens.kMaxBorderRadius,
+                          ),
+                        ),
+                      ),
               ],
             ),
           ),
@@ -212,7 +219,8 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
                     header: ApplicationUtils.fetchHeaderStatus(context),
                     footer: ApplicationUtils.fetchFooterStatus(),
                     onRefresh: () async {
-                      if (_commonStore.prevProgramRatePage()) {
+                      if (widget.mentorModel != null &&
+                          _commonStore.prevProgramRatePage()) {
                         _commonStore.callback =
                             () => _refreshController.refreshCompleted();
 
@@ -234,7 +242,8 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
                       }
                     },
                     onLoading: () async {
-                      if (_commonStore.nextProgramRatePage()) {
+                      if (widget.mentorModel != null &&
+                          _commonStore.nextProgramRatePage()) {
                         await _commonStore
                             .fetchProgramRateList(
                                 widget.mentorModel!.id, widget.programDetail.id)
@@ -269,6 +278,17 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
           ),
         ],
       ),
+    );
+  }
+
+  // ignore: non_constant_identifier_names
+  Widget _ShimmerSection({required Widget child}) {
+    return Shimmer.fromColors(
+      child: child,
+      baseColor: _themeStore.light.withOpacity(0.5),
+      highlightColor: _themeStore.themeColorfulColorShimmer,
+      direction: ShimmerDirection.ltr,
+      period: const Duration(milliseconds: 3000),
     );
   }
 }
