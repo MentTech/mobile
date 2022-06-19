@@ -15,6 +15,20 @@ mixin _$CommonStore on _CommonStore, Store {
   bool get isLoading => (_$isLoadingComputed ??=
           Computed<bool>(() => super.isLoading, name: '_CommonStore.isLoading'))
       .value;
+  Computed<bool>? _$isRegisteringComputed;
+
+  @override
+  bool get isRegistering =>
+      (_$isRegisteringComputed ??= Computed<bool>(() => super.isRegistering,
+              name: '_CommonStore.isRegistering'))
+          .value;
+  Computed<bool>? _$isRegisteringDoneComputed;
+
+  @override
+  bool get isRegisteringDone => (_$isRegisteringDoneComputed ??= Computed<bool>(
+          () => super.isRegisteringDone,
+          name: '_CommonStore.isRegisteringDone'))
+      .value;
   Computed<int>? _$programLengthListComputed;
 
   @override
@@ -59,6 +73,24 @@ mixin _$CommonStore on _CommonStore, Store {
   set requestFuture(ObservableFuture<Map<String, dynamic>?> value) {
     _$requestFutureAtom.reportWrite(value, super.requestFuture, () {
       super.requestFuture = value;
+    });
+  }
+
+  late final _$requestRegisterSessionFutureAtom =
+      Atom(name: '_CommonStore.requestRegisterSessionFuture', context: context);
+
+  @override
+  ObservableFuture<Map<String, dynamic>?> get requestRegisterSessionFuture {
+    _$requestRegisterSessionFutureAtom.reportRead();
+    return super.requestRegisterSessionFuture;
+  }
+
+  @override
+  set requestRegisterSessionFuture(
+      ObservableFuture<Map<String, dynamic>?> value) {
+    _$requestRegisterSessionFutureAtom
+        .reportWrite(value, super.requestRegisterSessionFuture, () {
+      super.requestRegisterSessionFuture = value;
     });
   }
 
@@ -184,9 +216,12 @@ mixin _$CommonStore on _CommonStore, Store {
     return '''
 success: ${success},
 requestFuture: ${requestFuture},
+requestRegisterSessionFuture: ${requestRegisterSessionFuture},
 rateModels: ${rateModels},
 session: ${session},
 isLoading: ${isLoading},
+isRegistering: ${isRegistering},
+isRegisteringDone: ${isRegisteringDone},
 programLengthList: ${programLengthList},
 sessionObserver: ${sessionObserver}
     ''';

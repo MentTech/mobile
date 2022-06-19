@@ -147,3 +147,8 @@ class CircleListItem extends StatelessWidget {
     );
   }
 }
+
+Future<Map<String, dynamic>> longRequest() async {
+  await Future.delayed(const Duration(seconds: 2));
+  return Future.value({});
+}

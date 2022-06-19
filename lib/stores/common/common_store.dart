@@ -38,6 +38,10 @@ abstract class _CommonStore with Store {
           }
         }
       }),
+      reaction((_) => requestRegisterSessionFuture.status,
+          (FutureStatus status) {
+        if (status == FutureStatus.fulfilled) {}
+      }),
     ];
   }
 
@@ -58,6 +62,10 @@ abstract class _CommonStore with Store {
   ObservableFuture<Map<String, dynamic>?> requestFuture = emptyResponse;
 
   @observable
+  ObservableFuture<Map<String, dynamic>?> requestRegisterSessionFuture =
+      emptyResponse;
+
+  @observable
   ObservableList<RateModel> rateModels = ObservableList<RateModel>();
 
   @observable
@@ -66,6 +74,14 @@ abstract class _CommonStore with Store {
   // computed:------------------------------------------------------------------
   @computed
   bool get isLoading => requestFuture.status == FutureStatus.pending;
+
+  @computed
+  bool get isRegistering =>
+      requestRegisterSessionFuture.status == FutureStatus.pending;
+
+  @computed
+  bool get isRegisteringDone =>
+      (requestRegisterSessionFuture.status == FutureStatus.fulfilled);
 
   @computed
   int get programLengthList => rateModels.length;
@@ -163,7 +179,7 @@ abstract class _CommonStore with Store {
       programID: programID,
       body: body,
     );
-    requestFuture = ObservableFuture(future);
+    requestRegisterSessionFuture = ObservableFuture(future);
 
     future.then((res) {
       try {
@@ -205,7 +221,7 @@ abstract class _CommonStore with Store {
       sessionID: session!.id,
       authToken: accessToken,
     );
-    requestFuture = ObservableFuture(future);
+    requestRegisterSessionFuture = ObservableFuture(future);
 
     future.then(
       (res) {

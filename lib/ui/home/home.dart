@@ -195,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
 //   //   return Observer(
 //   //     builder: (context) {
 //   //       return _postStore.loading
-//   //           ? const CustomProgressIndicatorWidget()
+//   //           ? CustomProgressIndicatorWidget()
 //   //           : Material(child: _buildListView());
 //   //     },
 //   //   );

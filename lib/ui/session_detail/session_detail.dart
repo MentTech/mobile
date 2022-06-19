@@ -7,7 +7,7 @@ import 'package:mobile/models/common/session/session.dart';
 import 'package:mobile/stores/common/common_store.dart';
 import 'package:mobile/stores/mentor/mentor_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
-import 'package:mobile/ui/program_register/program_detail.dart';
+import 'package:mobile/ui/session_detail/program_detail.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
 import 'package:mobile/widgets/dialog_showing/slider_dialog.dart';
@@ -103,7 +103,7 @@ class _SesstionDetailState extends State<SesstionDetail> {
             builder: (context) {
               return Visibility(
                 visible: _commonStore.isLoading,
-                child: const CustomProgressIndicatorWidget(),
+                child: CustomProgressIndicatorWidget(),
               );
             },
           )

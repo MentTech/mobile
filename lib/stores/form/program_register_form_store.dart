@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:mobile/stores/common/common_store.dart';
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
 
@@ -16,10 +15,7 @@ abstract class _ProgramRegisterFormStore with Store {
   // store for handling error messages
   final MessageStore messageStore = MessageStore();
 
-  // store for handling authenticators
-  final CommonStore commonStore; // = getIt<CommonStore>();
-
-  _ProgramRegisterFormStore(this.commonStore) {
+  _ProgramRegisterFormStore() {
     _setupValidations();
   }
 
@@ -38,6 +34,9 @@ abstract class _ProgramRegisterFormStore with Store {
   }
 
   // store variables:-----------------------------------------------------------
+  @observable
+  bool onPage = false;
+
   @observable
   String name = '';
 
@@ -75,6 +74,7 @@ abstract class _ProgramRegisterFormStore with Store {
   // actions:-------------------------------------------------------------------
   @action
   void setName(String value) {
+    log("message name" + name);
     name = value;
   }
 
@@ -159,46 +159,28 @@ abstract class _ProgramRegisterFormStore with Store {
     }
   }
 
-  @action
-  Future registerProgram({
-    required int mentorID,
-    required int programID,
-  }) async {
-    loading = true;
-
-    commonStore.registerProgramOfMentor(
-      mentorID: mentorID,
-      programID: programID,
-      body: {
-        "name": name,
-        "email": email,
-        "description": description,
-        "note": note,
-        "expectation": expectation,
-        "goal": goal,
-      },
-    ).then((future) {
-      loading = false;
-
-      if (future != null) {
-        messageStore.errorMessage = "You should to check your connection";
-        success = false;
-      } else {
-        messageStore.successMessage =
-            "You have register this program successfully";
-        success = true;
-      }
-    }).catchError((e) {
-      loading = false;
-      success = false;
-      messageStore.errorMessage = e.toString().contains("ERROR_USER_NOT_FOUND")
-          ? "Username and password doesn't match"
-          : "Something went wrong, please check your internet connection and try again";
-      log(e.toString());
-    });
+  // general methods:-----------------------------------------------------------
+  Map<String, String> toRequestJson() {
+    return {
+      "name": name,
+      "email": email,
+      "description": description,
+      "note": note,
+      "expectation": expectation,
+      "goal": goal,
+    };
   }
 
-  // general methods:-----------------------------------------------------------
+  RegisterInformation toRegisterInforObject() {
+    return RegisterInformation(
+        name: name,
+        email: email,
+        description: description,
+        note: note,
+        expectation: expectation,
+        goal: goal);
+  }
+
   void dispose() {
     for (final d in _disposers) {
       d();
@@ -248,4 +230,27 @@ abstract class _ProgramRegisterErrorForm with Store {
       note != null ||
       expectation != null ||
       goal != null;
+}
+
+class RegisterInformation {
+  final String name;
+
+  final String email;
+
+  final String description;
+
+  final String note;
+
+  final String expectation;
+
+  final String goal;
+
+  const RegisterInformation({
+    required this.name,
+    required this.email,
+    required this.description,
+    required this.note,
+    required this.expectation,
+    required this.goal,
+  });
 }

@@ -17,6 +17,22 @@ mixin _$ProgramRegisterFormStore on _ProgramRegisterFormStore, Store {
               name: '_ProgramRegisterFormStore.canRegisterProgram'))
       .value;
 
+  late final _$onPageAtom =
+      Atom(name: '_ProgramRegisterFormStore.onPage', context: context);
+
+  @override
+  bool get onPage {
+    _$onPageAtom.reportRead();
+    return super.onPage;
+  }
+
+  @override
+  set onPage(bool value) {
+    _$onPageAtom.reportWrite(value, super.onPage, () {
+      super.onPage = value;
+    });
+  }
+
   late final _$nameAtom =
       Atom(name: '_ProgramRegisterFormStore.name', context: context);
 
@@ -143,17 +159,6 @@ mixin _$ProgramRegisterFormStore on _ProgramRegisterFormStore, Store {
     _$loadingAtom.reportWrite(value, super.loading, () {
       super.loading = value;
     });
-  }
-
-  late final _$registerProgramAsyncAction = AsyncAction(
-      '_ProgramRegisterFormStore.registerProgram',
-      context: context);
-
-  @override
-  Future<dynamic> registerProgram(
-      {required int mentorID, required int programID}) {
-    return _$registerProgramAsyncAction.run(
-        () => super.registerProgram(mentorID: mentorID, programID: programID));
   }
 
   late final _$_ProgramRegisterFormStoreActionController =
@@ -294,6 +299,7 @@ mixin _$ProgramRegisterFormStore on _ProgramRegisterFormStore, Store {
   @override
   String toString() {
     return '''
+onPage: ${onPage},
 name: ${name},
 email: ${email},
 description: ${description},

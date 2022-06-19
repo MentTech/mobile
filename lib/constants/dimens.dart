@@ -69,7 +69,7 @@ class Dimens {
   static const double more_small_text = 12;
 
   /// return size 15
-  static const double small_text = 15;
+  static const double small_text = 16;
 
   /// return size 18
   static const double lightly_medium_text = 18;

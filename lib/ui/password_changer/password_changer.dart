@@ -85,7 +85,7 @@ class _PasswordChangerScreenState extends State<PasswordChangerScreen> {
             builder: (_) {
               return Visibility(
                 visible: _userStore.isLoading,
-                child: const CustomProgressIndicatorWidget(),
+                child: CustomProgressIndicatorWidget(),
               );
             },
           )

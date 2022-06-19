@@ -172,7 +172,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
                 visible: _store.loading ||
                     _userStore.isLoading ||
                     _searchStore.isLoading,
-                child: const CustomProgressIndicatorWidget(),
+                child: CustomProgressIndicatorWidget(),
               );
             },
           )

@@ -293,6 +293,7 @@ abstract class _MentorStore with Store {
       return;
     }
 
+    program = null;
     final future = _repository.fetchProgram(mentorModel!.id, programID);
     requestFuture = ObservableFuture(future);
 
