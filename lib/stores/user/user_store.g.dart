@@ -15,6 +15,13 @@ mixin _$UserStore on _UserStore, Store {
   bool get isLoading => (_$isLoadingComputed ??=
           Computed<bool>(() => super.isLoading, name: '_UserStore.isLoading'))
       .value;
+  Computed<bool>? _$isUploadingAvatarComputed;
+
+  @override
+  bool get isUploadingAvatar => (_$isUploadingAvatarComputed ??= Computed<bool>(
+          () => super.isUploadingAvatar,
+          name: '_UserStore.isUploadingAvatar'))
+      .value;
   Computed<bool>? _$isPushingFavMentorDataComputed;
 
   @override
@@ -79,6 +86,23 @@ mixin _$UserStore on _UserStore, Store {
   set requestFuture(ObservableFuture<Map<String, dynamic>?> value) {
     _$requestFutureAtom.reportWrite(value, super.requestFuture, () {
       super.requestFuture = value;
+    });
+  }
+
+  late final _$requestUploadAvatarFutureAtom =
+      Atom(name: '_UserStore.requestUploadAvatarFuture', context: context);
+
+  @override
+  ObservableFuture<Map<String, dynamic>?> get requestUploadAvatarFuture {
+    _$requestUploadAvatarFutureAtom.reportRead();
+    return super.requestUploadAvatarFuture;
+  }
+
+  @override
+  set requestUploadAvatarFuture(ObservableFuture<Map<String, dynamic>?> value) {
+    _$requestUploadAvatarFutureAtom
+        .reportWrite(value, super.requestUploadAvatarFuture, () {
+      super.requestUploadAvatarFuture = value;
     });
   }
 
@@ -255,6 +279,24 @@ mixin _$UserStore on _UserStore, Store {
         .run(() => super.callUpdateFavMentor(mentorID: mentorID));
   }
 
+  late final _$uploadUserAvatarAsyncAction =
+      AsyncAction('_UserStore.uploadUserAvatar', context: context);
+
+  @override
+  Future<bool> uploadUserAvatar({required File imageFile}) {
+    return _$uploadUserAvatarAsyncAction
+        .run(() => super.uploadUserAvatar(imageFile: imageFile));
+  }
+
+  late final _$updateUserInformationAsyncAction =
+      AsyncAction('_UserStore.updateUserInformation', context: context);
+
+  @override
+  Future<bool> updateUserInformation({required Map<String, String> data}) {
+    return _$updateUserInformationAsyncAction
+        .run(() => super.updateUserInformation(data: data));
+  }
+
   late final _$_UserStoreActionController =
       ActionController(name: '_UserStore', context: context);
 
@@ -274,6 +316,7 @@ mixin _$UserStore on _UserStore, Store {
     return '''
 success: ${success},
 requestFuture: ${requestFuture},
+requestUploadAvatarFuture: ${requestUploadAvatarFuture},
 requestFavEventFuture: ${requestFavEventFuture},
 requestSessionFuture: ${requestSessionFuture},
 requestTransactionFuture: ${requestTransactionFuture},
@@ -282,6 +325,7 @@ sessionStatus: ${sessionStatus},
 sessionFetchingData: ${sessionFetchingData},
 sessions: ${sessions},
 isLoading: ${isLoading},
+isUploadingAvatar: ${isUploadingAvatar},
 isPushingFavMentorData: ${isPushingFavMentorData},
 isSessionLoading: ${isSessionLoading},
 isTransactionLoading: ${isTransactionLoading},

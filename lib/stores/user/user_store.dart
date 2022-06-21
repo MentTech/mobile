@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:mobile/data/repository.dart';
 import 'package:mobile/models/common/session/session.dart';
@@ -65,6 +68,10 @@ abstract class _UserStore with Store {
   ObservableFuture<Map<String, dynamic>?> requestFuture = emptyLoginResponse;
 
   @observable
+  ObservableFuture<Map<String, dynamic>?> requestUploadAvatarFuture =
+      emptyLoginResponse;
+
+  @observable
   ObservableFuture<Map<String, dynamic>?> requestFavEventFuture =
       emptyLoginResponse;
 
@@ -99,6 +106,10 @@ abstract class _UserStore with Store {
 
   @computed
   bool get isLoading => requestFuture.status == FutureStatus.pending;
+
+  @computed
+  bool get isUploadingAvatar =>
+      requestUploadAvatarFuture.status == FutureStatus.pending;
 
   @computed
   bool get isPushingFavMentorData =>
@@ -215,7 +226,8 @@ abstract class _UserStore with Store {
 
     final future = _repository.fetchFavouriteMentors(authToken: accessToken!);
 
-    await future.then((res) {
+    future.then((res) {
+      log("message: [fetchFavouriteMentors]: Class '_InternalLinkedHashMap<String, dynamic>' has no instance method 'cast' with matching arguments.");
       favouriteMentorIdList.addAll(res!["ids"]!.cast<int>());
 
       callback?.call();
@@ -287,6 +299,61 @@ abstract class _UserStore with Store {
           favouriteMentorIdList.add(mentorID);
         }
 
+        success = true;
+        return Future.value(true);
+      } catch (e) {
+        // res['message']
+        success = false;
+        return Future.value(false);
+      }
+    });
+
+    return Future.value(true);
+  }
+
+  @action
+  Future<bool> uploadUserAvatar({required File imageFile}) async {
+    String? accessToken = await _repository.authToken;
+
+    if (null == accessToken) {
+      return Future.value(false);
+    }
+
+    final Future<Map<String, dynamic>?> future =
+        _repository.uploadUserAvatar(authToken: accessToken, image: imageFile);
+
+    requestUploadAvatarFuture = ObservableFuture(future);
+
+    future.then((res) {
+      try {
+        success = true;
+        return Future.value(true);
+      } catch (e) {
+        // res['message']
+        success = false;
+        return Future.value(false);
+      }
+    });
+
+    return Future.value(true);
+  }
+
+  @action
+  Future<bool> updateUserInformation(
+      {required Map<String, String> data}) async {
+    String? accessToken = await _repository.authToken;
+
+    if (null == accessToken) {
+      return Future.value(false);
+    }
+
+    final Future<Map<String, dynamic>?> future =
+        _repository.updateUserInformation(authToken: accessToken, data: data);
+
+    requestFuture = ObservableFuture(future);
+
+    future.then((res) {
+      try {
         success = true;
         return Future.value(true);
       } catch (e) {

@@ -12,4 +12,18 @@ extension DateTimeExtension on DateTime {
   String toDateTimeDealString() {
     return DateFormat("dd/MM/yyyy, hh:mm:ss a").format(this);
   }
+
+  String toBirthdayString() {
+    return DateFormat("dd/MM/yyyy").format(this);
+  }
+}
+
+extension StringToDate on String {
+  DateTime parseFromBithdayToString() {
+    return DateFormat("dd/MM/yyyy").parse(this);
+  }
+
+  String parseFromBithdayToIso8601String() {
+    return parseFromBithdayToString().toIso8601String();
+  }
 }

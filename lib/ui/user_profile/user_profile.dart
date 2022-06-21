@@ -1,25 +1,24 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:io';
+
+import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:mobile/constants/colors.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/user/user.dart';
+import 'package:mobile/stores/authen_form/user_info_form_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
-import 'package:mobile/ui/user_profile/user_editable_popup.dart';
-import 'package:mobile/utils/device/device_utils.dart';
+import 'package:mobile/ui/user_profile/avatar_changer.dart';
+import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
-import 'package:mobile/widgets/background_colorful/random_bubble_gradient_background.dart';
-import 'package:mobile/widgets/button_widgets/neumorphism_button.dart';
-import 'package:mobile/widgets/container/image_container/network_image_widget.dart';
-import 'package:mobile/widgets/container/section_container/description_title_container.dart';
-import 'package:mobile/widgets/dialog_showing/slider_dialog.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
+import 'package:mobile/widgets/progress_indicator_widget.dart';
+import 'package:mobile/widgets/textfield_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:mobile/utils/extension/datetime_extension.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({Key? key}) : super(key: key);
@@ -29,264 +28,439 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
-  late UserStore userStore;
+  //text controllers:-----------------------------------------------------------
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _birthdayController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
-  // Controller:----------------------------------------------------------------
-  final RefreshController refreshController =
-      RefreshController(initialRefresh: true);
+  //stores:---------------------------------------------------------------------
+  late final UserStore _userStore;
+  late final UserInfoFormStore _formStore;
+  final ThemeStore _themeStore = getIt<ThemeStore>();
 
-  int curPage = 1;
+  // attributes:----------------------------------------------------------------
+  File? avatarImage;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
 
-    userStore = Provider.of<UserStore>(context);
-  }
+    _userStore = Provider.of<UserStore>(context, listen: false);
 
-  @override
-  void dispose() {
-    refreshController.dispose();
-    super.dispose();
+    UserModel user = _userStore.user!;
+
+    _emailController.text = user.email;
+    _nameController.text = user.name;
+
+    String birthdayString =
+        (user.birthday ?? DateTime.now().subtractYear(year: 18))
+            .toBirthdayString();
+    _birthdayController.text = birthdayString;
+    _phoneController.text = user.phone ?? "";
+
+    _formStore = UserInfoFormStore(
+      email: user.email,
+      name: user.name,
+      birthday: birthdayString,
+      phone: user.phone ?? "",
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      primary: true,
+      // backgroundColor: Colors.white,
       body: Stack(
+        fit: StackFit.expand,
         children: <Widget>[
-          const LinearGradientBackground(),
-          RandomBubbleGradientBackground(
-            count: 3,
-            maxRadius: 150,
-            minRadius: 50,
-            gradientColor: [
-              AppColors.lightBlueContrast.withOpacity(0.1),
-              AppColors.darkBlueContrast,
-            ],
+          LinearGradientBackground(
+            colors: _themeStore.lineToLineGradientColors,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            stops: null,
           ),
-          CustomScrollView(
-            slivers: [
-              SliverPersistentHeader(
-                delegate: CustomSliverAppbarDelegate(
-                  expandedHeight: DeviceUtils.getScaledHeight(context, .65),
-                  userModel: userStore.user!,
-                ),
-                floating: true,
-                pinned: true,
-              ),
-              SliverFillRemaining(
-                child: Consumer<UserStore>(
-                  builder: (BuildContext context, UserStore authenInfor,
-                      Widget? child) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          height: Dimens.vertical_margin * 3,
-                        ),
-                        authenInfor.user != null &&
-                                authenInfor.user!.birthday != null
-                            ? DescriptionTitleContainer(
-                                titleWidget: const Text("Birthday"),
-                                contentWidget: Text(DateFormat("")
-                                    .format(authenInfor.user!.birthday!)),
-                                spaceBetween: Dimens.vertical_margin * 2,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: Dimens.horizontal_padding),
-                              )
-                            : const SizedBox(),
-                      ],
+          SafeArea(
+            top: false,
+            child: _buildContent(),
+          ),
+          Observer(
+            // validator
+            builder: (_) {
+              return _userStore.success
+                  ? _showSuccessMessage(
+                      _formStore.messageStore.successMessage,
+                      duration: Properties.delayTimeInSecond,
+                    )
+                  : _showErrorMessage(
+                      _formStore.messageStore.errorMessage,
+                      duration: Properties.delayTimeInSecond,
                     );
-                  },
-                ),
-              ),
-            ],
+            },
+          ),
+          Observer(
+            builder: (context) {
+              return Visibility(
+                visible: _userStore.isLoading || _userStore.isUploadingAvatar,
+                child: CustomProgressIndicatorWidget(),
+              );
+            },
           ),
         ],
       ),
     );
   }
-}
 
-class CustomSliverAppbarDelegate extends SliverPersistentHeaderDelegate {
-  final double expandedHeight;
-  final UserModel userModel;
-
-  CustomSliverAppbarDelegate({
-    required this.expandedHeight,
-    required this.userModel,
-  });
-
-  double shrinkPerExpanded(double shrinkOffset) =>
-      shrinkOffset / expandedHeight;
-  double inverseShrinkPerExpanded(double shrinkOffset) =>
-      1 - shrinkOffset / expandedHeight;
-
-  Widget buildUserMainContent() =>
-      Consumer<UserStore>(builder: (context, authenInfor, child) {
-        ThemeStore themeStore = getIt<ThemeStore>();
-
-        return GlassmorphismContainer(
-          blur: Properties.blur_glass_morphism,
-          opacity: Properties.opacity_glass_morphism,
-          padding: const EdgeInsets.symmetric(
-            vertical: Dimens.vertical_padding,
-            horizontal: Dimens.horizontal_padding,
-          ),
-          height: kToolbarHeight * 3,
-          width: DeviceUtils.getScaledWidth(context, 1.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text(
-                    authenInfor.user?.name ?? "",
-                    style: TextStyle(
-                      color: themeStore.reverseThemeColor,
-                      fontSize: Dimens.medium_text,
-                    ),
-                  ),
-                  Text(
-                    authenInfor.user?.email ?? "",
-                    style: TextStyle(
-                      color: themeStore.reverseThemeColor,
-                      fontSize: Dimens.small_text,
-                    ),
-                  ),
-                  Text(
-                    "Token: ${authenInfor.user?.coin ?? 0}",
-                    style: TextStyle(
-                      color: themeStore.reverseThemeColor,
-                      fontSize: Dimens.small_text,
-                    ),
-                  ),
-                ],
-              ),
-              NetworkImageWidget(url: userModel.avatar),
-            ],
-          ),
-        );
-      });
-
-  Widget buildBackground() => ClipRRect(
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            Opacity(
-              opacity: 0.3,
-              child: CachedNetworkImage(
-                imageUrl:
-                    "https://images.unsplash.com/photo-1649217708305-685a96a98279?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8",
-                fit: BoxFit.fill,
-                placeholder: (context, url) => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-                errorWidget: (BuildContext context, String url, dynamic error) {
-                  if (error.statusCode == 403) {
-                    // Code to handle 403 error corrections on the database.
-                    // Not implemented when experiencing this issue.
-                  } else if (error.statusCode == 404) {
-                    // log("File Not Found");
-                  }
-                  return const Icon(Icons.error_outline);
-                },
-              ),
-            ),
-            Center(
-              child: CachedNetworkImage(
-                imageUrl:
-                    "https://images.unsplash.com/photo-1649217708305-685a96a98279?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8",
-                fit: BoxFit.fitHeight,
-                placeholder: (context, url) => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-                errorWidget: (BuildContext context, String url, dynamic error) {
-                  if (error.statusCode == 403) {
-                    // Code to handle 403 error corrections on the database.
-                    // Not implemented when experiencing this issue.
-                  } else if (error.statusCode == 404) {
-                    // log("File Not Found");
-                  }
-                  return const Icon(Icons.error_outline);
-                },
-              ),
-            ),
-          ],
-        ),
-      );
-
-  Widget buildControlButton(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding:
-            const EdgeInsets.symmetric(horizontal: Dimens.horizontal_padding),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            // Go back button
-            NeumorphismButton(
-              child: Icon(
-                Icons.arrow_back_ios_new_rounded,
-                color: AppColors.darkBlue[700],
-              ),
-              onTap: () {
-                Routes.popRoute(context);
-              },
-            ),
-            // Edit information popup
-            NeumorphismButton(
-              child: Icon(
-                Icons.edit,
-                color: AppColors.darkBlue[700],
-              ),
-              shape: BoxShape.circle,
-              onTap: () {
-                DialogPopupPresenter.showSlidePopupDialog<bool>(
-                        context,
-                        const UserEditablePopup(),
-                        DeviceUtils.getScaledHeight(context, 0.8),
-                        DeviceUtils.getScaledWidth(context, 0.8))
-                    .then((bool? result) {
-                  //
-                });
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget _buildContent() {
     return Stack(
       fit: StackFit.passthrough,
-      children: <Widget>[
-        buildBackground(),
+      children: [
         Positioned(
-          bottom: 0,
-          child: buildUserMainContent(),
+          top: 0,
+          left: 0,
+          right: 0,
+          child: _buildHeaderWidget(),
         ),
-        buildControlButton(context),
-        // buildContent(shrinkOffset, context),
+        SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(
+                height: kToolbarHeight,
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Dimens.large_horizontal_padding,
+                  ),
+                  child: _buildFieldContent(),
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
 
-  @override
-  double get maxExtent => expandedHeight;
+  Widget _buildHeaderWidget() {
+    return GlassmorphismContainer(
+      border: _themeStore.reverseThemeColorfulColor,
+      radius: 0,
+      child: SafeArea(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextButton(
+              onPressed: () {
+                Routes.popRoute(context);
+              },
+              child: Text(
+                AppLocalizations.of(context)
+                    .translate("cancel_button_translate"),
+                style: TextStyle(
+                  color: _themeStore.reverseThemeColor,
+                  fontSize: Dimens.lightly_medium_text,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+            Text(
+              AppLocalizations.of(context)
+                  .translate("profile_editor_settings_translate"),
+              style: TextStyle(
+                color: _themeStore.reverseThemeColor,
+                fontSize: Dimens.lightly_medium_text,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                // on Save
+                _userStore.updateUserInformation(data: _formStore.toDataJson());
+                if (null != avatarImage) {
+                  _userStore.uploadUserAvatar(imageFile: avatarImage!);
+                }
+              },
+              child: Text(
+                AppLocalizations.of(context).translate("done_button_translate"),
+                style: TextStyle(
+                  color: _themeStore.reverseThemeColorfulColor,
+                  fontSize: Dimens.lightly_medium_text,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      blur: Properties.lightly_blur_glass_morphism,
+      opacity: Properties.lightly_opacity_glass_morphism,
+    );
+  }
 
-  @override
-  double get minExtent => kToolbarHeight * 5;
+  Widget _buildFieldContent() {
+    return SingleChildScrollView(
+      clipBehavior: Clip.none,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Align(
+            alignment: Alignment.center,
+            child: AvatarChanger(
+              onChangeAvatar: ((file) {
+                avatarImage = file;
+              }),
+            ),
+          ),
+          Divider(color: _themeStore.reverseThemeColorfulColor),
+          _buildEmaildField(),
+          _buildNameField(),
+          _buildBirthdayField(),
+          _buildPhoneField(),
+          Divider(color: _themeStore.reverseThemeColorfulColor),
+          const SizedBox(
+            height: Dimens.vertical_margin,
+          ),
+        ],
+      ),
+    );
+  }
 
+  Widget _buildEmaildField() {
+    return Container(
+      clipBehavior: Clip.none,
+      margin: const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            flex: 5,
+            child: Text(
+              AppLocalizations.of(context).translate("email_label_translate"),
+              style: TextStyle(
+                color: _themeStore.reverseThemeColor,
+                fontSize: Dimens.small_text,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 15,
+            child: Observer(
+              builder: (_) {
+                return TextFieldWidget(
+                  hint: AppLocalizations.of(context)
+                      .translate('login_et_user_email'),
+                  hintColor: _themeStore.reverseThemeColor,
+                  textStyle: TextStyle(
+                    color: _themeStore.reverseThemeColor,
+                    fontSize: Dimens.small_text,
+                  ),
+                  isIcon: false,
+                  inputType: TextInputType.emailAddress,
+                  iconColor: _themeStore.reverseThemeColor,
+                  textController: _emailController,
+                  inputAction: TextInputAction.done,
+                  autoFocus: false,
+                  onChanged: (value) {
+                    _formStore.setEmail(_emailController.text);
+                  },
+                  errorText: _formStore.formErrorStore.email,
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNameField() {
+    return Container(
+      clipBehavior: Clip.none,
+      margin: const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            flex: 5,
+            child: Text(
+              AppLocalizations.of(context).translate("name_label_translate"),
+              style: TextStyle(
+                color: _themeStore.reverseThemeColor,
+                fontSize: Dimens.small_text,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 15,
+            child: Observer(
+              builder: (_) {
+                return TextFieldWidget(
+                  hint: AppLocalizations.of(context)
+                      .translate('login_et_user_email'),
+                  hintColor: _themeStore.reverseThemeColor,
+                  textStyle: TextStyle(
+                    color: _themeStore.reverseThemeColor,
+                    fontSize: Dimens.small_text,
+                  ),
+                  isIcon: false,
+                  inputType: TextInputType.emailAddress,
+                  iconColor: _themeStore.reverseThemeColor,
+                  textController: _nameController,
+                  inputAction: TextInputAction.done,
+                  autoFocus: false,
+                  onChanged: (value) {
+                    _formStore.setName(_nameController.text);
+                  },
+                  errorText: _formStore.formErrorStore.name,
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBirthdayField() {
+    return Container(
+      clipBehavior: Clip.none,
+      margin: const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            flex: 5,
+            child: Text(
+              AppLocalizations.of(context)
+                  .translate("birthday_label_translate"),
+              style: TextStyle(
+                color: _themeStore.reverseThemeColor,
+                fontSize: Dimens.small_text,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 15,
+            child: Observer(
+              builder: (_) {
+                return TextFieldWidget(
+                  hint: AppLocalizations.of(context)
+                      .translate('login_et_user_email'),
+                  hintColor: _themeStore.reverseThemeColor,
+                  textStyle: TextStyle(
+                    color: _themeStore.reverseThemeColor,
+                    fontSize: Dimens.small_text,
+                  ),
+                  isIcon: false,
+                  inputType: TextInputType.emailAddress,
+                  iconColor: _themeStore.reverseThemeColor,
+                  textController: _birthdayController,
+                  inputAction: TextInputAction.done,
+                  autoFocus: false,
+                  onChanged: (value) {
+                    _formStore.setBirthday(_birthdayController.text);
+                  },
+                  errorText: _formStore.formErrorStore.birthday,
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPhoneField() {
+    return Container(
+      clipBehavior: Clip.none,
+      margin: const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            flex: 5,
+            child: Text(
+              AppLocalizations.of(context).translate("phone_label_translate"),
+              style: TextStyle(
+                color: _themeStore.reverseThemeColor,
+                fontSize: Dimens.small_text,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 15,
+            child: Observer(
+              builder: (_) {
+                return TextFieldWidget(
+                  hint: AppLocalizations.of(context)
+                      .translate('login_et_user_email'),
+                  hintColor: _themeStore.reverseThemeColor,
+                  textStyle: TextStyle(
+                    color: _themeStore.reverseThemeColor,
+                    fontSize: Dimens.small_text,
+                  ),
+                  isIcon: false,
+                  inputType: TextInputType.emailAddress,
+                  iconColor: _themeStore.reverseThemeColor,
+                  textController: _phoneController,
+                  inputAction: TextInputAction.done,
+                  autoFocus: false,
+                  onChanged: (value) {
+                    _formStore.setPhone(_phoneController.text);
+                  },
+                  errorText: _formStore.formErrorStore.phone,
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // General Methods:-----------------------------------------------------------
+  _showErrorMessage(String message,
+      {int duration = Properties.delayTimeInSecond}) {
+    if (message.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        FlushbarHelper.createError(
+          message: message,
+          title: AppLocalizations.of(context).translate('home_tv_error'),
+          duration: Duration(seconds: duration),
+        ).show(context);
+      });
+    }
+
+    return const SizedBox.shrink();
+  }
+
+  _showSuccessMessage(String message,
+      {int duration = Properties.delayTimeInSecond}) {
+    if (message.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        FlushbarHelper.createSuccess(
+          message: message,
+          title: AppLocalizations.of(context).translate('home_tv_success'),
+          duration: Duration(seconds: duration),
+        ).show(context);
+      });
+    }
+
+    return const SizedBox.shrink();
+  }
+
+  // dispose:-------------------------------------------------------------------
   @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
-    return this != oldDelegate;
+  void dispose() {
+    // Clean up the controller when the Widget is removed from the Widget tree
+    _emailController.dispose();
+    _nameController.dispose();
+    _birthdayController.dispose();
+    _phoneController.dispose();
+
+    super.dispose();
   }
 }

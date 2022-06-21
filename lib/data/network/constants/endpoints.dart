@@ -37,6 +37,12 @@ class Endpoints {
   /// Get User Infor: /users/profile
   static const String fetchUserInfor = _userProxy + "/profile";
 
+  /// Patch User Infor for building: /users/profile
+  static const String updateUserInformation = _userProxy + "/profile";
+
+  /// Patch User Avatar for building: /users/avatar
+  static const String uploadUserAvatar = _userProxy + "/avatar";
+
   //:---------------------------------------------------------------------------
 
   /// Mentor APIs

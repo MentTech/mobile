@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:mobile/data/network/apis/auth/auth_api.dart';
 import 'package:mobile/data/network/apis/common/common_api.dart';
@@ -62,6 +63,38 @@ class Repository {
     }).catchError((error) {
       log("Fetch Userinfor failing");
       return null;
+    });
+  }
+
+  Future<Map<String, dynamic>?> uploadUserAvatar({
+    required String authToken,
+    required File image,
+  }) async {
+    return _menteeAPI
+        .uploadUserAvatar(
+      authToken: authToken,
+      imageFile: image,
+    )
+        .catchError((error) {
+      return {
+        "onError": error.toString(),
+      };
+    });
+  }
+
+  Future<Map<String, dynamic>?> updateUserInformation({
+    required String authToken,
+    required Map<String, String> data,
+  }) async {
+    return _menteeAPI
+        .updateUserInformation(
+      authToken: authToken,
+      requestBody: data,
+    )
+        .catchError((error) {
+      return {
+        "onError": error.toString(),
+      };
     });
   }
 
