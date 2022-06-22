@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:mobile/data/network/constants/endpoints.dart';
 import 'package:mobile/data/network/dio_client.dart';
+import 'package:path/path.dart' as path;
+import 'package:uuid/uuid.dart';
 
 class MenteeAPI {
   // dio instance
@@ -52,15 +54,37 @@ class MenteeAPI {
     required File imageFile,
   }) async {
     try {
-      String fileName = imageFile.path.split('/').last;
-      FormData formData = FormData.fromMap({
+      final String fileName = imageFile.path.split('/').last;
+      final String extensionName = path.extension(imageFile.path);
+      final String newFileName =
+          const Uuid().v5(Uuid.NAMESPACE_URL, Endpoints.imageSever) +
+              extensionName;
+
+      final FormData formData = FormData.fromMap({
         "avatar":
             await MultipartFile.fromFile(imageFile.path, filename: fileName),
       });
 
+      /// post to image server
+      await _dioClient.post(
+        Endpoints.imageSever,
+        data: {
+          "filename": newFileName,
+        },
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) => true,
+          // headers: {
+          //   "Authorization": "Bearer $authToken",
+          // },
+        ),
+      );
+
       final res = await _dioClient.patch(
         Endpoints.uploadUserAvatar,
-        data: formData,
+        data: {
+          "avatar": newFileName,
+        },
         options: Options(
           followRedirects: false,
           validateStatus: (status) => true,

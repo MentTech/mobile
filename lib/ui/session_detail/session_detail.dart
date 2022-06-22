@@ -60,39 +60,38 @@ class _SesstionDetailState extends State<SesstionDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
+        fit: StackFit.expand,
         children: [
           LinearGradientBackground(
             colors: _themeStore.lineToLineGradientColors,
             stops: null,
           ),
           SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: Dimens.horizontal_padding,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Observer(
-                      builder: (context) {
-                        if (!_mentorStore.hasMentor) {
-                          _mentorStore
-                              .fetchAMentor(widget.session.program.mentorId);
-                        }
-                        return ProgramDetailContainer(
-                          programDetail: widget.session.program,
-                          mentorModel: _mentorStore.getMentor,
-                        );
-                      },
-                    ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Observer(
+                    builder: (context) {
+                      if (!_mentorStore.hasMentor) {
+                        _mentorStore
+                            .fetchAMentor(widget.session.program.mentorId);
+                      }
+                      return ProgramDetailContainer(
+                        programDetail: widget.session.program,
+                        mentorModel: _mentorStore.getMentor,
+                      );
+                    },
                   ),
-                  _buildActionMethod(),
-                  const SizedBox(
-                    height: Dimens.extra_large_vertical_margin,
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(
+                  height: Dimens.medium_vertical_margin,
+                ),
+                _buildActionMethod(),
+                const SizedBox(
+                  height: Dimens.extra_large_vertical_margin,
+                ),
+              ],
             ),
           ),
           Observer(

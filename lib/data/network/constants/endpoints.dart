@@ -1,8 +1,11 @@
 class Endpoints {
   Endpoints._();
 
-  // base url
+  /// base url
   static const String baseUrl = "https://api.menttech.live/v1";
+
+  /// base url
+  static const String imageSever = "https://images.menttech.live";
 
   // receiveTimeout
   static const int receiveTimeout = 15000;
@@ -121,4 +124,6 @@ class Endpoints {
 
   /// Get all transaction in Server
   static const String fetchUserTransactions = baseUrl + "/transaction/balance";
+
+  //:---------------------------------------------------------------------------
 }

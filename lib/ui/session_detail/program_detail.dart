@@ -1,5 +1,6 @@
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
@@ -18,7 +19,6 @@ import 'package:mobile/widgets/item/comment_item.dart';
 import 'package:mobile/widgets/star_widget/start_rate_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:readmore/readmore.dart';
 import 'package:mobile/utils/extension/datetime_extension.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -57,162 +57,98 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(Dimens.kBorderMaxRadiusValue),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Expanded(
-                flex: 3,
-                child: Text(
-                  widget.programDetail.title +
-                      "\n${AppLocalizations.of(context).translate('with_translate')} " +
-                      (widget.mentorModel?.name ?? ""),
-                  style: const TextStyle(
-                    fontSize: Dimens.large_text,
-                    color: Colors.white,
-                    height: 1.5,
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: NetworkImageWidget(url: widget.mentorModel?.avatar),
-              ),
-            ],
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(
-              vertical: Dimens.vertical_margin,
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                GlassmorphismContainer(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: Dimens.more_small_vertical_padding,
-                    horizontal: Dimens.more_small_horizontal_padding,
-                  ),
-                  child: SymbolsItem(
-                    symbol: const Icon(
-                      Icons.monetization_on_outlined,
-                      size: Dimens.large_text,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeaderContent(),
+            _buildCoinContent(),
+            widget.programDetail.createAt != null
+                ? Text(
+                    "${AppLocalizations.of(context).translate('create_at_translate')} ${widget.programDetail.createAt!.toFulltimeString()}",
+                    style: const TextStyle(
+                      fontSize: Dimens.small_text,
                       color: Colors.white70,
+                      height: 1.5,
                     ),
-                    child: Text(
-                      widget.programDetail.credit.toString(),
-                      style: const TextStyle(
-                        fontSize: Dimens.small_text,
-                        color: Colors.white70,
-                      ),
-                    ),
-                  ),
-                  blur: Properties.blur_glass_morphism,
-                  opacity: Properties.opacity_glass_morphism,
+                  )
+                : const SizedBox(),
+            //     // ReadMoreText(
+            //     //   widget.programDetail.detail,
+            //     //   style: const TextStyle(
+            //     //     color: Colors.white70,
+            //     //     fontSize: Dimens.small_text,
+            //     //   ),
+            //     //   trimLines: 5,
+            //     //   trimMode: TrimMode.Line,
+            //     // ),
+
+            Html(
+              data: widget.programDetail.detail,
+              shrinkWrap: true,
+              style: {
+                "li": Style(
+                  color: _themeStore.reverseThemeColor,
+                  fontSize: const FontSize(Dimens.small_text),
                 ),
-                const SizedBox(
-                  width: Dimens.vertical_margin,
+                "p": Style(
+                  color: _themeStore.reverseThemeColor,
+                  fontSize: const FontSize(Dimens.small_text),
                 ),
-                widget.mentorModel != null
-                    ? Text(
-                        widget.mentorModel?.userMentor.category.name ?? "",
-                        style: const TextStyle(
-                          fontSize: Dimens.lightly_medium_text,
-                          color: Colors.white70,
-                        ),
-                      )
-                    : _ShimmerSection(
-                        child: Container(
-                          height: Dimens.medium_text,
-                          width: 100,
-                          margin: const EdgeInsets.symmetric(
-                              vertical: Dimens.vertical_margin),
-                          decoration: BoxDecoration(
-                            color: Colors.black54,
-                            borderRadius: Dimens.kMaxBorderRadius,
+              },
+            ),
+            Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                const Divider(
+                  color: Colors.white70,
+                  thickness: 2.5,
+                  indent: Dimens.large_horizontal_margin,
+                  endIndent: Dimens.large_horizontal_margin,
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          AppLocalizations.of(context).translate("discusstion"),
+                          style: const TextStyle(
+                            fontSize: Dimens.lightly_medium_text,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white70,
                           ),
                         ),
-                      ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        Divider(
+                          color: _themeStore.themeColor,
+                          thickness: 1,
+                          indent: Dimens.large_horizontal_margin,
+                          endIndent: Dimens.large_horizontal_margin,
+                        ),
+                      ],
+                    ),
+                    StarRateWidget(
+                      rating:
+                          widget.programDetail.averageRating?.average ?? 0.0,
+                      count: widget.programDetail.averageRating?.count ?? 0,
+                    ),
+                  ],
+                ),
               ],
             ),
-          ),
-          widget.programDetail.createAt != null
-              ? Text(
-                  "${AppLocalizations.of(context).translate('create_at_translate')} ${widget.programDetail.createAt!.toFulltimeString()}",
-                  style: const TextStyle(
-                    fontSize: Dimens.small_text,
-                    color: Colors.white70,
-                    height: 1.5,
-                  ),
-                )
-              : const SizedBox(),
-          ReadMoreText(
-            widget.programDetail.detail,
-            style: const TextStyle(
-              color: Colors.white70,
-              fontSize: Dimens.small_text,
-            ),
-            trimLines: 5,
-            trimMode: TrimMode.Line,
-          ),
-          Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              const Divider(
-                color: Colors.white70,
-                thickness: 2.5,
-                indent: Dimens.large_horizontal_margin,
-                endIndent: Dimens.large_horizontal_margin,
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        AppLocalizations.of(context).translate("discusstion"),
-                        style: const TextStyle(
-                          fontSize: Dimens.lightly_medium_text,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white70,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Divider(
-                        color: _themeStore.themeColor,
-                        thickness: 1,
-                        indent: Dimens.large_horizontal_margin,
-                        endIndent: Dimens.large_horizontal_margin,
-                      ),
-                    ],
-                  ),
-                  StarRateWidget(
-                    rating: widget.programDetail.averageRating?.average ?? 0.0,
-                    count: widget.programDetail.averageRating?.count ?? 0,
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Expanded(
-            child: Observer(
-              builder: (_) {
-                return ClipRRect(
-                  borderRadius:
-                      BorderRadius.circular(Dimens.kBorderMaxRadiusValue),
-                  child: SmartRefresher(
+            Flexible(
+              child: Observer(
+                builder: (_) {
+                  return SmartRefresher(
                     controller: _refreshController,
                     enablePullUp: true,
                     enablePullDown: true,
@@ -262,6 +198,8 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
                       }
                     },
                     child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (_, int index) {
                         RateModel rateModel =
                             _commonStore.getRateCommentAt(index);
@@ -271,13 +209,99 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
                       },
                       itemCount: _commonStore.programLengthList,
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Container _buildCoinContent() {
+    return Container(
+      margin: const EdgeInsets.symmetric(
+        vertical: Dimens.large_vertical_margin,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          GlassmorphismContainer(
+            padding: const EdgeInsets.symmetric(
+              vertical: Dimens.more_small_vertical_padding,
+              horizontal: Dimens.more_small_horizontal_padding,
+            ),
+            child: SymbolsItem(
+              symbol: const Icon(
+                Icons.monetization_on_outlined,
+                size: Dimens.large_text,
+                color: Colors.white70,
+              ),
+              child: Text(
+                widget.programDetail.credit.toString(),
+                style: const TextStyle(
+                  fontSize: Dimens.small_text,
+                  color: Colors.white70,
+                ),
+              ),
+            ),
+            blur: Properties.blur_glass_morphism,
+            opacity: Properties.opacity_glass_morphism,
           ),
+          const SizedBox(
+            width: Dimens.vertical_margin,
+          ),
+          widget.mentorModel != null
+              ? Text(
+                  widget.mentorModel?.userMentor.category.name ?? "",
+                  style: const TextStyle(
+                    fontSize: Dimens.lightly_medium_text,
+                    color: Colors.white70,
+                  ),
+                )
+              : _ShimmerSection(
+                  child: Container(
+                    height: Dimens.medium_text,
+                    width: 100,
+                    margin: const EdgeInsets.symmetric(
+                        vertical: Dimens.vertical_margin),
+                    decoration: BoxDecoration(
+                      color: Colors.black54,
+                      borderRadius: Dimens.kMaxBorderRadius,
+                    ),
+                  ),
+                ),
         ],
       ),
+    );
+  }
+
+  Row _buildHeaderContent() {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Expanded(
+          flex: 3,
+          child: Text(
+            widget.programDetail.title +
+                "\n${AppLocalizations.of(context).translate('with_translate')} " +
+                (widget.mentorModel?.name ?? ""),
+            style: const TextStyle(
+              fontSize: Dimens.large_text,
+              color: Colors.white,
+              height: 1.5,
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: NetworkImageWidget(url: widget.mentorModel?.avatar),
+        ),
+      ],
     );
   }
 

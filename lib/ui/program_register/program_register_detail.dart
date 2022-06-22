@@ -1,5 +1,6 @@
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
@@ -20,7 +21,6 @@ import 'package:mobile/widgets/item/comment_item.dart';
 import 'package:mobile/widgets/star_widget/start_rate_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:readmore/readmore.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:mobile/utils/extension/datetime_extension.dart';
 
@@ -172,14 +172,28 @@ class _ProgramRegisterDetailState extends State<ProgramRegisterDetail> {
                   ),
                 )
               : const SizedBox(),
-          ReadMoreText(
-            program.detail,
-            style: TextStyle(
-              color: _themeStore.reverseThemeColor,
-              fontSize: Dimens.small_text,
-            ),
-            trimLines: 5,
-            trimMode: TrimMode.Line,
+          // ReadMoreText(
+          //   program.detail,
+          //   style: TextStyle(
+          //     color: _themeStore.reverseThemeColor,
+          //     fontSize: Dimens.small_text,
+          //   ),
+          //   trimLines: 5,
+          //   trimMode: TrimMode.Line,
+          // ),
+          Html(
+            data: program.detail,
+            shrinkWrap: true,
+            style: {
+              "li": Style(
+                color: _themeStore.reverseThemeColor,
+                fontSize: const FontSize(Dimens.small_text),
+              ),
+              "p": Style(
+                color: _themeStore.reverseThemeColor,
+                fontSize: const FontSize(Dimens.small_text),
+              ),
+            },
           ),
         ],
       );

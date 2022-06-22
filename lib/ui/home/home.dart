@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
-import 'package:mobile/ui/home/page/notification_page.dart';
 
 import 'page/home_page.dart';
+import 'page/message_page.dart';
+import 'page/notification_page.dart';
 import 'page/settings_page.dart';
 import 'page/tutor_page.dart';
 
@@ -21,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
       GlobalKey<CurvedNavigationBarState>();
 
   // controller:----------------------------------------------------------------
-  final pageController = PageController(keepPage: true, initialPage: 1);
+  final pageController = PageController(keepPage: true, initialPage: 2);
 
   // static value:--------------------------------------------------------------
   static const double sizeBottomButton = 30;
@@ -31,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final curveEffect = Curves.easeInOutSine;
 
   final List<Icon> _listCurveButtonIcon = const [
-    // Icon(Icons.date_range, size: _sizeBottomButton),
+    Icon(Icons.date_range, size: sizeBottomButton),
     Icon(Icons.school_rounded, size: sizeBottomButton),
     Icon(Icons.home, size: sizeBottomButton),
     Icon(Icons.notifications_active_rounded, size: sizeBottomButton),
@@ -39,16 +40,15 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   final List<Widget> pageList = [
-    // const SchedulePage(),
     const TutorPage(),
+    MessagePage(),
     const HomePage(),
-    // MessagePage(),
     NotificationPage(),
     SettingsPage(),
   ];
 
   // state:---------------------------------------------------------------------
-  final int _initButtonIndex = 1;
+  final int _initButtonIndex = 2;
 
   // init stores:---------------------------------------------------------------
   final ThemeStore _themeStore = getIt<ThemeStore>();

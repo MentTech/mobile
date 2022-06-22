@@ -6,7 +6,6 @@ import 'package:mobile/models/common/program/program.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/glassmorphism_widget_button.dart';
 import 'package:mobile/widgets/star_widget/start_rate_widget.dart';
-import 'package:readmore/readmore.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SessionTicketItem extends StatelessWidget {
@@ -57,44 +56,44 @@ class SessionTicketItem extends StatelessWidget {
           callbackIfProgramNotNull?.call();
         },
         child: ListTile(
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                program.title,
-                style: TextStyle(
-                  color: Color.alphaBlend(
-                      (textColor ?? _themeStore.reverseThemeColor)
-                          .withAlpha(150),
-                      Colors.white),
-                  fontSize: Dimens.small_text,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              StarRateWidget(
-                rateColor: _themeStore.ratingColor,
-                rating: 3.5, //program.rate,
-              ),
-            ],
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: Dimens.small_vertical_padding,
+            horizontal: Dimens.horizontal_padding,
           ),
-          subtitle: ReadMoreText(
-            program.detail,
-            style: TextStyle(
-              color: textColor ?? _themeStore.reverseThemeColor,
-              fontSize: Dimens.small_text,
-            ),
-            trimLines: 1,
-            trimMode: TrimMode.Line,
-            moreStyle: TextStyle(
-              color: textColor ?? _themeStore.reverseThemeColor,
-              fontSize: Dimens.small_text,
-            ),
-            lessStyle: TextStyle(
-              color: textColor ?? _themeStore.reverseThemeColor,
-              fontSize: Dimens.small_text,
+          title: Container(
+            margin: const EdgeInsets.only(bottom: Dimens.vertical_margin),
+            child: Text(
+              program.title,
+              style: TextStyle(
+                color: Color.alphaBlend(
+                    (textColor ?? _themeStore.reverseThemeColor).withAlpha(150),
+                    Colors.white),
+                fontSize: Dimens.small_text,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
+          subtitle: StarRateWidget(
+            rateColor: _themeStore.ratingColor,
+            rating: 3.5, //program.rate,
+          ),
+          // ReadMoreText(
+          //   program.detail,
+          //   style: TextStyle(
+          //     color: textColor ?? _themeStore.reverseThemeColor,
+          //     fontSize: Dimens.small_text,
+          //   ),
+          //   trimLines: 1,
+          //   trimMode: TrimMode.Line,
+          //   moreStyle: TextStyle(
+          //     color: textColor ?? _themeStore.reverseThemeColor,
+          //     fontSize: Dimens.small_text,
+          //   ),
+          //   lessStyle: TextStyle(
+          //     color: textColor ?? _themeStore.reverseThemeColor,
+          //     fontSize: Dimens.small_text,
+          //   ),
+          // ),
           leading: Icon(
             Icons.loyalty_outlined,
             size: Dimens.large_text,
