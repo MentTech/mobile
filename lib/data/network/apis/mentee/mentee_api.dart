@@ -66,9 +66,6 @@ class MenteeAPI {
         options: Options(
           followRedirects: false,
           validateStatus: (status) => true,
-          headers: {
-            "Authorization": "Bearer $authToken",
-          },
         ),
       );
 
