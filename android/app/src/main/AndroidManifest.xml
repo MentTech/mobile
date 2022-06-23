@@ -1,7 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.jett.sgrayk.mobile">
+    
+    <uses-permission
+     android:name="android.permission.INTERNET"/>
+
    <application
-        android:label="MenTech"
+        android:label="MentTech"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

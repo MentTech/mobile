@@ -12,6 +12,7 @@ import 'package:mobile/stores/common/common_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/ui/mentor_detail/mentor_profile.dart';
 import 'package:mobile/utils/application/application_utils.dart';
+import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/widgets/container/image_container/network_image_widget.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
@@ -58,162 +59,179 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(Dimens.kBorderMaxRadiusValue),
       child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeaderContent(),
-            _buildCoinContent(),
-            widget.programDetail.createAt != null
-                ? Text(
-                    "${AppLocalizations.of(context).translate('create_at_translate')} ${widget.programDetail.createAt!.toFulltimeString()}",
-                    style: const TextStyle(
-                      fontSize: Dimens.small_text,
-                      color: Colors.white70,
-                      height: 1.5,
-                    ),
-                  )
-                : const SizedBox(),
-            //     // ReadMoreText(
-            //     //   widget.programDetail.detail,
-            //     //   style: const TextStyle(
-            //     //     color: Colors.white70,
-            //     //     fontSize: Dimens.small_text,
-            //     //   ),
-            //     //   trimLines: 5,
-            //     //   trimMode: TrimMode.Line,
-            //     // ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: Dimens.vertical_padding,
+            horizontal: Dimens.horizontal_padding,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeaderContent(),
+              _buildCoinContent(),
+              widget.programDetail.createAt != null
+                  ? Text(
+                      "${AppLocalizations.of(context).translate('create_at_translate')} ${widget.programDetail.createAt!.toFulltimeString()}",
+                      style: const TextStyle(
+                        fontSize: Dimens.small_text,
+                        color: Colors.white70,
+                        height: 1.5,
+                      ),
+                    )
+                  : const SizedBox(),
+              //     // ReadMoreText(
+              //     //   widget.programDetail.detail,
+              //     //   style: const TextStyle(
+              //     //     color: Colors.white70,
+              //     //     fontSize: Dimens.small_text,
+              //     //   ),
+              //     //   trimLines: 5,
+              //     //   trimMode: TrimMode.Line,
+              //     // ),
 
-            Html(
-              data: widget.programDetail.detail,
-              shrinkWrap: true,
-              style: {
-                "li": Style(
-                  color: _themeStore.reverseThemeColor,
-                  fontSize: const FontSize(Dimens.small_text),
+              Html(
+                data: widget.programDetail.detail,
+                shrinkWrap: true,
+                style: {
+                  "li": Style(
+                    color: _themeStore.reverseThemeColor,
+                    fontSize: const FontSize(Dimens.small_text),
+                  ),
+                  "p": Style(
+                    color: _themeStore.reverseThemeColor,
+                    fontSize: const FontSize(Dimens.small_text),
+                  ),
+                },
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(
+                    vertical: Dimens.vertical_margin),
+                child: Divider(
+                  color: _themeStore.reverseThemeColorfulColor,
+                  thickness: 1.5,
                 ),
-                "p": Style(
-                  color: _themeStore.reverseThemeColor,
-                  fontSize: const FontSize(Dimens.small_text),
-                ),
-              },
-            ),
-            Stack(
-              alignment: Alignment.bottomCenter,
-              children: [
-                const Divider(
-                  color: Colors.white70,
-                  thickness: 2.5,
-                  indent: Dimens.large_horizontal_margin,
-                  endIndent: Dimens.large_horizontal_margin,
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          AppLocalizations.of(context).translate("discusstion"),
-                          style: const TextStyle(
-                            fontSize: Dimens.lightly_medium_text,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white70,
+              ),
+
+              Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  const Divider(
+                    color: Colors.white70,
+                    thickness: 2.5,
+                    indent: Dimens.large_horizontal_margin,
+                    endIndent: Dimens.large_horizontal_margin,
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)
+                                .translate("discusstion"),
+                            style: const TextStyle(
+                              fontSize: Dimens.lightly_medium_text,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white70,
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Divider(
-                          color: _themeStore.themeColor,
-                          thickness: 1,
-                          indent: Dimens.large_horizontal_margin,
-                          endIndent: Dimens.large_horizontal_margin,
-                        ),
-                      ],
-                    ),
-                    StarRateWidget(
-                      rating:
-                          widget.programDetail.averageRating?.average ?? 0.0,
-                      count: widget.programDetail.averageRating?.count ?? 0,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Flexible(
-              child: Observer(
-                builder: (_) {
-                  return SmartRefresher(
-                    controller: _refreshController,
-                    enablePullUp: true,
-                    enablePullDown: true,
-                    header: ApplicationUtils.fetchHeaderStatus(context),
-                    footer: ApplicationUtils.fetchFooterStatus(),
-                    onRefresh: () async {
-                      if (widget.mentorModel != null &&
-                          _commonStore.prevProgramRatePage()) {
-                        _commonStore.callback =
-                            () => _refreshController.refreshCompleted();
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          Divider(
+                            color: _themeStore.themeColor,
+                            thickness: 1,
+                            indent: Dimens.large_horizontal_margin,
+                            endIndent: Dimens.large_horizontal_margin,
+                          ),
+                        ],
+                      ),
+                      StarRateWidget(
+                        rating:
+                            widget.programDetail.averageRating?.average ?? 0.0,
+                        count: widget.programDetail.averageRating?.count ?? 0,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: DeviceUtils.getScaledHeight(context, 0.5),
+                child: Observer(
+                  builder: (_) {
+                    return SmartRefresher(
+                      controller: _refreshController,
+                      enablePullUp: true,
+                      enablePullDown: true,
+                      header: ApplicationUtils.fetchHeaderStatus(context),
+                      footer: ApplicationUtils.fetchFooterStatus(),
+                      onRefresh: () async {
+                        if (widget.mentorModel != null &&
+                            _commonStore.prevProgramRatePage()) {
+                          _commonStore.callback =
+                              () => _refreshController.refreshCompleted();
 
-                        await _commonStore
-                            .fetchProgramRateList(
-                                widget.mentorModel!.id, widget.programDetail.id)
-                            .then(
-                          (_) {
+                          await _commonStore
+                              .fetchProgramRateList(widget.mentorModel!.id,
+                                  widget.programDetail.id)
+                              .then(
+                            (_) {
+                              FlushbarHelper.createSuccess(
+                                message: AppLocalizations.of(context)
+                                    .translate("home_tv_success"),
+                                title: AppLocalizations.of(context)
+                                    .translate('load_success'),
+                              ).show(context);
+                            },
+                          );
+                        } else {
+                          _refreshController.refreshCompleted();
+                        }
+                      },
+                      onLoading: () async {
+                        if (widget.mentorModel != null &&
+                            _commonStore.nextProgramRatePage()) {
+                          await _commonStore
+                              .fetchProgramRateList(widget.mentorModel!.id,
+                                  widget.programDetail.id)
+                              .then((_) {
                             FlushbarHelper.createSuccess(
                               message: AppLocalizations.of(context)
                                   .translate("home_tv_success"),
                               title: AppLocalizations.of(context)
                                   .translate('load_success'),
                             ).show(context);
-                          },
-                        );
-                      } else {
-                        _refreshController.refreshCompleted();
-                      }
-                    },
-                    onLoading: () async {
-                      if (widget.mentorModel != null &&
-                          _commonStore.nextProgramRatePage()) {
-                        await _commonStore
-                            .fetchProgramRateList(
-                                widget.mentorModel!.id, widget.programDetail.id)
-                            .then((_) {
-                          FlushbarHelper.createSuccess(
-                            message: AppLocalizations.of(context)
-                                .translate("home_tv_success"),
-                            title: AppLocalizations.of(context)
-                                .translate('load_success'),
-                          ).show(context);
 
+                            _refreshController.loadComplete();
+                          });
+                        } else {
                           _refreshController.loadComplete();
-                        });
-                      } else {
-                        _refreshController.loadComplete();
-                      }
-                    },
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (_, int index) {
-                        RateModel rateModel =
-                            _commonStore.getRateCommentAt(index);
-                        return CommentItem(
-                          rateModel: rateModel,
-                        );
+                        }
                       },
-                      itemCount: _commonStore.programLengthList,
-                    ),
-                  );
-                },
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (_, int index) {
+                          RateModel rateModel =
+                              _commonStore.getRateCommentAt(index);
+                          return CommentItem(
+                            rateModel: rateModel,
+                          );
+                        },
+                        itemCount: _commonStore.programLengthList,
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

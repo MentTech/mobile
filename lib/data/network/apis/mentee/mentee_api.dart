@@ -4,8 +4,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:mobile/data/network/constants/endpoints.dart';
 import 'package:mobile/data/network/dio_client.dart';
-import 'package:path/path.dart' as path;
-import 'package:uuid/uuid.dart';
 
 class MenteeAPI {
   // dio instance
@@ -55,36 +53,16 @@ class MenteeAPI {
   }) async {
     try {
       final String fileName = imageFile.path.split('/').last;
-      final String extensionName = path.extension(imageFile.path);
-      final String newFileName =
-          const Uuid().v5(Uuid.NAMESPACE_URL, Endpoints.imageSever) +
-              extensionName;
 
       final FormData formData = FormData.fromMap({
-        "avatar":
+        "file":
             await MultipartFile.fromFile(imageFile.path, filename: fileName),
       });
 
       /// post to image server
-      await _dioClient.post(
+      final responseData = await _dioClient.post(
         Endpoints.imageSever,
-        data: {
-          "filename": newFileName,
-        },
-        options: Options(
-          followRedirects: false,
-          validateStatus: (status) => true,
-          // headers: {
-          //   "Authorization": "Bearer $authToken",
-          // },
-        ),
-      );
-
-      final res = await _dioClient.patch(
-        Endpoints.uploadUserAvatar,
-        data: {
-          "avatar": newFileName,
-        },
+        data: formData,
         options: Options(
           followRedirects: false,
           validateStatus: (status) => true,
@@ -94,9 +72,32 @@ class MenteeAPI {
         ),
       );
 
-      return {
-        "data": res,
-      };
+      String? uuidFileName = responseData["filename"];
+
+      if (null != uuidFileName && uuidFileName.isNotEmpty) {
+        final res = await _dioClient.patch(
+          Endpoints.uploadUserAvatar,
+          data: {
+            "avatar": Endpoints.imageSever + "/" + uuidFileName,
+          },
+          options: Options(
+            followRedirects: false,
+            validateStatus: (status) => true,
+            headers: {
+              "Authorization": "Bearer $authToken",
+            },
+          ),
+        );
+
+        return {
+          "data": res,
+        };
+      } else {
+        return {
+          "error": "Can not upload image",
+        };
+      }
+
       // return User.fromJson(res);
     } catch (e) {
       log(e.toString());

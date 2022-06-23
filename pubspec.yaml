@@ -128,9 +128,6 @@ dependencies:
   # read session html content
   flutter_html: ^2.2.1
 
-  # uuid
-  uuid: ^3.0.6
-
   shimmer: 
 
   flutter_localizations:
@@ -212,3 +209,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+# `flutter build appbundle --no-shrink`
