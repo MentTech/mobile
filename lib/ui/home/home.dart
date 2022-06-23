@@ -32,8 +32,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final curveEffect = Curves.easeInOutSine;
 
   final List<Icon> _listCurveButtonIcon = const [
-    Icon(Icons.date_range, size: sizeBottomButton),
     Icon(Icons.school_rounded, size: sizeBottomButton),
+    Icon(Icons.date_range, size: sizeBottomButton),
     Icon(Icons.home, size: sizeBottomButton),
     Icon(Icons.notifications_active_rounded, size: sizeBottomButton),
     Icon(Icons.settings, size: sizeBottomButton),
@@ -62,16 +62,19 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _themeStore.themeColor,
       extendBody: true,
       bottomNavigationBar: Theme(
-        data: Theme.of(context)
-            .copyWith(iconTheme: const IconThemeData(color: Colors.white)),
+        data: Theme.of(context).copyWith(
+          iconTheme: const IconThemeData(color: Colors.white),
+        ),
         child: CurvedNavigationBar(
           key: _bottomNavigationKey,
-          color: Theme.of(context).primaryColor,
+          color: Color.alphaBlend(
+              _themeStore.themeColorfulColor.withOpacity(0.7),
+              _themeStore.reverseThemeColor),
           height: sizeBottomButton * 2,
           backgroundColor: Colors.transparent,
+          buttonBackgroundColor: _themeStore.reverseThemeColorfulColor,
           index: _initButtonIndex,
           animationCurve: curveEffect,
           animationDuration: durationEffect,

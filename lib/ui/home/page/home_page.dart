@@ -17,7 +17,9 @@ import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
 import 'package:mobile/widgets/button_widgets/neumorphism_button.dart';
 import 'package:mobile/widgets/container/image_container/network_image_widget.dart';
+import 'package:mobile/widgets/container/section_container/wrap_named_list_widget.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
+import 'package:mobile/widgets/glassmorphism_widgets/glassmorphism_widget_button.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -142,6 +144,57 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            WrapNamedListWidget(
+              themeColor: _themeStore.reverseThemeColor,
+              namedContainer:
+                  AppLocalizations.of(context).translate("programs_translate"),
+              margin: const EdgeInsets.symmetric(
+                vertical: Dimens.large_vertical_margin,
+              ),
+              children: <Widget>[
+                GlassmorphismWidgetButton(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.dashboard,
+                        color: _themeStore.reverseThemeColor,
+                        size: Dimens.large_text,
+                      ),
+                      const SizedBox(
+                        height: Dimens.vertical_margin,
+                      ),
+                      Text(
+                        AppLocalizations.of(context)
+                            .translate("sessions_translate"),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: _themeStore.reverseThemeColor,
+                            letterSpacing: 0.2,
+                            fontSize: Dimens.small_text),
+                      ),
+                    ],
+                  ),
+                  alignment: Alignment.center,
+                  width: 100,
+                  blur: Properties.blur_glass_morphism,
+                  opacity: Properties.opacity_glass_morphism,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Dimens.horizontal_padding,
+                    vertical: Dimens.vertical_padding,
+                  ),
+                  radius: 15,
+                  onTap: () {
+                    Routes.navigatorSupporter(
+                      context,
+                      Routes.tokenProfile,
+                    );
+                  },
+                ),
+              ],
+            ),
             // try to lazy loading for favourite mentor
             Text(
               AppLocalizations.of(context).translate("home_favourite_list"),
