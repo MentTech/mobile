@@ -3,7 +3,7 @@ import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/widgets/button_widgets/rounded_button_widget.dart';
-import 'package:mobile/widgets/textfield_widget.dart';
+import 'package:mobile/widgets/textfield/textfield_widget.dart';
 
 class FieldPopupTemplate extends StatefulWidget {
   const FieldPopupTemplate({

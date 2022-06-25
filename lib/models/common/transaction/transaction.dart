@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:mobile/models/common/dart_enum/status_type_enum.dart';
-import 'package:mobile/models/common/dart_enum/transaction_type_enum.dart';
+import 'package:mobile/stores/enum/status_type_enum.dart';
+import 'package:mobile/stores/enum/transaction_type_enum.dart';
 
 part 'transaction.g.dart';
 

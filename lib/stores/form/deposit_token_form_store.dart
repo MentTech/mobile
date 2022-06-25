@@ -1,3 +1,4 @@
+import 'package:mobile/stores/enum/payment_method.dart';
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:validators/validators.dart';
@@ -44,6 +45,9 @@ abstract class _DepositTokenFormStore with Store {
   @observable
   String note = '';
 
+  @observable
+  PaymentMethod paymentMethod = PaymentMethod.WireTransfer;
+
   @computed
   bool get canLoadToken =>
       !formErrorStore.hasErrorsLoad &&
@@ -74,6 +78,11 @@ abstract class _DepositTokenFormStore with Store {
   }
 
   @action
+  void setPaymentMethod(PaymentMethod paymentMethod) {
+    this.paymentMethod = paymentMethod;
+  }
+
+  @action
   void validateName(String value) {
     if (value.isEmpty) {
       formErrorStore.name = "Name can't be empty";
@@ -86,6 +95,8 @@ abstract class _DepositTokenFormStore with Store {
   void validateEmail(String value) {
     if (value.isEmpty) {
       formErrorStore.email = "Email can't be empty";
+    } else if (!isEmail(value)) {
+      formErrorStore.email = 'Please enter a valid email address';
     } else {
       formErrorStore.email = null;
     }
@@ -97,6 +108,8 @@ abstract class _DepositTokenFormStore with Store {
       formErrorStore.token = "Token can't be empty";
     } else if (!isNumeric(value)) {
       formErrorStore.token = "Token should be a Numeric";
+    } else if (int.parse(value) % 100 != 0) {
+      formErrorStore.token = "Tokens to deposit is a multiple of 100";
     } else {
       formErrorStore.token = null;
     }
@@ -117,10 +130,14 @@ abstract class _DepositTokenFormStore with Store {
     return {
       "name": name,
       "email": email,
-      "paymentMethod": "WireTransfer",
+      "paymentMethod": paymentMethod.name,
       "note": note,
       "token": int.parse(token),
     };
+  }
+
+  bool isSamePaymentMethod(PaymentMethod paymentMethod) {
+    return this.paymentMethod == paymentMethod;
   }
 
   void dispose() {

@@ -7,7 +7,7 @@ import 'package:mobile/stores/form/program_register_form_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
-import 'package:mobile/widgets/textfield_widget.dart';
+import 'package:mobile/widgets/textfield/textfield_widget.dart';
 
 class ProgramRegisterForm extends StatefulWidget {
   const ProgramRegisterForm({

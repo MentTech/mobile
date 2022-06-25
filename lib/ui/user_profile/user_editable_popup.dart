@@ -5,7 +5,7 @@ import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/authen_form/editable_user_infor_form_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
-import 'package:mobile/widgets/textfield_widget.dart';
+import 'package:mobile/widgets/textfield/textfield_widget.dart';
 
 class UserEditablePopup extends StatefulWidget {
   const UserEditablePopup({Key? key}) : super(key: key);

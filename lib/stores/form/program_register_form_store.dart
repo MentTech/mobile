@@ -1,5 +1,6 @@
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
+import 'package:validators/validators.dart';
 
 part 'program_register_form_store.g.dart';
 
@@ -113,6 +114,8 @@ abstract class _ProgramRegisterFormStore with Store {
   void validateEmail(String value) {
     if (value.isEmpty) {
       formErrorStore.email = "Email can't be empty";
+    } else if (!isEmail(value)) {
+      formErrorStore.email = 'Please enter a valid email address';
     } else {
       formErrorStore.email = null;
     }

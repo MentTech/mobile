@@ -15,4 +15,16 @@ class Assets {
   // assets images in app
   static const String settingsBackgroundAssets =
       'assets/images/study_background.jpg';
+
+  // assets images in app
+  static const String paymentMethodPaypal =
+      'assets/icons/payment_method/paypal_icon.png';
+  static const String paymentMethodWireTransfer =
+      'assets/icons/payment_method/wire_transfer_icon.png';
+  static const String paymentMethodMomo =
+      'assets/icons/payment_method/momo_icon.png';
+  static const String paymentMethodViettelPay =
+      'assets/icons/payment_method/viettelpay_icon.png';
+  static const String paymentMethodZaloPay =
+      'assets/icons/payment_method/zalopay_icon.png';
 }

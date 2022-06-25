@@ -15,6 +15,12 @@ mixin _$OrderStore on _OrderStore, Store {
   bool get isLoading => (_$isLoadingComputed ??=
           Computed<bool>(() => super.isLoading, name: '_OrderStore.isLoading'))
       .value;
+  Computed<bool>? _$isSuccessComputed;
+
+  @override
+  bool get isSuccess => (_$isSuccessComputed ??=
+          Computed<bool>(() => super.isSuccess, name: '_OrderStore.isSuccess'))
+      .value;
 
   late final _$successAtom =
       Atom(name: '_OrderStore.success', context: context);
@@ -87,7 +93,8 @@ mixin _$OrderStore on _OrderStore, Store {
 success: ${success},
 rateTopup: ${rateTopup},
 requestFuture: ${requestFuture},
-isLoading: ${isLoading}
+isLoading: ${isLoading},
+isSuccess: ${isSuccess}
     ''';
   }
 }

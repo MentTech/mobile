@@ -17,7 +17,7 @@ import 'package:mobile/widgets/background_colorful/linear_gradient_background.da
 import 'package:mobile/widgets/container/image_container/network_image_widget.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:mobile/widgets/popup_template/hero_popup_routes.dart';
-import 'package:mobile/widgets/textfield_widget.dart';
+import 'package:mobile/widgets/textfield/textfield_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:readmore/readmore.dart';

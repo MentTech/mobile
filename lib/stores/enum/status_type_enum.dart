@@ -9,7 +9,7 @@ enum StatusType {
   HOLD,
 }
 
-extension TransactionTypeExtension on StatusType {
+extension StatusTypeExtension on StatusType {
   String toTranslateCode() {
     return name.toLowerCase() + "_status_translate";
   }

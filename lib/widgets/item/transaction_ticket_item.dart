@@ -8,9 +8,9 @@ import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:readmore/readmore.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:mobile/models/common/dart_enum/status_type_enum.dart';
 import 'package:mobile/utils/extension/datetime_extension.dart';
-import 'package:mobile/models/common/dart_enum/transaction_type_enum.dart';
+import 'package:mobile/stores/enum/transaction_type_enum.dart';
+import 'package:mobile/stores/enum/status_type_enum.dart';
 
 class TransactionTicketItem extends StatelessWidget {
   TransactionTicketItem({

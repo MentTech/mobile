@@ -16,7 +16,8 @@ import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:mobile/widgets/progress_indicator_widget.dart';
-import 'package:mobile/widgets/textfield_widget.dart';
+import 'package:mobile/widgets/textfield/textfield_name_before.dart';
+import 'package:mobile/widgets/textfield/textfield_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile/utils/extension/datetime_extension.dart';
 
@@ -229,98 +230,36 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   Widget _buildEmaildField() {
-    return Container(
-      clipBehavior: Clip.none,
-      margin: const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            flex: 5,
-            child: Text(
+    return Observer(
+      builder: (_) {
+        return TextFieldNameWidget(
+          labelText:
               AppLocalizations.of(context).translate("email_label_translate"),
-              style: TextStyle(
-                color: _themeStore.reverseThemeColor,
-                fontSize: Dimens.small_text,
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 15,
-            child: Observer(
-              builder: (_) {
-                return TextFieldWidget(
-                  hint: AppLocalizations.of(context)
-                      .translate('email_label_translate'),
-                  hintColor: _themeStore.reverseThemeColor,
-                  textStyle: TextStyle(
-                    color: _themeStore.reverseThemeColor,
-                    fontSize: Dimens.small_text,
-                  ),
-                  isIcon: false,
-                  inputType: TextInputType.emailAddress,
-                  iconColor: _themeStore.reverseThemeColor,
-                  textController: _emailController,
-                  inputAction: TextInputAction.done,
-                  autoFocus: false,
-                  onChanged: (value) {
-                    _formStore.setEmail(_emailController.text);
-                  },
-                  errorText: _formStore.formErrorStore.email,
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+          errorText: _formStore.formErrorStore.email,
+          controller: _emailController,
+          textColor: _themeStore.reverseThemeColor,
+          onValueChanged: (value) {
+            _formStore.setEmail(_emailController.text);
+          },
+        );
+      },
     );
   }
 
   Widget _buildNameField() {
-    return Container(
-      clipBehavior: Clip.none,
-      margin: const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            flex: 5,
-            child: Text(
+    return Observer(
+      builder: (_) {
+        return TextFieldNameWidget(
+          labelText:
               AppLocalizations.of(context).translate("name_label_translate"),
-              style: TextStyle(
-                color: _themeStore.reverseThemeColor,
-                fontSize: Dimens.small_text,
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 15,
-            child: Observer(
-              builder: (_) {
-                return TextFieldWidget(
-                  hint: AppLocalizations.of(context)
-                      .translate('name_label_translate'),
-                  hintColor: _themeStore.reverseThemeColor,
-                  textStyle: TextStyle(
-                    color: _themeStore.reverseThemeColor,
-                    fontSize: Dimens.small_text,
-                  ),
-                  isIcon: false,
-                  inputType: TextInputType.emailAddress,
-                  iconColor: _themeStore.reverseThemeColor,
-                  textController: _nameController,
-                  inputAction: TextInputAction.done,
-                  autoFocus: false,
-                  onChanged: (value) {
-                    _formStore.setName(_nameController.text);
-                  },
-                  errorText: _formStore.formErrorStore.name,
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+          errorText: _formStore.formErrorStore.name,
+          controller: _nameController,
+          textColor: _themeStore.reverseThemeColor,
+          onValueChanged: (value) {
+            _formStore.setName(_nameController.text);
+          },
+        );
+      },
     );
   }
 
@@ -374,50 +313,19 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   Widget _buildPhoneField() {
-    return Container(
-      clipBehavior: Clip.none,
-      margin: const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            flex: 5,
-            child: Text(
+    return Observer(
+      builder: (_) {
+        return TextFieldNameWidget(
+          labelText:
               AppLocalizations.of(context).translate("phone_label_translate"),
-              style: TextStyle(
-                color: _themeStore.reverseThemeColor,
-                fontSize: Dimens.small_text,
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 15,
-            child: Observer(
-              builder: (_) {
-                return TextFieldWidget(
-                  hint: AppLocalizations.of(context)
-                      .translate('phone_label_translate'),
-                  hintColor: _themeStore.reverseThemeColor,
-                  textStyle: TextStyle(
-                    color: _themeStore.reverseThemeColor,
-                    fontSize: Dimens.small_text,
-                  ),
-                  isIcon: false,
-                  inputType: TextInputType.emailAddress,
-                  iconColor: _themeStore.reverseThemeColor,
-                  textController: _phoneController,
-                  inputAction: TextInputAction.done,
-                  autoFocus: false,
-                  onChanged: (value) {
-                    _formStore.setPhone(_phoneController.text);
-                  },
-                  errorText: _formStore.formErrorStore.phone,
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+          errorText: _formStore.formErrorStore.phone,
+          controller: _phoneController,
+          textColor: _themeStore.reverseThemeColor,
+          onValueChanged: (value) {
+            _formStore.setPhone(_phoneController.text);
+          },
+        );
+      },
     );
   }
 

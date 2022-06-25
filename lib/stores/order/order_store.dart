@@ -25,7 +25,9 @@ abstract class _OrderStore with Store {
   late List<ReactionDisposer> _disposers;
 
   void _setupDisposers() {
-    _disposers = [];
+    _disposers = [
+      reaction((_) => success, (_) => success = false, delay: 200),
+    ];
   }
 
   // empty responses:-----------------------------------------------------------
@@ -48,6 +50,9 @@ abstract class _OrderStore with Store {
   @computed
   bool get isLoading => requestFuture.status == FutureStatus.pending;
 
+  @computed
+  bool get isSuccess => success;
+
   // actions:-------------------------------------------------------------------
   @action
   Future fetchTopupRate() async {
@@ -59,6 +64,7 @@ abstract class _OrderStore with Store {
           String? topUpRate = res!["topUpRate"];
           if (null != topUpRate && topUpRate.isNotEmpty) {
             success = true;
+            rateTopup = int.parse(topUpRate);
           }
         } catch (e) {
           // res['message']
@@ -138,12 +144,18 @@ abstract class _OrderStore with Store {
     future.then((res) {
       try {
         // rateModels = ObservableList.of(RateModelList.fromJson(res!).rateModels);
+        final String? orderID = res!["orderId"];
+        if (null != orderID && orderID.isNotEmpty) {
+          messageStore.successMessage =
+              "You create a request load tokens successfully.";
+        } else {
+          messageStore.errorMessage = "Your request has been failed.";
+        }
 
         success = true;
       } catch (e) {
         // res['message']
         messageStore.errorMessage = e.toString();
-        messageStore.successMessage = "[orderATopup] error to post order";
 
         success = false;
       }

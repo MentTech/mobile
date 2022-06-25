@@ -81,6 +81,22 @@ mixin _$DepositTokenFormStore on _DepositTokenFormStore, Store {
     });
   }
 
+  late final _$paymentMethodAtom =
+      Atom(name: '_DepositTokenFormStore.paymentMethod', context: context);
+
+  @override
+  PaymentMethod get paymentMethod {
+    _$paymentMethodAtom.reportRead();
+    return super.paymentMethod;
+  }
+
+  @override
+  set paymentMethod(PaymentMethod value) {
+    _$paymentMethodAtom.reportWrite(value, super.paymentMethod, () {
+      super.paymentMethod = value;
+    });
+  }
+
   late final _$_DepositTokenFormStoreActionController =
       ActionController(name: '_DepositTokenFormStore', context: context);
 
@@ -123,6 +139,17 @@ mixin _$DepositTokenFormStore on _DepositTokenFormStore, Store {
         name: '_DepositTokenFormStore.setNote');
     try {
       return super.setNote(value);
+    } finally {
+      _$_DepositTokenFormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setPaymentMethod(PaymentMethod paymentMethod) {
+    final _$actionInfo = _$_DepositTokenFormStoreActionController.startAction(
+        name: '_DepositTokenFormStore.setPaymentMethod');
+    try {
+      return super.setPaymentMethod(paymentMethod);
     } finally {
       _$_DepositTokenFormStoreActionController.endAction(_$actionInfo);
     }
@@ -179,6 +206,7 @@ name: ${name},
 email: ${email},
 token: ${token},
 note: ${note},
+paymentMethod: ${paymentMethod},
 canLoadToken: ${canLoadToken}
     ''';
   }

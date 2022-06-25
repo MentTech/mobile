@@ -20,7 +20,7 @@ import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:mobile/widgets/progress_indicator_widget.dart';
 import 'package:mobile/widgets/button_widgets/rounded_button_widget.dart';
 import 'package:mobile/widgets/text_view/text_widget.dart';
-import 'package:mobile/widgets/textfield_widget.dart';
+import 'package:mobile/widgets/textfield/textfield_widget.dart';
 import 'package:provider/provider.dart';
 
 class AuthorizationScreen extends StatefulWidget {
