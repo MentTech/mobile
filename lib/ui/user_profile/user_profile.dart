@@ -251,7 +251,7 @@ class _UserProfileState extends State<UserProfile> {
               builder: (_) {
                 return TextFieldWidget(
                   hint: AppLocalizations.of(context)
-                      .translate('login_et_user_email'),
+                      .translate('email_label_translate'),
                   hintColor: _themeStore.reverseThemeColor,
                   textStyle: TextStyle(
                     color: _themeStore.reverseThemeColor,
@@ -299,7 +299,7 @@ class _UserProfileState extends State<UserProfile> {
               builder: (_) {
                 return TextFieldWidget(
                   hint: AppLocalizations.of(context)
-                      .translate('login_et_user_email'),
+                      .translate('name_label_translate'),
                   hintColor: _themeStore.reverseThemeColor,
                   textStyle: TextStyle(
                     color: _themeStore.reverseThemeColor,
@@ -348,7 +348,7 @@ class _UserProfileState extends State<UserProfile> {
               builder: (_) {
                 return TextFieldWidget(
                   hint: AppLocalizations.of(context)
-                      .translate('login_et_user_email'),
+                      .translate('birthday_label_translate'),
                   hintColor: _themeStore.reverseThemeColor,
                   textStyle: TextStyle(
                     color: _themeStore.reverseThemeColor,
@@ -396,7 +396,7 @@ class _UserProfileState extends State<UserProfile> {
               builder: (_) {
                 return TextFieldWidget(
                   hint: AppLocalizations.of(context)
-                      .translate('login_et_user_email'),
+                      .translate('phone_label_translate'),
                   hintColor: _themeStore.reverseThemeColor,
                   textStyle: TextStyle(
                     color: _themeStore.reverseThemeColor,

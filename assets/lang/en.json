@@ -111,6 +111,8 @@
   "register_session_status_success": "You have registered this session successfully",
   "fill_register_fields_note_translate": "Please Fill In All The Fields\nTo Register This Program",
   "session_register_end": "-------------------------------------------------------------------------",
+  "deposit_rule": "The number of tokens to deposit is a multiple of",
+  "deposit_end": "----------------------------------------------------------------------------------",
   "mark_session_as_done": "Mark this session as done",
   "unregister_session": "Unregister this session",
   "want_to_change_question": "Do you want to apply change?",

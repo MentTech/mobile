@@ -336,6 +336,28 @@ class Repository {
     });
   }
 
+  // Order:---------------------------------------------------------------------
+  Future<Map<String, dynamic>?> fetchTopupRate() async {
+    return _transactionAPI.fetchTopupRate().catchError((error) {
+      return {
+        "onError": error.toString(),
+      };
+    });
+  }
+
+  Future<Map<String, dynamic>?> createTopupOrder({
+    required String authToken,
+    required Map<String, dynamic> orderInfor,
+  }) async {
+    return _transactionAPI
+        .createTopupOrder(authToken: authToken, orderInfor: orderInfor)
+        .catchError((error) {
+      return {
+        "onError": error.toString(),
+      };
+    });
+  }
+
   // Future<List<Post>> findPostById(int id) {
   //   //creating filter
   //   List<Filter> filters = [];

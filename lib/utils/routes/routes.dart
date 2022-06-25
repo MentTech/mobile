@@ -4,6 +4,7 @@ import 'package:mobile/effects/navigate/screen_transition.dart';
 import 'package:mobile/ui/advanced_settings/advanced_settings.dart';
 import 'package:mobile/ui/authorization/authorization_screen.dart';
 import 'package:mobile/ui/home/home.dart';
+import 'package:mobile/ui/more_token/deposit_token.dart';
 import 'package:mobile/ui/password_changer/password_changer.dart';
 import 'package:mobile/ui/program_register/program_register_screen.dart';
 import 'package:mobile/ui/splash/splash.dart';
@@ -24,6 +25,7 @@ class Routes {
   // static const String sessionDetail = '/session_detail';
   static const String advancedSettings = '/advanced_settings';
   static const String changePasswordSettings = '/change_password_settings';
+  static const String depositToken = '/deposit_token';
   // static const String mentorProfile = '/mentor_profile';
   static const String testScreen = '/test_screen';
 
@@ -38,6 +40,7 @@ class Routes {
     advancedSettings: (BuildContext context) => AdvancedSettings(),
     changePasswordSettings: (BuildContext context) =>
         const PasswordChangerScreen(),
+    depositToken: (BuildContext context) => const DepositToken(),
     // mentorProfile: (BuildContext context) => const MentorProfile(),
     testScreen: (BuildContext context) => const TestScreen(),
   };

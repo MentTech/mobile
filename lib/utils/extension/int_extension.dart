@@ -1,6 +1,6 @@
 extension StringExtension on int {
-  String toTokenValueString() {
-    if (this != 1) {
+  String toTokenValueString({required String locale}) {
+    if (1 == this && "en".compareTo(locale) == 0) {
       return "$this token";
     }
     return "$this tokens";

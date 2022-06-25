@@ -26,10 +26,12 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        LinearGradientBackground(
-          colors: themeStore.lineToLineGradientColors,
-          stops: null,
-        ),
+        Observer(builder: (_) {
+          return LinearGradientBackground(
+            colors: themeStore.lineToLineGradientColors,
+            stops: null,
+          );
+        }),
         Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: Dimens.horizontal_padding,

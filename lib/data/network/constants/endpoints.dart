@@ -126,4 +126,18 @@ class Endpoints {
   static const String fetchUserTransactions = baseUrl + "/transaction/balance";
 
   //:---------------------------------------------------------------------------
+
+  /// Order APIS
+  ///
+
+  /// Private Order proxy
+  static const String _orderProxy = baseUrl + "/order";
+
+  /// Get rate of Topup per currency
+  static const String fetchTopupRatePerCurrency = _orderProxy + "/rate/top-up";
+
+  /// Create a Topup Order
+  static const String createTopupOrder = _orderProxy + "/top-up";
+
+  //:---------------------------------------------------------------------------
 }

@@ -134,9 +134,10 @@ class _BalancedProfileState extends State<BalancedProfile> {
       builder: (_, scrollController) {
         return Material(
           elevation: 10,
-          color: _themeStore.themeColor
-              .withGreen((_themeStore.themeColorfulColor.green * 0.5).round())
-              .withBlue((_themeStore.themeColorfulColor.blue * 0.5).round())
+          color: Color.alphaBlend(
+                  _themeStore.themeColorfulColor
+                      .withOpacity(_themeStore.opacityTheme),
+                  _themeStore.reverseThemeColor)
               .withOpacity(_themeStore.opacityTheme),
           shape: const RoundedRectangleBorder(
             side: BorderSide(
@@ -334,7 +335,9 @@ class _BalancedProfileState extends State<BalancedProfile> {
                 ],
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Routes.navigatorSupporter(context, Routes.depositToken);
+                },
                 icon: Icon(
                   Icons.local_atm_rounded,
                   color: _themeStore.reverseThemeColor,

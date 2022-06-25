@@ -175,7 +175,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
                 child: CustomProgressIndicatorWidget(),
               );
             },
-          )
+          ),
         ],
       ),
     );
