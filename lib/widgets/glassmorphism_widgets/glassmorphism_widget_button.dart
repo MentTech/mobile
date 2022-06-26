@@ -25,7 +25,7 @@ class GlassmorphismWidgetButton extends StatelessWidget {
     this.padding = const EdgeInsets.all(0),
     this.fontSizeText = Dimens.small_text,
     this.textColor = AppColors.lightTextTheme,
-    this.alignment = Alignment.topLeft,
+    this.alignment,
     this.onTap,
   }) : super(key: key);
 
@@ -40,33 +40,34 @@ class GlassmorphismWidgetButton extends StatelessWidget {
   final Color background;
   final Color border;
   final Gradient gradientBorder;
-  final Alignment alignment;
+  final Alignment? alignment;
   final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(radius),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: blur,
-          sigmaY: blur,
-        ),
-        child: InkWell(
-          onTap: onTap,
-          child: Container(
-            width: width,
-            padding: padding,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(radius),
-              color: background.withOpacity(opacity),
-              border: Border.all(
-                width: 1.5,
-                color: border.withOpacity(opacity),
-              ),
+    return Ink(
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(radius)),
+      child: InkWell(
+        onTap: onTap,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(radius),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: blur,
+              sigmaY: blur,
             ),
-            child: Align(
+            child: Container(
               alignment: alignment,
+              width: width,
+              padding: padding,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(radius),
+                color: background.withOpacity(opacity),
+                border: Border.all(
+                  width: 1.5,
+                  color: border.withOpacity(opacity),
+                ),
+              ),
               child: child,
             ),
           ),

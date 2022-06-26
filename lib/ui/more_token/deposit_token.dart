@@ -44,8 +44,8 @@ class _DepositTokenState extends State<DepositToken> {
   final DepositTokenFormStore _depositTokenFormStore = DepositTokenFormStore();
 
   // attributes:----------------------------------------------------------------
-  late final double edgeDimensPaymentMethod;
-  late final double iconLogoEdgeDimens;
+  late double edgeDimensPaymentMethod;
+  late double iconLogoEdgeDimens;
 
   // init:----------------------------------------------------------------------
   @override
@@ -143,7 +143,6 @@ class _DepositTokenState extends State<DepositToken> {
       margin:
           const EdgeInsets.symmetric(vertical: Dimens.large_vertical_margin),
       child: GlassmorphismWidgetButton(
-        alignment: Alignment.center,
         radius: Dimens.kBorderRadiusValue,
         child: TextButton(
           onPressed: () {
@@ -410,6 +409,8 @@ class _DepositTokenState extends State<DepositToken> {
         });
       });
     }
+
+    return const SizedBox.shrink();
   }
 }
 

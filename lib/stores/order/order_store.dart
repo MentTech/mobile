@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:mobile/data/repository.dart';
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
@@ -63,7 +65,6 @@ abstract class _OrderStore with Store {
         try {
           String? topUpRate = res!["topUpRate"];
           if (null != topUpRate && topUpRate.isNotEmpty) {
-            success = true;
             rateTopup = int.parse(topUpRate);
           }
         } catch (e) {

@@ -152,3 +152,19 @@ Future<Map<String, dynamic>> longRequest() async {
   await Future.delayed(const Duration(seconds: 2));
   return Future.value({});
 }
+
+
+// @action
+// Future<void> fakeLongAPI() async {
+//   final Future<Map<String, dynamic>> future = fake();
+
+//   requestFuture = ObservableFuture(future);
+
+//   future.then((value) => success = true);
+// }
+
+// Future<Map<String, dynamic>> fake() async {
+//   await Future.delayed(const Duration(seconds: 3));
+
+//   return Future.value({});
+// }
