@@ -72,6 +72,17 @@ mixin _$MessageStore on _MessageStore, Store {
   }
 
   @override
+  void setErrorMessageByCode(int code) {
+    final _$actionInfo = _$_MessageStoreActionController.startAction(
+        name: '_MessageStore.setErrorMessageByCode');
+    try {
+      return super.setErrorMessageByCode(code);
+    } finally {
+      _$_MessageStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setSuccessMessage(String message) {
     final _$actionInfo = _$_MessageStoreActionController.startAction(
         name: '_MessageStore.setSuccessMessage');

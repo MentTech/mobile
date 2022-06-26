@@ -47,7 +47,7 @@ class TextFieldWidget extends StatelessWidget {
               enabledBorder: hasBorder
                   ? OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Theme.of(context).dividerColor,
+                        color: Theme.of(context).highlightColor,
                       ),
                       borderRadius: BorderRadius.circular(
                         Dimens.kBorderMaxRadiusValue,
@@ -56,14 +56,14 @@ class TextFieldWidget extends StatelessWidget {
                     )
                   : UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: Theme.of(context).dividerColor,
+                        color: Theme.of(context).highlightColor,
                       ),
                       borderRadius: Dimens.kBorderRadius,
                     ),
               focusedBorder: hasBorder
                   ? OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Theme.of(context).dividerColor,
+                        color: Theme.of(context).highlightColor,
                       ),
                       borderRadius: BorderRadius.circular(
                         Dimens.kBorderMaxRadiusValue,
@@ -72,14 +72,18 @@ class TextFieldWidget extends StatelessWidget {
                     )
                   : UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: Theme.of(context).dividerColor,
+                        color: Theme.of(context).highlightColor,
                         width: 3,
                       ),
                       borderRadius: Dimens.kBorderRadius,
                     ),
               focusColor: Theme.of(context).focusColor,
               hintText: hint,
-              hintStyle: textStyle ?? Theme.of(context).textTheme.bodyMedium,
+              hintStyle: textStyle ??
+                  Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(color: Theme.of(context).hintColor),
               errorText: errorText,
               counterText: '',
               icon: IconTheme(

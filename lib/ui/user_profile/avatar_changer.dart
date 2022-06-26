@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile/constants/dimens.dart';
-import 'package:mobile/di/components/service_locator.dart';
-import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
@@ -30,7 +28,6 @@ class _AvatarChangerState extends State<AvatarChanger> {
 
   // store:---------------------------------------------------------------------
   late final UserStore _userStore;
-  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   // variable:------------------------------------------------------------------
   File? image;
@@ -87,12 +84,14 @@ class _AvatarChangerState extends State<AvatarChanger> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     boxShadow: [
-                      const BoxShadow(
-                          color: Colors.black,
-                          blurRadius: 10,
-                          offset: Offset(-3, 5)),
                       BoxShadow(
-                          color: _themeStore.reverseThemeColorfulColor,
+                          color: Theme.of(context).highlightColor,
+                          blurRadius: 20,
+                          spreadRadius: 5,
+                          offset: const Offset(-3, 5)),
+                      BoxShadow(
+                          color:
+                              Theme.of(context).highlightColor.withOpacity(0.2),
                           spreadRadius: 5,
                           offset: const Offset(-2, 2)),
                     ],
@@ -121,10 +120,10 @@ class _AvatarChangerState extends State<AvatarChanger> {
                 Text(
                   AppLocalizations.of(context)
                       .translate("change_profile_photo_label_translate"),
-                  style: TextStyle(
-                    fontSize: Dimens.small_text,
-                    color: _themeStore.reverseThemeColor,
-                  ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .copyWith(fontWeight: FontWeight.w400),
                 ),
               ],
             )),

@@ -15,6 +15,9 @@ abstract class _MessageStore with Store {
     ];
   }
 
+  // attributes:----------------------------------------------------------------
+  final ResponseCode _responseCodeInstance = ResponseCode();
+
   // store variables:-----------------------------------------------------------
   @observable
   String errorMessage = '';
@@ -29,6 +32,11 @@ abstract class _MessageStore with Store {
   @action
   void setErrorMessage(String message) {
     errorMessage = message;
+  }
+
+  @action
+  void setErrorMessageByCode(int code) {
+    errorMessage = _responseCodeInstance.notifyMessage(code);
   }
 
   @action
@@ -53,5 +61,24 @@ abstract class _MessageStore with Store {
     for (final d in _disposers) {
       d();
     }
+  }
+}
+
+class ResponseCode {
+  final Map<int, String> responseCode = <int, String>{};
+
+  bool _authenticated = false;
+
+  set setAuthenticate(bool authenticated) {
+    _authenticated = authenticated;
+  }
+
+  bool get isAuthen => _authenticated;
+
+  ResponseCode();
+
+  String notifyMessage(int code) {
+    // if some code is unauthen = > set unauthen = true
+    return responseCode[code]! + "_translate";
   }
 }

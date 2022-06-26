@@ -147,7 +147,7 @@ class _UserProfileState extends State<UserProfile> {
 
   Widget _buildHeaderWidget() {
     return GlassmorphismContainer(
-      border: Theme.of(context).dividerColor,
+      border: Theme.of(context).highlightColor,
       radius: 0,
       child: SafeArea(
         child: Row(
@@ -160,7 +160,10 @@ class _UserProfileState extends State<UserProfile> {
               child: Text(
                 AppLocalizations.of(context)
                     .translate("cancel_button_translate"),
-                style: Theme.of(context).textTheme.bodySmall,
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color: Colors.red.shade600,
+                      fontWeight: FontWeight.w500,
+                    ),
               ),
             ),
             Text(
@@ -178,7 +181,10 @@ class _UserProfileState extends State<UserProfile> {
               },
               child: Text(
                 AppLocalizations.of(context).translate("done_button_translate"),
-                style: Theme.of(context).textTheme.labelSmall,
+                style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                      color: Colors.green.shade700,
+                      fontWeight: FontWeight.w500,
+                    ),
               ),
             ),
           ],
@@ -265,10 +271,7 @@ class _UserProfileState extends State<UserProfile> {
             child: Text(
               AppLocalizations.of(context)
                   .translate("birthday_label_translate"),
-              style: TextStyle(
-                color: Theme.of(context).highlightColor,
-                fontSize: Dimens.small_text,
-              ),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
           Expanded(
