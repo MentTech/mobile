@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:mobile/models/common/achievement/achievement.dart';
 import 'package:mobile/models/common/category/category.dart';
 import 'package:mobile/models/common/degree/degree.dart';
 import 'package:mobile/models/common/experience/experience.dart';
@@ -68,8 +69,11 @@ class UserMentor {
   List<Program>? programs;
   Category category;
   List<Skill> skills;
-  List<Degree> degree;
+
+  @JsonKey(name: "degree")
+  List<Degree> degrees;
   List<Experience> experiences;
+  List<Achievement> achievements;
 
   UserMentor({
     // required this.linkedin,
@@ -78,8 +82,9 @@ class UserMentor {
     required this.programs,
     required this.category,
     this.skills = const <Skill>[],
-    this.degree = const <Degree>[],
+    this.degrees = const <Degree>[],
     this.experiences = const <Experience>[],
+    this.achievements = const <Achievement>[],
   });
 
   factory UserMentor.fromJson(Map<String, dynamic> json) =>

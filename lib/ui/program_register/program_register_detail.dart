@@ -4,13 +4,11 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
-import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/common/program/program.dart';
 import 'package:mobile/models/mentor/mentor.dart';
 import 'package:mobile/models/rate/rate.dart';
 import 'package:mobile/stores/common/common_store.dart';
 import 'package:mobile/stores/mentor/mentor_store.dart';
-import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/ui/mentor_detail/mentor_profile.dart';
 import 'package:mobile/utils/application/application_utils.dart';
 import 'package:mobile/utils/device/device_utils.dart';
@@ -33,7 +31,6 @@ class ProgramRegisterDetail extends StatefulWidget {
 
 class _ProgramRegisterDetailState extends State<ProgramRegisterDetail> {
   // store:---------------------------------------------------------------------
-  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   late final MentorStore _mentorStore;
   late final CommonStore _commonStore;
@@ -103,11 +100,10 @@ class _ProgramRegisterDetailState extends State<ProgramRegisterDetail> {
                       program.title +
                           "\n${AppLocalizations.of(context).translate('with_translate')} " +
                           mentorModel.name,
-                      style: TextStyle(
-                        fontSize: Dimens.large_text,
-                        color: _themeStore.reverseThemeColor,
-                        height: 1.5,
-                      ),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(height: 1.5),
                     )
                   ],
                 ),
@@ -133,17 +129,15 @@ class _ProgramRegisterDetailState extends State<ProgramRegisterDetail> {
                     horizontal: Dimens.more_small_horizontal_padding,
                   ),
                   child: SymbolsItem(
-                    symbol: Icon(
-                      Icons.monetization_on_outlined,
-                      size: Dimens.large_text,
-                      color: _themeStore.reverseThemeColor,
+                    symbol: IconTheme(
+                      data: Theme.of(context)
+                          .iconTheme
+                          .copyWith(size: Dimens.large_text),
+                      child: const Icon(Icons.monetization_on_outlined),
                     ),
                     child: Text(
                       " ${program.credit}",
-                      style: TextStyle(
-                        fontSize: Dimens.small_text,
-                        color: _themeStore.reverseThemeColor,
-                      ),
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
                   blur: Properties.blur_glass_morphism,
@@ -154,10 +148,7 @@ class _ProgramRegisterDetailState extends State<ProgramRegisterDetail> {
                 ),
                 Text(
                   mentorModel.userMentor.category.name,
-                  style: TextStyle(
-                    fontSize: Dimens.lightly_medium_text,
-                    color: _themeStore.reverseThemeColor,
-                  ),
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
             ),
@@ -165,12 +156,10 @@ class _ProgramRegisterDetailState extends State<ProgramRegisterDetail> {
           program.createAt != null
               ? Text(
                   "${AppLocalizations.of(context).translate('create_at_translate')} ${program.createAt!.toFulltimeString()}",
-                  style: TextStyle(
-                    fontSize: Dimens.small_text,
-                    color: _themeStore.reverseThemeColor,
-                    height: 1.5,
-                  ),
-                )
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .copyWith(height: 1.5))
               : const SizedBox(),
           // ReadMoreText(
           //   program.detail,
@@ -186,11 +175,11 @@ class _ProgramRegisterDetailState extends State<ProgramRegisterDetail> {
             shrinkWrap: true,
             style: {
               "li": Style(
-                color: _themeStore.reverseThemeColor,
+                color: Theme.of(context).indicatorColor,
                 fontSize: const FontSize(Dimens.small_text),
               ),
               "p": Style(
-                color: _themeStore.reverseThemeColor,
+                color: Theme.of(context).indicatorColor,
                 fontSize: const FontSize(Dimens.small_text),
               ),
             },
@@ -229,11 +218,10 @@ class _ProgramRegisterDetailState extends State<ProgramRegisterDetail> {
               children: [
                 Text(
                   AppLocalizations.of(context).translate("discusstion"),
-                  style: const TextStyle(
-                    fontSize: Dimens.lightly_medium_text,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white70,
-                  ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(fontWeight: FontWeight.w500),
                 ),
                 StarRateWidget(
                   rating: program.averageRating?.average ?? 0.0,
@@ -249,7 +237,7 @@ class _ProgramRegisterDetailState extends State<ProgramRegisterDetail> {
                 SizedBox(
                   width: DeviceUtils.getScaledWidth(context, 0.5),
                   child: Divider(
-                    color: _themeStore.reverseThemeColorfulColor,
+                    color: Theme.of(context).highlightColor,
                     thickness: 3,
                     indent: Dimens.large_horizontal_margin,
                     endIndent: Dimens.large_horizontal_margin,
@@ -258,7 +246,7 @@ class _ProgramRegisterDetailState extends State<ProgramRegisterDetail> {
                 SizedBox(
                   width: DeviceUtils.getScaledWidth(context, 1.0),
                   child: Divider(
-                    color: _themeStore.reverseThemeColor,
+                    color: Theme.of(context).indicatorColor,
                     thickness: 1,
                     indent: Dimens.large_horizontal_margin,
                     endIndent: Dimens.large_horizontal_margin,
@@ -345,8 +333,8 @@ class _ProgramRegisterDetailState extends State<ProgramRegisterDetail> {
 
   Widget _buildProgramShimmerLoading() {
     return ProgramRegisterDetailShimmer(
-      baseColor: _themeStore.light.withOpacity(0.5),
-      highlightColor: _themeStore.themeColorfulColorShimmer,
+      baseColor: Colors.white70.withOpacity(0.5),
+      highlightColor: Theme.of(context).splashColor,
     );
   }
 }
@@ -468,11 +456,10 @@ class ProgramRegisterDetailShimmer extends StatelessWidget {
                 children: [
                   Text(
                     AppLocalizations.of(context).translate("discusstion"),
-                    style: const TextStyle(
-                      fontSize: Dimens.lightly_medium_text,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white70,
-                    ),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(fontWeight: FontWeight.w500),
                   ),
                   _ShimmerSection(
                     child: Container(

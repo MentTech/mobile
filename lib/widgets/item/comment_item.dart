@@ -28,9 +28,7 @@ class CommentItem extends StatelessWidget {
         ),
         title: Text(
           rateModel.user.name,
-          style: const TextStyle(
-            color: Colors.white70,
-          ),
+          style: Theme.of(context).textTheme.bodySmall,
         ),
         subtitle: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -47,7 +45,7 @@ class CommentItem extends StatelessWidget {
                     onReviewChange: null,
                     canReact: false,
                     rate: rateModel.rating.round(),
-                    chooseColor: Colors.yellow,
+                    chooseColor: Theme.of(context).selectedRowColor,
                     sizeStar: Dimens.lightly_medium_text,
                   ),
                   Text(
@@ -55,9 +53,7 @@ class CommentItem extends StatelessWidget {
                       rateModel.createAt,
                       locale: AppLocalizations.of(context).locale.languageCode,
                     ),
-                    style: const TextStyle(
-                      color: Colors.white70,
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
               ),
@@ -66,9 +62,7 @@ class CommentItem extends StatelessWidget {
               rateModel.comment,
               trimMode: TrimMode.Line,
               trimLines: 1,
-              style: const TextStyle(
-                color: Colors.white70,
-              ),
+              style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
         ),

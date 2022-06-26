@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
-import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/common/skill/skill.dart';
-import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 
 class SkillWidgetContainer extends StatelessWidget {
-  SkillWidgetContainer({
+  const SkillWidgetContainer({
     Key? key,
     required this.width,
     required this.skill,
@@ -21,8 +19,6 @@ class SkillWidgetContainer extends StatelessWidget {
   final Skill skill;
   final EdgeInsets padding;
   final EdgeInsets margin;
-
-  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +36,9 @@ class SkillWidgetContainer extends StatelessWidget {
                 vertical: Dimens.vertical_padding,
               ),
               child: CircleProgressBar(
-                foregroundColor: _themeStore.reverseThemeColor,
-                backgroundColor: _themeStore.reverseThemeColor.withOpacity(0.3),
+                foregroundColor: Theme.of(context).indicatorColor,
+                backgroundColor:
+                    Theme.of(context).indicatorColor.withOpacity(0.3),
                 value: skill.abilityPercent,
                 animationDuration: const Duration(
                   milliseconds: Properties.animatedTimeInMiliSecond,
@@ -49,10 +46,7 @@ class SkillWidgetContainer extends StatelessWidget {
                 child: Center(
                   child: Text(
                     NumberFormat(".##%").format(skill.abilityPercent),
-                    style: TextStyle(
-                      fontSize: Dimens.medium_text,
-                      color: _themeStore.reverseThemeColor,
-                    ),
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
               ),
@@ -60,11 +54,10 @@ class SkillWidgetContainer extends StatelessWidget {
             Text(
               skill.description ?? "Unknown",
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: Dimens.small_text,
-                fontWeight: FontWeight.w500,
-                color: _themeStore.reverseThemeColor,
-              ),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall!
+                  .copyWith(fontWeight: FontWeight.w500),
             )
           ],
         ),

@@ -11,6 +11,12 @@ Experience _$ExperienceFromJson(Map<String, dynamic> json) => Experience(
       title: json['title'] as String?,
       company: json['company'] as String?,
       description: json['description'] as String?,
+      startAt: json['startAt'] == null
+          ? null
+          : DateTime.parse(json['startAt'] as String),
+      endAt: json['endAt'] == null
+          ? null
+          : DateTime.parse(json['endAt'] as String),
     );
 
 Map<String, dynamic> _$ExperienceToJson(Experience instance) =>
@@ -19,4 +25,6 @@ Map<String, dynamic> _$ExperienceToJson(Experience instance) =>
       'title': instance.title,
       'company': instance.company,
       'description': instance.description,
+      'startAt': instance.startAt?.toIso8601String(),
+      'endAt': instance.endAt?.toIso8601String(),
     };

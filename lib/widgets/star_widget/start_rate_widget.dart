@@ -34,10 +34,10 @@ class StarRateWidget extends StatelessWidget {
         ),
         Text(
           " $rating" + (count != 0 ? "($count reviews)" : ""),
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: sizeText,
-          ),
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium!
+              .copyWith(fontSize: sizeText),
         ),
       ],
     );

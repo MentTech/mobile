@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:like_button/like_button.dart';
 import 'package:mobile/constants/assets.dart';
-import 'package:mobile/constants/colors.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
+import 'package:mobile/models/common/achievement/achievement.dart';
 import 'package:mobile/models/common/degree/degree.dart';
 import 'package:mobile/models/common/experience/experience.dart';
 import 'package:mobile/models/common/program/program.dart';
@@ -20,6 +19,7 @@ import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
 import 'package:mobile/widgets/button_widgets/neumorphism_button.dart';
+import 'package:mobile/widgets/common_model_widgets/achievement_widget.dart';
 import 'package:mobile/widgets/common_model_widgets/experience_widget.dart';
 import 'package:mobile/widgets/common_model_widgets/skill_widget.dart';
 import 'package:mobile/widgets/container/image_container/network_image_widget.dart';
@@ -125,11 +125,12 @@ class _MentorProfileState extends State<MentorProfile> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        _buildIntroductionSection(mentorModel),
-        _buildProgramSection(mentorModel),
-        _buildSkillSection(mentorModel),
-        _buildDegreeSection(mentorModel),
-        _buildExperienceSection(mentorModel),
+        _buildIntroductionSection(mentorModel.userMentor),
+        _buildProgramSection(mentorModel.userMentor.programs ?? []),
+        _buildSkillSection(mentorModel.userMentor.skills),
+        _buildDegreeSection(mentorModel.userMentor.degrees),
+        _buildExperienceSection(mentorModel.userMentor.experiences),
+        _buildAchievementSection(mentorModel.userMentor.achievements),
         const SizedBox(
           height: kBottomNavigationBarHeight,
         ),
@@ -137,26 +138,50 @@ class _MentorProfileState extends State<MentorProfile> {
     );
   }
 
-  DescriptionTitleContainer _buildExperienceSection(MentorModel mentorModel) {
+  DescriptionTitleContainer _buildIntroductionSection(UserMentor userMentor) {
     return DescriptionTitleContainer(
       titleWidget: Text(
-        "${AppLocalizations.of(context).translate("experience_translate")}: ",
-        style: const TextStyle(
-          fontSize: Dimens.lightly_medium_text,
-        ),
+        "${AppLocalizations.of(context).translate("introduction_translate")}: ",
+        style: Theme.of(context).textTheme.bodyMedium,
+      ),
+      contentWidget: ReadMoreText(
+        userMentor.introduction ?? "",
+        style: Theme.of(context).textTheme.bodySmall,
+        trimLines: 5,
+        trimLength: 300,
+      ),
+      spaceBetween: Dimens.medium_vertical_margin,
+      padding: const EdgeInsets.symmetric(
+        horizontal: Dimens.horizontal_padding,
+        vertical: Dimens.large_vertical_margin,
+      ),
+    );
+  }
+
+  DescriptionTitleContainer _buildProgramSection(List<Program> programs) {
+    return DescriptionTitleContainer(
+      titleWidget: Text(
+        "${AppLocalizations.of(context).translate("program_translate")}: ",
+        style: Theme.of(context).textTheme.bodyMedium,
       ),
       contentWidget: Column(
-        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          for (Experience experience in mentorModel.userMentor.experiences)
-            ExperienceWidget(
-              experience: experience,
-              margin:
-                  const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
+          for (Program program in programs)
+            SessionTicketItem(
+              program: program,
+              margin: const EdgeInsets.only(
+                top: Dimens.vertical_margin,
+              ),
+              callbackIfProgramNotNull: () {
+                _mentorStore.fetchProgramOfMentor(program.id).then((_) {
+                  Routes.navigatorSupporter(context, Routes.programRegister);
+                });
+              },
             ),
         ],
       ),
-      spaceBetween: Dimens.vertical_margin * 2,
+      spaceBetween: Dimens.vertical_margin,
       padding: const EdgeInsets.symmetric(
         horizontal: Dimens.horizontal_padding,
         vertical: Dimens.large_vertical_margin,
@@ -164,46 +189,11 @@ class _MentorProfileState extends State<MentorProfile> {
     );
   }
 
-  DescriptionTitleContainer _buildDegreeSection(MentorModel mentorModel) {
-    return DescriptionTitleContainer(
-      titleWidget: Text(
-        "${AppLocalizations.of(context).translate("degree_translate")}: ",
-        style: const TextStyle(
-          fontSize: Dimens.lightly_medium_text,
-        ),
-      ),
-      contentWidget: Column(
-        children: [
-          for (Degree degree in mentorModel.userMentor.degree)
-            SymbolsItem(
-              symbol: const Icon(
-                Icons.arrow_right_rounded,
-                size: Dimens.large_text,
-              ),
-              child: Text(
-                degree.title,
-                style: const TextStyle(
-                  fontSize: Dimens.small_text,
-                ),
-              ),
-            )
-        ],
-      ),
-      spaceBetween: Dimens.vertical_margin * 2,
-      padding: const EdgeInsets.symmetric(
-        horizontal: Dimens.horizontal_padding,
-        vertical: Dimens.large_vertical_margin,
-      ),
-    );
-  }
-
-  DescriptionTitleContainer _buildSkillSection(MentorModel mentorModel) {
+  DescriptionTitleContainer _buildSkillSection(List<Skill> skills) {
     return DescriptionTitleContainer(
       titleWidget: Text(
         "${AppLocalizations.of(context).translate("skill_translate")}: ",
-        style: const TextStyle(
-          fontSize: Dimens.lightly_medium_text,
-        ),
+        style: Theme.of(context).textTheme.bodyMedium,
       ),
       contentWidget: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -212,7 +202,7 @@ class _MentorProfileState extends State<MentorProfile> {
             const SizedBox(
               width: Dimens.large_horizontal_margin,
             ),
-            for (Skill skill in mentorModel.userMentor.skills)
+            for (Skill skill in skills)
               SkillWidgetContainer(
                 width: 130,
                 skill: skill,
@@ -238,32 +228,28 @@ class _MentorProfileState extends State<MentorProfile> {
     );
   }
 
-  DescriptionTitleContainer _buildProgramSection(MentorModel mentorModel) {
+  DescriptionTitleContainer _buildDegreeSection(List<Degree> degrees) {
     return DescriptionTitleContainer(
       titleWidget: Text(
-        "${AppLocalizations.of(context).translate("program_translate")}: ",
-        style: const TextStyle(
-          fontSize: Dimens.lightly_medium_text,
-        ),
+        "${AppLocalizations.of(context).translate("degree_translate")}: ",
+        style: Theme.of(context).textTheme.bodyMedium,
       ),
       contentWidget: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          for (Program program in mentorModel.userMentor.programs ?? [])
-            SessionTicketItem(
-              program: program,
-              margin: const EdgeInsets.only(
-                top: Dimens.vertical_margin,
+          for (Degree degree in degrees)
+            SymbolsItem(
+              symbol: const Icon(
+                Icons.arrow_right_rounded,
+                size: Dimens.large_text,
               ),
-              callbackIfProgramNotNull: () {
-                _mentorStore.fetchProgramOfMentor(program.id).then((_) {
-                  Routes.navigatorSupporter(context, Routes.programRegister);
-                });
-              },
-            ),
+              child: Text(
+                degree.title,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            )
         ],
       ),
-      spaceBetween: Dimens.vertical_margin,
+      spaceBetween: Dimens.vertical_margin * 2,
       padding: const EdgeInsets.symmetric(
         horizontal: Dimens.horizontal_padding,
         vertical: Dimens.large_vertical_margin,
@@ -271,22 +257,49 @@ class _MentorProfileState extends State<MentorProfile> {
     );
   }
 
-  DescriptionTitleContainer _buildIntroductionSection(MentorModel mentorModel) {
+  DescriptionTitleContainer _buildExperienceSection(
+      List<Experience> experiences) {
     return DescriptionTitleContainer(
       titleWidget: Text(
-        "${AppLocalizations.of(context).translate("introduction_translate")}: ",
-        style: const TextStyle(
-          fontSize: Dimens.lightly_medium_text,
-        ),
+        "${AppLocalizations.of(context).translate("experience_translate")}: ",
+        style: Theme.of(context).textTheme.bodyMedium,
       ),
-      contentWidget: ReadMoreText(
-        mentorModel.userMentor.introduction ?? "",
-        style: TextStyle(
-          fontSize: Dimens.small_text,
-          color: _themeStore.reverseThemeColor,
-        ),
-        trimLines: 5,
-        trimLength: 300,
+      contentWidget: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (Experience experience in experiences)
+            ExperienceWidget(
+              experience: experience,
+              margin:
+                  const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
+            ),
+        ],
+      ),
+      spaceBetween: Dimens.vertical_margin * 2,
+      padding: const EdgeInsets.symmetric(
+        horizontal: Dimens.horizontal_padding,
+        vertical: Dimens.large_vertical_margin,
+      ),
+    );
+  }
+
+  DescriptionTitleContainer _buildAchievementSection(
+      List<Achievement> achievements) {
+    return DescriptionTitleContainer(
+      titleWidget: Text(
+        "${AppLocalizations.of(context).translate("achievement_translate")}: ",
+        style: Theme.of(context).textTheme.bodyMedium,
+      ),
+      contentWidget: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (Achievement achievement in achievements)
+            AchievementWidget(
+              achievement: achievement,
+              margin:
+                  const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
+            ),
+        ],
       ),
       spaceBetween: Dimens.vertical_margin * 2,
       padding: const EdgeInsets.symmetric(
@@ -301,8 +314,6 @@ class MentorProfileSliverAppbarDelegate extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
   final MentorModel mentorModel;
   final bool isLikedMentor;
-
-  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   final Future<bool> Function(bool)? onLikedMentor;
 
@@ -337,56 +348,47 @@ class MentorProfileSliverAppbarDelegate extends SliverPersistentHeaderDelegate {
               children: [
                 Text(
                   mentorModel.name,
-                  style: TextStyle(
-                    color: _themeStore.reverseThemeColor,
-                    fontSize: Dimens.medium_text,
-                  ),
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 Text(
                   "${AppLocalizations.of(context).translate("age_translate")}: ${mentorModel.age}",
-                  style: TextStyle(
-                    color: _themeStore.reverseThemeColor,
-                    fontSize: Dimens.small_text,
-                  ),
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
                 Text(
                   "${AppLocalizations.of(context).translate("major_translate")}: ${mentorModel.userMentor.category.name}",
-                  style: TextStyle(
-                    color: _themeStore.reverseThemeColor,
-                    fontSize: Dimens.small_text,
-                  ),
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     StarRateWidget(
-                      rateColor: _themeStore.ratingColor,
+                      rateColor: Theme.of(context).selectedRowColor,
                       rating: mentorModel.userMentor.rating ?? 0.0,
                     ),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: Dimens.horizontal_margin,
-                          ),
-                          child: IconButton(
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(),
-                            icon: FaIcon(
-                              FontAwesomeIcons.linkedinIn,
-                              color: _themeStore.reverseThemeColor,
-                              size: Dimens.small_text,
-                            ),
-                            onPressed: () {
-                              // log(mentorModel.userMentor.linkedin ?? "No Linkedin");
-                            },
-                          ),
-                        ),
-                        const SizedBox(
-                          width: Dimens.horizontal_margin,
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   children: [
+                    //     Padding(
+                    //       padding: const EdgeInsets.symmetric(
+                    //         horizontal: Dimens.horizontal_margin,
+                    //       ),
+                    //       child: IconButton(
+                    //         padding: EdgeInsets.zero,
+                    //         constraints: const BoxConstraints(),
+                    //         icon: FaIcon(
+                    //           FontAwesomeIcons.linkedinIn,
+                    //           color: Theme.of(context).indicatorColor,
+                    //           size: Dimens.small_text,
+                    //         ),
+                    //         onPressed: () {
+                    //           // log(mentorModel.userMentor.linkedin ?? "No Linkedin");
+                    //         },
+                    //       ),
+                    //     ),
+                    //     const SizedBox(
+                    //       width: Dimens.horizontal_margin,
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
               ],
@@ -408,26 +410,26 @@ class MentorProfileSliverAppbarDelegate extends SliverPersistentHeaderDelegate {
             Opacity(
               opacity: 0.3,
               child: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   image: DecorationImage(
-                    image: const AssetImage(
+                    image: AssetImage(
                       Assets.settingsBackgroundAssets,
                     ),
                     fit: BoxFit.fitHeight,
-                    opacity: _themeStore.opacityTheme,
+                    opacity: Properties.opacity_mode,
                   ),
                 ),
               ),
             ),
             Center(
               child: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   image: DecorationImage(
-                    image: const AssetImage(
+                    image: AssetImage(
                       Assets.settingsBackgroundAssets,
                     ),
                     fit: BoxFit.fitHeight,
-                    opacity: _themeStore.opacityTheme,
+                    opacity: Properties.opacity_mode,
                   ),
                 ),
               ),
@@ -451,7 +453,7 @@ class MentorProfileSliverAppbarDelegate extends SliverPersistentHeaderDelegate {
             NeumorphismButton(
               child: Icon(
                 Icons.arrow_back_ios_new_rounded,
-                color: AppColors.darkBlue[700],
+                color: Theme.of(context).primaryColor,
               ),
               onTap: () {
                 Routes.popRoute(context);

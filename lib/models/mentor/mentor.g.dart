@@ -49,7 +49,7 @@ UserMentor _$UserMentorFromJson(Map<String, dynamic> json) => UserMentor(
               ?.map((e) => Skill.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const <Skill>[],
-      degree: (json['degree'] as List<dynamic>?)
+      degrees: (json['degree'] as List<dynamic>?)
               ?.map((e) => Degree.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const <Degree>[],
@@ -57,6 +57,10 @@ UserMentor _$UserMentorFromJson(Map<String, dynamic> json) => UserMentor(
               ?.map((e) => Experience.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const <Experience>[],
+      achievements: (json['achievements'] as List<dynamic>?)
+              ?.map((e) => Achievement.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const <Achievement>[],
     );
 
 Map<String, dynamic> _$UserMentorToJson(UserMentor instance) =>
@@ -66,6 +70,7 @@ Map<String, dynamic> _$UserMentorToJson(UserMentor instance) =>
       'programs': instance.programs,
       'category': instance.category,
       'skills': instance.skills,
-      'degree': instance.degree,
+      'degree': instance.degrees,
       'experiences': instance.experiences,
+      'achievements': instance.achievements,
     };

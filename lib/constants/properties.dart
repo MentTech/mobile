@@ -22,6 +22,9 @@ class Properties {
   /// return heavily opacity = 0.3
   static const double hevily_opacity_glass_morphism = 0.3;
 
+  /// return heavily opacity = 0.3
+  static const double opacity_mode = 0.7;
+
   /// return heavily blur = 10
   static const double lightly_blur_glass_morphism = 5;
 

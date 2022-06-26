@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
-import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/common/program/program.dart';
-import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/glassmorphism_widget_button.dart';
 import 'package:mobile/widgets/star_widget/start_rate_widget.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SessionTicketItem extends StatelessWidget {
-  SessionTicketItem({
+  const SessionTicketItem({
     Key? key,
     required this.program,
     this.callbackIfProgramNotNull,
-    this.textColor,
     this.statusColor,
     this.padding = EdgeInsets.zero,
     this.margin = EdgeInsets.zero,
@@ -26,7 +23,6 @@ class SessionTicketItem extends StatelessWidget {
   final double blur;
   final double opacity;
 
-  final Color? textColor;
   final Color? statusColor;
 
   final EdgeInsets padding;
@@ -34,18 +30,16 @@ class SessionTicketItem extends StatelessWidget {
 
   final VoidCallback? callbackIfProgramNotNull;
 
-  final ThemeStore _themeStore = getIt<ThemeStore>();
-
   @override
   Widget build(BuildContext context) {
     if (null != program) {
-      return _buildAvailableItem(program!);
+      return _buildAvailableItem(context, program!);
     }
 
-    return _buildShimmerSessionTicketItem();
+    return _buildShimmerSessionTicketItem(context);
   }
 
-  Container _buildAvailableItem(Program program) {
+  Container _buildAvailableItem(BuildContext context, Program program) {
     return Container(
       margin: margin,
       child: GlassmorphismWidgetButton(
@@ -64,17 +58,14 @@ class SessionTicketItem extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: Dimens.vertical_margin),
             child: Text(
               program.title,
-              style: TextStyle(
-                color: Color.alphaBlend(
-                    (textColor ?? _themeStore.reverseThemeColor).withAlpha(150),
-                    Colors.white),
-                fontSize: Dimens.small_text,
-                fontWeight: FontWeight.w500,
-              ),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall!
+                  .copyWith(fontWeight: FontWeight.w500),
             ),
           ),
           subtitle: StarRateWidget(
-            rateColor: _themeStore.ratingColor,
+            rateColor: Theme.of(context).selectedRowColor,
             rating: 3.5, //program.rate,
           ),
           // ReadMoreText(
@@ -97,23 +88,21 @@ class SessionTicketItem extends StatelessWidget {
           leading: Icon(
             Icons.loyalty_outlined,
             size: Dimens.large_text,
-            color: statusColor ?? textColor ?? Colors.white70,
+            color: statusColor ?? Theme.of(context).indicatorColor,
           ),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 "${program.credit} ",
-                style: TextStyle(
-                  color: textColor ?? _themeStore.reverseThemeColor,
-                  fontSize: Dimens.small_text,
-                ),
+                style: Theme.of(context).textTheme.bodySmall,
               ),
-              Icon(
-                Icons.token_rounded,
-                size: Dimens.medium_text,
-                color: textColor ?? _themeStore.reverseThemeColor,
-              ),
+              IconTheme(
+                data: Theme.of(context)
+                    .iconTheme
+                    .copyWith(size: Dimens.medium_text),
+                child: const Icon(Icons.token_rounded),
+              )
             ],
           ),
         ),
@@ -123,7 +112,7 @@ class SessionTicketItem extends StatelessWidget {
     );
   }
 
-  Widget _buildShimmerSessionTicketItem() {
+  Widget _buildShimmerSessionTicketItem(BuildContext context) {
     return Shimmer.fromColors(
       child: Container(
         margin: margin,
@@ -172,7 +161,7 @@ class SessionTicketItem extends StatelessWidget {
             leading: Icon(
               Icons.loyalty_outlined,
               size: Dimens.large_text,
-              color: statusColor ?? textColor ?? Colors.white70,
+              color: statusColor ?? Colors.white70,
             ),
             trailing: Container(
               width: 40,
@@ -187,8 +176,8 @@ class SessionTicketItem extends StatelessWidget {
           opacity: opacity,
         ),
       ),
-      baseColor: _themeStore.light,
-      highlightColor: _themeStore.themeColorfulColor,
+      baseColor: Colors.white70,
+      highlightColor: Theme.of(context).primaryColor,
       direction: ShimmerDirection.ltr,
     );
   }

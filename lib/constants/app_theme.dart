@@ -38,6 +38,7 @@ final ThemeData themeData = ThemeData(
       AppColors.lightTextTheme.withOpacity(0.7), Colors.black87),
   dividerColor: AppColors.lightTextTheme,
   focusColor: Colors.black87,
+  splashColor: AppColors.lightTextTheme.withOpacity(0.5),
   iconTheme: const IconThemeData(color: Colors.black54),
   textTheme: const TextTheme(
     titleLarge: TextStyle(
@@ -87,6 +88,7 @@ final ThemeData themeDataDark = ThemeData(
       AppColors.darkTextTheme.withOpacity(0.7), Colors.black87),
   dividerColor: AppColors.darkTextTheme,
   focusColor: Colors.white70,
+  splashColor: AppColors.darkTextTheme.withOpacity(0.5),
   iconTheme: const IconThemeData(color: Colors.white70),
   primaryTextTheme: const TextTheme(
     titleLarge: TextStyle(

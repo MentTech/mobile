@@ -9,6 +9,8 @@ class Experience {
   String? title;
   String? company;
   String? description;
+  DateTime? startAt;
+  DateTime? endAt;
 
   Experience({
     required this.id,
@@ -16,6 +18,8 @@ class Experience {
     this.title,
     this.company,
     this.description,
+    this.startAt,
+    this.endAt,
   });
 
   factory Experience.fromJson(Map<String, dynamic> json) =>

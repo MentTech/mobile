@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
-import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/common/experience/experience.dart';
-import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:readmore/readmore.dart';
+import 'package:mobile/utils/extension/datetime_extension.dart';
 
 class ExperienceWidget extends StatelessWidget {
-  ExperienceWidget({
+  const ExperienceWidget({
     Key? key,
     required this.experience,
     this.padding = EdgeInsets.zero,
@@ -26,8 +25,6 @@ class ExperienceWidget extends StatelessWidget {
   final EdgeInsets padding;
   final EdgeInsets margin;
 
-  final ThemeStore _themeStore = getIt<ThemeStore>();
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,31 +40,33 @@ class ExperienceWidget extends StatelessWidget {
               Text(
                 experience.title ??
                     AppLocalizations.of(context).translate("unknown_translate"),
-                style: TextStyle(
-                  color: _themeStore.reverseThemeColor,
-                  fontSize: Dimens.lightly_medium_text,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(fontWeight: FontWeight.w500),
               ),
               const SizedBox(
                 height: Dimens.small_vertical_margin,
               ),
               Text(
-                "June 2021 - Hiện tại",
-                style: TextStyle(
-                  color: _themeStore.reverseThemeColor,
-                  fontSize: Dimens.small_text,
-                ),
+                (null != experience.startAt
+                        ? experience.startAt!.toMMMMYYYYLocaleString(context)
+                        : AppLocalizations.of(context)
+                            .translate("unknown_translate")) +
+                    " - " +
+                    (null != experience.endAt
+                        ? experience.endAt!.toMMMMYYYYLocaleString(context)
+                        : AppLocalizations.of(context)
+                            .translate("present_translate")),
+                style: Theme.of(context).textTheme.bodySmall,
               ),
               const SizedBox(
                 height: Dimens.small_vertical_margin,
               ),
               Text(
-                "APTECH Computer Education",
-                style: TextStyle(
-                  color: _themeStore.reverseThemeColor,
-                  fontSize: Dimens.small_text,
-                ),
+                experience.company ??
+                    AppLocalizations.of(context).translate("unknown_translate"),
+                style: Theme.of(context).textTheme.bodySmall,
               ),
               const SizedBox(
                 height: Dimens.vertical_margin,
@@ -76,25 +75,15 @@ class ExperienceWidget extends StatelessWidget {
           ),
           subtitle: ReadMoreText(
             experience.description ?? "",
-            style: TextStyle(
-              color: _themeStore.reverseThemeColor,
-              fontSize: Dimens.small_text,
-            ),
+            style: Theme.of(context).textTheme.bodySmall,
             trimLines: 1,
             trimMode: TrimMode.Line,
-            moreStyle: TextStyle(
-              color: _themeStore.reverseThemeColor,
-              fontSize: Dimens.small_text,
-            ),
-            lessStyle: TextStyle(
-              color: _themeStore.reverseThemeColor,
-              fontSize: Dimens.small_text,
-            ),
+            moreStyle: Theme.of(context).textTheme.bodySmall,
+            lessStyle: Theme.of(context).textTheme.bodySmall,
           ),
-          leading: Icon(
-            Icons.apartment_rounded,
-            size: Dimens.large_text,
-            color: _themeStore.reverseThemeColor,
+          leading: IconTheme(
+            data: Theme.of(context).iconTheme.copyWith(size: Dimens.large_text),
+            child: const Icon(Icons.apartment_rounded),
           ),
         ),
         blur: blur,

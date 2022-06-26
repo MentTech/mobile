@@ -52,10 +52,7 @@ class ProgramRegisterScreen extends StatelessWidget {
                       AppLocalizations.of(context)
                           .translate("fill_register_fields_note_translate"),
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: _themeStore.reverseThemeColor,
-                        fontSize: Dimens.medium_text,
-                      ),
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     bodyWidget: ProgramRegisterForm(
                       programRegisterFormStore: _programRegisterFormStore,
@@ -74,19 +71,13 @@ class ProgramRegisterScreen extends StatelessWidget {
                 done: Text(
                   AppLocalizations.of(context)
                       .translate("confirm_button_translate"),
-                  style: TextStyle(
-                    color: _themeStore.reverseThemeColor,
-                    fontSize: Dimens.small_text,
-                  ),
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
                 showBackButton: true,
                 back: Text(
                   AppLocalizations.of(context)
                       .translate("previous_button_translate"),
-                  style: TextStyle(
-                    color: _themeStore.reverseThemeColor,
-                    fontSize: Dimens.small_text,
-                  ),
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
                 showSkipButton: false,
                 showNextButton: ((mentorStore.hasProgram &&
@@ -96,14 +87,11 @@ class ProgramRegisterScreen extends StatelessWidget {
                 next: Text(
                   AppLocalizations.of(context)
                       .translate("next_button_translate"),
-                  style: TextStyle(
-                    color: _themeStore.reverseThemeColor,
-                    fontSize: Dimens.small_text,
-                  ),
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
                 dotsDecorator: DotsDecorator(
-                  color: _themeStore.reverseThemeColor,
-                  activeColor: _themeStore.reverseThemeColorfulColor,
+                  color: Theme.of(context).indicatorColor,
+                  activeColor: Theme.of(context).primaryColor,
                   size: const Size(10, 10),
                   activeSize: const Size(15, 10),
                   activeShape: RoundedRectangleBorder(
@@ -141,10 +129,10 @@ class ProgramRegisterScreen extends StatelessWidget {
                   child: Text(
                     AppLocalizations.of(context)
                         .translate("cancel_button_translate"),
-                    style: TextStyle(
-                      fontSize: Dimens.small_text,
-                      color: Colors.red.shade300,
-                    ),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(color: Colors.red.shade500),
                   ),
                 ),
               ),

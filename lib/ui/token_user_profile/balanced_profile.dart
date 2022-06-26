@@ -213,7 +213,6 @@ class _BalancedProfileState extends State<BalancedProfile> {
       child: SessionTicketItem(
         program: session?.program,
         statusColor: decideColorOfSession(session),
-        textColor: Colors.white70,
         margin: const EdgeInsets.only(
           top: Dimens.vertical_margin,
         ),
