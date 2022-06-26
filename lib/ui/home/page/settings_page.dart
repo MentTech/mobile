@@ -54,20 +54,18 @@ class SettingsPage extends StatelessWidget {
                         margin: const EdgeInsets.symmetric(vertical: 5),
                         child: Text(
                           AppLocalizations.of(context).translate('greeting'),
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: Dimens.lightly_medium_text,
-                            color: themeStore.reverseThemeColor,
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(fontWeight: FontWeight.w700),
                         ),
                       ),
                       subtitle: Text(
                         userModel.name,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: Dimens.extra_large_text,
-                          color: themeStore.reverseThemeColor,
-                        ),
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall!
+                            .copyWith(fontWeight: FontWeight.w800),
                       ),
                       trailing: NetworkImageWidget(
                         url: userModel.avatar,
@@ -88,14 +86,14 @@ class SettingsPage extends StatelessWidget {
                             height: Dimens.ultra_extra_large_vertical_margin,
                           ),
                           LinearNamedListWidget(
-                            themeColor: themeStore.reverseThemeColor,
+                            themeColor: Theme.of(context).indicatorColor,
                             namedContainer: AppLocalizations.of(context)
                                 .translate("account_settings_translate"),
                             children: <Widget>[
                               GlassmorphismTextButton(
                                 text: AppLocalizations.of(context)
                                     .translate("change_password_translate"),
-                                textColor: themeStore.reverseThemeColor,
+                                textColor: Theme.of(context).indicatorColor,
                                 blur: Properties.blur_glass_morphism,
                                 opacity: Properties.opacity_glass_morphism,
                                 padding: const EdgeInsets.symmetric(
@@ -108,10 +106,12 @@ class SettingsPage extends StatelessWidget {
                                       context, Routes.changePasswordSettings);
                                 },
                               ),
+                              const SizedBox(
+                                  height: Dimens.small_vertical_margin),
                               GlassmorphismTextButton(
                                 text: AppLocalizations.of(context)
-                                    .translate("transaction_history"),
-                                textColor: themeStore.reverseThemeColor,
+                                    .translate("transaction_deal"),
+                                textColor: Theme.of(context).indicatorColor,
                                 blur: Properties.blur_glass_morphism,
                                 opacity: Properties.opacity_glass_morphism,
                                 padding: const EdgeInsets.symmetric(
@@ -121,23 +121,23 @@ class SettingsPage extends StatelessWidget {
                                 radius: 15,
                                 onTap: () {
                                   Routes.navigatorSupporter(
-                                      context, Routes.changePasswordSettings);
+                                      context, Routes.depositToken);
                                 },
                               ),
                             ],
                           ),
                           const SizedBox(
-                            height: Dimens.vertical_margin,
+                            height: Dimens.large_vertical_margin,
                           ),
                           LinearNamedListWidget(
-                            themeColor: themeStore.reverseThemeColor,
+                            themeColor: Theme.of(context).indicatorColor,
                             namedContainer: AppLocalizations.of(context)
                                 .translate("application_translate"),
                             children: <Widget>[
                               GlassmorphismTextButton(
                                 text: AppLocalizations.of(context)
                                     .translate("advanced_settings_translate"),
-                                textColor: themeStore.reverseThemeColor,
+                                textColor: Theme.of(context).indicatorColor,
                                 blur: Properties.blur_glass_morphism,
                                 opacity: Properties.opacity_glass_morphism,
                                 padding: const EdgeInsets.symmetric(
@@ -181,24 +181,25 @@ class SettingsPage extends StatelessWidget {
                                         text: TextSpan(
                                           children: [
                                             TextSpan(
-                                                text:
-                                                    '${AppLocalizations.of(context).translate("settings_ver")}:  ',
-                                                style: TextStyle(
-                                                  color: themeStore
-                                                      .reverseThemeColor,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize:
-                                                      Dimens.more_small_text,
-                                                )),
+                                              text:
+                                                  '${AppLocalizations.of(context).translate("settings_ver")}:  ',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall!
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                            ),
                                             TextSpan(
-                                                text: DeviceUtils
-                                                    .packageInfo!.version,
-                                                style: TextStyle(
-                                                  fontSize: Dimens.small_text,
-                                                  fontWeight: FontWeight.w900,
-                                                  color: themeStore
-                                                      .reverseThemeColor,
-                                                ))
+                                              text: DeviceUtils
+                                                  .packageInfo!.version,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall!
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w800),
+                                            ),
                                           ],
                                         ),
                                       )
@@ -209,7 +210,7 @@ class SettingsPage extends StatelessWidget {
                                 GlassmorphismTextButton(
                                   text: AppLocalizations.of(context)
                                       .translate('logout'),
-                                  textColor: themeStore.reverseThemeColor,
+                                  textColor: Theme.of(context).indicatorColor,
                                   blur: Properties.blur_glass_morphism,
                                   opacity: Properties.opacity_glass_morphism,
                                   padding: const EdgeInsets.symmetric(

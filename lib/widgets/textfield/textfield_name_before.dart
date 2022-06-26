@@ -10,12 +10,14 @@ class TextFieldNameWidget extends StatelessWidget {
     required this.controller,
     required this.textColor,
     required this.onValueChanged,
+    this.textInputType = TextInputType.text,
   }) : super(key: key);
 
   final String labelText;
   final String? errorText;
   final Color textColor;
   final TextEditingController controller;
+  final TextInputType textInputType;
   final ValueChanged<String> onValueChanged;
 
   @override
@@ -30,22 +32,18 @@ class TextFieldNameWidget extends StatelessWidget {
             flex: 5,
             child: Text(
               labelText,
-              style: TextStyle(
-                color: textColor,
-                fontSize: Dimens.small_text,
-              ),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: textColor),
             ),
           ),
           Expanded(
             flex: 15,
             child: TextFieldWidget(
               hint: labelText,
-              textStyle: TextStyle(
-                color: textColor,
-                fontSize: Dimens.small_text,
-              ),
               isIcon: false,
-              inputType: TextInputType.emailAddress,
+              inputType: textInputType,
               textController: controller,
               inputAction: TextInputAction.done,
               autoFocus: false,

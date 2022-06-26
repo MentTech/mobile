@@ -160,13 +160,13 @@ class _UserProfileState extends State<UserProfile> {
               child: Text(
                 AppLocalizations.of(context)
                     .translate("cancel_button_translate"),
-                style: Theme.of(context).primaryTextTheme.bodyText1,
+                style: Theme.of(context).textTheme.bodySmall,
               ),
             ),
             Text(
               AppLocalizations.of(context)
                   .translate("profile_editor_settings_translate"),
-              style: Theme.of(context).primaryTextTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             TextButton(
               onPressed: () {
@@ -178,7 +178,7 @@ class _UserProfileState extends State<UserProfile> {
               },
               child: Text(
                 AppLocalizations.of(context).translate("done_button_translate"),
-                style: Theme.of(context).primaryTextTheme.button,
+                style: Theme.of(context).textTheme.labelSmall,
               ),
             ),
           ],
@@ -203,12 +203,12 @@ class _UserProfileState extends State<UserProfile> {
               }),
             ),
           ),
-          Divider(color: _themeStore.reverseThemeColorfulColor),
+          Divider(color: Theme.of(context).dividerColor),
           _buildEmaildField(),
           _buildNameField(),
           _buildBirthdayField(),
           _buildPhoneField(),
-          Divider(color: _themeStore.reverseThemeColorfulColor),
+          Divider(color: Theme.of(context).dividerColor),
           const SizedBox(
             height: Dimens.vertical_margin,
           ),
@@ -223,9 +223,10 @@ class _UserProfileState extends State<UserProfile> {
         return TextFieldNameWidget(
           labelText:
               AppLocalizations.of(context).translate("email_label_translate"),
+          textInputType: TextInputType.emailAddress,
           errorText: _formStore.formErrorStore.email,
           controller: _emailController,
-          textColor: _themeStore.reverseThemeColor,
+          textColor: Theme.of(context).indicatorColor,
           onValueChanged: (value) {
             _formStore.setEmail(_emailController.text);
           },
@@ -240,9 +241,10 @@ class _UserProfileState extends State<UserProfile> {
         return TextFieldNameWidget(
           labelText:
               AppLocalizations.of(context).translate("name_label_translate"),
+          textInputType: TextInputType.name,
           errorText: _formStore.formErrorStore.name,
           controller: _nameController,
-          textColor: _themeStore.reverseThemeColor,
+          textColor: Theme.of(context).indicatorColor,
           onValueChanged: (value) {
             _formStore.setName(_nameController.text);
           },
@@ -264,7 +266,7 @@ class _UserProfileState extends State<UserProfile> {
               AppLocalizations.of(context)
                   .translate("birthday_label_translate"),
               style: TextStyle(
-                color: _themeStore.reverseThemeColor,
+                color: Theme.of(context).highlightColor,
                 fontSize: Dimens.small_text,
               ),
             ),
@@ -276,12 +278,8 @@ class _UserProfileState extends State<UserProfile> {
                 return TextFieldWidget(
                   hint: AppLocalizations.of(context)
                       .translate('birthday_label_translate'),
-                  textStyle: TextStyle(
-                    color: _themeStore.reverseThemeColor,
-                    fontSize: Dimens.small_text,
-                  ),
                   isIcon: false,
-                  inputType: TextInputType.emailAddress,
+                  inputType: TextInputType.datetime,
                   textController: _birthdayController,
                   inputAction: TextInputAction.done,
                   autoFocus: false,
@@ -304,9 +302,10 @@ class _UserProfileState extends State<UserProfile> {
         return TextFieldNameWidget(
           labelText:
               AppLocalizations.of(context).translate("phone_label_translate"),
+          textInputType: TextInputType.phone,
           errorText: _formStore.formErrorStore.phone,
           controller: _phoneController,
-          textColor: _themeStore.reverseThemeColor,
+          textColor: Theme.of(context).indicatorColor,
           onValueChanged: (value) {
             _formStore.setPhone(_phoneController.text);
           },

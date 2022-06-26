@@ -98,7 +98,7 @@ class _PasswordChangerScreenState extends State<PasswordChangerScreen> {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(
-            horizontal: Dimens.horizontal_padding * 2),
+            horizontal: Dimens.large_horizontal_padding),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -196,7 +196,7 @@ class _PasswordChangerScreenState extends State<PasswordChangerScreen> {
       child: RoundedButtonWidget(
         buttonText: AppLocalizations.of(context).translate("change_password"),
         buttonColor: Colors.transparent,
-        textColor: _themeStore.reverseThemeColorfulColor,
+        textColor: Theme.of(context).primaryColor,
         onPressed: () async {
           DeviceUtils.hideKeyboard(context);
           FormStatus formStatus = _formStore.renewPasswordStatus;

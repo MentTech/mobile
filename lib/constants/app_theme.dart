@@ -40,6 +40,18 @@ final ThemeData themeData = ThemeData(
   focusColor: Colors.black87,
   iconTheme: const IconThemeData(color: Colors.black54),
   textTheme: const TextTheme(
+    titleLarge: TextStyle(
+      color: Colors.black87,
+      fontSize: Dimens.ultra_large_text,
+    ),
+    titleMedium: TextStyle(
+      color: Colors.black87,
+      fontSize: Dimens.extra_large_text,
+    ),
+    titleSmall: TextStyle(
+      color: Colors.black87,
+      fontSize: Dimens.large_text,
+    ),
     bodyLarge: TextStyle(
       color: Colors.black87,
       fontSize: Dimens.medium_text,
@@ -55,6 +67,10 @@ final ThemeData themeData = ThemeData(
     labelMedium: TextStyle(
       color: AppColors.darkTextTheme,
       fontSize: Dimens.lightly_medium_text,
+    ),
+    labelSmall: TextStyle(
+      color: AppColors.darkTextTheme,
+      fontSize: Dimens.small_text,
     ),
   ),
   textSelectionTheme: const TextSelectionThemeData(cursorColor: Colors.black54),
@@ -73,6 +89,18 @@ final ThemeData themeDataDark = ThemeData(
   focusColor: Colors.white70,
   iconTheme: const IconThemeData(color: Colors.white70),
   primaryTextTheme: const TextTheme(
+    titleLarge: TextStyle(
+      color: Colors.white70,
+      fontSize: Dimens.ultra_large_text,
+    ),
+    titleMedium: TextStyle(
+      color: Colors.white70,
+      fontSize: Dimens.extra_large_text,
+    ),
+    titleSmall: TextStyle(
+      color: Colors.white70,
+      fontSize: Dimens.large_text,
+    ),
     bodyLarge: TextStyle(
       color: Colors.white70,
       fontSize: Dimens.medium_text,
@@ -88,6 +116,10 @@ final ThemeData themeDataDark = ThemeData(
     labelMedium: TextStyle(
       color: AppColors.lightTextTheme,
       fontSize: Dimens.lightly_medium_text,
+    ),
+    labelSmall: TextStyle(
+      color: AppColors.lightTextTheme,
+      fontSize: Dimens.small_text,
     ),
   ),
   textSelectionTheme: const TextSelectionThemeData(cursorColor: Colors.white70),

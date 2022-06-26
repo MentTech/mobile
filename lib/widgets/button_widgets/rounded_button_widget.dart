@@ -15,7 +15,7 @@ class RoundedButtonWidget extends StatelessWidget {
     this.textColor,
     required this.onPressed,
     this.padding = const EdgeInsets.symmetric(
-        vertical: Dimens.small_vertical_padding,
+        vertical: Dimens.vertical_padding,
         horizontal: Dimens.horizontal_padding),
   }) : super(key: key);
 
@@ -27,7 +27,7 @@ class RoundedButtonWidget extends StatelessWidget {
         shape: StadiumBorder(
             side: BorderSide(
                 color: textColor?.withOpacity(0.5) ??
-                    Theme.of(context).dividerColor,
+                    Theme.of(context).highlightColor,
                 width: 1.5)),
       ),
       child: InkWell(
@@ -44,6 +44,7 @@ class RoundedButtonWidget extends StatelessWidget {
           ),
           child: Text(
             buttonText,
+            textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
