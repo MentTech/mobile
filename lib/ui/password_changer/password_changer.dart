@@ -132,11 +132,9 @@ class _PasswordChangerScreenState extends State<PasswordChangerScreen> {
           inputType: TextInputType.text,
           isObscure: true,
           iconData: Icons.key,
-          iconColor: _themeStore.reverseThemeColorfulColor,
           textController: _currentPasswordController,
           inputAction: TextInputAction.done,
           autoFocus: false,
-          hintColor: _themeStore.reverseThemeColor,
           onChanged: (value) {
             _formStore.setPassword(_currentPasswordController.text);
           },
@@ -156,11 +154,9 @@ class _PasswordChangerScreenState extends State<PasswordChangerScreen> {
           inputType: TextInputType.text,
           isObscure: true,
           iconData: Icons.key,
-          iconColor: _themeStore.reverseThemeColorfulColor,
           textController: _recurrentPasswordController,
           inputAction: TextInputAction.done,
           autoFocus: false,
-          hintColor: _themeStore.reverseThemeColor,
           onChanged: (value) {
             _formStore.setConfirmPassword(_recurrentPasswordController.text);
           },
@@ -180,11 +176,9 @@ class _PasswordChangerScreenState extends State<PasswordChangerScreen> {
           inputType: TextInputType.text,
           isObscure: true,
           iconData: Icons.key,
-          iconColor: _themeStore.reverseThemeColorfulColor,
           textController: _newPasswordController,
           inputAction: TextInputAction.done,
           autoFocus: false,
-          hintColor: _themeStore.reverseThemeColor,
           onChanged: (value) {
             _formStore.setNewPassword(_newPasswordController.text);
           },

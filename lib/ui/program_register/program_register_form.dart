@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
-import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/form/program_register_form_store.dart';
-import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:mobile/widgets/textfield/textfield_widget.dart';
@@ -29,8 +27,6 @@ class _ProgramRegisterFormState extends State<ProgramRegisterForm> {
   final TextEditingController _noteController = TextEditingController();
   final TextEditingController _expectationController = TextEditingController();
   final TextEditingController _goalController = TextEditingController();
-
-  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   late final ProgramRegisterFormStore _formStore;
 
@@ -90,7 +86,6 @@ class _ProgramRegisterFormState extends State<ProgramRegisterForm> {
             hint: AppLocalizations.of(context).translate('full_name'),
             inputType: TextInputType.text,
             iconData: Icons.person,
-            iconColor: _themeStore.reverseThemeColor,
             textController: _nameController,
             inputAction: TextInputAction.done,
             autoFocus: false,
@@ -113,7 +108,6 @@ class _ProgramRegisterFormState extends State<ProgramRegisterForm> {
             hint: AppLocalizations.of(context).translate('email'),
             inputType: TextInputType.text,
             iconData: Icons.email_rounded,
-            iconColor: _themeStore.reverseThemeColor,
             textController: _emailController,
             inputAction: TextInputAction.done,
             autoFocus: false,
@@ -136,7 +130,6 @@ class _ProgramRegisterFormState extends State<ProgramRegisterForm> {
             hint: AppLocalizations.of(context).translate('your_description'),
             inputType: TextInputType.text,
             iconData: Icons.badge_rounded,
-            iconColor: _themeStore.reverseThemeColor,
             textController: _descriptionController,
             inputAction: TextInputAction.done,
             autoFocus: false,
@@ -160,7 +153,6 @@ class _ProgramRegisterFormState extends State<ProgramRegisterForm> {
             hint: AppLocalizations.of(context).translate('your_note'),
             inputType: TextInputType.text,
             iconData: Icons.sticky_note_2_rounded,
-            iconColor: _themeStore.reverseThemeColor,
             textController: _noteController,
             inputAction: TextInputAction.done,
             autoFocus: false,
@@ -168,9 +160,6 @@ class _ProgramRegisterFormState extends State<ProgramRegisterForm> {
             onChanged: (value) {
               _formStore.setNote(_noteController.text);
             },
-            // onFieldSubmitted: (value) {
-            //   FocusScope.of(context).requestFocus(_passwordFocusNode);
-            // },
             errorText: _formStore.formErrorStore.note,
           );
         },
@@ -187,7 +176,6 @@ class _ProgramRegisterFormState extends State<ProgramRegisterForm> {
             hint: AppLocalizations.of(context).translate('your_expectation'),
             inputType: TextInputType.text,
             iconData: Icons.wysiwyg_rounded,
-            iconColor: _themeStore.reverseThemeColor,
             textController: _expectationController,
             inputAction: TextInputAction.done,
             autoFocus: false,
@@ -211,7 +199,6 @@ class _ProgramRegisterFormState extends State<ProgramRegisterForm> {
             hint: AppLocalizations.of(context).translate('your_goal'),
             inputType: TextInputType.text,
             iconData: Icons.flag_rounded,
-            iconColor: _themeStore.reverseThemeColor,
             textController: _goalController,
             inputAction: TextInputAction.done,
             autoFocus: false,

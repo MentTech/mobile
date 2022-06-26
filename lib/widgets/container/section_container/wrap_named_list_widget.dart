@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mobile/constants/colors.dart';
 import 'package:mobile/constants/dimens.dart';
 
 class WrapNamedListWidget extends StatelessWidget {
@@ -11,7 +10,7 @@ class WrapNamedListWidget extends StatelessWidget {
     this.margin = const EdgeInsets.all(Dimens.horizontal_margin),
     this.crossAxisSpacing = 10.0,
     this.mainAxisSpacing = 10.0,
-    this.themeColor = AppColors.lightTextTheme,
+    this.themeColor,
   }) : super(key: key);
 
   final List<Widget> children;
@@ -20,7 +19,7 @@ class WrapNamedListWidget extends StatelessWidget {
   final double crossAxisSpacing;
   final double mainAxisSpacing;
   final String namedContainer;
-  final Color themeColor;
+  final Color? themeColor;
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +31,10 @@ class WrapNamedListWidget extends StatelessWidget {
         children: <Widget>[
           Text(
             namedContainer,
-            style: TextStyle(
-              fontSize: Dimens.medium_text,
-              fontWeight: FontWeight.w600,
-              color: themeColor,
-            ),
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: themeColor,
+                ),
           ),
           const SizedBox(
             height: Dimens.vertical_margin,

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:mobile/di/components/service_locator.dart';
-import 'package:mobile/stores/theme/theme_store.dart';
 
 import 'page/home_page.dart';
 import 'page/message_page.dart';
@@ -51,7 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final int _initButtonIndex = 2;
 
   // init stores:---------------------------------------------------------------
-  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   // general function
   void onBottomChanged(int index) {
@@ -69,12 +66,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: CurvedNavigationBar(
           key: _bottomNavigationKey,
-          color: Color.alphaBlend(
-              _themeStore.themeColorfulColor.withOpacity(0.7),
-              _themeStore.reverseThemeColor),
+          color: Theme.of(context).bottomAppBarColor,
           height: sizeBottomButton * 2,
           backgroundColor: Colors.transparent,
-          buttonBackgroundColor: _themeStore.reverseThemeColorfulColor,
+          buttonBackgroundColor: Theme.of(context).primaryColor,
           index: _initButtonIndex,
           animationCurve: curveEffect,
           animationDuration: durationEffect,

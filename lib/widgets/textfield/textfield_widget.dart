@@ -11,8 +11,6 @@ class TextFieldWidget extends StatelessWidget {
   final TextInputType? inputType;
   final TextEditingController textController;
   final EdgeInsets margin;
-  final Color hintColor;
-  final Color iconColor;
   final FocusNode? focusNode;
   final ValueChanged? onFieldSubmitted;
   final ValueChanged<String>? onChanged;
@@ -28,7 +26,7 @@ class TextFieldWidget extends StatelessWidget {
     return Container(
       margin: margin,
       child: TextFormField(
-        cursorColor: hintColor,
+        cursorColor: Theme.of(context).textSelectionTheme.cursorColor,
         controller: textController,
         focusNode: focusNode,
         onFieldSubmitted: onFieldSubmitted,
@@ -39,7 +37,7 @@ class TextFieldWidget extends StatelessWidget {
         minLines: numberLines,
         maxLines: numberLines,
         keyboardType: inputType,
-        style: textStyle ?? Theme.of(context).textTheme.bodyText1,
+        style: textStyle ?? Theme.of(context).textTheme.bodyMedium,
         decoration: inputDecoration ??
             InputDecoration(
               contentPadding: const EdgeInsets.symmetric(
@@ -49,7 +47,7 @@ class TextFieldWidget extends StatelessWidget {
               enabledBorder: hasBorder
                   ? OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: hintColor,
+                        color: Theme.of(context).dividerColor,
                       ),
                       borderRadius: BorderRadius.circular(
                         Dimens.kBorderMaxRadiusValue,
@@ -58,14 +56,14 @@ class TextFieldWidget extends StatelessWidget {
                     )
                   : UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: hintColor,
+                        color: Theme.of(context).dividerColor,
                       ),
                       borderRadius: Dimens.kBorderRadius,
                     ),
               focusedBorder: hasBorder
                   ? OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: hintColor,
+                        color: Theme.of(context).dividerColor,
                       ),
                       borderRadius: BorderRadius.circular(
                         Dimens.kBorderMaxRadiusValue,
@@ -74,20 +72,22 @@ class TextFieldWidget extends StatelessWidget {
                     )
                   : UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: hintColor,
+                        color: Theme.of(context).dividerColor,
                         width: 3,
                       ),
                       borderRadius: Dimens.kBorderRadius,
                     ),
-              focusColor: hintColor,
+              focusColor: Theme.of(context).focusColor,
               hintText: hint,
-              hintStyle: Theme.of(context)
-                  .textTheme
-                  .bodyText2!
-                  .copyWith(color: hintColor),
+              hintStyle: textStyle ?? Theme.of(context).textTheme.bodyMedium,
               errorText: errorText,
               counterText: '',
-              icon: icon ?? (isIcon ? Icon(iconData, color: iconColor) : null),
+              icon: IconTheme(
+                data: Theme.of(context).iconTheme,
+                child: SizedBox(
+                  child: icon ?? (isIcon ? Icon(iconData) : null),
+                ),
+              ),
             ),
       ),
     );
@@ -104,8 +104,6 @@ class TextFieldWidget extends StatelessWidget {
     this.isObscure = false,
     this.isIcon = true,
     this.margin = EdgeInsets.zero,
-    this.hintColor = Colors.white70,
-    this.iconColor = Colors.grey,
     this.focusNode,
     this.onFieldSubmitted,
     this.onChanged,

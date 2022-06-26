@@ -99,16 +99,9 @@ class _TutorPageState extends State<TutorPage> {
         bottom: Dimens.large_vertical_margin,
       ),
       textController: _searchController,
-      textStyle: TextStyle(
-        fontSize: Dimens.small_text,
-        color: _themeStore.reverseThemeColor,
-      ),
+      textStyle: Theme.of(context).textTheme.bodySmall,
       hint: AppLocalizations.of(context).translate('mentor_search'),
-      hintColor: _themeStore.reverseThemeColor,
-      icon: Icon(
-        Icons.search_rounded,
-        color: _themeStore.reverseThemeColor,
-      ),
+      iconData: Icons.search_rounded,
       hasBorder: true,
       onChanged: (String value) {
         _searchStore.onChangeSearchKey(value);
@@ -370,8 +363,8 @@ class _TutorPageState extends State<TutorPage> {
               },
               child: Wrap(
                 alignment: WrapAlignment.spaceAround,
-                spacing: Dimens.vertical_space,
-                runSpacing: Dimens.horizontal_space,
+                spacing: Dimens.horizontal_space,
+                runSpacing: Dimens.vertical_space,
                 direction: Axis.horizontal,
                 children: List.generate(_mentorStore.length, (i) => i)
                     .map(
@@ -398,7 +391,7 @@ class _TutorPageState extends State<TutorPage> {
 }
 
 class FilterButtonTag extends StatelessWidget {
-  FilterButtonTag({
+  const FilterButtonTag({
     Key? key,
     required this.text,
     required this.isFilted,
@@ -418,7 +411,7 @@ class FilterButtonTag extends StatelessWidget {
   final double? marginHeight;
 
   //store:----------------------------------------------------------------------
-  final ThemeStore _themeStore = getIt<ThemeStore>();
+  // final ThemeStore _themeStore = getIt<ThemeStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -444,12 +437,12 @@ class FilterButtonTag extends StatelessWidget {
               Text(
                 text,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: Dimens.small_text,
-                    color: isFilted
-                        ? _themeStore.textChoosed
-                        : _themeStore.reverseThemeColor),
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color: isFilted
+                          ? Theme.of(context).selectedRowColor
+                          : Theme.of(context).indicatorColor,
+                      fontWeight: FontWeight.w500,
+                    ),
               ),
               const SizedBox(
                 height: Dimens.vertical_margin,
@@ -457,8 +450,8 @@ class FilterButtonTag extends StatelessWidget {
               Icon(
                 Icons.fiber_manual_record,
                 color: isFilted
-                    ? _themeStore.textChoosed
-                    : _themeStore.reverseThemeColor,
+                    ? Theme.of(context).selectedRowColor
+                    : Theme.of(context).indicatorColor,
                 size: Dimens.small_text,
               ),
             ],
@@ -471,8 +464,8 @@ class FilterButtonTag extends StatelessWidget {
         title: text,
         filters: titleItems,
         selectedFilter: selectedTitleItems,
-        selectedFilterColor: _themeStore.textChoosed,
-        unselectedFilterColor: _themeStore.reverseThemeColor,
+        selectedFilterColor: Theme.of(context).selectedRowColor,
+        unselectedFilterColor: Theme.of(context).indicatorColor,
         onValueChange: (itemSelect) {
           return onValueChange?.call(itemSelect) ?? [];
         },
@@ -485,7 +478,7 @@ class FilterButtonTag extends StatelessWidget {
 }
 
 class ShortImformationItem extends StatelessWidget {
-  ShortImformationItem({
+  const ShortImformationItem({
     Key? key,
     required this.mentorModel,
     required this.onTapViewDetail,
@@ -493,8 +486,6 @@ class ShortImformationItem extends StatelessWidget {
 
   final MentorModel mentorModel;
   final VoidCallback onTapViewDetail;
-
-  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   final double height = 200;
   final double width = 165;
@@ -509,8 +500,8 @@ class ShortImformationItem extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            _themeStore.reverseThemeColorfulColor,
-            _themeStore.themeColorfulColor,
+            Theme.of(context).highlightColor.withOpacity(0.7),
+            Theme.of(context).primaryColor,
           ],
         ),
       ),
@@ -552,14 +543,12 @@ class ShortImformationItem extends StatelessWidget {
                           children: <Widget>[
                             Icon(
                               Icons.star_rate_rounded,
-                              color: _themeStore.ratingColor,
+                              color: Theme.of(context).selectedRowColor,
                               size: Dimens.medium_text,
                             ),
                             Text(
                               " ${mentorModel.userMentor.rating}",
-                              style: TextStyle(
-                                  color: _themeStore.reverseThemeColor,
-                                  fontSize: Dimens.small_text),
+                              style: Theme.of(context).textTheme.bodySmall,
                             ),
                           ],
                         )),
@@ -575,9 +564,10 @@ class ShortImformationItem extends StatelessWidget {
                 onTap: onTapViewDetail,
                 child: Text(
                   mentorModel.name,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: Dimens.lightly_medium_text),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(fontWeight: FontWeight.w600),
                 ),
               ),
             ),
@@ -586,7 +576,7 @@ class ShortImformationItem extends StatelessWidget {
                   const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
               child: Text(
                 "${AppLocalizations.of(context).translate("major_translate")}: ${mentorModel.userMentor.category.name}",
-                style: const TextStyle(fontWeight: FontWeight.w400),
+                style: Theme.of(context).textTheme.bodySmall,
               ),
             ),
             Padding(
@@ -594,9 +584,7 @@ class ShortImformationItem extends StatelessWidget {
                   const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
               child: ReadMoreText(
                 mentorModel.userMentor.introduction ?? "",
-                style: const TextStyle(
-                  fontWeight: FontWeight.w400,
-                ),
+                style: Theme.of(context).textTheme.bodySmall,
                 trimLines: 3,
                 trimLength: 50,
               ),
@@ -670,8 +658,6 @@ class ListFilterPopup extends StatefulWidget {
 class _ListFilterPopupState extends State<ListFilterPopup> {
   late List<TitleItem> selectedFilter;
 
-  final ThemeStore _themeStore = getIt<ThemeStore>();
-
   @override
   void initState() {
     super.initState();
@@ -694,17 +680,17 @@ class _ListFilterPopupState extends State<ListFilterPopup> {
                 const EdgeInsets.symmetric(horizontal: Dimens.vertical_padding),
             child: Text(
               widget.title,
-              style: TextStyle(
-                  color: widget.selectedFilterColor,
-                  fontSize: Dimens.medium_text,
-                  fontWeight: FontWeight.w500),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: widget.selectedFilterColor),
             ),
           ),
           Divider(
             thickness: 0.5,
             color: Color.alphaBlend(
               widget.selectedFilterColor.withAlpha(100),
-              _themeStore.reverseThemeColor,
+              Theme.of(context).primaryColor,
             ),
           ),
           Expanded(

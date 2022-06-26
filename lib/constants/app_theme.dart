@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mobile/constants/colors.dart';
 import 'package:mobile/constants/font_family.dart';
 
+import 'dimens.dart';
+
 /// Creating custom color palettes is part of creating a custom app. The idea is to create
 /// your class of custom colors, in this case `CompanyColors` and then create a `ThemeData`
 /// object with those colors you just defined.
@@ -28,11 +30,65 @@ final ThemeData themeData = ThemeData(
   brightness: Brightness.light,
   primarySwatch:
       MaterialColor(AppColors.darkBlue[500]!.value, AppColors.darkBlue),
-  primaryColor: AppColors.darkBlue[500],
+  primaryColor: AppColors.lightTextTheme,
+  highlightColor: AppColors.darkTextTheme,
+  selectedRowColor: Colors.yellow.shade600,
+  indicatorColor: Colors.black87,
+  bottomAppBarColor: Color.alphaBlend(
+      AppColors.lightTextTheme.withOpacity(0.7), Colors.black87),
+  dividerColor: AppColors.lightTextTheme,
+  focusColor: Colors.black87,
+  iconTheme: const IconThemeData(color: Colors.black54),
+  textTheme: const TextTheme(
+    bodyLarge: TextStyle(
+      color: Colors.black87,
+      fontSize: Dimens.medium_text,
+    ),
+    bodyMedium: TextStyle(
+      color: Colors.black87,
+      fontSize: Dimens.lightly_medium_text,
+    ),
+    bodySmall: TextStyle(
+      color: Colors.black87,
+      fontSize: Dimens.small_text,
+    ),
+    labelMedium: TextStyle(
+      color: AppColors.darkTextTheme,
+      fontSize: Dimens.lightly_medium_text,
+    ),
+  ),
+  textSelectionTheme: const TextSelectionThemeData(cursorColor: Colors.black54),
 );
 
 final ThemeData themeDataDark = ThemeData(
   fontFamily: FontFamily.productSans,
   brightness: Brightness.dark,
-  primaryColor: AppColors.darkBlue[500],
+  primaryColor: AppColors.darkTextTheme,
+  highlightColor: AppColors.lightTextTheme,
+  selectedRowColor: Colors.yellow.shade800,
+  indicatorColor: Colors.white70,
+  bottomAppBarColor: Color.alphaBlend(
+      AppColors.darkTextTheme.withOpacity(0.7), Colors.black87),
+  dividerColor: AppColors.darkTextTheme,
+  focusColor: Colors.white70,
+  iconTheme: const IconThemeData(color: Colors.white70),
+  primaryTextTheme: const TextTheme(
+    bodyLarge: TextStyle(
+      color: Colors.white70,
+      fontSize: Dimens.medium_text,
+    ),
+    bodyMedium: TextStyle(
+      color: Colors.white70,
+      fontSize: Dimens.lightly_medium_text,
+    ),
+    bodySmall: TextStyle(
+      color: Colors.white70,
+      fontSize: Dimens.small_text,
+    ),
+    labelMedium: TextStyle(
+      color: AppColors.lightTextTheme,
+      fontSize: Dimens.lightly_medium_text,
+    ),
+  ),
+  textSelectionTheme: const TextSelectionThemeData(cursorColor: Colors.white70),
 );

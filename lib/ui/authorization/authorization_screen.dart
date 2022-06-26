@@ -245,11 +245,9 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
         builder: (_) {
           return TextFieldWidget(
             hint: AppLocalizations.of(context).translate('login_et_user_email'),
-            hintColor: _themeStore.reverseThemeColor,
 
             inputType: TextInputType.emailAddress,
             iconData: Icons.person,
-            iconColor: _themeStore.reverseThemeColor,
             textController: _userEmailController,
             inputAction: TextInputAction.done,
             autoFocus: false,
@@ -280,13 +278,11 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
                   return TextFieldWidget(
                     hint: AppLocalizations.of(context)
                         .translate('login_et_user_password'),
-                    hintColor: _themeStore.reverseThemeColor,
                     isObscure: true,
                     margin: const EdgeInsets.symmetric(
                       vertical: Dimens.vertical_margin,
                     ),
                     iconData: Icons.lock,
-                    iconColor: _themeStore.reverseThemeColor,
                     textController: _passwordController,
                     focusNode: _passwordFocusNode,
                     errorText: _store.formErrorStore.password,
@@ -314,11 +310,9 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
                   return TextFieldWidget(
                     hint: AppLocalizations.of(context)
                         .translate('login_reet_user_password'),
-                    hintColor: _themeStore.reverseThemeColor,
                     isObscure: true,
                     margin: const EdgeInsets.only(top: 16.0),
                     iconData: Icons.lock,
-                    iconColor: _themeStore.reverseThemeColor,
                     textController: _confirmPasswordController,
                     errorText: _store.formErrorStore.confirmPassword,
                     onChanged: (value) {
@@ -346,10 +340,8 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
                   return TextFieldWidget(
                     hint: AppLocalizations.of(context)
                         .translate('login_et_user_name'),
-                    hintColor: _themeStore.reverseThemeColor,
                     margin: const EdgeInsets.only(top: 16.0),
                     iconData: Icons.badge,
-                    iconColor: _themeStore.reverseThemeColor,
                     textController: _nameController,
                     errorText: _store.formErrorStore.name,
                     onChanged: (value) {
@@ -369,10 +361,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
       child: TextButton(
         child: Text(
           AppLocalizations.of(context).translate('btn_forgot_password'),
-          style: Theme.of(context).textTheme.caption?.copyWith(
-                color: _themeStore.reverseThemeColor,
-                fontSize: Dimens.small_text,
-              ),
+          style: Theme.of(context).textTheme.bodySmall,
         ),
         onPressed: () {
           _store.setForgotPassword();
@@ -393,10 +382,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
             return TextButton(
               child: Text(
                 AppLocalizations.of(context).translate('signup_btn_sign_up'),
-                style: Theme.of(context).textTheme.caption?.copyWith(
-                      color: _themeStore.reverseThemeColor,
-                      fontSize: Dimens.small_text,
-                    ),
+                style: Theme.of(context).textTheme.bodySmall,
               ),
               onPressed: () {
                 _store.setSignup();
@@ -408,10 +394,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
             return TextButton(
               child: Text(
                 AppLocalizations.of(context).translate('login_btn_sign_in'),
-                style: Theme.of(context).textTheme.caption?.copyWith(
-                      color: _themeStore.reverseThemeColor,
-                      fontSize: Dimens.small_text,
-                    ),
+                style: Theme.of(context).textTheme.bodySmall,
               ),
               onPressed: () {
                 _store.setSignin();
@@ -443,38 +426,42 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
       }
     }
 
-    return RoundedButtonWidget(
-      buttonText: AppLocalizations.of(context).translate(keyTranslate),
-      buttonColor: Colors.transparent,
-      textColor: _themeStore.reverseThemeColor,
-      onPressed: () async {
-        if (_store.isForgotPasswordState) {
-          conditional = _store.canForgetPassword;
-        } else {
-          if (_store.stateAuthen == AuthenState.signin) {
-            conditional = _store.canLogin;
+    return Align(
+      alignment: Alignment.center,
+      child: RoundedButtonWidget(
+        buttonText: AppLocalizations.of(context).translate(keyTranslate),
+        padding: const EdgeInsets.symmetric(
+            vertical: Dimens.lightly_vertical_padding,
+            horizontal: Dimens.extra_large_horizontal_padding),
+        buttonColor: Colors.transparent,
+        onPressed: () async {
+          if (_store.isForgotPasswordState) {
+            conditional = _store.canForgetPassword;
           } else {
-            conditional = _store.canRegister;
+            if (_store.stateAuthen == AuthenState.signin) {
+              conditional = _store.canLogin;
+            } else {
+              conditional = _store.canRegister;
+            }
           }
-        }
-        if (conditional) {
-          DeviceUtils.hideKeyboard(context);
-          signFunction();
-        } else {
-          _showErrorMessage(
-            AppLocalizations.of(context).translate("missing_field"),
-          );
-        }
-      },
+          if (conditional) {
+            DeviceUtils.hideKeyboard(context);
+            signFunction();
+          } else {
+            _showErrorMessage(
+              AppLocalizations.of(context).translate("missing_field"),
+            );
+          }
+        },
+      ),
     );
   }
 
   Widget _othersWayLogin() {
     return Column(
       children: [
-        TextWidget(
+        SmallTextWidget(
           text: AppLocalizations.of(context).translate('login_others_ways'),
-          textColor: _themeStore.reverseThemeColor,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -494,7 +481,6 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
                 ).show(context);
               },
             ),
-            const SizedBox(width: Dimens.horizontal_padding / 3),
             SGVButton(
               width: 40,
               assetName: Assets.googleSVGLogo,

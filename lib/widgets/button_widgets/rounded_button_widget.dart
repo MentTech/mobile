@@ -4,38 +4,51 @@ import 'package:mobile/constants/dimens.dart';
 class RoundedButtonWidget extends StatelessWidget {
   final String buttonText;
   final Color buttonColor;
-  final Color textColor;
+  final Color? textColor;
   final VoidCallback onPressed;
+  final EdgeInsets padding;
 
   const RoundedButtonWidget({
     Key? key,
     required this.buttonText,
     required this.buttonColor,
-    this.textColor = Colors.white,
+    this.textColor,
     required this.onPressed,
+    this.padding = const EdgeInsets.symmetric(
+        vertical: Dimens.small_vertical_padding,
+        horizontal: Dimens.horizontal_padding),
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-            vertical: Dimens.small_vertical_padding,
-            horizontal: Dimens.horizontal_padding),
-        decoration: ShapeDecoration(
-          color: buttonColor,
-          shape: StadiumBorder(
-              side: BorderSide(color: textColor.withOpacity(0.5), width: 1.5)),
-        ),
-        child: Text(
-          buttonText,
-          style: Theme.of(context).textTheme.button!.copyWith(
-                color: textColor,
-                fontSize: Dimens.small_text,
-              ),
-        ),
+    return Ink(
+      decoration: ShapeDecoration(
+        color: buttonColor,
+        shape: StadiumBorder(
+            side: BorderSide(
+                color: textColor?.withOpacity(0.5) ??
+                    Theme.of(context).dividerColor,
+                width: 1.5)),
       ),
-      onPressed: onPressed,
+      child: InkWell(
+        child: Container(
+          padding: padding,
+          decoration: ShapeDecoration(
+            color: buttonColor,
+            shape: StadiumBorder(
+              side: BorderSide(
+                  color: textColor?.withOpacity(0.5) ??
+                      Theme.of(context).dividerColor,
+                  width: 1.5),
+            ),
+          ),
+          child: Text(
+            buttonText,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ),
+        onTap: onPressed,
+      ),
     );
   }
 }

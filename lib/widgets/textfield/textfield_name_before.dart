@@ -40,14 +40,12 @@ class TextFieldNameWidget extends StatelessWidget {
             flex: 15,
             child: TextFieldWidget(
               hint: labelText,
-              hintColor: textColor,
               textStyle: TextStyle(
                 color: textColor,
                 fontSize: Dimens.small_text,
               ),
               isIcon: false,
               inputType: TextInputType.emailAddress,
-              iconColor: textColor,
               textController: controller,
               inputAction: TextInputAction.done,
               autoFocus: false,

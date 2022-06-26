@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:mobile/data/repository.dart';
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';

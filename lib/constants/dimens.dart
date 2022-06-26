@@ -15,14 +15,20 @@ class Dimens {
   /// normal horizontal padding value: 12.0
   static const double horizontal_padding = 12.0;
 
-  /// large horizontal padding value: 12.0
+  /// large horizontal padding value: 20.0
   static const double large_horizontal_padding = 20.0;
+
+  /// extra large horizontal padding value: 30.0
+  static const double extra_large_horizontal_padding = 30.0;
 
   /// more small horizontal padding value: 3.0
   static const double more_small_vertical_padding = 3.0;
 
   /// small horizontal padding value: 6.0
   static const double small_vertical_padding = 6.0;
+
+  /// nomal horizontal padding value: 8.0
+  static const double lightly_vertical_padding = 8.0;
 
   /// nomal horizontal padding value: 12.0
   static const double vertical_padding = 12.0;
@@ -97,10 +103,10 @@ class Dimens {
 
   // Spacer
   /// return vertical space = 18.0
-  static const double vertical_space = 20.0;
+  static const double vertical_space = 10.0;
 
-  /// return horizontal space = 25.0
-  static const double horizontal_space = 25.0;
+  /// return horizontal space = 20.0
+  static const double horizontal_space = 5.0;
 
   // BorderRadius
   /// return radius value = 5.0

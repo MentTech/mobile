@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      fit: StackFit.expand,
+      fit: StackFit.passthrough,
       children: [
         LinearGradientBackground(
           colors: _themeStore.lineToLineGradientColors,
@@ -66,21 +66,9 @@ class _HomePageState extends State<HomePage> {
         ),
         SafeArea(
           bottom: false,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: Dimens.horizontal_padding,
-                vertical: Dimens.vertical_padding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                _buildHomePageHeader(),
-                _buildHomePageContent(),
-              ],
-            ),
-          ),
+          child: _buildHomePageContent(),
         ),
+        _buildHomePageHeader(),
       ],
     );
   }
@@ -88,50 +76,60 @@ class _HomePageState extends State<HomePage> {
   Observer _buildHomePageHeader() {
     return Observer(
       builder: (_) {
-        return Stack(
-          children: <Widget>[
-            Center(
-              heightFactor: 1.5,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    AppLocalizations.of(context).translate("greeting"),
-                    style: TextStyle(
-                      color: _themeStore.reverseThemeColor,
-                      fontSize: Dimens.lightly_medium_text,
+        return Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: GlassmorphismContainer(
+            padding:
+                const EdgeInsets.symmetric(vertical: Dimens.vertical_padding),
+            child: SafeArea(
+              bottom: false,
+              child: Stack(
+                fit: StackFit.passthrough,
+                children: <Widget>[
+                  Center(
+                    heightFactor: 1.5,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          AppLocalizations.of(context).translate("greeting"),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        Text(
+                          _userStore.user!.name,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ],
                     ),
                   ),
-                  Text(
-                    _userStore.user!.name,
-                    style: TextStyle(
-                      color: _themeStore.reverseThemeColor,
-                      fontSize: Dimens.large_text,
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: Dimens.horizontal_padding),
+                      child: NeumorphismButton(
+                        padding: EdgeInsets.zero,
+                        child: NetworkImageWidget(
+                          url: _userStore.user!.avatar,
+                          radius: DeviceUtils.getScaledHeight(context, 0.04),
+                          borderRadius: BorderRadius.zero,
+                        ),
+                        onTap: () {
+                          Routes.navigatorSupporter(context, Routes.profile);
+                        },
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: Dimens.horizontal_padding),
-                child: NeumorphismButton(
-                  padding: EdgeInsets.zero,
-                  child: NetworkImageWidget(
-                    url: _userStore.user!.avatar,
-                    radius: DeviceUtils.getScaledHeight(context, 0.04),
-                    borderRadius: BorderRadius.circular(0.0),
-                  ),
-                  onTap: () {
-                    Routes.navigatorSupporter(context, Routes.profile);
-                  },
-                ),
-              ),
-            ),
-          ],
+            blur: Properties.blur_glass_morphism,
+            opacity: Properties.opacity_glass_morphism,
+            radius: Dimens.kBorderRadiusValue,
+          ),
         );
       },
     );
@@ -139,86 +137,96 @@ class _HomePageState extends State<HomePage> {
 
   Expanded _buildHomePageContent() {
     return Expanded(
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            WrapNamedListWidget(
-              themeColor: _themeStore.reverseThemeColor,
-              namedContainer:
-                  AppLocalizations.of(context).translate("programs_translate"),
-              margin: const EdgeInsets.symmetric(
-                vertical: Dimens.large_vertical_margin,
-              ),
-              children: <Widget>[
-                GlassmorphismWidgetButton(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.dashboard,
-                        color: _themeStore.reverseThemeColor,
-                        size: Dimens.large_text,
-                      ),
-                      const SizedBox(
-                        height: Dimens.vertical_margin,
-                      ),
-                      Text(
-                        AppLocalizations.of(context)
-                            .translate("sessions_translate"),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: _themeStore.reverseThemeColor,
-                            letterSpacing: 0.2,
-                            fontSize: Dimens.small_text),
-                      ),
-                    ],
-                  ),
-                  alignment: Alignment.center,
-                  width: 100,
-                  blur: Properties.blur_glass_morphism,
-                  opacity: Properties.opacity_glass_morphism,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: Dimens.horizontal_padding,
-                    vertical: Dimens.vertical_padding,
-                  ),
-                  radius: 15,
-                  onTap: () {
-                    Routes.navigatorSupporter(
-                      context,
-                      Routes.tokenProfile,
-                    );
-                  },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+            horizontal: Dimens.horizontal_padding,
+            vertical: Dimens.vertical_padding),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                  height: kBottomNavigationBarHeight +
+                      Dimens.large_vertical_padding),
+              WrapNamedListWidget(
+                themeColor: Theme.of(context).indicatorColor,
+                namedContainer: AppLocalizations.of(context)
+                    .translate("programs_translate"),
+                margin: const EdgeInsets.symmetric(
+                  vertical: Dimens.large_vertical_margin,
                 ),
-              ],
-            ),
-            // try to lazy loading for favourite mentor
-            Text(
-              AppLocalizations.of(context).translate("home_favourite_list"),
-              style: TextStyle(
-                color: _themeStore.reverseThemeColor,
-                fontSize: Dimens.lightly_medium_text,
+                children: <Widget>[
+                  GlassmorphismWidgetButton(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        IconTheme(
+                          data: Theme.of(context)
+                              .iconTheme
+                              .copyWith(size: Dimens.large_text),
+                          child: const Icon(
+                            Icons.dashboard,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: Dimens.vertical_margin,
+                        ),
+                        Text(
+                          AppLocalizations.of(context)
+                              .translate("sessions_translate"),
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(letterSpacing: 0.2),
+                        ),
+                      ],
+                    ),
+                    alignment: Alignment.center,
+                    width: 100,
+                    blur: Properties.blur_glass_morphism,
+                    opacity: Properties.opacity_glass_morphism,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Dimens.horizontal_padding,
+                      vertical: Dimens.vertical_padding,
+                    ),
+                    radius: 15,
+                    onTap: () {
+                      Routes.navigatorSupporter(
+                        context,
+                        Routes.tokenProfile,
+                      );
+                    },
+                  ),
+                ],
               ),
-            ),
-            _buildFavouriteContent(),
-            const SizedBox(
-              height: Dimens.extra_large_vertical_margin,
-            ),
-            Text(
-              AppLocalizations.of(context).translate("home_recommended_list"),
-              style: TextStyle(
-                color: _themeStore.reverseThemeColor,
-                fontSize: Dimens.lightly_medium_text,
+              // try to lazy loading for favourite mentor
+              Text(
+                AppLocalizations.of(context).translate("home_favourite_list"),
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).indicatorColor,
+                    ),
               ),
-            ),
-            _buildRecommendedContent(),
-            const SizedBox(
-              height: kBottomNavigationBarHeight,
-            ),
-          ],
+              _buildFavouriteContent(),
+              const SizedBox(
+                height: Dimens.extra_large_vertical_margin,
+              ),
+              Text(
+                AppLocalizations.of(context).translate("home_recommended_list"),
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).indicatorColor,
+                    ),
+              ),
+              _buildRecommendedContent(),
+              const SizedBox(
+                height: kBottomNavigationBarHeight,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -312,7 +320,7 @@ class _HomePageState extends State<HomePage> {
 }
 
 class HomeMentorItem extends StatelessWidget {
-  HomeMentorItem({
+  const HomeMentorItem({
     Key? key,
     required this.mentorModel,
     required this.onCheckFavMentor,
@@ -325,7 +333,6 @@ class HomeMentorItem extends StatelessWidget {
   final Future<bool> Function(bool) onCheckFavMentor;
 
   // store:---------------------------------------------------------------------
-  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -403,12 +410,12 @@ class HomeMentorItem extends StatelessWidget {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: _themeStore.reverseThemeColorfulColor,
+                color: Theme.of(context).highlightColor,
                 blurRadius: 12,
                 spreadRadius: 1,
               ),
             ],
-            color: _themeStore.reverseThemeColorfulColor,
+            color: Theme.of(context).highlightColor,
             shape: BoxShape.circle,
           ),
           child: Padding(
@@ -440,11 +447,9 @@ class HomeMentorItem extends StatelessWidget {
             InkWell(
               child: Text(
                 mentorModel.name,
-                style: TextStyle(
-                  color: _themeStore.reverseThemeColor,
-                  fontSize: Dimens.lightly_medium_text,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
               ),
               onTap: () {
                 Navigator.of(context).push(
@@ -460,10 +465,7 @@ class HomeMentorItem extends StatelessWidget {
             ),
             Text(
               "${AppLocalizations.of(context).translate("major_translate")}: ${mentorModel.userMentor.category.name}",
-              style: TextStyle(
-                color: _themeStore.reverseThemeColor,
-                fontSize: Dimens.small_text,
-              ),
+              style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
         ),

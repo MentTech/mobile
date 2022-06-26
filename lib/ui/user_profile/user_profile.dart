@@ -72,7 +72,6 @@ class _UserProfileState extends State<UserProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       primary: true,
-      // backgroundColor: Colors.white,
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -148,7 +147,7 @@ class _UserProfileState extends State<UserProfile> {
 
   Widget _buildHeaderWidget() {
     return GlassmorphismContainer(
-      border: _themeStore.reverseThemeColorfulColor,
+      border: Theme.of(context).dividerColor,
       radius: 0,
       child: SafeArea(
         child: Row(
@@ -161,21 +160,13 @@ class _UserProfileState extends State<UserProfile> {
               child: Text(
                 AppLocalizations.of(context)
                     .translate("cancel_button_translate"),
-                style: TextStyle(
-                  color: _themeStore.reverseThemeColor,
-                  fontSize: Dimens.lightly_medium_text,
-                  fontWeight: FontWeight.w400,
-                ),
+                style: Theme.of(context).primaryTextTheme.bodyText1,
               ),
             ),
             Text(
               AppLocalizations.of(context)
                   .translate("profile_editor_settings_translate"),
-              style: TextStyle(
-                color: _themeStore.reverseThemeColor,
-                fontSize: Dimens.lightly_medium_text,
-                fontWeight: FontWeight.w500,
-              ),
+              style: Theme.of(context).primaryTextTheme.bodyText1,
             ),
             TextButton(
               onPressed: () {
@@ -187,10 +178,7 @@ class _UserProfileState extends State<UserProfile> {
               },
               child: Text(
                 AppLocalizations.of(context).translate("done_button_translate"),
-                style: TextStyle(
-                  color: _themeStore.reverseThemeColorfulColor,
-                  fontSize: Dimens.lightly_medium_text,
-                ),
+                style: Theme.of(context).primaryTextTheme.button,
               ),
             ),
           ],
@@ -288,14 +276,12 @@ class _UserProfileState extends State<UserProfile> {
                 return TextFieldWidget(
                   hint: AppLocalizations.of(context)
                       .translate('birthday_label_translate'),
-                  hintColor: _themeStore.reverseThemeColor,
                   textStyle: TextStyle(
                     color: _themeStore.reverseThemeColor,
                     fontSize: Dimens.small_text,
                   ),
                   isIcon: false,
                   inputType: TextInputType.emailAddress,
-                  iconColor: _themeStore.reverseThemeColor,
                   textController: _birthdayController,
                   inputAction: TextInputAction.done,
                   autoFocus: false,
