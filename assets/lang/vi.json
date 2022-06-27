@@ -134,5 +134,12 @@
   "want_to_change_question": "Bạn có muốn áp dụng thay đổi?",
   "review_title": "Để lại đánh giá cho phiên",
   "your_review": "Cảm nhận của bạn về phiên này",
-  "popup_translate_end": "--------------------------------------------------------------------------"
+  "popup_translate_end": "--------------------------------------------------------------------------",
+  "success_credential_title": "Xác thực phân quyền thành công",
+  "authorized_key_translate": "Bạn đã xác thực phiên này thành công",
+  "success_translate_end": "------------------------------------------------------------------------",
+  "failed_credential_title": "Xác thực phân quyền thất bại",
+  "unauthorized_key_translate": "Bạn đã hết phiên đăng nhập",
+  "unauthorized_wrong_credential_key_translate": "Thông tin đăng nhập không chính xác",
+  "error_translate_end": "--------------------------------------------------------------------------"
 }

@@ -1,7 +1,3 @@
-import 'dart:developer';
-
-import 'package:mobile/di/components/service_locator.dart';
-import 'package:mobile/stores/authen/authen_store.dart';
 import 'package:mobile/stores/enum/form_validation_status.dart';
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
@@ -23,9 +19,6 @@ abstract class _AuthenticatorFormStore with Store {
 
   // store for handling error messages
   final MessageStore messageStore = MessageStore();
-
-  // store for handling authenticators
-  final AuthenStore authenStore = getIt<AuthenStore>();
 
   _AuthenticatorFormStore() {
     _setupValidations();
@@ -207,124 +200,6 @@ abstract class _AuthenticatorFormStore with Store {
     } else {
       formErrorStore.confirmPassword = null;
     }
-  }
-
-  @action
-  Future register() async {
-    loading = true;
-
-    authenStore.register(userEmail, password, name).then((future) {
-      loading = false;
-
-      if (future != null) {
-        messageStore.errorMessage = future;
-        success = false;
-      } else {
-        messageStore.successMessage =
-            "Your account has been created successfully";
-        success = true;
-      }
-    }).catchError((e) {
-      loading = false;
-      success = false;
-      messageStore.errorMessage = e.toString().contains("ERROR_USER_NOT_FOUND")
-          ? "Username and password doesn't match"
-          : "Something went wrong, please check your internet connection and try again";
-      log(e.toString());
-    });
-  }
-
-  @action
-  Future login() async {
-    loading = true;
-    success = false;
-    messageStore.successMessage = "You have not logined yet";
-
-    authenStore.login(userEmail, password).then((future) {
-      loading = false;
-
-      if (future != null) {
-        messageStore.errorMessage = future;
-        success = false;
-      } else {
-        messageStore.successMessage = "You are login successfully";
-        success = true;
-        logined = true;
-      }
-    }).catchError((e) {
-      loading = false;
-      success = false;
-      messageStore.errorMessage = e.toString().contains("ERROR_USER_NOT_FOUND")
-          ? "Username and password doesn't match"
-          : "Something went wrong, please check your internet connection and try again";
-      log(e.toString());
-    });
-  }
-
-  @action
-  Future<bool> googleAuthenticator() async {
-    loading = true;
-    success = false;
-
-    try {
-      await authenStore.googleAuthenticator().then((result) {
-        loading = false;
-
-        if (result == null) {
-          success = true;
-          logined = true;
-          messageStore.successMessage = "You are login successfully";
-          return Future.value(true);
-        } else {
-          success = false;
-          logined = false;
-          messageStore.errorMessage = "You has not authenticated yet";
-          return Future.value(false);
-        }
-      });
-    } catch (err) {
-      // other types of Exceptions
-      messageStore.errorMessage = err.toString();
-      success = false;
-    }
-
-    return Future.value(false);
-  }
-
-  @action
-  Future changePassword() async {
-    loading = true;
-    success = false;
-
-    authenStore.changePassword(password, newPassword).then((future) {
-      loading = false;
-
-      if (future != null) {
-        messageStore.errorMessage = future;
-        success = false;
-      } else {
-        messageStore.successMessage = "You are change password successfully";
-        success = true;
-        logined = true;
-      }
-    }).catchError((e) {
-      loading = false;
-      success = false;
-      messageStore.errorMessage = e.toString().contains("ERROR_USER_NOT_FOUND")
-          ? "Username and password doesn't match"
-          : "Something went wrong, please check your internet connection and try again";
-      log(e.toString());
-    });
-  }
-
-  @action
-  Future forgotPassword() async {
-    loading = true;
-  }
-
-  @action
-  Future logout() async {
-    loading = true;
   }
 
   // general methods:-----------------------------------------------------------

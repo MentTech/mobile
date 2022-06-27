@@ -1,4 +1,3 @@
-import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:validators/validators.dart';
 import 'package:mobile/utils/extension/datetime_extension.dart';
@@ -10,9 +9,6 @@ class UserInfoFormStore = _UserInfoFormStore with _$UserInfoFormStore;
 abstract class _UserInfoFormStore with Store {
   // store for handling form errors
   final UserFormErrorStore formErrorStore = UserFormErrorStore();
-
-  // store for handling error messages
-  final MessageStore messageStore = MessageStore();
 
   _UserInfoFormStore({
     required this.email,
@@ -102,7 +98,7 @@ abstract class _UserInfoFormStore with Store {
   void validateBirthday(String value) {
     if (value.isEmpty) {
       formErrorStore.birthday = "Birthday can't be empty";
-    } else if (!isDate(value)) {
+    } else if (!value.isBirthdayString()) {
       formErrorStore.birthday = "This is a invalid date";
     } else {
       formErrorStore.birthday = null;

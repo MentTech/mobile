@@ -5,7 +5,9 @@ import 'package:mobile/constants/assets.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/constants/strings.dart';
+import 'package:mobile/data/repository.dart';
 import 'package:mobile/di/components/service_locator.dart';
+import 'package:mobile/stores/authen/authen_store.dart';
 import 'package:mobile/stores/authen_form/authen_form_store.dart';
 import 'package:mobile/stores/search_store.dart/search_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
@@ -42,7 +44,8 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
   //stores:---------------------------------------------------------------------
   late final UserStore _userStore;
   late final SearchStore _searchStore;
-  final _store = AuthenticatorFormStore();
+  final AuthenStore _authenStore = AuthenStore(getIt<Repository>());
+  final AuthenticatorFormStore _store = AuthenticatorFormStore();
   final ThemeStore _themeStore = getIt<ThemeStore>();
 
   //focus node:-----------------------------------------------------------------
@@ -92,21 +95,6 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
 
     _userStore = Provider.of<UserStore>(context, listen: false);
     _searchStore = Provider.of<SearchStore>(context, listen: false);
-    _userStore.callback = (result) {
-      if (result) {
-        _searchStore.initializeDatabase().then((_) {
-          FlushbarHelper.createSuccess(
-            message: _store.messageStore.successMessage,
-            title: AppLocalizations.of(context).translate('home_tv_success'),
-            duration: const Duration(seconds: Properties.delayTimeInSecond),
-          ).show(context).then((_) {
-            Routes.authenticatedRoute(context);
-          });
-        });
-      } else {
-        _showErrorMessage(_store.messageStore.errorMessage);
-      }
-    };
   }
 
   @override
@@ -160,16 +148,21 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
           Observer(
             // validator
             builder: (_) {
-              return _store.success
-                  ? _showSuccessMessage()
-                  : _showErrorMessage(_store.messageStore.errorMessage,
-                      duration: Properties.delayTimeInSecond);
+              return _authenStore.isSuccess
+                  ? _showSuccessMessage(
+                      _authenStore.getFailedMessageKey,
+                      duration: Properties.delayTimeInSecond,
+                    )
+                  : _showErrorMessage(
+                      _authenStore.getFailedMessageKey,
+                      duration: Properties.delayTimeInSecond,
+                    );
             },
           ),
           Observer(
             builder: (context) {
               return Visibility(
-                visible: _store.loading ||
+                visible: _authenStore.isLoading ||
                     _userStore.isLoading ||
                     _searchStore.isLoading,
                 child: CustomProgressIndicatorWidget(),
@@ -181,11 +174,6 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
     );
   }
 
-  // [
-  //   // AppColors.firstGradientBackgroundTheme,
-  //   // AppColors.secondGradientBackgroundTheme,
-  //   // AppColors.firstGradientBackgroundTheme,
-  // ],
   Widget _buildBanner() {
     return LinearGradientBackground(
       colors: _themeStore.lineToLineGradientColors,
@@ -411,18 +399,15 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
   Widget _buildSignButton() {
     bool conditional;
     String keyTranslate;
-    Future<dynamic> Function() signFunction;
 
     if (_store.isForgotPasswordState) {
       keyTranslate = 'reset_btn_password';
-      signFunction = _store.forgotPassword;
+      //authenStore.  .forgotPassword;
     } else {
       if (_store.stateAuthen == AuthenState.signin) {
         keyTranslate = 'login_btn_sign_in';
-        signFunction = _store.login;
       } else {
         keyTranslate = 'signup_btn_sign_up';
-        signFunction = _store.register;
       }
     }
 
@@ -446,7 +431,16 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
           }
           if (conditional) {
             DeviceUtils.hideKeyboard(context);
-            signFunction();
+            if (_store.isForgotPasswordState) {
+              // _authenStore.forgotPassword()
+            } else {
+              if (_store.stateAuthen == AuthenState.signin) {
+                _authenStore.login(_store.userEmail, _store.password);
+              } else {
+                _authenStore.register(
+                    _store.userEmail, _store.password, _store.name);
+              }
+            }
           } else {
             _showErrorMessage(
               AppLocalizations.of(context).translate("missing_field"),
@@ -485,7 +479,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
               width: 40,
               assetName: Assets.googleSVGLogo,
               ontap: () async {
-                await _store.googleAuthenticator();
+                await _authenStore.googleAuthenticator();
               },
             ),
           ],
@@ -495,13 +489,13 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
   }
 
   // General Methods:-----------------------------------------------------------
-  _showErrorMessage(String message,
-      {int duration = Properties.delayTimeInSecond}) {
-    if (message.isNotEmpty) {
+  _showErrorMessage(String key, {int duration = Properties.delayTimeInSecond}) {
+    if (key.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         FlushbarHelper.createError(
-          message: message,
-          title: AppLocalizations.of(context).translate('home_tv_error'),
+          message: AppLocalizations.of(context).translate(key),
+          title:
+              AppLocalizations.of(context).translate('failed_credential_title'),
           duration: Duration(seconds: duration),
         ).show(context);
       });
@@ -510,9 +504,21 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
     return const SizedBox.shrink();
   }
 
-  _showSuccessMessage() {
-    if (_store.logined) {
-      _userStore.fetchUserInfor();
+  _showSuccessMessage(String key,
+      {int duration = Properties.delayTimeInSecond}) {
+    if (key.isNotEmpty) {
+      _searchStore.initializeDatabase().then((_) {
+        FlushbarHelper.createSuccess(
+          message: AppLocalizations.of(context).translate(key),
+          title: AppLocalizations.of(context)
+              .translate('success_credential_title'),
+          duration: const Duration(seconds: Properties.delayTimeInSecond),
+        ).show(context).then((_) {
+          _userStore.fetchUserInfor().then((isCanRoute) {
+            Routes.authenticatedRoute(context);
+          });
+        });
+      });
     }
 
     return const SizedBox.shrink();

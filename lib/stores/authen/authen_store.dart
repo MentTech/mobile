@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mobile/data/repository.dart';
+import 'package:mobile/di/components/service_locator.dart';
+import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
 
 part 'authen_store.g.dart';
@@ -53,20 +55,32 @@ abstract class _AuthenStore with Store {
   bool success = false;
 
   @observable
-  ObservableFuture<Map<String, dynamic>> loginFuture = emptyLoginResponse;
+  MessageStore messageStore = getIt<MessageStore>();
+
+  @observable
+  ObservableFuture<Map<String, dynamic>> credentialFuture = emptyLoginResponse;
 
   @computed
-  bool get isLoading => loginFuture.status == FutureStatus.pending;
+  bool get isLoading => credentialFuture.status == FutureStatus.pending;
 
   @computed
   bool get canBeAuthenticated => accessToken != null;
+
+  @computed
+  String get getSuccessMessageKey => messageStore.successMessagekey;
+
+  @computed
+  String get getFailedMessageKey => messageStore.errorMessagekey;
+
+  @computed
+  bool get isSuccess => success;
 
   // actions:-------------------------------------------------------------------
   @action
   Future<String?> register(String email, String password, String name) async {
     final future = _repository.register(email, password, name);
 
-    loginFuture = ObservableFuture(future);
+    credentialFuture = ObservableFuture(future);
 
     String? message;
 
@@ -87,31 +101,33 @@ abstract class _AuthenStore with Store {
   }
 
   @action
-  Future<String?> login(String email, String password) async {
+  Future<void> login(String email, String password) async {
     final future = _repository.login(email, password);
 
-    loginFuture = ObservableFuture(future);
-
-    String? message;
+    credentialFuture = ObservableFuture(future);
+    success = false;
 
     await future.then((mapJson) async {
-      if (mapJson["message"] == null) {
+      if (mapJson["statusCode"] == null) {
         success = true;
 
         final token = mapJson["accessToken"];
         await _repository.saveAuthToken(token);
         accessToken = token;
-      }
 
-      message = mapJson['message'];
+        messageStore.setSuccessMessage(Code.authenticated);
+      } else {
+        int code = mapJson["statusCode"] as int;
+        if (41 == code) {
+          code++;
+        }
+        messageStore.setErrorMessageByCode(code);
+      }
     }).catchError((e) {
       log(e.toString());
       accessToken = null;
-      success = false;
       throw e;
     });
-
-    return Future.value(message);
   }
 
   @action
@@ -200,7 +216,7 @@ abstract class _AuthenStore with Store {
       },
     );
 
-    loginFuture = ObservableFuture(future);
+    credentialFuture = ObservableFuture(future);
 
     String? message;
 

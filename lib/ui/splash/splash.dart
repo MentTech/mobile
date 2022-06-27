@@ -37,19 +37,6 @@ class _SplashScreenState extends State<SplashScreen> {
     super.didChangeDependencies();
 
     userStore = Provider.of<UserStore>(context, listen: false);
-    userStore!.callback = (result) {
-      if (result) {
-        Provider.of<SearchStore>(context, listen: false)
-            .initializeDatabase()
-            .then(
-          (_) {
-            Routes.authenticatedRoute(context);
-          },
-        );
-      } else {
-        Routes.unauthenticatedRoute(context);
-      }
-    };
   }
 
   @override
@@ -78,7 +65,19 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (auth.canBeAuthenticated) {
       // asynchronous
-      userStore!.fetchUserInfor();
+      userStore!.fetchUserInfor().then((isAuthenticated) {
+        if (isAuthenticated) {
+          Provider.of<SearchStore>(context, listen: false)
+              .initializeDatabase()
+              .then(
+            (_) {
+              Routes.authenticatedRoute(context);
+            },
+          );
+        } else {
+          Routes.unauthenticatedRoute(context);
+        }
+      });
     } else {
       Routes.unauthenticatedRoute(context);
     }

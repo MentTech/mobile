@@ -121,18 +121,18 @@ class _DepositTokenState extends State<DepositToken> {
               );
             },
           ),
-          Observer(
-            // validator
-            builder: (_) {
-              return _orderStore.isSuccess
-                  ? _showSuccessMessage(
-                      _depositTokenFormStore.messageStore.successMessage,
-                      duration: Properties.delayTimeInSecond)
-                  : _showErrorMessage(
-                      _depositTokenFormStore.messageStore.errorMessage,
-                      duration: Properties.delayTimeInSecond);
-            },
-          ),
+          // Observer(
+          //   // validator
+          //   builder: (_) {
+          //     return _orderStore.isSuccess
+          //         ? _showSuccessMessage(
+          //             _depositTokenFormStore.messageStore.successMessage,
+          //             duration: Properties.delayTimeInSecond)
+          //         : _showErrorMessage(
+          //             _depositTokenFormStore.messageStore.errorMessage,
+          //             duration: Properties.delayTimeInSecond);
+          //   },
+          // ),
         ],
       ),
     );

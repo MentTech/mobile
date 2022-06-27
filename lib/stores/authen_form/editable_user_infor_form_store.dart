@@ -133,7 +133,6 @@ abstract class _UserInforEditorFormStore with Store {
       "name": name,
       "birthday": birthday,
       "phone": phone,
-      "avatar": avatar
     };
   }
 

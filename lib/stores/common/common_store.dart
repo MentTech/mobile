@@ -121,8 +121,7 @@ abstract class _CommonStore with Store {
     String? accessToken = await _repository.authToken;
 
     if (null == accessToken) {
-      messageStore.successMessage = "";
-      messageStore.errorMessage = "There are no AccessToken";
+      messageStore.setErrorMessageByCode(401);
       messageStore.notifyExpiredTokenStatus();
 
       success = false;
@@ -147,9 +146,9 @@ abstract class _CommonStore with Store {
         success = true;
       } catch (e) {
         // res['message']
-        messageStore.errorMessage = e.toString();
-        messageStore.successMessage =
-            "[fetchProgramRate] error to get Program Rate List";
+        // messageStore.errorMessage = e.toString();
+        // messageStore.successMessage =
+        //     "[fetchProgramRate] error to get Program Rate List";
 
         success = false;
       }
@@ -165,8 +164,7 @@ abstract class _CommonStore with Store {
     String? accessToken = await _repository.authToken;
 
     if (null == accessToken) {
-      messageStore.successMessage = "";
-      messageStore.errorMessage = "There are no AccessToken";
+      messageStore.setErrorMessageByCode(401);
       messageStore.notifyExpiredTokenStatus();
 
       success = false;
@@ -189,9 +187,9 @@ abstract class _CommonStore with Store {
         success = true;
       } catch (e) {
         // res['message']
-        messageStore.errorMessage = e.toString();
-        messageStore.successMessage =
-            "[fetchProgramRate] error to get Program Rate List";
+        // messageStore.errorMessage = e.toString();
+        // messageStore.successMessage =
+        //     "[fetchProgramRate] error to get Program Rate List";
 
         success = false;
       }
@@ -207,8 +205,7 @@ abstract class _CommonStore with Store {
     String? accessToken = await _repository.authToken;
 
     if (null == accessToken) {
-      messageStore.successMessage = "";
-      messageStore.errorMessage = "There are no AccessToken";
+      messageStore.setErrorMessageByCode(401);
       messageStore.notifyExpiredTokenStatus();
 
       success = false;
@@ -231,8 +228,8 @@ abstract class _CommonStore with Store {
           success = true;
         } catch (e) {
           // res['message']
-          messageStore.errorMessage = e.toString();
-          messageStore.successMessage = "";
+          // messageStore.errorMessage = e.toString();
+          // messageStore.successMessage = "";
 
           success = false;
         }
@@ -245,8 +242,7 @@ abstract class _CommonStore with Store {
     String? accessToken = await _repository.authToken;
 
     if (null == accessToken) {
-      messageStore.successMessage = "";
-      messageStore.errorMessage = "There are no AccessToken";
+      messageStore.setErrorMessageByCode(401);
       messageStore.notifyExpiredTokenStatus();
 
       success = false;
@@ -268,8 +264,8 @@ abstract class _CommonStore with Store {
           success = true;
         } catch (e) {
           // res['message']
-          messageStore.errorMessage = e.toString();
-          messageStore.successMessage = "";
+          // messageStore.errorMessage = e.toString();
+          // messageStore.successMessage = "";
 
           success = false;
         }
@@ -282,8 +278,7 @@ abstract class _CommonStore with Store {
     String? accessToken = await _repository.authToken;
 
     if (null == accessToken) {
-      messageStore.successMessage = "";
-      messageStore.errorMessage = "There are no AccessToken";
+      messageStore.setErrorMessageByCode(401);
       messageStore.notifyExpiredTokenStatus();
 
       success = false;
@@ -307,8 +302,8 @@ abstract class _CommonStore with Store {
           success = true;
         } catch (e) {
           // res['message']
-          messageStore.errorMessage = e.toString();
-          messageStore.successMessage = "";
+          // messageStore.errorMessage = e.toString();
+          // messageStore.successMessage = "";
 
           success = false;
         }

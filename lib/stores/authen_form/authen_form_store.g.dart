@@ -206,56 +206,6 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
     });
   }
 
-  late final _$registerAsyncAction =
-      AsyncAction('_AuthenticatorFormStore.register', context: context);
-
-  @override
-  Future<dynamic> register() {
-    return _$registerAsyncAction.run(() => super.register());
-  }
-
-  late final _$loginAsyncAction =
-      AsyncAction('_AuthenticatorFormStore.login', context: context);
-
-  @override
-  Future<dynamic> login() {
-    return _$loginAsyncAction.run(() => super.login());
-  }
-
-  late final _$googleAuthenticatorAsyncAction = AsyncAction(
-      '_AuthenticatorFormStore.googleAuthenticator',
-      context: context);
-
-  @override
-  Future<bool> googleAuthenticator() {
-    return _$googleAuthenticatorAsyncAction
-        .run(() => super.googleAuthenticator());
-  }
-
-  late final _$changePasswordAsyncAction =
-      AsyncAction('_AuthenticatorFormStore.changePassword', context: context);
-
-  @override
-  Future<dynamic> changePassword() {
-    return _$changePasswordAsyncAction.run(() => super.changePassword());
-  }
-
-  late final _$forgotPasswordAsyncAction =
-      AsyncAction('_AuthenticatorFormStore.forgotPassword', context: context);
-
-  @override
-  Future<dynamic> forgotPassword() {
-    return _$forgotPasswordAsyncAction.run(() => super.forgotPassword());
-  }
-
-  late final _$logoutAsyncAction =
-      AsyncAction('_AuthenticatorFormStore.logout', context: context);
-
-  @override
-  Future<dynamic> logout() {
-    return _$logoutAsyncAction.run(() => super.logout());
-  }
-
   late final _$_AuthenticatorFormStoreActionController =
       ActionController(name: '_AuthenticatorFormStore', context: context);
 

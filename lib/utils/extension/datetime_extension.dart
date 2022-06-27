@@ -28,12 +28,29 @@ extension DateTimeExtension on DateTime {
 }
 
 extension StringToDate on String {
-  DateTime parseFromBithdayToString() {
-    return DateFormat("dd/MM/yyyy").parse(this);
+  DateTime parseFromBithdayString({bool utc = false}) {
+    return DateFormat("dd/MM/yyyy").parse(this, utc);
+  }
+
+  bool isBirthdayString() {
+    final isBirthdayStringForm =
+        (RegExp(r'\d\d\/\d\d\/\d+').firstMatch(this)?.group(0)?.length ?? -1) ==
+            length;
+
+    bool isDateString = false;
+    try {
+      DateFormat("dd/MM/yyyy").parse(this);
+
+      isDateString = true;
+    } catch (e) {
+      isDateString = false;
+    }
+
+    return isBirthdayStringForm && isDateString;
   }
 
   String parseFromBithdayToIso8601String() {
-    return parseFromBithdayToString().toIso8601String();
+    return parseFromBithdayString(utc: true).toIso8601String();
   }
 
   String capitalizeFirstCharacter() {

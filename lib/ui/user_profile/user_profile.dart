@@ -81,24 +81,29 @@ class _UserProfileState extends State<UserProfile> {
             end: Alignment.bottomRight,
             stops: null,
           ),
-          SafeArea(
-            top: false,
-            child: _buildContent(),
+          _buildContent(),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: _buildHeaderWidget(),
           ),
-          Observer(
-            // validator
-            builder: (_) {
-              return _userStore.success
-                  ? _showSuccessMessage(
-                      _formStore.messageStore.successMessage,
-                      duration: Properties.delayTimeInSecond,
-                    )
-                  : _showErrorMessage(
-                      _formStore.messageStore.errorMessage,
-                      duration: Properties.delayTimeInSecond,
-                    );
-            },
-          ),
+          // Observer(
+          //   // validator
+          //   builder: (_) {
+          //     return _userStore.success
+          //         ? _showSuccessMessage(
+          //             AppLocalizations.of(context)
+          //                 .translate(_formStore..successMessagekey),
+          //             duration: Properties.delayTimeInSecond,
+          //           )
+          //         : _showErrorMessage(
+          //             AppLocalizations.of(context)
+          //                 .translate(_formStore.messageStore.errorMessagekey),
+          //             duration: Properties.delayTimeInSecond,
+          //           );
+          //   },
+          // ),
           Observer(
             builder: (context) {
               return Visibility(
@@ -113,35 +118,24 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   Widget _buildContent() {
-    return Stack(
-      fit: StackFit.passthrough,
-      children: [
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          child: _buildHeaderWidget(),
-        ),
-        SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              const SizedBox(
-                height: kToolbarHeight,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: Dimens.large_horizontal_padding,
-                  ),
-                  child: _buildFieldContent(),
-                ),
-              ),
-            ],
+    return SafeArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          const SizedBox(
+            height: kToolbarHeight,
           ),
-        ),
-      ],
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: Dimens.large_horizontal_padding,
+              ),
+              child: _buildFieldContent(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -169,7 +163,10 @@ class _UserProfileState extends State<UserProfile> {
             Text(
               AppLocalizations.of(context)
                   .translate("profile_editor_settings_translate"),
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(fontWeight: FontWeight.w500),
             ),
             TextButton(
               onPressed: () {

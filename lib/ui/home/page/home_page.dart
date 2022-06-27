@@ -58,7 +58,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      fit: StackFit.passthrough,
       children: [
         LinearGradientBackground(
           colors: _themeStore.lineToLineGradientColors,

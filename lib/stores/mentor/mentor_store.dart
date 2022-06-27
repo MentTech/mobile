@@ -142,8 +142,7 @@ abstract class _MentorStore with Store {
     String? accessToken = await _repository.authToken;
 
     if (null == accessToken) {
-      messageStore.successMessage = "";
-      messageStore.errorMessage = "There are no AccessToken";
+      messageStore.setErrorMessageByCode(401);
       messageStore.notifyExpiredTokenStatus();
 
       success = false;
@@ -167,8 +166,8 @@ abstract class _MentorStore with Store {
         success = true;
       } catch (e) {
         // res['message']
-        messageStore.errorMessage = e.toString();
-        messageStore.successMessage = "";
+        // messageStore.errorMessage = e.toString();
+        // messageStore.successMessage = "";
 
         success = false;
       }
@@ -180,8 +179,7 @@ abstract class _MentorStore with Store {
     String? accessToken = await _repository.authToken;
 
     if (null == accessToken) {
-      messageStore.successMessage = "";
-      messageStore.errorMessage = "There are no AccessToken";
+      messageStore.setErrorMessageByCode(401);
       messageStore.notifyExpiredTokenStatus();
 
       success = false;
@@ -196,9 +194,9 @@ abstract class _MentorStore with Store {
 
         success = true;
       } catch (e) {
-        // res['message']
-        messageStore.errorMessage = e.toString();
-        messageStore.successMessage = "";
+        // // res['message']
+        // messageStore.errorMessage = e.toString();
+        // messageStore.successMessage = "";
 
         success = false;
       }
@@ -210,8 +208,7 @@ abstract class _MentorStore with Store {
     String? accessToken = await _repository.authToken;
 
     if (null == accessToken) {
-      messageStore.successMessage = "";
-      messageStore.errorMessage = "There are no AccessToken";
+      messageStore.setErrorMessageByCode(401);
       messageStore.notifyExpiredTokenStatus();
 
       success = false;
@@ -229,8 +226,8 @@ abstract class _MentorStore with Store {
         success = true;
       } catch (e) {
         // res['message']
-        messageStore.errorMessage = e.toString();
-        messageStore.successMessage = "";
+        // messageStore.errorMessage = e.toString();
+        // messageStore.successMessage = "";
 
         success = false;
       }
@@ -242,8 +239,7 @@ abstract class _MentorStore with Store {
     String? accessToken = await _repository.authToken;
 
     if (null == accessToken) {
-      messageStore.successMessage = "";
-      messageStore.errorMessage = "There are no AccessToken";
+      messageStore.setErrorMessageByCode(401);
       messageStore.notifyExpiredTokenStatus();
 
       success = false;
@@ -261,8 +257,8 @@ abstract class _MentorStore with Store {
         success = true;
       } catch (e) {
         // res['message']
-        messageStore.errorMessage = e.toString();
-        messageStore.successMessage = "";
+        // messageStore.errorMessage = e.toString();
+        // messageStore.successMessage = "";
 
         success = false;
       }
@@ -274,8 +270,7 @@ abstract class _MentorStore with Store {
     String? accessToken = await _repository.authToken;
 
     if (null == accessToken) {
-      messageStore.successMessage = "";
-      messageStore.errorMessage = "There are no AccessToken";
+      messageStore.setErrorMessageByCode(401);
       messageStore.notifyExpiredTokenStatus();
 
       success = false;
@@ -284,8 +279,8 @@ abstract class _MentorStore with Store {
     }
 
     if (null == mentorModel) {
-      messageStore.successMessage = "";
-      messageStore.errorMessage = "There are no MentorModel";
+      // messageStore.successMessage = "";
+      // messageStore.errorMessage = "There are no MentorModel";
       messageStore.notifyExpiredTokenStatus();
 
       success = false;
@@ -304,8 +299,8 @@ abstract class _MentorStore with Store {
         success = true;
       } catch (e) {
         // res['message']
-        messageStore.errorMessage = e.toString();
-        messageStore.successMessage = "";
+        // messageStore.errorMessage = e.toString();
+        // messageStore.successMessage = "";
 
         success = false;
       }

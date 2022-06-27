@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -25,7 +24,7 @@ abstract class _UserStore with Store {
   // final MessageStore messageStore = MessageStore();
 
   // function callback
-  ValueChanged<bool>? callback;
+  // ValueChanged<bool>? callback;
 
   // constructor:---------------------------------------------------------------
   _UserStore(Repository repository) : _repository = repository {
@@ -45,14 +44,14 @@ abstract class _UserStore with Store {
     _disposers = [
       // reaction((_) => success, (_) => success = false, delay: 200),
       // reaction((_) => accessToken, (_) => accessToken = null, delay: 200),
-      reaction((_) => requestFuture.status, (FutureStatus status) {
-        if (status == FutureStatus.fulfilled) {
-          if (callback != null) {
-            callback!.call(success);
-            callback = null;
-          }
-        }
-      }),
+      // reaction((_) => requestFuture.status, (FutureStatus status) {
+      //   if (status == FutureStatus.fulfilled) {
+      //     if (callback != null) {
+      //       callback!.call(success);
+      //       callback = null;
+      //     }
+      //   }
+      // }),
     ];
   }
 
@@ -172,19 +171,17 @@ abstract class _UserStore with Store {
     final future = _repository.fetchUserInfor(accessToken);
     requestFuture = ObservableFuture(future);
 
-    future.then((res) {
+    await future.then((res) {
       try {
         user = UserModel.fromJson(res!);
         success = true;
-        return Future.value(true);
       } catch (e) {
         // res['message']
         success = false;
-        return Future.value(false);
       }
     });
 
-    return Future.value(false);
+    return Future.value(success);
   }
 
   @action
@@ -227,7 +224,6 @@ abstract class _UserStore with Store {
     final future = _repository.fetchFavouriteMentors(authToken: accessToken!);
 
     future.then((res) {
-      log("message: [fetchFavouriteMentors]: Class '_InternalLinkedHashMap<String, dynamic>' has no instance method 'cast' with matching arguments.");
       favouriteMentorIdList.addAll(res!["ids"]!.cast<int>());
 
       callback?.call();

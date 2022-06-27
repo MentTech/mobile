@@ -134,5 +134,12 @@
   "want_to_change_question": "Do you want to apply change?",
   "review_title": "Leave a review for this session",
   "your_review": "Your review about this session",
-  "popup_translate_end": "--------------------------------------------------------------------------"
+  "popup_translate_end": "--------------------------------------------------------------------------",
+  "success_credential_title": "Decentralized authentication successful",
+  "authorized_key_translate": "You authenticated this session successfully",
+  "success_translate_end": "------------------------------------------------------------------------",
+  "failed_credential_title": "Decentralized authentication failed",
+  "unauthorized_key_translate": "Your login session has expired",
+  "unauthorized_wrong_credential_key_translate": "Please check your login credential",
+  "error_translate_end": "--------------------------------------------------------------------------"
 }

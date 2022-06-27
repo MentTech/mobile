@@ -1,4 +1,5 @@
 import 'package:mobile/data/repository.dart';
+import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/common/category/category.dart';
 import 'package:mobile/models/common/skill/skill.dart';
 import 'package:mobile/models/mentor/mentor.dart';
@@ -15,7 +16,7 @@ abstract class _SearchStore with Store {
   final Repository _repository;
 
   // store for handling error messages
-  final MessageStore messageStore = MessageStore();
+  final MessageStore messageStore = getIt<MessageStore>();
 
   // constructor:---------------------------------------------------------------
   _SearchStore(Repository repository) : _repository = repository {
@@ -153,8 +154,7 @@ abstract class _SearchStore with Store {
           success = true;
         } catch (e) {
           // res['message']
-          messageStore.errorMessage = e.toString();
-          messageStore.successMessage = "";
+          // messageStore.setErrorMessageByCode(res[???]);
 
           success = false;
         }
@@ -171,9 +171,7 @@ abstract class _SearchStore with Store {
           categories = CategoryList.fromJson(res!).categories;
           success = true;
         } catch (e) {
-          // res['message']
-          messageStore.errorMessage = e.toString();
-          messageStore.successMessage = "";
+          // messageStore.setErrorMessageByCode(res[???]);
 
           success = false;
         }

@@ -11,7 +11,8 @@ abstract class _MessageStore with Store {
   // constructor:---------------------------------------------------------------
   _MessageStore() {
     _disposers = [
-      reaction((_) => errorMessage, reset, delay: 200),
+      reaction((_) => errorMessagekey, resetError, delay: 200),
+      reaction((_) => successMessagekey, resetSuccess, delay: 200),
     ];
   }
 
@@ -20,10 +21,10 @@ abstract class _MessageStore with Store {
 
   // store variables:-----------------------------------------------------------
   @observable
-  String errorMessage = '';
+  String errorMessagekey = '';
 
   @observable
-  String successMessage = '';
+  String successMessagekey = '';
 
   @observable
   bool expriredToken = false;
@@ -31,23 +32,27 @@ abstract class _MessageStore with Store {
   // actions:-------------------------------------------------------------------
   @action
   void setErrorMessage(String message) {
-    errorMessage = message;
+    errorMessagekey = message;
   }
 
   @action
   void setErrorMessageByCode(int code) {
-    errorMessage = _responseCodeInstance.notifyMessage(code);
+    errorMessagekey = _responseCodeInstance.toErrorMessageKey(code);
   }
 
   @action
-  void setSuccessMessage(String message) {
-    successMessage = message;
+  void setSuccessMessage(Code code) {
+    successMessagekey = _responseCodeInstance.toSuccessMessageKey(code);
   }
 
   @action
-  void reset(String value) {
-    errorMessage = '';
-    successMessage = '';
+  void resetError(String value) {
+    errorMessagekey = '';
+  }
+
+  @action
+  void resetSuccess(String value) {
+    successMessagekey = '';
   }
 
   @action
@@ -64,21 +69,39 @@ abstract class _MessageStore with Store {
   }
 }
 
+//------------------------------------------------------------------------------
+enum Code {
+  authenticated,
+}
+
 class ResponseCode {
-  final Map<int, String> responseCode = <int, String>{};
+  final Map<int, String> responseCode = <int, String>{
+    401: "unauthorized_key_translate",
+    402: "unauthorized_wrong_credential_key_translate",
+  };
+
+  final Map<Code, String> successCode = <Code, String>{
+    Code.authenticated: "authorized_key_translate",
+  };
 
   bool _authenticated = false;
 
-  set setAuthenticate(bool authenticated) {
-    _authenticated = authenticated;
+  void setAuthenticated() {
+    _authenticated = true;
   }
 
   bool get isAuthen => _authenticated;
 
   ResponseCode();
 
-  String notifyMessage(int code) {
-    // if some code is unauthen = > set unauthen = true
-    return responseCode[code]! + "_translate";
+  String toErrorMessageKey(int code) {
+    if (401 == code) {
+      _authenticated = false;
+    }
+    return responseCode[code]!;
+  }
+
+  String toSuccessMessageKey(Code code) {
+    return successCode[code]!;
   }
 }

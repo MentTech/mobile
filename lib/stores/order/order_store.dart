@@ -67,9 +67,8 @@ abstract class _OrderStore with Store {
           }
         } catch (e) {
           // res['message']
-          messageStore.errorMessage = e.toString();
-          messageStore.successMessage =
-              "[fetchTopupRate] error to get Topup Rate";
+          // messageStore.errorMessage = e.toString();
+          //     "[fetchTopupRate] error to get Topup Rate";
         }
       },
     );
@@ -125,8 +124,7 @@ abstract class _OrderStore with Store {
     String? accessToken = await _repository.authToken;
 
     if (null == accessToken) {
-      messageStore.successMessage = "";
-      messageStore.errorMessage = "There are no AccessToken";
+      messageStore.setErrorMessageByCode(401);
       messageStore.notifyExpiredTokenStatus();
 
       success = false;
@@ -144,17 +142,17 @@ abstract class _OrderStore with Store {
       try {
         // rateModels = ObservableList.of(RateModelList.fromJson(res!).rateModels);
         final String? orderID = res!["orderId"];
-        if (null != orderID && orderID.isNotEmpty) {
-          messageStore.successMessage =
-              "You create a request load tokens successfully.";
-        } else {
-          messageStore.errorMessage = "Your request has been failed.";
-        }
+        // if (null != orderID && orderID.isNotEmpty) {
+        //   messageStore.successMessage =
+        //       "You create a request load tokens successfully.";
+        // } else {
+        //   messageStore.errorMessage = "Your request has been failed.";
+        // }
 
         success = true;
       } catch (e) {
         // res['message']
-        messageStore.errorMessage = e.toString();
+        // messageStore.errorMessage = e.toString();
 
         success = false;
       }

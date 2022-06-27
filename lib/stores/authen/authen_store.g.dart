@@ -22,6 +22,26 @@ mixin _$AuthenStore on _AuthenStore, Store {
           Computed<bool>(() => super.canBeAuthenticated,
               name: '_AuthenStore.canBeAuthenticated'))
       .value;
+  Computed<String>? _$getSuccessMessageKeyComputed;
+
+  @override
+  String get getSuccessMessageKey => (_$getSuccessMessageKeyComputed ??=
+          Computed<String>(() => super.getSuccessMessageKey,
+              name: '_AuthenStore.getSuccessMessageKey'))
+      .value;
+  Computed<String>? _$getFailedMessageKeyComputed;
+
+  @override
+  String get getFailedMessageKey => (_$getFailedMessageKeyComputed ??=
+          Computed<String>(() => super.getFailedMessageKey,
+              name: '_AuthenStore.getFailedMessageKey'))
+      .value;
+  Computed<bool>? _$isSuccessComputed;
+
+  @override
+  bool get isSuccess => (_$isSuccessComputed ??=
+          Computed<bool>(() => super.isSuccess, name: '_AuthenStore.isSuccess'))
+      .value;
 
   late final _$accessTokenAtom =
       Atom(name: '_AuthenStore.accessToken', context: context);
@@ -55,19 +75,35 @@ mixin _$AuthenStore on _AuthenStore, Store {
     });
   }
 
-  late final _$loginFutureAtom =
-      Atom(name: '_AuthenStore.loginFuture', context: context);
+  late final _$messageStoreAtom =
+      Atom(name: '_AuthenStore.messageStore', context: context);
 
   @override
-  ObservableFuture<Map<String, dynamic>> get loginFuture {
-    _$loginFutureAtom.reportRead();
-    return super.loginFuture;
+  MessageStore get messageStore {
+    _$messageStoreAtom.reportRead();
+    return super.messageStore;
   }
 
   @override
-  set loginFuture(ObservableFuture<Map<String, dynamic>> value) {
-    _$loginFutureAtom.reportWrite(value, super.loginFuture, () {
-      super.loginFuture = value;
+  set messageStore(MessageStore value) {
+    _$messageStoreAtom.reportWrite(value, super.messageStore, () {
+      super.messageStore = value;
+    });
+  }
+
+  late final _$credentialFutureAtom =
+      Atom(name: '_AuthenStore.credentialFuture', context: context);
+
+  @override
+  ObservableFuture<Map<String, dynamic>> get credentialFuture {
+    _$credentialFutureAtom.reportRead();
+    return super.credentialFuture;
+  }
+
+  @override
+  set credentialFuture(ObservableFuture<Map<String, dynamic>> value) {
+    _$credentialFutureAtom.reportWrite(value, super.credentialFuture, () {
+      super.credentialFuture = value;
     });
   }
 
@@ -84,7 +120,7 @@ mixin _$AuthenStore on _AuthenStore, Store {
       AsyncAction('_AuthenStore.login', context: context);
 
   @override
-  Future<String?> login(String email, String password) {
+  Future<void> login(String email, String password) {
     return _$loginAsyncAction.run(() => super.login(email, password));
   }
 
@@ -111,9 +147,13 @@ mixin _$AuthenStore on _AuthenStore, Store {
     return '''
 accessToken: ${accessToken},
 success: ${success},
-loginFuture: ${loginFuture},
+messageStore: ${messageStore},
+credentialFuture: ${credentialFuture},
 isLoading: ${isLoading},
-canBeAuthenticated: ${canBeAuthenticated}
+canBeAuthenticated: ${canBeAuthenticated},
+getSuccessMessageKey: ${getSuccessMessageKey},
+getFailedMessageKey: ${getFailedMessageKey},
+isSuccess: ${isSuccess}
     ''';
   }
 }

@@ -67,20 +67,20 @@ class _PasswordChangerScreenState extends State<PasswordChangerScreen> {
               ),
             ),
           ),
-          Observer(
-            // validator
-            builder: (_) {
-              return _formStore.success
-                  ? _showSuccessMessage(
-                      _formStore.messageStore.errorMessage,
-                      duration: Properties.delayTimeInSecond,
-                    )
-                  : _showErrorMessage(
-                      _formStore.messageStore.errorMessage,
-                      duration: Properties.delayTimeInSecond,
-                    );
-            },
-          ),
+          // Observer(
+          //   // validator
+          //   builder: (_) {
+          //     return _formStore.success
+          //         ? _showSuccessMessage(
+          //             _formStore.messageStore.errorMessage,
+          //             duration: Properties.delayTimeInSecond,
+          //           )
+          //         : _showErrorMessage(
+          //             _formStore.messageStore.errorMessage,
+          //             duration: Properties.delayTimeInSecond,
+          //           );
+          //   },
+          // ),
           Observer(
             builder: (_) {
               return Visibility(
@@ -204,7 +204,7 @@ class _PasswordChangerScreenState extends State<PasswordChangerScreen> {
           switch (formStatus) {
             case FormStatus.allValidated:
               // call api to change password
-              _formStore.changePassword();
+              // _formStore.changePassword();
               break;
             case FormStatus.missingField:
               _showErrorMessage(
