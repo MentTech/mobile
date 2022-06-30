@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'program.g.dart';
@@ -30,13 +31,15 @@ class Program {
 
 @JsonSerializable()
 class AverageRating {
-  double average;
-  int count;
+  late final double average;
+  final int count;
 
   AverageRating({
-    required this.average,
+    required double average,
     required this.count,
-  });
+  }) {
+    this.average = double.parse(NumberFormat(".##").format(average));
+  }
 
   factory AverageRating.fromJson(Map<String, dynamic> json) =>
       _$AverageRatingFromJson(json);

@@ -188,10 +188,9 @@ abstract class _MentorStore with Store {
     final future = _repository.fetchRecommendedMentors();
 
     future.then((res) {
+      recommendedMentorList =
+          ObservableList.of(MentorModelList.fromJson(res!).list);
       try {
-        recommendedMentorList =
-            ObservableList.of(MentorModelList.fromJson(res!).list);
-
         success = true;
       } catch (e) {
         // // res['message']

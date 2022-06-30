@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
+import 'package:mobile/models/user/user.dart';
 import 'package:mobile/stores/form/program_register_form_store.dart';
+import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:mobile/widgets/textfield/textfield_widget.dart';
+import 'package:provider/provider.dart';
 
 class ProgramRegisterForm extends StatefulWidget {
   const ProgramRegisterForm({
@@ -35,6 +38,12 @@ class _ProgramRegisterFormState extends State<ProgramRegisterForm> {
     super.initState();
 
     _formStore = widget.programRegisterFormStore;
+
+    final UserModel userModel =
+        Provider.of<UserStore>(context, listen: false).user!;
+
+    _nameController.text = userModel.name;
+    _emailController.text = userModel.email;
   }
 
   @override

@@ -193,6 +193,49 @@ class _HomePageState extends State<HomePage> {
                     ),
                     radius: 15,
                     onTap: () {
+                      // Routes.navigatorSupporter(
+                      //   context,
+                      //   Routes.tokenProfile,
+                      // );
+                    },
+                  ),
+                  GlassmorphismWidgetButton(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        IconTheme(
+                          data: Theme.of(context)
+                              .iconTheme
+                              .copyWith(size: Dimens.large_text),
+                          child: const Icon(
+                            Icons.receipt_long_rounded,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: Dimens.vertical_margin,
+                        ),
+                        Text(
+                          AppLocalizations.of(context)
+                              .translate("transaction_translate"),
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(letterSpacing: 0.2),
+                        ),
+                      ],
+                    ),
+                    alignment: Alignment.center,
+                    width: 100,
+                    blur: Properties.blur_glass_morphism,
+                    opacity: Properties.opacity_glass_morphism,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Dimens.horizontal_padding,
+                      vertical: Dimens.vertical_padding,
+                    ),
+                    radius: 15,
+                    onTap: () {
                       Routes.navigatorSupporter(
                         context,
                         Routes.tokenProfile,

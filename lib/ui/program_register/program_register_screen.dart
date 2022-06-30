@@ -16,6 +16,7 @@ import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
 import 'package:mobile/widgets/progress_indicator_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:mobile/utils/extension/string_extension.dart';
 
 class ProgramRegisterScreen extends StatelessWidget {
   ProgramRegisterScreen({Key? key}) : super(key: key);
@@ -50,7 +51,8 @@ class ProgramRegisterScreen extends StatelessWidget {
                   PageViewModel(
                     titleWidget: Text(
                       AppLocalizations.of(context)
-                          .translate("fill_register_fields_note_translate"),
+                          .translate("fill_register_fields_note_translate")
+                          .format([mentorStore.program?.title ?? ""]),
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),

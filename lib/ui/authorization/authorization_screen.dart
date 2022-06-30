@@ -150,7 +150,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
             builder: (_) {
               return _authenStore.isSuccess
                   ? _showSuccessMessage(
-                      _authenStore.getFailedMessageKey,
+                      _authenStore.getSuccessMessageKey,
                       duration: Properties.delayTimeInSecond,
                     )
                   : _showErrorMessage(

@@ -1,4 +1,3 @@
-import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -182,6 +181,10 @@ class _ProgramRegisterDetailState extends State<ProgramRegisterDetail> {
                 color: Theme.of(context).indicatorColor,
                 fontSize: const FontSize(Dimens.small_text),
               ),
+              "span": Style(
+                color: Theme.of(context).indicatorColor,
+                fontSize: const FontSize(Dimens.small_text),
+              ),
             },
           ),
         ],
@@ -285,12 +288,12 @@ class _ProgramRegisterDetailState extends State<ProgramRegisterDetail> {
                       .fetchProgramRateList(mentorModel.id, program.id)
                       .then(
                     (_) {
-                      FlushbarHelper.createSuccess(
-                        message: AppLocalizations.of(context)
-                            .translate("home_tv_success"),
-                        title: AppLocalizations.of(context)
-                            .translate('load_success'),
-                      ).show(context);
+                      // FlushbarHelper.createSuccess(
+                      //   message: AppLocalizations.of(context)
+                      //       .translate("home_tv_success"),
+                      //   title: AppLocalizations.of(context)
+                      //       .translate('load_success'),
+                      // ).show(context);
                     },
                   );
                 } else {
@@ -302,12 +305,12 @@ class _ProgramRegisterDetailState extends State<ProgramRegisterDetail> {
                   await _commonStore
                       .fetchProgramRateList(mentorModel.id, program.id)
                       .then((_) {
-                    FlushbarHelper.createSuccess(
-                      message: AppLocalizations.of(context)
-                          .translate("home_tv_success"),
-                      title: AppLocalizations.of(context)
-                          .translate('load_success'),
-                    ).show(context);
+                    // FlushbarHelper.createSuccess(
+                    //   message: AppLocalizations.of(context)
+                    //       .translate("home_tv_success"),
+                    //   title: AppLocalizations.of(context)
+                    //       .translate('load_success'),
+                    // ).show(context);
 
                     _refreshController.loadComplete();
                   });

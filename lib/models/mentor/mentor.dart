@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mobile/models/common/achievement/achievement.dart';
 import 'package:mobile/models/common/category/category.dart';
@@ -64,28 +65,32 @@ class MentorModel extends Equatable {
 @JsonSerializable()
 class UserMentor {
   // String? linkedin;
-  String? introduction;
-  double? rating;
-  List<Program>? programs;
-  Category category;
-  List<Skill> skills;
+  final String? introduction;
+  late final double? rating;
+  final List<Program>? programs;
+  final Category category;
+  final List<Skill> skills;
 
   @JsonKey(name: "degree")
-  List<Degree> degrees;
-  List<Experience> experiences;
-  List<Achievement> achievements;
+  final List<Degree> degrees;
+  final List<Experience> experiences;
+  final List<Achievement> achievements;
 
   UserMentor({
     // required this.linkedin,
     required this.introduction,
-    required this.rating,
+    double? rating,
     required this.programs,
     required this.category,
     this.skills = const <Skill>[],
     this.degrees = const <Degree>[],
     this.experiences = const <Experience>[],
     this.achievements = const <Achievement>[],
-  });
+  }) {
+    if (null != rating) {
+      this.rating = double.parse(NumberFormat(".##").format(rating));
+    }
+  }
 
   factory UserMentor.fromJson(Map<String, dynamic> json) =>
       _$UserMentorFromJson(json);

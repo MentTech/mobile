@@ -109,16 +109,16 @@ abstract class _AuthenStore with Store {
 
     await future.then((mapJson) async {
       if (mapJson["statusCode"] == null) {
-        success = true;
-
         final token = mapJson["accessToken"];
         await _repository.saveAuthToken(token);
         accessToken = token;
 
         messageStore.setSuccessMessage(Code.authenticated);
+
+        success = true;
       } else {
         int code = mapJson["statusCode"] as int;
-        if (41 == code) {
+        if (401 == code) {
           code++;
         }
         messageStore.setErrorMessageByCode(code);
