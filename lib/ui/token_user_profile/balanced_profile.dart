@@ -324,12 +324,12 @@ class _BalancedProfileState extends State<BalancedProfile> {
                     dimenImage: Dimens.extra_large_text,
                     image: _themeStore.appIcon,
                   ),
+                  const SizedBox(
+                    width: Dimens.large_horizontal_margin,
+                  ),
                   Text(
                     DeviceUtils.packageInfo!.appName,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: Dimens.medium_text,
-                    ),
+                    style: Theme.of(context).textTheme.bodyMedium,
                   )
                 ],
               ),
@@ -357,10 +357,7 @@ class _BalancedProfileState extends State<BalancedProfile> {
                 Text(
                   AppLocalizations.of(context)
                       .translate("your_balance_translate"),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: Dimens.lightly_medium_text,
-                  ),
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 Row(
                   mainAxisSize: MainAxisSize.min,
@@ -374,10 +371,7 @@ class _BalancedProfileState extends State<BalancedProfile> {
                     ),
                     Text(
                       _userStore.user!.coin.toString(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: Dimens.large_text,
-                      ),
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
                 ),

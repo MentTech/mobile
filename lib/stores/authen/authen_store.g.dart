@@ -75,22 +75,6 @@ mixin _$AuthenStore on _AuthenStore, Store {
     });
   }
 
-  late final _$messageStoreAtom =
-      Atom(name: '_AuthenStore.messageStore', context: context);
-
-  @override
-  MessageStore get messageStore {
-    _$messageStoreAtom.reportRead();
-    return super.messageStore;
-  }
-
-  @override
-  set messageStore(MessageStore value) {
-    _$messageStoreAtom.reportWrite(value, super.messageStore, () {
-      super.messageStore = value;
-    });
-  }
-
   late final _$credentialFutureAtom =
       Atom(name: '_AuthenStore.credentialFuture', context: context);
 
@@ -147,7 +131,6 @@ mixin _$AuthenStore on _AuthenStore, Store {
     return '''
 accessToken: ${accessToken},
 success: ${success},
-messageStore: ${messageStore},
 credentialFuture: ${credentialFuture},
 isLoading: ${isLoading},
 canBeAuthenticated: ${canBeAuthenticated},

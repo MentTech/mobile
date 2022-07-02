@@ -7,16 +7,16 @@ class UserModel {
   // @JsonKey(ignore: true)
   // bool isFaved;
 
-  int id;
-  String email;
-  String name;
-  DateTime? birthday;
-  String? phone;
-  String? avatar;
-  bool isActive;
-  int coin;
-  bool isPasswordSet;
-  DateTime createAt;
+  final int id;
+  final String email;
+  final String name;
+  final DateTime? birthday;
+  final String? phone;
+  final String? avatar;
+  final bool isActive;
+  final int coin;
+  final bool isPasswordSet;
+  final DateTime createAt;
 
   UserModel({
     required this.id,

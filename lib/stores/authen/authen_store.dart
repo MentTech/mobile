@@ -15,6 +15,9 @@ abstract class _AuthenStore with Store {
   // repository instance
   final Repository _repository;
 
+  // store for handling error messages
+  final MessageStore messageStore = getIt<MessageStore>();
+
   // constructor:---------------------------------------------------------------
   _AuthenStore(Repository repository) : _repository = repository {
     // setting up disposers
@@ -58,9 +61,6 @@ abstract class _AuthenStore with Store {
 
   @observable
   bool success = false;
-
-  @observable
-  MessageStore messageStore = getIt<MessageStore>();
 
   @observable
   ObservableFuture<Map<String, dynamic>> credentialFuture = emptyLoginResponse;

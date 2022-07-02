@@ -19,18 +19,13 @@ abstract class _UserStore with Store {
   // repository instance
   final Repository _repository;
 
-  // store for handling form errors
-  // final FormErrorStore formErrorStore = FormErrorStore();
+  // store for handling error messages
+  final MessageStore messageStore = getIt<MessageStore>();
 
   // constructor:---------------------------------------------------------------
   _UserStore(Repository repository) : _repository = repository {
     // setting up disposers
     _setupDisposers();
-
-    // checking if user is logged in
-    // repository.authToken.then((value) {
-    //   accessToken = value;
-    // });
   }
 
   // disposers:-----------------------------------------------------------------
@@ -77,9 +72,6 @@ abstract class _UserStore with Store {
   @observable
   ObservableFuture<Map<String, dynamic>?> requestTransactionFuture =
       emptyLoginResponse;
-
-  @observable
-  MessageStore messageStore = getIt<MessageStore>();
 
   @observable
   UserModel? user;
@@ -357,13 +349,15 @@ abstract class _UserStore with Store {
       try {
         if (res!["statusCode"] == null) {
           messageStore.setSuccessMessage(Code.updateUserInfor);
-          user = UserModel.fromJson(res["data"]);
+          user = UserModel.fromJson(res);
 
           success = true;
         } else {
           int code = res["statusCode"] as int;
 
           messageStore.setErrorMessageByCode(code);
+
+          success = false;
         }
       } catch (e) {
         // int code = mapJson["statusCode"] as int;

@@ -90,7 +90,6 @@ class _UserProfileState extends State<UserProfile> {
             child: _buildHeaderWidget(),
           ),
           Observer(
-            // validator
             builder: (_) {
               return _userStore.success
                   ? ApplicationUtils.showSuccessMessage(

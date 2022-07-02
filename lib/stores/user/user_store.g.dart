@@ -171,22 +171,6 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
-  late final _$messageStoreAtom =
-      Atom(name: '_UserStore.messageStore', context: context);
-
-  @override
-  MessageStore get messageStore {
-    _$messageStoreAtom.reportRead();
-    return super.messageStore;
-  }
-
-  @override
-  set messageStore(MessageStore value) {
-    _$messageStoreAtom.reportWrite(value, super.messageStore, () {
-      super.messageStore = value;
-    });
-  }
-
   late final _$userAtom = Atom(name: '_UserStore.user', context: context);
 
   @override
@@ -359,7 +343,6 @@ requestUploadAvatarFuture: ${requestUploadAvatarFuture},
 requestFavEventFuture: ${requestFavEventFuture},
 requestSessionFuture: ${requestSessionFuture},
 requestTransactionFuture: ${requestTransactionFuture},
-messageStore: ${messageStore},
 user: ${user},
 sessionStatus: ${sessionStatus},
 sessionFetchingData: ${sessionFetchingData},

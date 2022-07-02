@@ -100,22 +100,6 @@ mixin _$OrderStore on _OrderStore, Store {
     });
   }
 
-  late final _$messageStoreAtom =
-      Atom(name: '_OrderStore.messageStore', context: context);
-
-  @override
-  MessageStore get messageStore {
-    _$messageStoreAtom.reportRead();
-    return super.messageStore;
-  }
-
-  @override
-  set messageStore(MessageStore value) {
-    _$messageStoreAtom.reportWrite(value, super.messageStore, () {
-      super.messageStore = value;
-    });
-  }
-
   late final _$fetchTopupRateAsyncAction =
       AsyncAction('_OrderStore.fetchTopupRate', context: context);
 
@@ -140,7 +124,6 @@ success: ${success},
 rateTopup: ${rateTopup},
 currentOrder: ${currentOrder},
 requestFuture: ${requestFuture},
-messageStore: ${messageStore},
 isLoading: ${isLoading},
 isSuccess: ${isSuccess},
 getSuccessMessageKey: ${getSuccessMessageKey},

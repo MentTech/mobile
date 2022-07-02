@@ -12,6 +12,9 @@ abstract class _OrderStore with Store {
   // repository instance
   final Repository _repository;
 
+  // store for handling error messages
+  final MessageStore messageStore = getIt<MessageStore>();
+
   // constructor:---------------------------------------------------------------
   _OrderStore(Repository repository) : _repository = repository {
     // setting up disposers
@@ -47,9 +50,6 @@ abstract class _OrderStore with Store {
 
   @observable
   ObservableFuture<Map<String, dynamic>?> requestFuture = emptyResponse;
-
-  @observable
-  MessageStore messageStore = getIt<MessageStore>();
 
   // computed:------------------------------------------------------------------
   @computed
