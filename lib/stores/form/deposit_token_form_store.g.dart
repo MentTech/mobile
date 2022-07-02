@@ -65,22 +65,6 @@ mixin _$DepositTokenFormStore on _DepositTokenFormStore, Store {
     });
   }
 
-  late final _$noteAtom =
-      Atom(name: '_DepositTokenFormStore.note', context: context);
-
-  @override
-  String get note {
-    _$noteAtom.reportRead();
-    return super.note;
-  }
-
-  @override
-  set note(String value) {
-    _$noteAtom.reportWrite(value, super.note, () {
-      super.note = value;
-    });
-  }
-
   late final _$paymentMethodAtom =
       Atom(name: '_DepositTokenFormStore.paymentMethod', context: context);
 
@@ -134,17 +118,6 @@ mixin _$DepositTokenFormStore on _DepositTokenFormStore, Store {
   }
 
   @override
-  void setNote(String value) {
-    final _$actionInfo = _$_DepositTokenFormStoreActionController.startAction(
-        name: '_DepositTokenFormStore.setNote');
-    try {
-      return super.setNote(value);
-    } finally {
-      _$_DepositTokenFormStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   void setPaymentMethod(PaymentMethod paymentMethod) {
     final _$actionInfo = _$_DepositTokenFormStoreActionController.startAction(
         name: '_DepositTokenFormStore.setPaymentMethod');
@@ -189,23 +162,11 @@ mixin _$DepositTokenFormStore on _DepositTokenFormStore, Store {
   }
 
   @override
-  void validateNote(String value) {
-    final _$actionInfo = _$_DepositTokenFormStoreActionController.startAction(
-        name: '_DepositTokenFormStore.validateNote');
-    try {
-      return super.validateNote(value);
-    } finally {
-      _$_DepositTokenFormStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   String toString() {
     return '''
 name: ${name},
 email: ${email},
 token: ${token},
-note: ${note},
 paymentMethod: ${paymentMethod},
 canLoadToken: ${canLoadToken}
     ''';
@@ -269,29 +230,12 @@ mixin _$ProgramRegisterErrorForm on _ProgramRegisterErrorForm, Store {
     });
   }
 
-  late final _$noteAtom =
-      Atom(name: '_ProgramRegisterErrorForm.note', context: context);
-
-  @override
-  String? get note {
-    _$noteAtom.reportRead();
-    return super.note;
-  }
-
-  @override
-  set note(String? value) {
-    _$noteAtom.reportWrite(value, super.note, () {
-      super.note = value;
-    });
-  }
-
   @override
   String toString() {
     return '''
 name: ${name},
 email: ${email},
 token: ${token},
-note: ${note},
 hasErrorsLoad: ${hasErrorsLoad}
     ''';
   }

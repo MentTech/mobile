@@ -112,4 +112,19 @@ class Routes {
       ),
     );
   }
+
+  ///
+  /// Remove all routes and push
+  ///
+  static void routeReplaceAllAndPush<T>(
+      BuildContext context, Widget stateNavigate) {
+    Navigator.pushAndRemoveUntil(
+      context,
+      CustomFadeTransitionPageRoute(
+        timeCast: Properties.delayTimeInSecond,
+        child: stateNavigate,
+      ),
+      (route) => false,
+    );
+  }
 }

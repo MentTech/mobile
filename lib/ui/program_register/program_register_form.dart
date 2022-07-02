@@ -43,7 +43,10 @@ class _ProgramRegisterFormState extends State<ProgramRegisterForm> {
         Provider.of<UserStore>(context, listen: false).user!;
 
     _nameController.text = userModel.name;
+    _formStore.setName(userModel.name);
+
     _emailController.text = userModel.email;
+    _formStore.setEmail(userModel.email);
   }
 
   @override

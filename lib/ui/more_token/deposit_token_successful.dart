@@ -43,7 +43,9 @@ class DepositTokenSuccessFul extends StatelessWidget {
               ),
             ),
           ),
-          CustomInStackAppBar(),
+          CustomInStackAppBar(
+            nameAppbar: AppLocalizations.of(context).translate("deposit_title"),
+          ),
         ],
       ),
     );

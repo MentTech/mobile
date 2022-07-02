@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:mobile/data/repository.dart';
+import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/common/session/session.dart';
 import 'package:mobile/models/common/session/sessions.dart';
 import 'package:mobile/models/common/transaction/transaction.dart';
 import 'package:mobile/models/user/user.dart';
 import 'package:mobile/stores/enum/session_status_enum.dart';
+import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
 
 part 'user_store.g.dart';
@@ -83,6 +85,9 @@ abstract class _UserStore with Store {
       emptyLoginResponse;
 
   @observable
+  MessageStore messageStore = getIt<MessageStore>();
+
+  @observable
   UserModel? user;
 
   @observable
@@ -127,6 +132,12 @@ abstract class _UserStore with Store {
 
   @computed
   int get sizeTransactionList => _transactionContent?.transactions.length ?? 0;
+
+  @computed
+  String get getSuccessMessageKey => messageStore.successMessagekey;
+
+  @computed
+  String get getFailedMessageKey => messageStore.errorMessagekey;
 
   SessionStatus get currentSessionFetchStatus => sessionStatus;
 
@@ -335,12 +346,12 @@ abstract class _UserStore with Store {
   }
 
   @action
-  Future<bool> updateUserInformation(
+  Future<void> updateUserInformation(
       {required Map<String, String> data}) async {
     String? accessToken = await _repository.authToken;
 
     if (null == accessToken) {
-      return Future.value(false);
+      return;
     }
 
     final Future<Map<String, dynamic>?> future =
@@ -350,16 +361,23 @@ abstract class _UserStore with Store {
 
     future.then((res) {
       try {
-        success = true;
-        return Future.value(true);
+        if (res!["statusCode"] == null) {
+          messageStore.setSuccessMessage(Code.updateUserInfor);
+          user = UserModel.fromJson(res["data"]);
+
+          success = true;
+        } else {
+          int code = res["statusCode"] as int;
+
+          messageStore.setErrorMessageByCode(code);
+        }
       } catch (e) {
+        // int code = mapJson["statusCode"] as int;
+        // messageStore.setErrorMessageByCode(code);
         // res['message']
         success = false;
-        return Future.value(false);
       }
     });
-
-    return Future.value(true);
   }
 
   // general methods:-----------------------------------------------------------

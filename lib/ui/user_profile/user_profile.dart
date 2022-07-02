@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobile/constants/colors.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
@@ -11,6 +11,7 @@ import 'package:mobile/stores/authen_form/user_info_form_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/ui/user_profile/avatar_changer.dart';
+import 'package:mobile/utils/application/application_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
@@ -88,22 +89,22 @@ class _UserProfileState extends State<UserProfile> {
             right: 0,
             child: _buildHeaderWidget(),
           ),
-          // Observer(
-          //   // validator
-          //   builder: (_) {
-          //     return _userStore.success
-          //         ? _showSuccessMessage(
-          //             AppLocalizations.of(context)
-          //                 .translate(_formStore..successMessagekey),
-          //             duration: Properties.delayTimeInSecond,
-          //           )
-          //         : _showErrorMessage(
-          //             AppLocalizations.of(context)
-          //                 .translate(_formStore.messageStore.errorMessagekey),
-          //             duration: Properties.delayTimeInSecond,
-          //           );
-          //   },
-          // ),
+          Observer(
+            // validator
+            builder: (_) {
+              return _userStore.success
+                  ? ApplicationUtils.showSuccessMessage(
+                      context,
+                      "change_information_notification_title_translate",
+                      _userStore.getSuccessMessageKey,
+                    )
+                  : ApplicationUtils.showErrorMessage(
+                      context,
+                      "change_information_notification_title_translate",
+                      _userStore.getFailedMessageKey,
+                    );
+            },
+          ),
           Observer(
             builder: (context) {
               return Visibility(
@@ -171,7 +172,11 @@ class _UserProfileState extends State<UserProfile> {
             TextButton(
               onPressed: () {
                 // on Save
-                _userStore.updateUserInformation(data: _formStore.toDataJson());
+                _formStore.validateAll();
+                if (_formStore.canUpdateUserInfor) {
+                  _userStore.updateUserInformation(
+                      data: _formStore.toDataJson());
+                }
                 if (null != avatarImage) {
                   _userStore.uploadUserAvatar(imageFile: avatarImage!);
                 }
@@ -179,7 +184,7 @@ class _UserProfileState extends State<UserProfile> {
               child: Text(
                 AppLocalizations.of(context).translate("done_button_translate"),
                 style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                      color: Colors.green.shade700,
+                      color: AppColors.confirmColor,
                       fontWeight: FontWeight.w500,
                     ),
               ),
@@ -315,35 +320,6 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   // General Methods:-----------------------------------------------------------
-  _showErrorMessage(String message,
-      {int duration = Properties.delayTimeInSecond}) {
-    if (message.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        FlushbarHelper.createError(
-          message: message,
-          title: AppLocalizations.of(context).translate('home_tv_error'),
-          duration: Duration(seconds: duration),
-        ).show(context);
-      });
-    }
-
-    return const SizedBox.shrink();
-  }
-
-  _showSuccessMessage(String message,
-      {int duration = Properties.delayTimeInSecond}) {
-    if (message.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        FlushbarHelper.createSuccess(
-          message: message,
-          title: AppLocalizations.of(context).translate('home_tv_success'),
-          duration: Duration(seconds: duration),
-        ).show(context);
-      });
-    }
-
-    return const SizedBox.shrink();
-  }
 
   // dispose:-------------------------------------------------------------------
   @override

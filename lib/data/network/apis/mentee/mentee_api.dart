@@ -120,9 +120,8 @@ class MenteeAPI {
         ),
       );
 
-      return {
-        "data": res,
-      };
+      return res;
+
       // return User.fromJson(res);
     } catch (e) {
       log(e.toString());

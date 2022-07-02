@@ -117,8 +117,18 @@ class AuthAPI {
           },
         ),
       );
-
-      return res;
+      if (res is String) {
+        return {
+          "responseString": res,
+        };
+      } else {
+        if (res["message"] == "Unauthorized") {
+          res["statusCode"] = 401;
+        } else {
+          res["statusCode"] = 403;
+        }
+        return res;
+      }
     } catch (e) {
       log(e.toString());
       rethrow;

@@ -424,6 +424,12 @@ class Repository {
     });
   }
 
+  Future<String?> get userEmailAccount => _sharedPrefsHelper.userEmailAccount;
+
+  Future<bool> saveUserEmailAccount(String userEmailAccount) async {
+    return _sharedPrefsHelper.saveUserEmailAccount(userEmailAccount);
+  }
+
   Future<String?> get authToken => _sharedPrefsHelper.authToken;
 
   Future<bool> saveAuthToken(String authToken) async {

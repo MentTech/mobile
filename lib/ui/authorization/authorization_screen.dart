@@ -5,13 +5,13 @@ import 'package:mobile/constants/assets.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/constants/strings.dart';
-import 'package:mobile/data/repository.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/authen/authen_store.dart';
 import 'package:mobile/stores/authen_form/authen_form_store.dart';
 import 'package:mobile/stores/search_store.dart/search_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
+import 'package:mobile/utils/application/application_utils.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
@@ -44,7 +44,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
   //stores:---------------------------------------------------------------------
   late final UserStore _userStore;
   late final SearchStore _searchStore;
-  final AuthenStore _authenStore = AuthenStore(getIt<Repository>());
+  late final AuthenStore _authenStore;
   final AuthenticatorFormStore _store = AuthenticatorFormStore();
   final ThemeStore _themeStore = getIt<ThemeStore>();
 
@@ -95,6 +95,13 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
 
     _userStore = Provider.of<UserStore>(context, listen: false);
     _searchStore = Provider.of<SearchStore>(context, listen: false);
+
+    _authenStore = Provider.of<AuthenStore>(context, listen: false);
+
+    if (null != _authenStore.userEmailAccount) {
+      _userEmailController.text = _authenStore.userEmailAccount!;
+      _store.setUserId(_authenStore.userEmailAccount!);
+    }
   }
 
   @override
@@ -153,9 +160,10 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
                       _authenStore.getSuccessMessageKey,
                       duration: Properties.delayTimeInSecond,
                     )
-                  : _showErrorMessage(
+                  : ApplicationUtils.showErrorMessage(
+                      context,
+                      "credential_notification_title_translate",
                       _authenStore.getFailedMessageKey,
-                      duration: Properties.delayTimeInSecond,
                     );
             },
           ),
@@ -441,10 +449,6 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
                     _store.userEmail, _store.password, _store.name);
               }
             }
-          } else {
-            _showErrorMessage(
-              AppLocalizations.of(context).translate("missing_field"),
-            );
           }
         },
       ),
@@ -489,20 +493,6 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
   }
 
   // General Methods:-----------------------------------------------------------
-  _showErrorMessage(String key, {int duration = Properties.delayTimeInSecond}) {
-    if (key.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        FlushbarHelper.createError(
-          message: AppLocalizations.of(context).translate(key),
-          title:
-              AppLocalizations.of(context).translate('failed_credential_title'),
-          duration: Duration(seconds: duration),
-        ).show(context);
-      });
-    }
-
-    return const SizedBox.shrink();
-  }
 
   _showSuccessMessage(String key,
       {int duration = Properties.delayTimeInSecond}) {
@@ -512,7 +502,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
           message: AppLocalizations.of(context).translate(key),
           title: AppLocalizations.of(context)
               .translate('success_credential_title'),
-          duration: const Duration(seconds: Properties.delayTimeInSecond),
+          duration: Duration(seconds: duration),
         ).show(context).then((_) {
           _userStore.fetchUserInfor().then((isCanRoute) {
             Routes.authenticatedRoute(context);

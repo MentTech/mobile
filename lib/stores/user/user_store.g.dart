@@ -57,6 +57,20 @@ mixin _$UserStore on _UserStore, Store {
           Computed<int>(() => super.sizeTransactionList,
               name: '_UserStore.sizeTransactionList'))
       .value;
+  Computed<String>? _$getSuccessMessageKeyComputed;
+
+  @override
+  String get getSuccessMessageKey => (_$getSuccessMessageKeyComputed ??=
+          Computed<String>(() => super.getSuccessMessageKey,
+              name: '_UserStore.getSuccessMessageKey'))
+      .value;
+  Computed<String>? _$getFailedMessageKeyComputed;
+
+  @override
+  String get getFailedMessageKey => (_$getFailedMessageKeyComputed ??=
+          Computed<String>(() => super.getFailedMessageKey,
+              name: '_UserStore.getFailedMessageKey'))
+      .value;
 
   late final _$successAtom = Atom(name: '_UserStore.success', context: context);
 
@@ -154,6 +168,22 @@ mixin _$UserStore on _UserStore, Store {
     _$requestTransactionFutureAtom
         .reportWrite(value, super.requestTransactionFuture, () {
       super.requestTransactionFuture = value;
+    });
+  }
+
+  late final _$messageStoreAtom =
+      Atom(name: '_UserStore.messageStore', context: context);
+
+  @override
+  MessageStore get messageStore {
+    _$messageStoreAtom.reportRead();
+    return super.messageStore;
+  }
+
+  @override
+  set messageStore(MessageStore value) {
+    _$messageStoreAtom.reportWrite(value, super.messageStore, () {
+      super.messageStore = value;
     });
   }
 
@@ -292,7 +322,7 @@ mixin _$UserStore on _UserStore, Store {
       AsyncAction('_UserStore.updateUserInformation', context: context);
 
   @override
-  Future<bool> updateUserInformation({required Map<String, String> data}) {
+  Future<void> updateUserInformation({required Map<String, String> data}) {
     return _$updateUserInformationAsyncAction
         .run(() => super.updateUserInformation(data: data));
   }
@@ -320,6 +350,7 @@ requestUploadAvatarFuture: ${requestUploadAvatarFuture},
 requestFavEventFuture: ${requestFavEventFuture},
 requestSessionFuture: ${requestSessionFuture},
 requestTransactionFuture: ${requestTransactionFuture},
+messageStore: ${messageStore},
 user: ${user},
 sessionStatus: ${sessionStatus},
 sessionFetchingData: ${sessionFetchingData},
@@ -330,7 +361,9 @@ isPushingFavMentorData: ${isPushingFavMentorData},
 isSessionLoading: ${isSessionLoading},
 isTransactionLoading: ${isTransactionLoading},
 sizeSessionList: ${sizeSessionList},
-sizeTransactionList: ${sizeTransactionList}
+sizeTransactionList: ${sizeTransactionList},
+getSuccessMessageKey: ${getSuccessMessageKey},
+getFailedMessageKey: ${getFailedMessageKey}
     ''';
   }
 }

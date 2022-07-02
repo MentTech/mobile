@@ -1,4 +1,3 @@
-import 'package:mobile/stores/enum/form_validation_status.dart';
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:validators/validators.dart';
@@ -32,7 +31,7 @@ abstract class _AuthenticatorFormStore with Store {
       reaction((_) => userEmail, validateUserEmail),
       reaction((_) => password, validatePassword),
       reaction((_) => confirmPassword, validateConfirmPassword),
-      reaction((_) => newPassword, validateNewPassword),
+      reaction((_) => oldPassword, validateOldPassword),
       reaction((_) => name, validateName),
     ];
   }
@@ -48,13 +47,13 @@ abstract class _AuthenticatorFormStore with Store {
   String userEmail = '';
 
   @observable
+  String oldPassword = '';
+
+  @observable
   String password = '';
 
   @observable
   String confirmPassword = '';
-
-  @observable
-  String newPassword = '';
 
   @observable
   String name = '';
@@ -91,23 +90,28 @@ abstract class _AuthenticatorFormStore with Store {
       !formErrorStore.hasErrorInRenewPassword &&
       password.isNotEmpty &&
       confirmPassword.isNotEmpty &&
-      newPassword.isNotEmpty;
+      oldPassword.isNotEmpty;
 
-  @computed
-  FormStatus get renewPasswordStatus {
-    if (password.isEmpty || confirmPassword.isEmpty || newPassword.isEmpty) {
-      return FormStatus.missingField;
-    }
-    if (confirmPassword.compareTo(password) != 0) {
-      return FormStatus.notMatchPassword;
-    }
-    return FormStatus.allValidated; // canChangePassword
-  }
+  // @computed
+  // FormStatus get renewPasswordStatus {
+  //   if (password.isEmpty || confirmPassword.isEmpty || newPassword.isEmpty) {
+  //     return FormStatus.missingField;
+  //   }
+  //   if (confirmPassword.compareTo(password) != 0) {
+  //     return FormStatus.notMatchPassword;
+  //   }
+  //   return FormStatus.allValidated; // canChangePassword
+  // }
 
   // actions:-------------------------------------------------------------------
   @action
   void setUserId(String value) {
     userEmail = value;
+  }
+
+  @action
+  void setOldPassword(String value) {
+    oldPassword = value;
   }
 
   @action
@@ -118,11 +122,6 @@ abstract class _AuthenticatorFormStore with Store {
   @action
   void setConfirmPassword(String value) {
     confirmPassword = value;
-  }
-
-  @action
-  void setNewPassword(String value) {
-    newPassword = value;
   }
 
   @action
@@ -160,6 +159,18 @@ abstract class _AuthenticatorFormStore with Store {
   }
 
   @action
+  void validateOldPassword(String value) {
+    if (value.isEmpty) {
+      formErrorStore.oldPassword = "Password can't be empty";
+    } else if (value.length < 6) {
+      formErrorStore.oldPassword =
+          "Password must be at-least 6 characters long";
+    } else {
+      formErrorStore.oldPassword = null;
+    }
+  }
+
+  @action
   void validatePassword(String value) {
     if (value.isEmpty) {
       formErrorStore.password = "Password can't be empty";
@@ -167,18 +178,6 @@ abstract class _AuthenticatorFormStore with Store {
       formErrorStore.password = "Password must be at-least 6 characters long";
     } else {
       formErrorStore.password = null;
-    }
-  }
-
-  @action
-  void validateNewPassword(String value) {
-    if (value.isEmpty) {
-      formErrorStore.newPassword = "RePassword can't be empty";
-    } else if (value.length < 6) {
-      formErrorStore.newPassword =
-          "RePassword must be at-least 6 characters long";
-    } else {
-      formErrorStore.newPassword = null;
     }
   }
 
@@ -215,11 +214,20 @@ abstract class _AuthenticatorFormStore with Store {
     validateConfirmPassword(confirmPassword);
     validateName(name);
   }
+
+  void validatePasswordChanger() {
+    validateOldPassword(oldPassword);
+    validatePassword(password);
+    validateConfirmPassword(confirmPassword);
+  }
 }
 
 class FormErrorStore = _FormErrorStore with _$FormErrorStore;
 
 abstract class _FormErrorStore with Store {
+  @observable
+  String? oldPassword;
+
   @observable
   String? userEmail;
 
@@ -228,9 +236,6 @@ abstract class _FormErrorStore with Store {
 
   @observable
   String? confirmPassword;
-
-  @observable
-  String? newPassword;
 
   @observable
   String? name;
@@ -250,5 +255,5 @@ abstract class _FormErrorStore with Store {
 
   @computed
   bool get hasErrorInRenewPassword =>
-      password != null || confirmPassword != null || newPassword != null;
+      password != null || confirmPassword != null || oldPassword != null;
 }

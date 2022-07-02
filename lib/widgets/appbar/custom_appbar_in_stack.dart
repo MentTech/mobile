@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
-import 'package:mobile/di/components/service_locator.dart';
-import 'package:mobile/stores/theme/theme_store.dart';
-import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 
 class CustomInStackAppBar extends StatelessWidget {
-  CustomInStackAppBar({Key? key}) : super(key: key);
+  const CustomInStackAppBar({
+    Key? key,
+    required this.nameAppbar,
+  }) : super(key: key);
 
-  final ThemeStore _themeStore = getIt<ThemeStore>();
+  final String nameAppbar;
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +24,14 @@ class CustomInStackAppBar extends StatelessWidget {
               },
               icon: Icon(
                 Icons.arrow_back_ios,
-                color: _themeStore.reverseThemeColor,
+                color: Theme.of(context).indicatorColor,
               ),
             ),
             Text(
-              AppLocalizations.of(context).translate("deposit_title"),
+              nameAppbar,
               style: TextStyle(
                 fontSize: Dimens.medium_text,
-                color: _themeStore.reverseThemeColor,
+                color: Theme.of(context).indicatorColor,
               ),
             ),
           ],

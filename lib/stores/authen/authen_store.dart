@@ -24,6 +24,10 @@ abstract class _AuthenStore with Store {
     repository.authToken.then((value) {
       accessToken = value;
     });
+
+    repository.userEmailAccount.then((value) {
+      _userAccountEmail = value;
+    });
   }
 
   // disposers:-----------------------------------------------------------------
@@ -46,6 +50,7 @@ abstract class _AuthenStore with Store {
   ]);
 
   // store variables:-----------------------------------------------------------
+  String? _userAccountEmail;
 
   // token for access
   @observable
@@ -114,6 +119,8 @@ abstract class _AuthenStore with Store {
         accessToken = token;
 
         messageStore.setSuccessMessage(Code.authenticated);
+
+        _repository.saveUserEmailAccount(email);
 
         success = true;
       } else {
@@ -199,13 +206,14 @@ abstract class _AuthenStore with Store {
   }
 
   @action
-  Future<String?> changePassword(String oldPassword, String newPassword) async {
+  Future<void> changePassword(String oldPassword, String newPassword) async {
     String? accessToken = await _repository.authToken;
 
     if (null == accessToken) {
       success = false;
 
-      return "No access token";
+      "No access token";
+      return;
     }
 
     final future = _repository.changePassword(
@@ -218,30 +226,30 @@ abstract class _AuthenStore with Store {
 
     credentialFuture = ObservableFuture(future);
 
-    String? message;
-
     await future.then((mapJson) async {
-      if (mapJson["message"] == null) {
+      if (mapJson["statusCode"] == null) {
+        messageStore.setSuccessMessage(Code.changePassword);
+
         success = true;
+      } else {
+        int code = mapJson["statusCode"] as int;
 
-        final token = mapJson["accessToken"];
-        await _repository.saveAuthToken(token);
-        accessToken = token;
+        messageStore.setErrorMessageByCode(code);
       }
-
-      message = mapJson['message'];
     }).catchError((e) {
       log(e.toString());
       accessToken = null;
       success = false;
       throw e;
     });
-
-    return Future.value(message);
   }
 
   // getter:--------------------------------------------------------------------
   bool get isLoggedIn => accessToken != null;
+
+  String? get userEmailAccount {
+    return _userAccountEmail;
+  }
 
   // general methods:-----------------------------------------------------------
   void dispose() {

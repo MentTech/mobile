@@ -37,13 +37,6 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
           () => super.canChangePassword,
           name: '_AuthenticatorFormStore.canChangePassword'))
       .value;
-  Computed<FormStatus>? _$renewPasswordStatusComputed;
-
-  @override
-  FormStatus get renewPasswordStatus => (_$renewPasswordStatusComputed ??=
-          Computed<FormStatus>(() => super.renewPasswordStatus,
-              name: '_AuthenticatorFormStore.renewPasswordStatus'))
-      .value;
 
   late final _$stateAuthenAtom =
       Atom(name: '_AuthenticatorFormStore.stateAuthen', context: context);
@@ -94,6 +87,22 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
     });
   }
 
+  late final _$oldPasswordAtom =
+      Atom(name: '_AuthenticatorFormStore.oldPassword', context: context);
+
+  @override
+  String get oldPassword {
+    _$oldPasswordAtom.reportRead();
+    return super.oldPassword;
+  }
+
+  @override
+  set oldPassword(String value) {
+    _$oldPasswordAtom.reportWrite(value, super.oldPassword, () {
+      super.oldPassword = value;
+    });
+  }
+
   late final _$passwordAtom =
       Atom(name: '_AuthenticatorFormStore.password', context: context);
 
@@ -123,22 +132,6 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
   set confirmPassword(String value) {
     _$confirmPasswordAtom.reportWrite(value, super.confirmPassword, () {
       super.confirmPassword = value;
-    });
-  }
-
-  late final _$newPasswordAtom =
-      Atom(name: '_AuthenticatorFormStore.newPassword', context: context);
-
-  @override
-  String get newPassword {
-    _$newPasswordAtom.reportRead();
-    return super.newPassword;
-  }
-
-  @override
-  set newPassword(String value) {
-    _$newPasswordAtom.reportWrite(value, super.newPassword, () {
-      super.newPassword = value;
     });
   }
 
@@ -221,6 +214,17 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
   }
 
   @override
+  void setOldPassword(String value) {
+    final _$actionInfo = _$_AuthenticatorFormStoreActionController.startAction(
+        name: '_AuthenticatorFormStore.setOldPassword');
+    try {
+      return super.setOldPassword(value);
+    } finally {
+      _$_AuthenticatorFormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setPassword(String value) {
     final _$actionInfo = _$_AuthenticatorFormStoreActionController.startAction(
         name: '_AuthenticatorFormStore.setPassword');
@@ -237,17 +241,6 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
         name: '_AuthenticatorFormStore.setConfirmPassword');
     try {
       return super.setConfirmPassword(value);
-    } finally {
-      _$_AuthenticatorFormStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void setNewPassword(String value) {
-    final _$actionInfo = _$_AuthenticatorFormStoreActionController.startAction(
-        name: '_AuthenticatorFormStore.setNewPassword');
-    try {
-      return super.setNewPassword(value);
     } finally {
       _$_AuthenticatorFormStoreActionController.endAction(_$actionInfo);
     }
@@ -309,22 +302,22 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
   }
 
   @override
-  void validatePassword(String value) {
+  void validateOldPassword(String value) {
     final _$actionInfo = _$_AuthenticatorFormStoreActionController.startAction(
-        name: '_AuthenticatorFormStore.validatePassword');
+        name: '_AuthenticatorFormStore.validateOldPassword');
     try {
-      return super.validatePassword(value);
+      return super.validateOldPassword(value);
     } finally {
       _$_AuthenticatorFormStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  void validateNewPassword(String value) {
+  void validatePassword(String value) {
     final _$actionInfo = _$_AuthenticatorFormStoreActionController.startAction(
-        name: '_AuthenticatorFormStore.validateNewPassword');
+        name: '_AuthenticatorFormStore.validatePassword');
     try {
-      return super.validateNewPassword(value);
+      return super.validatePassword(value);
     } finally {
       _$_AuthenticatorFormStoreActionController.endAction(_$actionInfo);
     }
@@ -358,9 +351,9 @@ mixin _$AuthenticatorFormStore on _AuthenticatorFormStore, Store {
 stateAuthen: ${stateAuthen},
 isForgotPasswordState: ${isForgotPasswordState},
 userEmail: ${userEmail},
+oldPassword: ${oldPassword},
 password: ${password},
 confirmPassword: ${confirmPassword},
-newPassword: ${newPassword},
 name: ${name},
 success: ${success},
 logined: ${logined},
@@ -368,8 +361,7 @@ loading: ${loading},
 canLogin: ${canLogin},
 canRegister: ${canRegister},
 canForgetPassword: ${canForgetPassword},
-canChangePassword: ${canChangePassword},
-renewPasswordStatus: ${renewPasswordStatus}
+canChangePassword: ${canChangePassword}
     ''';
   }
 }
@@ -403,6 +395,22 @@ mixin _$FormErrorStore on _FormErrorStore, Store {
           Computed<bool>(() => super.hasErrorInRenewPassword,
               name: '_FormErrorStore.hasErrorInRenewPassword'))
       .value;
+
+  late final _$oldPasswordAtom =
+      Atom(name: '_FormErrorStore.oldPassword', context: context);
+
+  @override
+  String? get oldPassword {
+    _$oldPasswordAtom.reportRead();
+    return super.oldPassword;
+  }
+
+  @override
+  set oldPassword(String? value) {
+    _$oldPasswordAtom.reportWrite(value, super.oldPassword, () {
+      super.oldPassword = value;
+    });
+  }
 
   late final _$userEmailAtom =
       Atom(name: '_FormErrorStore.userEmail', context: context);
@@ -452,22 +460,6 @@ mixin _$FormErrorStore on _FormErrorStore, Store {
     });
   }
 
-  late final _$newPasswordAtom =
-      Atom(name: '_FormErrorStore.newPassword', context: context);
-
-  @override
-  String? get newPassword {
-    _$newPasswordAtom.reportRead();
-    return super.newPassword;
-  }
-
-  @override
-  set newPassword(String? value) {
-    _$newPasswordAtom.reportWrite(value, super.newPassword, () {
-      super.newPassword = value;
-    });
-  }
-
   late final _$nameAtom = Atom(name: '_FormErrorStore.name', context: context);
 
   @override
@@ -486,10 +478,10 @@ mixin _$FormErrorStore on _FormErrorStore, Store {
   @override
   String toString() {
     return '''
+oldPassword: ${oldPassword},
 userEmail: ${userEmail},
 password: ${password},
 confirmPassword: ${confirmPassword},
-newPassword: ${newPassword},
 name: ${name},
 hasErrorsInLogin: ${hasErrorsInLogin},
 hasErrorsInRegister: ${hasErrorsInRegister},

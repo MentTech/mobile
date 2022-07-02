@@ -1,4 +1,6 @@
 import 'package:mobile/data/repository.dart';
+import 'package:mobile/di/components/service_locator.dart';
+import 'package:mobile/models/common/order/order.dart';
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
 
@@ -9,9 +11,6 @@ class OrderStore = _OrderStore with _$OrderStore;
 abstract class _OrderStore with Store {
   // repository instance
   final Repository _repository;
-
-  // store for handling error messages
-  final MessageStore messageStore = MessageStore();
 
   // constructor:---------------------------------------------------------------
   _OrderStore(Repository repository) : _repository = repository {
@@ -44,7 +43,13 @@ abstract class _OrderStore with Store {
   int rateTopup = 0;
 
   @observable
+  Order? currentOrder;
+
+  @observable
   ObservableFuture<Map<String, dynamic>?> requestFuture = emptyResponse;
+
+  @observable
+  MessageStore messageStore = getIt<MessageStore>();
 
   // computed:------------------------------------------------------------------
   @computed
@@ -52,6 +57,12 @@ abstract class _OrderStore with Store {
 
   @computed
   bool get isSuccess => success;
+
+  @computed
+  String get getSuccessMessageKey => messageStore.successMessagekey;
+
+  @computed
+  String get getFailedMessageKey => messageStore.errorMessagekey;
 
   // actions:-------------------------------------------------------------------
   @action
@@ -140,14 +151,17 @@ abstract class _OrderStore with Store {
 
     future.then((res) {
       try {
-        // rateModels = ObservableList.of(RateModelList.fromJson(res!).rateModels);
-        final String? orderID = res!["orderId"];
-        // if (null != orderID && orderID.isNotEmpty) {
-        //   messageStore.successMessage =
-        //       "You create a request load tokens successfully.";
-        // } else {
-        //   messageStore.errorMessage = "Your request has been failed.";
-        // }
+        if (res!["statusCode"] == null) {
+          messageStore.setSuccessMessage(Code.updateUserInfor);
+
+          currentOrder = Order.fromJson(res);
+
+          success = true;
+        } else {
+          int code = res["statusCode"] as int;
+
+          messageStore.setErrorMessageByCode(code);
+        }
 
         success = true;
       } catch (e) {

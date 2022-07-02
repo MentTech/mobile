@@ -1,6 +1,12 @@
+import 'dart:developer';
+
+import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/dimens.dart';
+import 'package:mobile/constants/properties.dart';
+import 'package:mobile/ui/authorization/authorization_screen.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
+import 'package:mobile/utils/routes/routes.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ApplicationUtils {
@@ -75,5 +81,53 @@ class ApplicationUtils {
         AppLocalizations.of(context).translate("load_success"),
       ),
     );
+  }
+
+  /// FlushbarHelper: Error Message
+  static Widget showErrorMessage(
+    BuildContext context,
+    String titleKey,
+    String messageKey, {
+    int duration = Properties.delayTimeInSecond,
+  }) {
+    if (messageKey.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        FlushbarHelper.createError(
+          message: AppLocalizations.of(context).translate(messageKey),
+          title: AppLocalizations.of(context).translate(titleKey),
+          duration: Duration(seconds: duration),
+        ).show(context).then((_) {
+          log("message" + messageKey);
+          if (messageKey == "unauthorized_key_translate") {
+            Routes.routeReplaceAllAndPush(context, const AuthorizationScreen());
+          }
+        });
+      });
+    }
+
+    return const SizedBox.shrink();
+  }
+
+  /// FlushbarHelper: Success Message
+  static Widget showSuccessMessage(
+    BuildContext context,
+    String titleKey,
+    String messageKey, {
+    int duration = Properties.delayTimeInSecond,
+    VoidCallback? callback,
+  }) {
+    if (messageKey.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        FlushbarHelper.createSuccess(
+          message: AppLocalizations.of(context).translate(messageKey),
+          title: AppLocalizations.of(context).translate(titleKey),
+          duration: Duration(seconds: duration),
+        ).show(context).then((_) {
+          callback?.call();
+        });
+      });
+    }
+
+    return const SizedBox.shrink();
   }
 }

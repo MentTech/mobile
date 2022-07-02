@@ -12,6 +12,16 @@ class SharedPreferenceHelper {
   SharedPreferenceHelper(this._sharedPreference);
 
   // Authorization:-------------------------------------------------------------
+
+  Future<String?> get userEmailAccount async {
+    return _sharedPreference.getString(Preferences.user_email_account);
+  }
+
+  Future<bool> saveUserEmailAccount(String userEmailAccount) async {
+    return _sharedPreference.setString(
+        Preferences.user_email_account, userEmailAccount);
+  }
+
   Future<String?> get authToken async {
     return _sharedPreference.getString(Preferences.auth_token);
   }

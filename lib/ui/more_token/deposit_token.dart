@@ -1,4 +1,5 @@
-import 'package:another_flushbar/flushbar_helper.dart';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/assets.dart';
@@ -13,6 +14,7 @@ import 'package:mobile/stores/order/order_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/ui/more_token/deposit_token_successful.dart';
+import 'package:mobile/utils/application/application_utils.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
@@ -36,7 +38,7 @@ class _DepositTokenState extends State<DepositToken> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _tokenNumberController = TextEditingController();
-  final TextEditingController _noteController = TextEditingController();
+  // final TextEditingController _noteController = TextEditingController();
 
   //stores:---------------------------------------------------------------------
   final OrderStore _orderStore = OrderStore(getIt<Repository>());
@@ -76,7 +78,7 @@ class _DepositTokenState extends State<DepositToken> {
     _emailController.dispose();
     _nameController.dispose();
     _tokenNumberController.dispose();
-    _noteController.dispose();
+    // _noteController.dispose();
 
     super.dispose();
   }
@@ -97,22 +99,33 @@ class _DepositTokenState extends State<DepositToken> {
               padding: const EdgeInsets.symmetric(
                   horizontal: Dimens.horizontal_padding,
                   vertical: Dimens.vertical_padding),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    const SizedBox(
-                      height: kBottomNavigationBarHeight,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          const SizedBox(
+                            height: kBottomNavigationBarHeight,
+                          ),
+                          _buildLoadTokenMethod(),
+                          _buildLoadTokenForm(),
+                          const SizedBox(
+                            height: kBottomNavigationBarHeight,
+                          ),
+                        ],
+                      ),
                     ),
-                    _buildLoadTokenMethod(),
-                    _buildLoadTokenForm(),
-                    _buildPayUpButton(),
-                  ],
-                ),
+                  ),
+                  _buildPayUpButton(),
+                ],
               ),
             ),
           ),
-          CustomInStackAppBar(),
+          CustomInStackAppBar(
+            nameAppbar: AppLocalizations.of(context).translate("deposit_title"),
+          ),
           Observer(
             builder: (context) {
               return Visibility(
@@ -121,18 +134,25 @@ class _DepositTokenState extends State<DepositToken> {
               );
             },
           ),
-          // Observer(
-          //   // validator
-          //   builder: (_) {
-          //     return _orderStore.isSuccess
-          //         ? _showSuccessMessage(
-          //             _depositTokenFormStore.messageStore.successMessage,
-          //             duration: Properties.delayTimeInSecond)
-          //         : _showErrorMessage(
-          //             _depositTokenFormStore.messageStore.errorMessage,
-          //             duration: Properties.delayTimeInSecond);
-          //   },
-          // ),
+          Observer(
+            // validator
+            builder: (_) {
+              return _orderStore.isSuccess
+                  ? ApplicationUtils.showSuccessMessage(
+                      context,
+                      "transaction_notification_title_translate",
+                      _orderStore.getSuccessMessageKey,
+                      callback: (() {
+                        Routes.route(context, DepositTokenSuccessFul());
+                      }),
+                    )
+                  : ApplicationUtils.showErrorMessage(
+                      context,
+                      "transaction_notification_title_translate",
+                      _orderStore.getFailedMessageKey,
+                    );
+            },
+          ),
         ],
       ),
     );
@@ -211,6 +231,7 @@ class _DepositTokenState extends State<DepositToken> {
               onTap: () {
                 _depositTokenFormStore
                     .setPaymentMethod(PaymentMethod.WireTransfer);
+                log("message");
               },
             ),
             PaymentMethodSelectableButton(
@@ -283,6 +304,7 @@ class _DepositTokenState extends State<DepositToken> {
                   style: TextStyle(
                     color: _themeStore.reverseThemeColor,
                     fontSize: Dimens.lightly_medium_text,
+                    height: 1.5,
                   ),
                 ),
                 TextSpan(
@@ -291,6 +313,7 @@ class _DepositTokenState extends State<DepositToken> {
                   style: TextStyle(
                     color: _themeStore.reverseThemeColor,
                     fontSize: Dimens.small_text,
+                    height: 1.3,
                   ),
                 ),
               ],
@@ -307,7 +330,7 @@ class _DepositTokenState extends State<DepositToken> {
         _buildEmaildField(),
         _buildNameField(),
         _buildTokenField(),
-        _buildNoteField(),
+        // _buildNoteField(),
       ],
     );
   }
@@ -316,6 +339,8 @@ class _DepositTokenState extends State<DepositToken> {
     return Observer(
       builder: (_) {
         return TextFieldNameWidget(
+          frontFlex: 3,
+          backFlex: 19,
           labelText:
               AppLocalizations.of(context).translate("email_label_translate"),
           errorText: _depositTokenFormStore.formErrorStore.email,
@@ -333,6 +358,8 @@ class _DepositTokenState extends State<DepositToken> {
     return Observer(
       builder: (_) {
         return TextFieldNameWidget(
+          frontFlex: 3,
+          backFlex: 19,
           labelText:
               AppLocalizations.of(context).translate("name_label_translate"),
           errorText: _depositTokenFormStore.formErrorStore.name,
@@ -350,6 +377,8 @@ class _DepositTokenState extends State<DepositToken> {
     return Observer(
       builder: (_) {
         return TextFieldNameWidget(
+          frontFlex: 3,
+          backFlex: 19,
           labelText:
               AppLocalizations.of(context).translate("token_label_translate"),
           errorText: _depositTokenFormStore.formErrorStore.token,
@@ -363,55 +392,25 @@ class _DepositTokenState extends State<DepositToken> {
     );
   }
 
-  Widget _buildNoteField() {
-    return Observer(
-      builder: (_) {
-        return TextFieldNameWidget(
-          labelText:
-              AppLocalizations.of(context).translate("note_label_translate"),
-          errorText: _depositTokenFormStore.formErrorStore.note,
-          controller: _noteController,
-          textColor: _themeStore.reverseThemeColor,
-          onValueChanged: (value) {
-            _depositTokenFormStore.setNote(_noteController.text);
-          },
-        );
-      },
-    );
-  }
+  // Widget _buildNoteField() {
+  //   return Observer(
+  //     builder: (_) {
+  //       return TextFieldNameWidget(
+  //         labelText:
+  //             AppLocalizations.of(context).translate("note_label_translate"),
+  //         errorText: _depositTokenFormStore.formErrorStore.note,
+  //         controller: _noteController,
+  //         textColor: _themeStore.reverseThemeColor,
+  //         onValueChanged: (value) {
+  //           _depositTokenFormStore.setNote(_noteController.text);
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
 
   // General Methods:-----------------------------------------------------------
-  _showErrorMessage(String message,
-      {int duration = Properties.delayTimeInSecond}) {
-    if (message.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        FlushbarHelper.createError(
-          message: message,
-          title: AppLocalizations.of(context).translate('home_tv_error'),
-          duration: Duration(seconds: duration),
-        ).show(context);
-      });
-    }
 
-    return const SizedBox.shrink();
-  }
-
-  _showSuccessMessage(String message,
-      {int duration = Properties.delayTimeInSecond}) {
-    if (message.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        FlushbarHelper.createSuccess(
-          message: message,
-          title: AppLocalizations.of(context).translate('home_tv_error'),
-          duration: Duration(seconds: duration),
-        ).show(context).then((_) {
-          Routes.route(context, DepositTokenSuccessFul());
-        });
-      });
-    }
-
-    return const SizedBox.shrink();
-  }
 }
 
 class PaymentMethodSelectableButton extends StatelessWidget {
@@ -432,12 +431,10 @@ class PaymentMethodSelectableButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeStore _themeStore = getIt<ThemeStore>();
-
     final Color statusColor = isSelected
-        ? _themeStore.reverseThemeColorfulColor
+        ? Theme.of(context).selectedRowColor
         : Color.alphaBlend(
-            _themeStore.reverseThemeColor.withOpacity(0.7),
+            Theme.of(context).indicatorColor.withOpacity(0.2),
             Colors.white70,
           );
     return Container(
@@ -446,7 +443,7 @@ class PaymentMethodSelectableButton extends StatelessWidget {
       child: AspectRatio(
         aspectRatio: 1 / 1,
         child: GlassmorphismWidgetButton(
-          textColor: statusColor,
+          background: statusColor,
           radius: 10,
           padding: const EdgeInsets.symmetric(
             vertical: Dimens.small_vertical_padding,
@@ -461,10 +458,11 @@ class PaymentMethodSelectableButton extends StatelessWidget {
                 value,
                 softWrap: true,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: statusColor,
-                  fontSize: Dimens.small_text,
-                ),
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      color: isSelected
+                          ? Theme.of(context).selectedRowColor
+                          : Theme.of(context).primaryColorLight,
+                    ),
               ),
             ],
           ),

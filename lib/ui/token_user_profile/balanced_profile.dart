@@ -407,7 +407,7 @@ class _BalancedProfileState extends State<BalancedProfile> {
       child: AspectRatio(
         aspectRatio: 1 / 1,
         child: GlassmorphismWidgetButton(
-          textColor: statusColor,
+          background: statusColor,
           radius: 10,
           alignment: Alignment.center,
           child: Column(

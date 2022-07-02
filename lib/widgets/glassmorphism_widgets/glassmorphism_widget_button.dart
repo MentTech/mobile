@@ -1,8 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:mobile/constants/colors.dart';
-import 'package:mobile/constants/dimens.dart';
 
 class GlassmorphismWidgetButton extends StatelessWidget {
   const GlassmorphismWidgetButton({
@@ -10,21 +8,11 @@ class GlassmorphismWidgetButton extends StatelessWidget {
     required this.child,
     required this.blur,
     required this.opacity,
-    this.gradientBorder = const LinearGradient(
-      colors: [
-        Colors.blue,
-        Colors.orange,
-      ],
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-    ),
     this.background = Colors.white,
     this.border = Colors.white,
     this.radius = 20,
     this.width = 150,
     this.padding = const EdgeInsets.all(0),
-    this.fontSizeText = Dimens.small_text,
-    this.textColor = AppColors.lightTextTheme,
     this.alignment,
     this.onTap,
   }) : super(key: key);
@@ -35,11 +23,8 @@ class GlassmorphismWidgetButton extends StatelessWidget {
   final double width;
   final EdgeInsets padding;
   final Widget child;
-  final double fontSizeText;
-  final Color textColor;
   final Color background;
   final Color border;
-  final Gradient gradientBorder;
   final Alignment? alignment;
   final Function()? onTap;
 

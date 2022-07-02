@@ -25,11 +25,11 @@ class _SplashScreenState extends State<SplashScreen> {
   // stores:--------------------------------------------------------------------
   UserStore? userStore;
   final ThemeStore _themeStore = getIt<ThemeStore>();
+  late final AuthenStore _auth;
 
   @override
   void initState() {
     super.initState();
-    startTimer();
   }
 
   @override
@@ -37,6 +37,9 @@ class _SplashScreenState extends State<SplashScreen> {
     super.didChangeDependencies();
 
     userStore = Provider.of<UserStore>(context, listen: false);
+
+    _auth = Provider.of<AuthenStore>(context, listen: false);
+    startTimer();
   }
 
   @override
@@ -57,13 +60,11 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void fetch() async {
-    final AuthenStore auth = getIt<AuthenStore>();
-
     await PackageInfo.fromPlatform().then((packageInfo) {
       DeviceUtils.packageInfo = packageInfo;
     });
 
-    if (auth.canBeAuthenticated) {
+    if (_auth.canBeAuthenticated) {
       // asynchronous
       userStore!.fetchUserInfor().then((isAuthenticated) {
         if (isAuthenticated) {

@@ -27,4 +27,6 @@ class AppColors {
 
   static const Color lightBlueContrast = Color(0xFF00DFC1);
   static const Color darkBlueContrast = Color(0xFF2E2A77);
+
+  static const Color confirmColor = Color.fromARGB(255, 15, 206, 24);
 }

@@ -27,7 +27,7 @@ abstract class _DepositTokenFormStore with Store {
       reaction((_) => name, validateName),
       reaction((_) => email, validateEmail),
       reaction((_) => token, validateToken),
-      reaction((_) => note, validateNote),
+      // reaction((_) => note, validateNote),
     ];
   }
 
@@ -42,8 +42,8 @@ abstract class _DepositTokenFormStore with Store {
   @observable
   String token = '';
 
-  @observable
-  String note = '';
+  // @observable
+  // String note = '';
 
   @observable
   PaymentMethod paymentMethod = PaymentMethod.WireTransfer;
@@ -53,8 +53,9 @@ abstract class _DepositTokenFormStore with Store {
       !formErrorStore.hasErrorsLoad &&
       name.isNotEmpty &&
       email.isNotEmpty &&
-      token.isNotEmpty &&
-      note.isNotEmpty;
+      token.isNotEmpty;
+  //  &&
+  // note.isNotEmpty;
 
   // actions:-------------------------------------------------------------------
   @action
@@ -72,10 +73,10 @@ abstract class _DepositTokenFormStore with Store {
     token = value;
   }
 
-  @action
-  void setNote(String value) {
-    note = value;
-  }
+  // @action
+  // void setNote(String value) {
+  //   note = value;
+  // }
 
   @action
   void setPaymentMethod(PaymentMethod paymentMethod) {
@@ -115,15 +116,15 @@ abstract class _DepositTokenFormStore with Store {
     }
   }
 
-  @action
-  void validateNote(String value) {
-    if (value.isEmpty) {
-      formErrorStore.note =
-          "You should give your more information to your mentor";
-    } else {
-      formErrorStore.note = null;
-    }
-  }
+  // @action
+  // void validateNote(String value) {
+  //   if (value.isEmpty) {
+  //     formErrorStore.note =
+  //         "You should give your more information to your mentor";
+  //   } else {
+  //     formErrorStore.note = null;
+  //   }
+  // }
 
   // general methods:-----------------------------------------------------------
   Map<String, dynamic> toRequestJson() {
@@ -131,7 +132,7 @@ abstract class _DepositTokenFormStore with Store {
       "name": name,
       "email": email,
       "paymentMethod": paymentMethod.name,
-      "note": note,
+      // "note": note,
       "token": int.parse(token),
     };
   }
@@ -150,7 +151,7 @@ abstract class _DepositTokenFormStore with Store {
     validateName(name);
     validateEmail(email);
     validateToken(token);
-    validateNote(note);
+    // validateNote(note);
   }
 }
 
@@ -167,10 +168,10 @@ abstract class _ProgramRegisterErrorForm with Store {
   @observable
   String? token;
 
-  @observable
-  String? note;
+  // @observable
+  // String? note;
 
   @computed
-  bool get hasErrorsLoad =>
-      name != null || email != null || token != null || note != null;
+  bool get hasErrorsLoad => name != null || email != null || token != null;
+  //  || note != null;
 }

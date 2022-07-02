@@ -72,16 +72,21 @@ abstract class _MessageStore with Store {
 //------------------------------------------------------------------------------
 enum Code {
   authenticated,
+  updateUserInfor,
+  changePassword,
 }
 
 class ResponseCode {
   final Map<int, String> responseCode = <int, String>{
     401: "unauthorized_key_translate",
     402: "unauthorized_wrong_credential_key_translate",
+    403: "wrong_current_password_translate",
   };
 
   final Map<Code, String> successCode = <Code, String>{
     Code.authenticated: "authorized_key_translate",
+    Code.updateUserInfor: "update_user_profile_title_success",
+    Code.changePassword: "change_password_success",
   };
 
   bool _authenticated = false;

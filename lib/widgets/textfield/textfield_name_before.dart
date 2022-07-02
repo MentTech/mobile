@@ -10,6 +10,8 @@ class TextFieldNameWidget extends StatelessWidget {
     required this.controller,
     required this.textColor,
     required this.onValueChanged,
+    this.frontFlex = 5,
+    this.backFlex = 15,
     this.textInputType = TextInputType.text,
   }) : super(key: key);
 
@@ -20,6 +22,9 @@ class TextFieldNameWidget extends StatelessWidget {
   final TextInputType textInputType;
   final ValueChanged<String> onValueChanged;
 
+  final int frontFlex;
+  final int backFlex;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,7 +34,7 @@ class TextFieldNameWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-            flex: 5,
+            flex: frontFlex,
             child: Text(
               labelText,
               style: Theme.of(context)
@@ -39,7 +44,7 @@ class TextFieldNameWidget extends StatelessWidget {
             ),
           ),
           Expanded(
-            flex: 15,
+            flex: backFlex,
             child: TextFieldWidget(
               hint: labelText,
               isIcon: false,

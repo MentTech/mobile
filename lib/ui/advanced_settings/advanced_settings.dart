@@ -6,6 +6,7 @@ import 'package:mobile/models/language/language.dart';
 import 'package:mobile/stores/language/language_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
+import 'package:mobile/widgets/appbar/custom_appbar_in_stack.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:mobile/widgets/popup_template/hero_popup_routes.dart';
@@ -22,8 +23,8 @@ class AdvancedSettings extends StatelessWidget {
       body: Stack(
         children: [
           LinearGradientBackground(
-            colors: _themeStore.linearGradientColors,
-            stops: _themeStore.linearGradientStops,
+            colors: _themeStore.lineToLineGradientColors,
+            stops: null,
           ),
           SafeArea(
             child: Padding(
@@ -31,7 +32,8 @@ class AdvancedSettings extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   const SizedBox(
-                    height: Dimens.vertical_margin,
+                    height: kBottomNavigationBarHeight +
+                        Dimens.large_vertical_margin,
                   ),
                   _buildLanguageSession(context),
                   const SizedBox(
@@ -41,6 +43,10 @@ class AdvancedSettings extends StatelessWidget {
                 ],
               ),
             ),
+          ),
+          CustomInStackAppBar(
+            nameAppbar: AppLocalizations.of(context)
+                .translate("advanced_settings_translate"),
           ),
         ],
       ),

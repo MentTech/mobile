@@ -20,7 +20,6 @@ class SettingsPage extends StatelessWidget {
   SettingsPage({Key? key}) : super(key: key);
 
   final ThemeStore themeStore = getIt<ThemeStore>();
-  final AuthenStore authenStore = getIt<AuthenStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +123,42 @@ class SettingsPage extends StatelessWidget {
                                       context, Routes.depositToken);
                                 },
                               ),
+                              const SizedBox(
+                                  height: Dimens.small_vertical_margin),
+                              GlassmorphismTextButton(
+                                text: AppLocalizations.of(context)
+                                    .translate("order_history_title_translate"),
+                                textColor: Theme.of(context).indicatorColor,
+                                blur: Properties.blur_glass_morphism,
+                                opacity: Properties.opacity_glass_morphism,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: Dimens.horizontal_padding,
+                                  vertical: Dimens.vertical_padding,
+                                ),
+                                radius: 15,
+                                onTap: () {
+                                  // Routes.navigatorSupporter(
+                                  //     context, Routes.depositToken);
+                                },
+                              ),
+                              const SizedBox(
+                                  height: Dimens.small_vertical_margin),
+                              GlassmorphismTextButton(
+                                text: AppLocalizations.of(context)
+                                    .translate("giftcode_title_translate"),
+                                textColor: Theme.of(context).indicatorColor,
+                                blur: Properties.blur_glass_morphism,
+                                opacity: Properties.opacity_glass_morphism,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: Dimens.horizontal_padding,
+                                  vertical: Dimens.vertical_padding,
+                                ),
+                                radius: 15,
+                                onTap: () {
+                                  // Routes.navigatorSupporter(
+                                  //     context, Routes.depositToken);
+                                },
+                              ),
                             ],
                           ),
                           const SizedBox(
@@ -219,7 +254,10 @@ class SettingsPage extends StatelessWidget {
                                   ),
                                   radius: 15,
                                   onTap: () {
-                                    authenStore.logout().then((_) {
+                                    Provider.of<AuthenStore>(context,
+                                            listen: false)
+                                        .logout()
+                                        .then((_) {
                                       Routes.unauthenticatedRoute(context);
                                     });
                                   },

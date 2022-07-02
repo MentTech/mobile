@@ -137,7 +137,7 @@ mixin _$AuthenStore on _AuthenStore, Store {
       AsyncAction('_AuthenStore.changePassword', context: context);
 
   @override
-  Future<String?> changePassword(String oldPassword, String newPassword) {
+  Future<void> changePassword(String oldPassword, String newPassword) {
     return _$changePasswordAsyncAction
         .run(() => super.changePassword(oldPassword, newPassword));
   }
