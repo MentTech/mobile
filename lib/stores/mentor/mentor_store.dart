@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:mobile/data/repository.dart';
+import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/common/program/program.dart';
 import 'package:mobile/models/mentor/mentor.dart';
 import 'package:mobile/stores/message/message_store.dart';
@@ -14,7 +15,7 @@ abstract class _MentorStore with Store {
   final Repository _repository;
 
   // store for handling error messages
-  final MessageStore messageStore = MessageStore();
+  final MessageStore messageStore = getIt<MessageStore>();
 
   // constructor:---------------------------------------------------------------
   _MentorStore(Repository repository) : _repository = repository {
@@ -188,8 +189,16 @@ abstract class _MentorStore with Store {
     final future = _repository.fetchRecommendedMentors();
 
     future.then((res) {
-      recommendedMentorList =
-          ObservableList.of(MentorModelList.fromJson(res!).list);
+      if (res!["statusCode"] == null) {
+        recommendedMentorList =
+            ObservableList.of(MentorModelList.fromJson(res).list);
+
+        success = true;
+      } else {
+        int code = res["statusCode"] as int;
+
+        messageStore.setErrorMessageByCode(code);
+      }
       try {
         success = true;
       } catch (e) {

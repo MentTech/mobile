@@ -86,4 +86,6 @@ Future<void> setupLocator() async {
   getIt.registerSingleton(ThemeStore(getIt<Repository>()));
   // getIt.registerSingleton(AuthenStore(getIt<Repository>()));
   // getIt.registerSingleton(CommonStore(getIt<Repository>()));
+
+  // getIt.registerSingleton(MessageStore());
 }

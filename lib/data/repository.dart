@@ -77,7 +77,8 @@ class Repository {
     )
         .catchError((error) {
       return {
-        "onError": error.toString(),
+        "statusCode": 417,
+        "message": error.toString(),
       };
     });
   }
@@ -93,7 +94,25 @@ class Repository {
     )
         .catchError((error) {
       return {
-        "onError": error.toString(),
+        "statusCode": 417,
+        "message": error.toString(),
+      };
+    });
+  }
+
+  Future<Map<String, dynamic>?> applyGiftcode({
+    required String authToken,
+    required Map<String, String> data,
+  }) async {
+    return _menteeAPI
+        .applyGiftcode(
+      authToken: authToken,
+      requestBody: data,
+    )
+        .catchError((error) {
+      return {
+        "statusCode": 417,
+        "message": error.toString(),
       };
     });
   }
@@ -104,7 +123,8 @@ class Repository {
         .fetchFavouriteMentors(authToken: authToken)
         .catchError((error) {
       return {
-        "onError": error.toString(),
+        "statusCode": 417,
+        "message": error.toString(),
       };
     });
   }
@@ -115,7 +135,8 @@ class Repository {
         .addFavouriteMentor(authToken: authToken, mentorId: mentorId)
         .catchError((error) {
       return {
-        "onError": error.toString(),
+        "statusCode": 417,
+        "message": error.toString(),
       };
     });
   }
@@ -126,7 +147,8 @@ class Repository {
         .removeFavouriteMentor(authToken: authToken, mentorId: mentorId)
         .catchError((error) {
       return {
-        "onError": error.toString(),
+        "statusCode": 417,
+        "message": error.toString(),
       };
     });
   }
@@ -154,7 +176,8 @@ class Repository {
     )
         .catchError((error) {
       return {
-        "onError": error.toString(),
+        "statusCode": 417,
+        "message": error.toString(),
       };
     });
   }
@@ -164,17 +187,22 @@ class Repository {
         .fetchMentorInformation(mentorID: mentorID)
         .catchError((error) {
       return {
-        "onError": error.toString(),
+        "statusCode": 417,
+        "message": error.toString(),
       };
     });
   }
 
   Future<Map<String, dynamic>?> fetchRecommendedMentors() async {
-    return _mentorAPI.fetchRecommendedMentors().catchError((error) {
-      return {
-        "onError": error.toString(),
-      };
-    });
+    return _mentorAPI.fetchRecommendedMentors().catchError(
+      (error) {
+        log("message [fetchRecommendedMentors] " + error.toString());
+        return {
+          "statusCode": 417,
+          "message": error.toString(),
+        };
+      },
+    );
   }
 
   Future<Map<String, dynamic>?> fetchMultipleMentorsByIds({
@@ -188,7 +216,8 @@ class Repository {
     )
         .catchError((error) {
       return {
-        "onError": error.toString(),
+        "statusCode": 417,
+        "message": error.toString(),
       };
     });
   }
@@ -199,7 +228,8 @@ class Repository {
         .fetchProgramInformation(mentorID: mentorID, programID: programID)
         .catchError((error) {
       return {
-        "onError": error.toString(),
+        "statusCode": 417,
+        "message": error.toString(),
       };
     });
   }
@@ -254,7 +284,8 @@ class Repository {
     )
         .catchError((error) {
       return {
-        "onError": error.toString(),
+        "statusCode": 417,
+        "message": error.toString(),
       };
     });
   }
@@ -274,7 +305,8 @@ class Repository {
     )
         .catchError((error) {
       return {
-        "onError": error.toString(),
+        "statusCode": 417,
+        "message": error.toString(),
       };
     });
   }
@@ -298,7 +330,8 @@ class Repository {
     )
         .catchError((error) {
       return {
-        "onError": error.toString(),
+        "statusCode": 417,
+        "message": error.toString(),
       };
     });
   }
@@ -308,7 +341,8 @@ class Repository {
   Future<Map<String, dynamic>?> fetchAllSkills() async {
     return _commonAPI.fetchAllSkills().catchError((error) {
       return {
-        "onError": error.toString(),
+        "statusCode": 417,
+        "message": error.toString(),
       };
     });
   }
@@ -316,7 +350,8 @@ class Repository {
   Future<Map<String, dynamic>?> fetchAllCategories() async {
     return _commonAPI.fetchAllCategories().catchError((error) {
       return {
-        "onError": error.toString(),
+        "statusCode": 417,
+        "message": error.toString(),
       };
     });
   }
@@ -331,7 +366,8 @@ class Repository {
     )
         .catchError((error) {
       return {
-        "onError": error.toString(),
+        "statusCode": 417,
+        "message": error.toString(),
       };
     });
   }
@@ -340,7 +376,8 @@ class Repository {
   Future<Map<String, dynamic>?> fetchTopupRate() async {
     return _transactionAPI.fetchTopupRate().catchError((error) {
       return {
-        "onError": error.toString(),
+        "statusCode": 417,
+        "message": error.toString(),
       };
     });
   }
@@ -353,7 +390,8 @@ class Repository {
         .createTopupOrder(authToken: authToken, orderInfor: orderInfor)
         .catchError((error) {
       return {
-        "onError": error.toString(),
+        "statusCode": 417,
+        "message": error.toString(),
       };
     });
   }

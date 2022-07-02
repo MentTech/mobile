@@ -327,6 +327,15 @@ mixin _$UserStore on _UserStore, Store {
         .run(() => super.updateUserInformation(data: data));
   }
 
+  late final _$applyGiftcodeAsyncAction =
+      AsyncAction('_UserStore.applyGiftcode', context: context);
+
+  @override
+  Future<void> applyGiftcode({required Map<String, String> data}) {
+    return _$applyGiftcodeAsyncAction
+        .run(() => super.applyGiftcode(data: data));
+  }
+
   late final _$_UserStoreActionController =
       ActionController(name: '_UserStore', context: context);
 

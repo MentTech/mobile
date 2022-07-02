@@ -125,6 +125,10 @@ class Endpoints {
   /// Get all transaction in Server
   static const String fetchUserTransactions = baseUrl + "/transaction/balance";
 
+  /// Get all transaction in Server
+  static const String applyTokenInTransaction =
+      baseUrl + "/transaction/card/apply";
+
   //:---------------------------------------------------------------------------
 
   /// Order APIS

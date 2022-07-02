@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:mobx/mobx.dart';
 
 part 'message_store.g.dart';
@@ -10,6 +12,7 @@ abstract class _MessageStore with Store {
 
   // constructor:---------------------------------------------------------------
   _MessageStore() {
+    log("message");
     _disposers = [
       reaction((_) => errorMessagekey, resetError, delay: 200),
       reaction((_) => successMessagekey, resetSuccess, delay: 200),
@@ -74,6 +77,7 @@ enum Code {
   authenticated,
   updateUserInfor,
   changePassword,
+  applyGiftcode,
 }
 
 class ResponseCode {
@@ -81,12 +85,14 @@ class ResponseCode {
     401: "unauthorized_key_translate",
     402: "unauthorized_wrong_credential_key_translate",
     403: "wrong_current_password_translate",
+    404: "gift_code_not_found_translate",
   };
 
   final Map<Code, String> successCode = <Code, String>{
     Code.authenticated: "authorized_key_translate",
     Code.updateUserInfor: "update_user_profile_title_success",
     Code.changePassword: "change_password_success",
+    Code.applyGiftcode: "apply_giftcode_success",
   };
 
   bool _authenticated = false;

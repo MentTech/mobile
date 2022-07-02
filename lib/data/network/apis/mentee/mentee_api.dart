@@ -129,6 +129,33 @@ class MenteeAPI {
     }
   }
 
+  Future<Map<String, dynamic>?> applyGiftcode({
+    required String authToken,
+    required Map<String, String> requestBody,
+  }) async {
+    try {
+      final res = await _dioClient.post(
+        Endpoints.applyTokenInTransaction,
+        data: requestBody,
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) => true,
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            "Authorization": "Bearer $authToken"
+          },
+        ),
+      );
+
+      return res;
+
+      // return User.fromJson(res);
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
   Future<Map<String, dynamic>?> fetchFavouriteMentors(
       {required String authToken}) async {
     try {

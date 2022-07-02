@@ -155,8 +155,10 @@ class SettingsPage extends StatelessWidget {
                                 ),
                                 radius: 15,
                                 onTap: () {
-                                  // Routes.navigatorSupporter(
-                                  //     context, Routes.depositToken);
+                                  Routes.navigatorSupporter(
+                                    context,
+                                    Routes.applyGiftcode,
+                                  );
                                 },
                               ),
                             ],

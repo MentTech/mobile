@@ -1,4 +1,3 @@
-import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:validators/validators.dart';
 
@@ -15,9 +14,6 @@ class AuthenticatorFormStore = _AuthenticatorFormStore
 abstract class _AuthenticatorFormStore with Store {
   // store for handling form errors
   final FormErrorStore formErrorStore = FormErrorStore();
-
-  // store for handling error messages
-  final MessageStore messageStore = MessageStore();
 
   _AuthenticatorFormStore() {
     _setupValidations();

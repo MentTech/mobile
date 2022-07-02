@@ -1,4 +1,3 @@
-import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:validators/validators.dart';
 
@@ -10,9 +9,6 @@ class ProgramRegisterFormStore = _ProgramRegisterFormStore
 abstract class _ProgramRegisterFormStore with Store {
   // store for handling form errors
   final ProgramRegisterErrorForm formErrorStore = ProgramRegisterErrorForm();
-
-  // store for handling error messages
-  final MessageStore messageStore = MessageStore();
 
   _ProgramRegisterFormStore() {
     _setupValidations();

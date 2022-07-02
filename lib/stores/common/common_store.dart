@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:mobile/data/repository.dart';
+import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/common/session/session.dart';
 import 'package:mobile/models/rate/rate.dart';
 import 'package:mobile/stores/message/message_store.dart';
@@ -14,7 +15,7 @@ abstract class _CommonStore with Store {
   final Repository _repository;
 
   // store for handling error messages
-  final MessageStore messageStore = MessageStore();
+  final MessageStore messageStore = getIt<MessageStore>();
 
   // constructor:---------------------------------------------------------------
   _CommonStore(Repository repository) : _repository = repository {

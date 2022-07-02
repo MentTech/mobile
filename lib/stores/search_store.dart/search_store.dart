@@ -1,9 +1,7 @@
 import 'package:mobile/data/repository.dart';
-import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/common/category/category.dart';
 import 'package:mobile/models/common/skill/skill.dart';
 import 'package:mobile/models/mentor/mentor.dart';
-import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobile/stores/search_store.dart/search_type_enum.dart';
 import 'package:mobx/mobx.dart';
 
@@ -14,9 +12,6 @@ class SearchStore = _SearchStore with _$SearchStore;
 abstract class _SearchStore with Store {
   // repository instance
   final Repository _repository;
-
-  // store for handling error messages
-  final MessageStore messageStore = getIt<MessageStore>();
 
   // constructor:---------------------------------------------------------------
   _SearchStore(Repository repository) : _repository = repository {

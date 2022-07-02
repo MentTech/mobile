@@ -1,5 +1,4 @@
 import 'package:mobile/stores/enum/payment_method.dart';
-import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:validators/validators.dart';
 
@@ -11,9 +10,6 @@ class DepositTokenFormStore = _DepositTokenFormStore
 abstract class _DepositTokenFormStore with Store {
   // store for handling form errors
   final ProgramRegisterErrorForm formErrorStore = ProgramRegisterErrorForm();
-
-  // store for handling error messages
-  final MessageStore messageStore = MessageStore();
 
   _DepositTokenFormStore() {
     _setupValidations();

@@ -22,12 +22,6 @@ abstract class _UserStore with Store {
   // store for handling form errors
   // final FormErrorStore formErrorStore = FormErrorStore();
 
-  // store for handling error messages
-  // final MessageStore messageStore = MessageStore();
-
-  // function callback
-  // ValueChanged<bool>? callback;
-
   // constructor:---------------------------------------------------------------
   _UserStore(Repository repository) : _repository = repository {
     // setting up disposers
@@ -44,7 +38,7 @@ abstract class _UserStore with Store {
 
   void _setupDisposers() {
     _disposers = [
-      // reaction((_) => success, (_) => success = false, delay: 200),
+      reaction((_) => success, (_) => success = false, delay: 200),
       // reaction((_) => accessToken, (_) => accessToken = null, delay: 200),
       // reaction((_) => requestFuture.status, (FutureStatus status) {
       //   if (status == FutureStatus.fulfilled) {
@@ -375,6 +369,39 @@ abstract class _UserStore with Store {
         // int code = mapJson["statusCode"] as int;
         // messageStore.setErrorMessageByCode(code);
         // res['message']
+        success = false;
+      }
+    });
+  }
+
+  @action
+  Future<void> applyGiftcode({required Map<String, String> data}) async {
+    String? accessToken = await _repository.authToken;
+
+    if (null == accessToken) {
+      messageStore.setErrorMessageByCode(401);
+
+      return;
+    }
+
+    final Future<Map<String, dynamic>?> future =
+        _repository.applyGiftcode(authToken: accessToken, data: data);
+
+    requestFuture = ObservableFuture(future);
+
+    future.then((res) {
+      try {
+        if (res!["statusCode"] == null) {
+          messageStore.setSuccessMessage(Code.applyGiftcode);
+
+          success = true;
+        } else {
+          int code = res["statusCode"] as int;
+
+          messageStore.setErrorMessageByCode(code);
+        }
+      } catch (e) {
+        messageStore.setErrorMessageByCode(304);
         success = false;
       }
     });
