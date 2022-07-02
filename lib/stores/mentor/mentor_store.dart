@@ -106,6 +106,12 @@ abstract class _MentorStore with Store {
   @computed
   int get favouriteLength => favouriteMentorList.length;
 
+  @computed
+  String get getSuccessMessageKey => messageStore.successMessagekey;
+
+  @computed
+  String get getFailedMessageKey => messageStore.errorMessagekey;
+
   // actions:-------------------------------------------------------------------
   @action
   bool nextPage() {

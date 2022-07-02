@@ -13,7 +13,12 @@ class _TestScreenState extends State<TestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return
+        // const ErrorContentWidget(
+        //   titleError: "Title",
+        //   contentError: "Content",
+        // );
+        Scaffold(
       body: SafeArea(
         child: Column(
           children: [

@@ -70,6 +70,20 @@ mixin _$MentorStore on _MentorStore, Store {
       (_$favouriteLengthComputed ??= Computed<int>(() => super.favouriteLength,
               name: '_MentorStore.favouriteLength'))
           .value;
+  Computed<String>? _$getSuccessMessageKeyComputed;
+
+  @override
+  String get getSuccessMessageKey => (_$getSuccessMessageKeyComputed ??=
+          Computed<String>(() => super.getSuccessMessageKey,
+              name: '_MentorStore.getSuccessMessageKey'))
+      .value;
+  Computed<String>? _$getFailedMessageKeyComputed;
+
+  @override
+  String get getFailedMessageKey => (_$getFailedMessageKeyComputed ??=
+          Computed<String>(() => super.getFailedMessageKey,
+              name: '_MentorStore.getFailedMessageKey'))
+      .value;
 
   late final _$successAtom =
       Atom(name: '_MentorStore.success', context: context);
@@ -317,7 +331,9 @@ hasFavouriteMentors: ${hasFavouriteMentors},
 getProgram: ${getProgram},
 hasProgram: ${hasProgram},
 recommendedLength: ${recommendedLength},
-favouriteLength: ${favouriteLength}
+favouriteLength: ${favouriteLength},
+getSuccessMessageKey: ${getSuccessMessageKey},
+getFailedMessageKey: ${getFailedMessageKey}
     ''';
   }
 }

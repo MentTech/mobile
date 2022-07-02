@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:mobile/constants/assets.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
@@ -52,7 +53,7 @@ class DepositTokenSuccessFul extends StatelessWidget {
   }
 
   Widget _buildLottieSuccessfullyWidget(BuildContext context) {
-    return Lottie.asset('assets/lottiefiles/success-animation.json',
+    return Lottie.asset(Assets.successfullyRequestLotties,
         height: DeviceUtils.getScaledHeight(context, 0.3));
   }
 

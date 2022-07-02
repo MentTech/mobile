@@ -24,7 +24,7 @@ import 'package:mobile/widgets/common_model_widgets/experience_widget.dart';
 import 'package:mobile/widgets/common_model_widgets/skill_widget.dart';
 import 'package:mobile/widgets/container/image_container/network_image_widget.dart';
 import 'package:mobile/widgets/container/section_container/description_title_container.dart';
-import 'package:mobile/widgets/errors_widget/text_error.dart';
+import 'package:mobile/widgets/errors_widget/error_widget.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:mobile/widgets/item/session_ticket_item.dart';
 import 'package:mobile/widgets/shimmer_loading_effect/profile_shimmer_loading_effect.dart';
@@ -110,7 +110,11 @@ class _MentorProfileState extends State<MentorProfile> {
                     ],
                   );
                 } else {
-                  return const TextShowingError();
+                  return ErrorContentWidget(
+                    titleError: "Oops",
+                    contentError: AppLocalizations.of(context)
+                        .translate("home_tv_oops_content"),
+                  );
                 }
               }
             },

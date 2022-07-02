@@ -28,4 +28,10 @@ class Assets {
       'assets/icons/payment_method/viettelpay_icon.png';
   static const String paymentMethodZaloPay =
       'assets/icons/payment_method/zalopay_icon.png';
+
+  // assets Lotties File for animation
+  static const String successfullyRequestLotties =
+      'assets/lottiefiles/success-animation.json';
+  static const String someErrorHappendedLotties =
+      'assets/lottiefiles/oops_error.json';
 }
