@@ -225,14 +225,18 @@ class NotificationPage extends StatelessWidget {
 
   Widget _buildNotificationList(BuildContext context) {
     return GroupedListView<NotificationModel, String>(
-      elements: _notificationStore.notifications,
+      elements: _notificationStore.getFilteredNotificationList(),
       groupBy: (element) => timeago.format(
         element.createAt,
         locale: AppLocalizations.of(context).locale.languageCode,
       ),
       groupSeparatorBuilder: (String groupByValue) => Text(groupByValue),
       itemBuilder: (BuildContext context, NotificationModel element) =>
-          NotificationTag(notificationModel: element),
+          NotificationTag(
+              notificationModel: element,
+              callback: () {
+                _notificationStore.markNotificationAsRead(element.id);
+              }),
       itemComparator: (item1, item2) =>
           item1.createAt.compareTo(item2.createAt),
       groupComparator: (item1, item2) => item1.compareTo(item2),
@@ -247,12 +251,11 @@ class NotificationPage extends StatelessWidget {
     return Observer(
       builder: (_) {
         return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _buildSelectableButton(
               context,
-              iconData: Icons.clear_all,
               text: AppLocalizations.of(context).translate("all_translate"),
               isSelected: _notificationStore.notificationFilter ==
                   NotificationFilter.all,
@@ -261,9 +264,11 @@ class NotificationPage extends StatelessWidget {
                     .changeNotificationMethodFilter(NotificationFilter.all);
               },
             ),
+            const SizedBox(
+              width: Dimens.large_horizontal_margin,
+            ),
             _buildSelectableButton(
               context,
-              iconData: Icons.pending_actions,
               text: AppLocalizations.of(context).translate("waiting_translate"),
               isSelected: _notificationStore.notificationFilter ==
                   NotificationFilter.unread,
@@ -280,48 +285,34 @@ class NotificationPage extends StatelessWidget {
 
   Widget _buildSelectableButton(
     BuildContext context, {
-    required IconData iconData,
     required String text,
     required VoidCallback ontap,
     required bool isSelected,
   }) {
-    final Color statusColor = isSelected
-        ? Theme.of(context).highlightColor
-        : Color.alphaBlend(
-            Theme.of(context).indicatorColor.withOpacity(0.7),
-            Colors.white70,
-          );
-
-    return SizedBox(
-      height: 100,
-      child: AspectRatio(
-        aspectRatio: 1 / 1,
-        child: GlassmorphismWidgetButton(
-          background: statusColor,
-          radius: 10,
-          alignment: Alignment.center,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Icon(
-                iconData,
-                color: statusColor,
-                size: Dimens.large_text,
-              ),
-              Text(
-                text,
-                style: TextStyle(
-                  color: statusColor,
-                  fontSize: 10,
-                ),
-              ),
-            ],
-          ),
-          onTap: ontap,
-          blur: Properties.blur_glass_morphism,
-          opacity: Properties.opacity_glass_morphism,
-        ),
+    return GlassmorphismWidgetButton(
+      width: null,
+      padding: const EdgeInsets.symmetric(
+        vertical: Dimens.vertical_padding,
+        horizontal: Dimens.horizontal_padding,
       ),
+      background:
+          isSelected ? Theme.of(context).selectedRowColor : Colors.white,
+      radius: Dimens.kBorderMaxRadiusValue,
+      alignment: Alignment.center,
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+              color: isSelected
+                  ? Theme.of(context).selectedRowColor
+                  : Color.alphaBlend(
+                      Theme.of(context).highlightColor.withOpacity(0.7),
+                      Theme.of(context).highlightColor,
+                    ),
+            ),
+      ),
+      onTap: ontap,
+      blur: Properties.blur_glass_morphism,
+      opacity: Properties.opacity_glass_morphism,
     );
   }
 }

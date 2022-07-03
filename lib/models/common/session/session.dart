@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:mobile/models/common/additional/additional.dart';
 import 'package:mobile/models/common/program/program.dart';
 
 part 'session.g.dart';
@@ -12,6 +13,9 @@ class Session extends Equatable {
   final bool isCanceled;
   final DateTime? expectedDate;
   final Program program;
+  final String? contactInfo;
+  final double rating;
+  final Additional? additional;
 
   const Session({
     required this.id,
@@ -20,6 +24,9 @@ class Session extends Equatable {
     required this.done,
     required this.program,
     this.expectedDate,
+    this.contactInfo,
+    this.additional,
+    this.rating = 0,
   });
 
   factory Session.fromJson(Map<String, dynamic> json) =>

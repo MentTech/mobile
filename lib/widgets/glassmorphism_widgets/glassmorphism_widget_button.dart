@@ -20,7 +20,7 @@ class GlassmorphismWidgetButton extends StatelessWidget {
   final double blur;
   final double opacity;
   final double radius;
-  final double width;
+  final double? width;
   final EdgeInsets padding;
   final Widget child;
   final Color background;

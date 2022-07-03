@@ -85,6 +85,9 @@ abstract class _UserStore with Store {
   List<Session> originSessions = [];
 
   @observable
+  Session? session;
+
+  @observable
   ObservableList<Session> sessions = ObservableList();
 
   @observable
@@ -112,6 +115,12 @@ abstract class _UserStore with Store {
   @computed
   bool get isTransactionLoading =>
       requestTransactionFuture.status == FutureStatus.pending;
+
+  @computed
+  Session? get getSession => session;
+
+  @computed
+  bool get hasSession => session != null;
 
   @computed
   int get sizeSessionList => sessions.length;
@@ -260,6 +269,47 @@ abstract class _UserStore with Store {
     });
 
     return Future.value(false);
+  }
+
+  @action
+  Future<void> fetchSession({required int sessionId}) async {
+    String? accessToken = await _repository.authToken;
+
+    if (null == accessToken) {
+      messageStore.setErrorMessageByCode(401);
+
+      success = false;
+
+      return;
+    }
+
+    session = null;
+
+    final future = _repository.fetchSession(
+      authToken: accessToken,
+      sessionId: sessionId,
+    );
+    requestSessionFuture = ObservableFuture(future);
+
+    await future.then((res) {
+      try {
+        if (res!["statusCode"] == null) {
+          session = Session.fromJson(res);
+
+          success = true;
+        } else {
+          int code = res["statusCode"] as int;
+
+          messageStore.setErrorMessageByCode(code);
+
+          success = false;
+        }
+      } catch (e) {
+        messageStore.setErrorMessageByCode(500);
+
+        success = false;
+      }
+    });
   }
 
   @action

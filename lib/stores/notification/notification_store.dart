@@ -41,6 +41,8 @@ abstract class _NotificationStore with Store {
   // non-observable variables:--------------------------------------------------
   List<int> unreadedMessageIds = [];
 
+  List<NotificationModel> unreadedNotifications = <NotificationModel>[];
+
   // observable variables:------------------------------------------------------
   @observable
   bool success = false;
@@ -111,9 +113,12 @@ abstract class _NotificationStore with Store {
           notifications =
               ObservableList.of(NotificationList.fromJson(res).notifications);
 
+          unreadedMessageIds.clear();
+          unreadedNotifications.clear();
           for (NotificationModel noti in notifications) {
             if (!noti.isRead) {
               unreadedMessageIds.add(noti.id);
+              unreadedNotifications.add(noti);
             }
           }
 
@@ -150,7 +155,7 @@ abstract class _NotificationStore with Store {
       markReadedIds: unreadedMessageIds,
     );
 
-    requestFuture = ObservableFuture(future);
+    // requestFuture = ObservableFuture(future);
 
     future.then((res) {
       try {
@@ -158,6 +163,8 @@ abstract class _NotificationStore with Store {
           for (var noti in notifications) {
             noti = noti.toReadedModel();
           }
+
+          unreadedMessageIds = [];
 
           success = true;
         } else {
@@ -192,11 +199,20 @@ abstract class _NotificationStore with Store {
       notificationId: notificationId,
     );
 
-    requestFuture = ObservableFuture(future);
+    // requestFuture = ObservableFuture(future);
 
     future.then((res) {
       try {
         if (res!["statusCode"] == null) {
+          for (var noti in notifications) {
+            if (noti.id == notificationId) {
+              noti = noti.toReadedModel();
+              break;
+            }
+          }
+
+          unreadedMessageIds.remove(notificationId);
+
           success = true;
         } else {
           int code = res["statusCode"] as int;
@@ -214,6 +230,14 @@ abstract class _NotificationStore with Store {
   }
 
   // general methods:-----------------------------------------------------------
+  List<NotificationModel> getFilteredNotificationList() {
+    if (_notificationFilter == NotificationFilter.all) {
+      return notifications;
+    } else {
+      // NotificationFilter.unread
+      return unreadedNotifications;
+    }
+  }
 
   NotificationModel getNotificationContentAt(int index) =>
       notifications.elementAt(index);

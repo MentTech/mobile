@@ -15,6 +15,11 @@ Session _$SessionFromJson(Map<String, dynamic> json) => Session(
       expectedDate: json['expectedDate'] == null
           ? null
           : DateTime.parse(json['expectedDate'] as String),
+      contactInfo: json['contactInfo'] as String?,
+      additional: json['additional'] == null
+          ? null
+          : Additional.fromJson(json['additional'] as Map<String, dynamic>),
+      rating: (json['rating'] as num?)?.toDouble() ?? 0,
     );
 
 Map<String, dynamic> _$SessionToJson(Session instance) => <String, dynamic>{
@@ -24,4 +29,7 @@ Map<String, dynamic> _$SessionToJson(Session instance) => <String, dynamic>{
       'isCanceled': instance.isCanceled,
       'expectedDate': instance.expectedDate?.toIso8601String(),
       'program': instance.program,
+      'contactInfo': instance.contactInfo,
+      'rating': instance.rating,
+      'additional': instance.additional,
     };

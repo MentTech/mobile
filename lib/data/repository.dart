@@ -69,6 +69,23 @@ class Repository {
     });
   }
 
+  Future<Map<String, dynamic>?> fetchSession({
+    required String authToken,
+    required int sessionId,
+  }) async {
+    return await _menteeAPI
+        .fetchOnlySession(
+      authToken: authToken,
+      sessionId: sessionId,
+    )
+        .then((resVal) {
+      return resVal;
+    }).catchError((error) {
+      log("Fetch Userinfor failing");
+      return null;
+    });
+  }
+
   Future<Map<String, dynamic>?> uploadUserAvatar({
     required String authToken,
     required File image,

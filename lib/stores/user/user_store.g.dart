@@ -43,6 +43,19 @@ mixin _$UserStore on _UserStore, Store {
           Computed<bool>(() => super.isTransactionLoading,
               name: '_UserStore.isTransactionLoading'))
       .value;
+  Computed<Session?>? _$getSessionComputed;
+
+  @override
+  Session? get getSession =>
+      (_$getSessionComputed ??= Computed<Session?>(() => super.getSession,
+              name: '_UserStore.getSession'))
+          .value;
+  Computed<bool>? _$hasSessionComputed;
+
+  @override
+  bool get hasSession => (_$hasSessionComputed ??=
+          Computed<bool>(() => super.hasSession, name: '_UserStore.hasSession'))
+      .value;
   Computed<int>? _$sizeSessionListComputed;
 
   @override
@@ -218,6 +231,21 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
+  late final _$sessionAtom = Atom(name: '_UserStore.session', context: context);
+
+  @override
+  Session? get session {
+    _$sessionAtom.reportRead();
+    return super.session;
+  }
+
+  @override
+  set session(Session? value) {
+    _$sessionAtom.reportWrite(value, super.session, () {
+      super.session = value;
+    });
+  }
+
   late final _$sessionsAtom =
       Atom(name: '_UserStore.sessions', context: context);
 
@@ -284,6 +312,15 @@ mixin _$UserStore on _UserStore, Store {
     return _$fetchUserSessionsAsyncAction.run(() => super.fetchUserSessions());
   }
 
+  late final _$fetchSessionAsyncAction =
+      AsyncAction('_UserStore.fetchSession', context: context);
+
+  @override
+  Future<void> fetchSession({required int sessionId}) {
+    return _$fetchSessionAsyncAction
+        .run(() => super.fetchSession(sessionId: sessionId));
+  }
+
   late final _$callUpdateFavMentorAsyncAction =
       AsyncAction('_UserStore.callUpdateFavMentor', context: context);
 
@@ -346,12 +383,15 @@ requestTransactionFuture: ${requestTransactionFuture},
 user: ${user},
 sessionStatus: ${sessionStatus},
 sessionFetchingData: ${sessionFetchingData},
+session: ${session},
 sessions: ${sessions},
 isLoading: ${isLoading},
 isUploadingAvatar: ${isUploadingAvatar},
 isPushingFavMentorData: ${isPushingFavMentorData},
 isSessionLoading: ${isSessionLoading},
 isTransactionLoading: ${isTransactionLoading},
+getSession: ${getSession},
+hasSession: ${hasSession},
 sizeSessionList: ${sizeSessionList},
 sizeTransactionList: ${sizeTransactionList},
 getSuccessMessageKey: ${getSuccessMessageKey},

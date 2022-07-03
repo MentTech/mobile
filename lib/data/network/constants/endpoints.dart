@@ -94,8 +94,12 @@ class Endpoints {
   /// Private Mentee proxy
   static const String _menteeProxy = baseUrl + "/mentee";
 
-  /// Get all sessions which is registered by user
+  /// Get all sessions which are registered by user
   static const String sessionRegisterProgram = _menteeProxy + "/mysession";
+
+  /// Get one session which is registered by user
+  static const String sessionRegistered =
+      _menteeProxy + "/mysession/:sessionId";
 
   /// Fetch favourite mentor List: /mentee/favorite
   static const String fetchFavouriteMentors = _menteeProxy + "/favorite";

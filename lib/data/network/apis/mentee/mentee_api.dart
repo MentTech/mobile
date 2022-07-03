@@ -47,6 +47,34 @@ class MenteeAPI {
     }
   }
 
+  Future<Map<String, dynamic>?> fetchOnlySession({
+    required String authToken,
+    required int sessionId,
+  }) async {
+    try {
+      final res = await _dioClient.get(
+        Endpoints.sessionRegistered
+            .replaceAll(":sessionId", sessionId.toString()),
+        // queryParameters: parameters,
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) => true,
+          // headers: headers
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            "Authorization": "Bearer $authToken"
+          },
+        ),
+      );
+
+      return res;
+      // return User.fromJson(res);
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
   Future<Map<String, dynamic>?> uploadUserAvatar({
     required String authToken,
     required File imageFile,
