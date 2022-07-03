@@ -76,203 +76,193 @@ class SettingsPage extends StatelessWidget {
               Expanded(
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
-                  child: Observer(
-                    builder: (_) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const SizedBox(
+                        height: Dimens.ultra_extra_large_vertical_margin,
+                      ),
+                      LinearNamedListWidget(
+                        themeColor: Theme.of(context).indicatorColor,
+                        namedContainer: AppLocalizations.of(context)
+                            .translate("account_settings_translate"),
                         children: <Widget>[
-                          const SizedBox(
-                            height: Dimens.ultra_extra_large_vertical_margin,
-                          ),
-                          LinearNamedListWidget(
-                            themeColor: Theme.of(context).indicatorColor,
-                            namedContainer: AppLocalizations.of(context)
-                                .translate("account_settings_translate"),
-                            children: <Widget>[
-                              GlassmorphismTextButton(
-                                text: AppLocalizations.of(context)
-                                    .translate("change_password_translate"),
-                                textColor: Theme.of(context).indicatorColor,
-                                blur: Properties.blur_glass_morphism,
-                                opacity: Properties.opacity_glass_morphism,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: Dimens.horizontal_padding,
-                                  vertical: Dimens.vertical_padding,
-                                ),
-                                radius: 15,
-                                onTap: () {
-                                  Routes.navigatorSupporter(
-                                      context, Routes.changePasswordSettings);
-                                },
-                              ),
-                              const SizedBox(
-                                  height: Dimens.small_vertical_margin),
-                              GlassmorphismTextButton(
-                                text: AppLocalizations.of(context)
-                                    .translate("transaction_deal"),
-                                textColor: Theme.of(context).indicatorColor,
-                                blur: Properties.blur_glass_morphism,
-                                opacity: Properties.opacity_glass_morphism,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: Dimens.horizontal_padding,
-                                  vertical: Dimens.vertical_padding,
-                                ),
-                                radius: 15,
-                                onTap: () {
-                                  Routes.navigatorSupporter(
-                                      context, Routes.depositToken);
-                                },
-                              ),
-                              const SizedBox(
-                                  height: Dimens.small_vertical_margin),
-                              GlassmorphismTextButton(
-                                text: AppLocalizations.of(context)
-                                    .translate("order_history_title_translate"),
-                                textColor: Theme.of(context).indicatorColor,
-                                blur: Properties.blur_glass_morphism,
-                                opacity: Properties.opacity_glass_morphism,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: Dimens.horizontal_padding,
-                                  vertical: Dimens.vertical_padding,
-                                ),
-                                radius: 15,
-                                onTap: () {
-                                  // Routes.navigatorSupporter(
-                                  //     context, Routes.depositToken);
-                                },
-                              ),
-                              const SizedBox(
-                                  height: Dimens.small_vertical_margin),
-                              GlassmorphismTextButton(
-                                text: AppLocalizations.of(context)
-                                    .translate("giftcode_title_translate"),
-                                textColor: Theme.of(context).indicatorColor,
-                                blur: Properties.blur_glass_morphism,
-                                opacity: Properties.opacity_glass_morphism,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: Dimens.horizontal_padding,
-                                  vertical: Dimens.vertical_padding,
-                                ),
-                                radius: 15,
-                                onTap: () {
-                                  Routes.navigatorSupporter(
-                                    context,
-                                    Routes.applyGiftcode,
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: Dimens.large_vertical_margin,
-                          ),
-                          LinearNamedListWidget(
-                            themeColor: Theme.of(context).indicatorColor,
-                            namedContainer: AppLocalizations.of(context)
-                                .translate("application_translate"),
-                            children: <Widget>[
-                              GlassmorphismTextButton(
-                                text: AppLocalizations.of(context)
-                                    .translate("advanced_settings_translate"),
-                                textColor: Theme.of(context).indicatorColor,
-                                blur: Properties.blur_glass_morphism,
-                                opacity: Properties.opacity_glass_morphism,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: Dimens.horizontal_padding,
-                                  vertical: Dimens.vertical_padding,
-                                ),
-                                radius: 15,
-                                onTap: () {
-                                  Routes.navigatorSupporter(
-                                      context, Routes.advancedSettings);
-                                },
-                              ),
-                              // GlassmorphismTextButton(
-                              //   text: "text ui",
-                              //   textColor: themeStore.reverseThemeColor,
-                              //   blur: Properties.blur_glass_morphism,
-                              //   opacity: Properties.opacity_glass_morphism,
-                              //   padding: const EdgeInsets.symmetric(
-                              //     horizontal: Dimens.horizontal_padding,
-                              //     vertical: Dimens.vertical_padding,
-                              //   ),
-                              //   radius: 15,
-                              //   onTap: () {
-                              //     Routes.navigatorSupporter(
-                              //         context, Routes.testScreen);
-                              //   },
-                              // ),
-                            ],
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(
-                              top: Dimens.extra_large_vertical_margin,
+                          GlassmorphismTextButton(
+                            text: AppLocalizations.of(context)
+                                .translate("change_password_translate"),
+                            textColor: Theme.of(context).indicatorColor,
+                            blur: Properties.blur_glass_morphism,
+                            opacity: Properties.opacity_glass_morphism,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Dimens.horizontal_padding,
+                              vertical: Dimens.vertical_padding,
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                DeviceUtils.packageInfo != null
-                                    ? RichText(
-                                        textAlign: TextAlign.right,
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text:
-                                                  '${AppLocalizations.of(context).translate("settings_ver")}:  ',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall!
-                                                  .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                            ),
-                                            TextSpan(
-                                              text: DeviceUtils
-                                                  .packageInfo!.version,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodySmall!
-                                                  .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w800),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    : const SizedBox(),
-                                const SizedBox(
-                                  height: Dimens.vertical_margin,
-                                ),
-                                GlassmorphismTextButton(
-                                  text: AppLocalizations.of(context)
-                                      .translate('logout'),
-                                  textColor: Theme.of(context).indicatorColor,
-                                  blur: Properties.blur_glass_morphism,
-                                  opacity: Properties.opacity_glass_morphism,
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: Dimens.horizontal_padding,
-                                    vertical: Dimens.vertical_padding,
-                                  ),
-                                  radius: 15,
-                                  onTap: () {
-                                    Provider.of<AuthenStore>(context,
-                                            listen: false)
-                                        .logout()
-                                        .then((_) {
-                                      Routes.unauthenticatedRoute(context);
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
+                            radius: 15,
+                            onTap: () {
+                              Routes.navigatorSupporter(
+                                  context, Routes.changePasswordSettings);
+                            },
                           ),
-                          const SizedBox(
-                            height: kBottomNavigationBarHeight,
-                          )
+                          const SizedBox(height: Dimens.small_vertical_margin),
+                          GlassmorphismTextButton(
+                            text: AppLocalizations.of(context)
+                                .translate("transaction_deal"),
+                            textColor: Theme.of(context).indicatorColor,
+                            blur: Properties.blur_glass_morphism,
+                            opacity: Properties.opacity_glass_morphism,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Dimens.horizontal_padding,
+                              vertical: Dimens.vertical_padding,
+                            ),
+                            radius: 15,
+                            onTap: () {
+                              Routes.navigatorSupporter(
+                                  context, Routes.depositToken);
+                            },
+                          ),
+                          const SizedBox(height: Dimens.small_vertical_margin),
+                          GlassmorphismTextButton(
+                            text: AppLocalizations.of(context)
+                                .translate("order_history_title_translate"),
+                            textColor: Theme.of(context).indicatorColor,
+                            blur: Properties.blur_glass_morphism,
+                            opacity: Properties.opacity_glass_morphism,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Dimens.horizontal_padding,
+                              vertical: Dimens.vertical_padding,
+                            ),
+                            radius: 15,
+                            onTap: () {
+                              // Routes.navigatorSupporter(
+                              //     context, Routes.depositToken);
+                            },
+                          ),
+                          const SizedBox(height: Dimens.small_vertical_margin),
+                          GlassmorphismTextButton(
+                            text: AppLocalizations.of(context)
+                                .translate("giftcode_title_translate"),
+                            textColor: Theme.of(context).indicatorColor,
+                            blur: Properties.blur_glass_morphism,
+                            opacity: Properties.opacity_glass_morphism,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Dimens.horizontal_padding,
+                              vertical: Dimens.vertical_padding,
+                            ),
+                            radius: 15,
+                            onTap: () {
+                              Routes.navigatorSupporter(
+                                context,
+                                Routes.applyGiftcode,
+                              );
+                            },
+                          ),
                         ],
-                      );
-                    },
+                      ),
+                      const SizedBox(
+                        height: Dimens.large_vertical_margin,
+                      ),
+                      LinearNamedListWidget(
+                        themeColor: Theme.of(context).indicatorColor,
+                        namedContainer: AppLocalizations.of(context)
+                            .translate("application_translate"),
+                        children: <Widget>[
+                          GlassmorphismTextButton(
+                            text: AppLocalizations.of(context)
+                                .translate("advanced_settings_translate"),
+                            textColor: Theme.of(context).indicatorColor,
+                            blur: Properties.blur_glass_morphism,
+                            opacity: Properties.opacity_glass_morphism,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Dimens.horizontal_padding,
+                              vertical: Dimens.vertical_padding,
+                            ),
+                            radius: 15,
+                            onTap: () {
+                              Routes.navigatorSupporter(
+                                  context, Routes.advancedSettings);
+                            },
+                          ),
+                          // GlassmorphismTextButton(
+                          //   text: "text ui",
+                          //   textColor: themeStore.reverseThemeColor,
+                          //   blur: Properties.blur_glass_morphism,
+                          //   opacity: Properties.opacity_glass_morphism,
+                          //   padding: const EdgeInsets.symmetric(
+                          //     horizontal: Dimens.horizontal_padding,
+                          //     vertical: Dimens.vertical_padding,
+                          //   ),
+                          //   radius: 15,
+                          //   onTap: () {
+                          //     Routes.navigatorSupporter(
+                          //         context, Routes.testScreen);
+                          //   },
+                          // ),
+                        ],
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(
+                          top: Dimens.extra_large_vertical_margin,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            DeviceUtils.packageInfo != null
+                                ? RichText(
+                                    textAlign: TextAlign.right,
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text:
+                                              '${AppLocalizations.of(context).translate("settings_ver")}:  ',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall!
+                                              .copyWith(
+                                                  fontWeight: FontWeight.w600),
+                                        ),
+                                        TextSpan(
+                                          text:
+                                              DeviceUtils.packageInfo!.version,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall!
+                                              .copyWith(
+                                                  fontWeight: FontWeight.w800),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : const SizedBox(),
+                            const SizedBox(
+                              height: Dimens.vertical_margin,
+                            ),
+                            GlassmorphismTextButton(
+                              text: AppLocalizations.of(context)
+                                  .translate('logout'),
+                              textColor: Theme.of(context).indicatorColor,
+                              blur: Properties.blur_glass_morphism,
+                              opacity: Properties.opacity_glass_morphism,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: Dimens.horizontal_padding,
+                                vertical: Dimens.vertical_padding,
+                              ),
+                              radius: 15,
+                              onTap: () {
+                                Provider.of<AuthenStore>(context, listen: false)
+                                    .logout()
+                                    .then((_) {
+                                  Routes.unauthenticatedRoute(context);
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: kBottomNavigationBarHeight,
+                      )
+                    ],
                   ),
                 ),
               )

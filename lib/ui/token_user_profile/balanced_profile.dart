@@ -135,10 +135,9 @@ class _BalancedProfileState extends State<BalancedProfile> {
         return Material(
           elevation: 10,
           color: Color.alphaBlend(
-                  _themeStore.themeColorfulColor
-                      .withOpacity(_themeStore.opacityTheme),
-                  _themeStore.reverseThemeColor)
-              .withOpacity(_themeStore.opacityTheme),
+                  Theme.of(context).primaryColor.withOpacity(0.65),
+                  Theme.of(context).indicatorColor)
+              .withOpacity(0.65),
           shape: const RoundedRectangleBorder(
             side: BorderSide(
               color: Colors.white12,
@@ -168,7 +167,7 @@ class _BalancedProfileState extends State<BalancedProfile> {
                 height: 5,
                 width: 50,
                 decoration: BoxDecoration(
-                  color: _themeStore.reverseThemeColor,
+                  color: Theme.of(context).indicatorColor,
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
@@ -339,7 +338,7 @@ class _BalancedProfileState extends State<BalancedProfile> {
                 },
                 icon: Icon(
                   Icons.local_atm_rounded,
-                  color: _themeStore.reverseThemeColor,
+                  color: Theme.of(context).indicatorColor,
                   size: Dimens.extra_large_text,
                 ),
               ),
@@ -390,9 +389,9 @@ class _BalancedProfileState extends State<BalancedProfile> {
     required bool isSelected,
   }) {
     final Color statusColor = isSelected
-        ? _themeStore.reverseThemeColorfulColor
+        ? Theme.of(context).highlightColor
         : Color.alphaBlend(
-            _themeStore.reverseThemeColor.withOpacity(0.7),
+            Theme.of(context).indicatorColor.withOpacity(0.7),
             Colors.white70,
           );
 

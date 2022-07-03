@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/assets.dart';
@@ -130,7 +128,7 @@ class _DepositTokenState extends State<DepositToken> {
             builder: (context) {
               return Visibility(
                 visible: _orderStore.isLoading,
-                child: CustomProgressIndicatorWidget(),
+                child: const CustomProgressIndicatorWidget(),
               );
             },
           ),
@@ -175,7 +173,7 @@ class _DepositTokenState extends State<DepositToken> {
           child: Text(
             AppLocalizations.of(context).translate("payup_button_translate"),
             style: TextStyle(
-              color: _themeStore.reverseThemeColor,
+              color: Theme.of(context).indicatorColor,
               fontSize: Dimens.lightly_medium_text,
             ),
           ),
@@ -220,7 +218,7 @@ class _DepositTokenState extends State<DepositToken> {
             PaymentMethodSelectableButton(
               icon: Icon(
                 Icons.account_balance_rounded,
-                color: _themeStore.textChoosed,
+                color: Theme.of(context).selectedRowColor,
                 size: Dimens.ultra_large_text,
               ),
               value: AppLocalizations.of(context)
@@ -231,7 +229,6 @@ class _DepositTokenState extends State<DepositToken> {
               onTap: () {
                 _depositTokenFormStore
                     .setPaymentMethod(PaymentMethod.WireTransfer);
-                log("message");
               },
             ),
             PaymentMethodSelectableButton(
@@ -302,7 +299,7 @@ class _DepositTokenState extends State<DepositToken> {
                               .languageCode) +
                       " = 10.000 VNĐ\n",
                   style: TextStyle(
-                    color: _themeStore.reverseThemeColor,
+                    color: Theme.of(context).indicatorColor,
                     fontSize: Dimens.lightly_medium_text,
                     height: 1.5,
                   ),
@@ -311,7 +308,7 @@ class _DepositTokenState extends State<DepositToken> {
                   text: AppLocalizations.of(context).translate("deposit_rule") +
                       _orderStore.rateTopup.toString(),
                   style: TextStyle(
-                    color: _themeStore.reverseThemeColor,
+                    color: Theme.of(context).indicatorColor,
                     fontSize: Dimens.small_text,
                     height: 1.3,
                   ),
@@ -345,7 +342,7 @@ class _DepositTokenState extends State<DepositToken> {
               AppLocalizations.of(context).translate("email_label_translate"),
           errorText: _depositTokenFormStore.formErrorStore.email,
           controller: _emailController,
-          textColor: _themeStore.reverseThemeColor,
+          textColor: Theme.of(context).indicatorColor,
           onValueChanged: (value) {
             _depositTokenFormStore.setEmail(_emailController.text);
           },
@@ -364,7 +361,7 @@ class _DepositTokenState extends State<DepositToken> {
               AppLocalizations.of(context).translate("name_label_translate"),
           errorText: _depositTokenFormStore.formErrorStore.name,
           controller: _nameController,
-          textColor: _themeStore.reverseThemeColor,
+          textColor: Theme.of(context).indicatorColor,
           onValueChanged: (value) {
             _depositTokenFormStore.setName(_nameController.text);
           },
@@ -383,7 +380,7 @@ class _DepositTokenState extends State<DepositToken> {
               AppLocalizations.of(context).translate("token_label_translate"),
           errorText: _depositTokenFormStore.formErrorStore.token,
           controller: _tokenNumberController,
-          textColor: _themeStore.reverseThemeColor,
+          textColor: Theme.of(context).indicatorColor,
           onValueChanged: (value) {
             _depositTokenFormStore.setToken(_tokenNumberController.text);
           },
@@ -400,7 +397,7 @@ class _DepositTokenState extends State<DepositToken> {
   //             AppLocalizations.of(context).translate("note_label_translate"),
   //         errorText: _depositTokenFormStore.formErrorStore.note,
   //         controller: _noteController,
-  //         textColor: _themeStore.reverseThemeColor,
+  //         textColor: Theme.of(context).indicatorColor,
   //         onValueChanged: (value) {
   //           _depositTokenFormStore.setNote(_noteController.text);
   //         },

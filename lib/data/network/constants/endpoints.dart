@@ -144,4 +144,21 @@ class Endpoints {
   static const String createTopupOrder = _orderProxy + "/top-up";
 
   //:---------------------------------------------------------------------------
+
+  ///
+  /// Notification Apis
+  ///
+
+  /// Get all notifications
+  static const String fetchAllNotifications = baseUrl + "/notification";
+
+  /// Mark multiple notifications as read
+  static const String markMultiNotificationsAsRead =
+      baseUrl + "/notification/multiple";
+
+  /// Mark a notification as read
+  static const String markNotificationAsRead =
+      baseUrl + "/notification/:notificationId";
+
+  //:---------------------------------------------------------------------------
 }

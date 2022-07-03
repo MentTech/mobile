@@ -96,11 +96,11 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
                 shrinkWrap: true,
                 style: {
                   "li": Style(
-                    color: _themeStore.reverseThemeColor,
+                    color: Theme.of(context).indicatorColor,
                     fontSize: const FontSize(Dimens.small_text),
                   ),
                   "p": Style(
-                    color: _themeStore.reverseThemeColor,
+                    color: Theme.of(context).indicatorColor,
                     fontSize: const FontSize(Dimens.small_text),
                   ),
                 },
@@ -109,7 +109,7 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
                 margin: const EdgeInsets.symmetric(
                     vertical: Dimens.vertical_margin),
                 child: Divider(
-                  color: _themeStore.reverseThemeColorfulColor,
+                  color: Theme.of(context).highlightColor,
                   thickness: 1.5,
                 ),
               ),
@@ -281,6 +281,7 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
                   ),
                 )
               : _ShimmerSection(
+                  context,
                   child: Container(
                     height: Dimens.medium_text,
                     width: 100,
@@ -324,11 +325,11 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
   }
 
   // ignore: non_constant_identifier_names
-  Widget _ShimmerSection({required Widget child}) {
+  Widget _ShimmerSection(BuildContext context, {required Widget child}) {
     return Shimmer.fromColors(
       child: child,
       baseColor: _themeStore.light.withOpacity(0.5),
-      highlightColor: _themeStore.themeColorfulColorShimmer,
+      highlightColor: Theme.of(context).primaryColor,
       direction: ShimmerDirection.ltr,
       period: const Duration(milliseconds: 3000),
     );

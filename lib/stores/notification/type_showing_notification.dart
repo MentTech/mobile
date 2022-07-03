@@ -1,0 +1,4 @@
+enum NotificationFilter {
+  all,
+  unread,
+}

@@ -47,7 +47,7 @@ class ProgramConfirmContainer extends StatelessWidget {
               padding:
                   const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
               child: Divider(
-                color: _themeStore.reverseThemeColorfulColor,
+                color: Theme.of(context).highlightColor,
                 thickness: 2.0,
               ),
             ),
@@ -90,7 +90,7 @@ class ProgramConfirmContainer extends StatelessWidget {
                     mentorModel.name,
                 style: TextStyle(
                   fontSize: Dimens.large_text,
-                  color: _themeStore.reverseThemeColor,
+                  color: Theme.of(context).indicatorColor,
                   height: 1.5,
                 ),
               ),
@@ -119,13 +119,13 @@ class ProgramConfirmContainer extends StatelessWidget {
                   symbol: Icon(
                     Icons.monetization_on_outlined,
                     size: Dimens.large_text,
-                    color: _themeStore.reverseThemeColor,
+                    color: Theme.of(context).indicatorColor,
                   ),
                   child: Text(
                     " ${program.credit}",
                     style: TextStyle(
                       fontSize: Dimens.small_text,
-                      color: _themeStore.reverseThemeColor,
+                      color: Theme.of(context).indicatorColor,
                     ),
                   ),
                 ),
@@ -139,7 +139,7 @@ class ProgramConfirmContainer extends StatelessWidget {
                 mentorModel.userMentor.category.name,
                 style: TextStyle(
                   fontSize: Dimens.lightly_medium_text,
-                  color: _themeStore.reverseThemeColor,
+                  color: Theme.of(context).indicatorColor,
                 ),
               ),
             ],
@@ -150,7 +150,7 @@ class ProgramConfirmContainer extends StatelessWidget {
                 "${AppLocalizations.of(context).translate('create_at_translate')} ${program.createAt!.toFulltimeString()}",
                 style: TextStyle(
                   fontSize: Dimens.small_text,
-                  color: _themeStore.reverseThemeColor,
+                  color: Theme.of(context).indicatorColor,
                   height: 1.5,
                 ),
               )
@@ -158,7 +158,7 @@ class ProgramConfirmContainer extends StatelessWidget {
         // ReadMoreText(
         //   program.detail,
         //   style: TextStyle(
-        //     color: _themeStore.reverseThemeColor,
+        //     color: Theme.of(context).indicatorColor,
         //     fontSize: Dimens.small_text,
         //   ),
         //   trimLines: 5,
@@ -169,11 +169,11 @@ class ProgramConfirmContainer extends StatelessWidget {
           shrinkWrap: true,
           style: {
             "li": Style(
-              color: _themeStore.reverseThemeColor,
+              color: Theme.of(context).indicatorColor,
               fontSize: const FontSize(Dimens.small_text),
             ),
             "p": Style(
-              color: _themeStore.reverseThemeColor,
+              color: Theme.of(context).indicatorColor,
               fontSize: const FontSize(Dimens.small_text),
             ),
           },
@@ -199,6 +199,7 @@ class ProgramConfirmContainer extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _ShimmerSection(
+                    context,
                     child: Container(
                       height: Dimens.medium_text * 2,
                       width: double.infinity,
@@ -211,6 +212,7 @@ class ProgramConfirmContainer extends StatelessWidget {
                     ),
                   ),
                   _ShimmerSection(
+                    context,
                     child: Container(
                       height: Dimens.medium_text,
                       width: double.infinity,
@@ -229,6 +231,7 @@ class ProgramConfirmContainer extends StatelessWidget {
               width: Dimens.horizontal_margin,
             ),
             _ShimmerSection(
+              context,
               child: Container(
                 width: DeviceUtils.getScaledWidth(context, 0.3),
                 decoration: BoxDecoration(
@@ -258,9 +261,10 @@ class ProgramConfirmContainer extends StatelessWidget {
                   symbol: Icon(
                     Icons.monetization_on_outlined,
                     size: Dimens.large_text,
-                    color: _themeStore.reverseThemeColor,
+                    color: Theme.of(context).indicatorColor,
                   ),
                   child: _ShimmerSection(
+                    context,
                     child: Container(
                       height: Dimens.medium_text,
                       width: 100,
@@ -284,13 +288,14 @@ class ProgramConfirmContainer extends StatelessWidget {
                 mentorModel.userMentor.category.name,
                 style: TextStyle(
                   fontSize: Dimens.lightly_medium_text,
-                  color: _themeStore.reverseThemeColor,
+                  color: Theme.of(context).indicatorColor,
                 ),
               ),
             ],
           ),
         ),
         _ShimmerSection(
+          context,
           child: Container(
             height: Dimens.medium_text,
             width: double.infinity,
@@ -303,6 +308,7 @@ class ProgramConfirmContainer extends StatelessWidget {
           ),
         ),
         _ShimmerSection(
+          context,
           child: Container(
             height: Dimens.medium_text * 6,
             width: double.infinity,
@@ -326,10 +332,12 @@ class ProgramConfirmContainer extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildInnerLineInfo(
+          context,
           label: AppLocalizations.of(context).translate("name_label_translate"),
           data: registerInformation.name,
         ),
         _buildInnerLineInfo(
+          context,
           label:
               AppLocalizations.of(context).translate("email_label_translate"),
           data: registerInformation.email,
@@ -360,7 +368,8 @@ class ProgramConfirmContainer extends StatelessWidget {
     );
   }
 
-  Widget _buildInnerLineInfo({required String label, required String data}) {
+  Widget _buildInnerLineInfo(BuildContext context,
+      {required String label, required String data}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
       child: Row(
@@ -370,14 +379,14 @@ class ProgramConfirmContainer extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              color: _themeStore.reverseThemeColor,
+              color: Theme.of(context).indicatorColor,
               fontSize: Dimens.small_text,
             ),
           ),
           Text(
             data,
             style: TextStyle(
-              color: _themeStore.reverseThemeColorfulColor,
+              color: Theme.of(context).highlightColor,
               fontSize: Dimens.small_text,
             ),
           ),
@@ -397,7 +406,7 @@ class ProgramConfirmContainer extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              color: _themeStore.reverseThemeColor,
+              color: Theme.of(context).indicatorColor,
               fontSize: Dimens.small_text,
             ),
           ),
@@ -414,7 +423,7 @@ class ProgramConfirmContainer extends StatelessWidget {
                   data,
                   softWrap: true,
                   style: TextStyle(
-                    color: _themeStore.reverseThemeColorfulColor,
+                    color: Theme.of(context).highlightColor,
                     fontSize: Dimens.small_text,
                   ),
                 ),
@@ -427,11 +436,11 @@ class ProgramConfirmContainer extends StatelessWidget {
   }
 
   // ignore: non_constant_identifier_names
-  Widget _ShimmerSection({required Widget child}) {
+  Widget _ShimmerSection(BuildContext context, {required Widget child}) {
     return Shimmer.fromColors(
       child: child,
       baseColor: _themeStore.light.withOpacity(0.5),
-      highlightColor: _themeStore.themeColorfulColorShimmer,
+      highlightColor: Theme.of(context).primaryColor,
       direction: ShimmerDirection.ltr,
       period: const Duration(milliseconds: 3000),
     );

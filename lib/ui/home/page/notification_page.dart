@@ -1,79 +1,327 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:grouped_list/grouped_list.dart';
 import 'package:mobile/constants/dimens.dart';
+import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
+import 'package:mobile/models/notification/notification.dart';
+import 'package:mobile/stores/notification/notification_store.dart';
+import 'package:mobile/stores/notification/type_showing_notification.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
+import 'package:mobile/ui/home/page/subpage/notification_tag.dart';
+import 'package:mobile/utils/application/application_utils.dart';
+import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
+import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
+import 'package:mobile/widgets/glassmorphism_widgets/glassmorphism_widget_button.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class NotificationPage extends StatelessWidget {
   NotificationPage({Key? key}) : super(key: key);
 
   // store:---------------------------------------------------------------------
   final ThemeStore _themeStore = getIt<ThemeStore>();
+  final NotificationStore _notificationStore = getIt<NotificationStore>();
 
   @override
   Widget build(BuildContext context) {
     return Stack(
-      fit: StackFit.expand,
+      fit: StackFit.passthrough,
       children: [
         LinearGradientBackground(
           colors: _themeStore.lineToLineGradientColors,
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
           stops: null,
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(
-              horizontal: Dimens.horizontal_padding,
-              vertical: Dimens.vertical_padding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: const <Widget>[
-              // Text(
-              //   AppLocalizations.of(context).translate("message_title"),
-              //   style: TextStyle(
-              //     fontFamily: FontFamily.gilroy,
-              //     fontSize: Dimens.largeText,
-              //     color: Theme.of(context).primaryColor.withAlpha(200),
-              //     letterSpacing: 2,
-              //   ),
-              // ),
-              // const SizedBox(
-              //   height: Dimens.verticalMargin,
-              // ),
-              // CustomTextInputForm(
-              //   textEditingController: editingController,
-              //   hintText: "message_search_bar",
-              //   labelText: "message_search_bar",
-              // ),
-              // Expanded(
-              //   child: Consumer<ListLastestMessage>(
-              //     builder: (context, value, child) {
-              //       return ListView.builder(
-              //         physics: const BouncingScrollPhysics(),
-              //         itemBuilder: (context, index) =>
-              //             _buildItem(context, index, value),
-              //         itemCount: value.lengthList,
-              //       );
-              //     },
-              //   ),
-              // ),
-            ],
+        SafeArea(
+          bottom: false,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: Dimens.horizontal_padding,
+                vertical: Dimens.vertical_padding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Text(
+                  AppLocalizations.of(context)
+                      .translate("notification_title_translate"),
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                    vertical: Dimens.extra_large_vertical_margin,
+                  ),
+                  child: _buildFilterNotificationButtons(context),
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                    vertical: Dimens.vertical_margin,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        AppLocalizations.of(context).translate("lastest"),
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          _notificationStore.readAllUnreadedNotification();
+                        },
+                        child: Text(
+                          AppLocalizations.of(context).translate("read_all"),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(
+                                  color: Theme.of(context).highlightColor),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: _buildNotificationView(context),
+                ),
+              ],
+            ),
           ),
+        ),
+        Observer(
+          builder: (_) {
+            return !_notificationStore.success
+                ? ApplicationUtils.showErrorMessage(
+                    context,
+                    "notification_center_notification_title_translate",
+                    _notificationStore.getFailedMessageKey,
+                  )
+                : const SizedBox.shrink();
+          },
         ),
       ],
     );
   }
 
-  // Widget _buildItem(BuildContext context, int index, ListLastestMessage llMes) {
-  //   return LastestMessageCard(
-  //     lastestMessage: llMes.getLastestMessageAt(index),
-  //     onClickMessage: () {
-  //       routeToMessageBox(index);
-  //     },
-  //   );
-  // }
+  Observer _buildNotificationView(BuildContext context) {
+    return Observer(
+      builder: (BuildContext context) {
+        if (_notificationStore.isLoading) {
+          return _buildShimmerLoading(context);
+        } else {
+          if (_notificationStore.hasNotification) {
+            return _buildNotificationList(context);
+          } else {
+            return _buildNoNotification(context);
+          }
+        }
+      },
+    );
+  }
 
-  // void routeToMessageBox(int index) {
-  //   log('route message box');
-  // }
+  Widget _buildShimmerLoading(BuildContext context) {
+    return ListView.builder(
+      itemBuilder: (_, __) {
+        return Container(
+          margin: const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
+          child: GlassmorphismContainer(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Dimens.horizontal_padding,
+              vertical: Dimens.small_vertical_padding,
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: ApplicationUtils.shimmerSection(
+                    context,
+                    child: Container(
+                      height: Dimens.medium_text * 4,
+                      width: Dimens.medium_text * 4,
+                      decoration: const BoxDecoration(
+                          color: Colors.black87, shape: BoxShape.circle),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: Dimens.extra_large_horizontal_margin,
+                ),
+                Expanded(
+                  flex: 8,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ApplicationUtils.shimmerSection(
+                        context,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                            vertical: Dimens.small_vertical_margin,
+                          ),
+                          height: Dimens.medium_text,
+                          decoration: BoxDecoration(
+                            color: Colors.black87,
+                            borderRadius: Dimens.kMaxBorderRadius,
+                          ),
+                        ),
+                      ),
+                      ApplicationUtils.shimmerSection(
+                        context,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                            vertical: Dimens.small_vertical_margin,
+                          ),
+                          height: Dimens.medium_text,
+                          decoration: BoxDecoration(
+                            color: Colors.black87,
+                            borderRadius: Dimens.kMaxBorderRadius,
+                          ),
+                        ),
+                      ),
+                      ApplicationUtils.shimmerSection(
+                        context,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                            vertical: Dimens.small_vertical_margin,
+                          ),
+                          height: Dimens.medium_text,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            color: Colors.black87,
+                            borderRadius: Dimens.kMaxBorderRadius,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: ApplicationUtils.shimmerSection(
+                    context,
+                    child: IconTheme(
+                      data: Theme.of(context).iconTheme,
+                      child: const Icon(Icons.fiber_manual_record_rounded),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            blur: Properties.blur_glass_morphism,
+            opacity: Properties.opacity_glass_morphism,
+            radius: Dimens.kBorderRadiusValue,
+          ),
+        );
+      },
+      itemCount: 5,
+    );
+  }
+
+  Text _buildNoNotification(BuildContext context) {
+    return Text(
+      AppLocalizations.of(context).translate("no_notification"),
+      style: Theme.of(context).textTheme.bodySmall,
+    );
+  }
+
+  Widget _buildNotificationList(BuildContext context) {
+    return GroupedListView<NotificationModel, String>(
+      elements: _notificationStore.notifications,
+      groupBy: (element) => timeago.format(
+        element.createAt,
+        locale: AppLocalizations.of(context).locale.languageCode,
+      ),
+      groupSeparatorBuilder: (String groupByValue) => Text(groupByValue),
+      itemBuilder: (BuildContext context, NotificationModel element) =>
+          NotificationTag(notificationModel: element),
+      itemComparator: (item1, item2) =>
+          item1.createAt.compareTo(item2.createAt),
+      groupComparator: (item1, item2) => item1.compareTo(item2),
+      useStickyGroupSeparators: true,
+      floatingHeader: true,
+      order: GroupedListOrder.ASC,
+      clipBehavior: Clip.none,
+    );
+  }
+
+  Widget _buildFilterNotificationButtons(BuildContext context) {
+    return Observer(
+      builder: (_) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _buildSelectableButton(
+              context,
+              iconData: Icons.clear_all,
+              text: AppLocalizations.of(context).translate("all_translate"),
+              isSelected: _notificationStore.notificationFilter ==
+                  NotificationFilter.all,
+              ontap: () {
+                _notificationStore
+                    .changeNotificationMethodFilter(NotificationFilter.all);
+              },
+            ),
+            _buildSelectableButton(
+              context,
+              iconData: Icons.pending_actions,
+              text: AppLocalizations.of(context).translate("waiting_translate"),
+              isSelected: _notificationStore.notificationFilter ==
+                  NotificationFilter.unread,
+              ontap: () {
+                _notificationStore
+                    .changeNotificationMethodFilter(NotificationFilter.unread);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildSelectableButton(
+    BuildContext context, {
+    required IconData iconData,
+    required String text,
+    required VoidCallback ontap,
+    required bool isSelected,
+  }) {
+    final Color statusColor = isSelected
+        ? Theme.of(context).highlightColor
+        : Color.alphaBlend(
+            Theme.of(context).indicatorColor.withOpacity(0.7),
+            Colors.white70,
+          );
+
+    return SizedBox(
+      height: 100,
+      child: AspectRatio(
+        aspectRatio: 1 / 1,
+        child: GlassmorphismWidgetButton(
+          background: statusColor,
+          radius: 10,
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Icon(
+                iconData,
+                color: statusColor,
+                size: Dimens.large_text,
+              ),
+              Text(
+                text,
+                style: TextStyle(
+                  color: statusColor,
+                  fontSize: 10,
+                ),
+              ),
+            ],
+          ),
+          onTap: ontap,
+          blur: Properties.blur_glass_morphism,
+          opacity: Properties.opacity_glass_morphism,
+        ),
+      ),
+    );
+  }
 }

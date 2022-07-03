@@ -108,7 +108,7 @@ class _UserProfileState extends State<UserProfile> {
             builder: (context) {
               return Visibility(
                 visible: _userStore.isLoading || _userStore.isUploadingAvatar,
-                child: CustomProgressIndicatorWidget(),
+                child: const CustomProgressIndicatorWidget(),
               );
             },
           ),

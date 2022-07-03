@@ -5,13 +5,12 @@ import 'package:mobile/constants/properties.dart';
 import 'package:mobile/constants/strings.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/authen/authen_store.dart';
+import 'package:mobile/stores/notification/notification_store.dart';
 import 'package:mobile/stores/search_store.dart/search_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
-import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/app_icon_widget.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -60,14 +59,12 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void fetch() async {
-    await PackageInfo.fromPlatform().then((packageInfo) {
-      DeviceUtils.packageInfo = packageInfo;
-    });
-
     if (_auth.canBeAuthenticated) {
       // asynchronous
       userStore!.fetchUserInfor().then((isAuthenticated) {
         if (isAuthenticated) {
+          getIt<NotificationStore>().fetchAllNotifications();
+
           Provider.of<SearchStore>(context, listen: false)
               .initializeDatabase()
               .then(

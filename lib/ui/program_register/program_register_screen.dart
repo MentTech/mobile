@@ -156,7 +156,7 @@ class ProgramRegisterScreen extends StatelessWidget {
               // }
               return Visibility(
                 visible: commonStore.isRegistering,
-                child: CustomProgressIndicatorWidget(),
+                child: const CustomProgressIndicatorWidget(),
               );
             },
           ),

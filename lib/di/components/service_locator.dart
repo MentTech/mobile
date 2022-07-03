@@ -4,6 +4,7 @@ import 'package:mobile/data/network/apis/auth/auth_api.dart';
 import 'package:mobile/data/network/apis/common/common_api.dart';
 import 'package:mobile/data/network/apis/mentee/mentee_api.dart';
 import 'package:mobile/data/network/apis/mentor/mentor_api.dart';
+import 'package:mobile/data/network/apis/notification/notification_api.dart';
 import 'package:mobile/data/network/apis/transaction/transaction_api.dart';
 import 'package:mobile/data/network/dio_client.dart';
 import 'package:mobile/data/network/rest_client.dart';
@@ -13,6 +14,7 @@ import 'package:mobile/di/module/local_module.dart';
 import 'package:mobile/di/module/network_module.dart';
 import 'package:mobile/stores/language/language_store.dart';
 import 'package:mobile/stores/message/message_store.dart';
+import 'package:mobile/stores/notification/notification_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -67,6 +69,12 @@ Future<void> setupLocator() async {
     ),
   );
 
+  getIt.registerSingleton(
+    NotifitcationAPI(
+      getIt<DioClient>(),
+    ),
+  );
+
   // data sources
   // getIt.registerSingleton(PostDataSource(await getIt.getAsync<Database>()));
 
@@ -77,6 +85,7 @@ Future<void> setupLocator() async {
     getIt<MenteeAPI>(),
     getIt<CommonAPI>(),
     getIt<TransactionAPI>(),
+    getIt<NotifitcationAPI>(),
     getIt<SharedPreferenceHelper>(),
     // getIt<PostDataSource>(),
   ));
@@ -84,7 +93,7 @@ Future<void> setupLocator() async {
   // stores:--------------------------------------------------------------------
   getIt.registerSingleton(LanguageStore(getIt<Repository>()));
   getIt.registerSingleton(ThemeStore(getIt<Repository>()));
-  // getIt.registerSingleton(AuthenStore(getIt<Repository>()));
+  getIt.registerSingleton(NotificationStore(getIt<Repository>()));
   // getIt.registerSingleton(CommonStore(getIt<Repository>()));
 
   // getIt.registerSingleton(MessageStore());

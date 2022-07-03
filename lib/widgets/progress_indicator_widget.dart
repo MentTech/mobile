@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/properties.dart';
-import 'package:mobile/di/components/service_locator.dart';
-import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 
 class CustomProgressIndicatorWidget extends StatelessWidget {
-  CustomProgressIndicatorWidget({
+  const CustomProgressIndicatorWidget({
     Key? key,
   }) : super(key: key);
-
-  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +23,7 @@ class CustomProgressIndicatorWidget extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(25.0),
                 child: CircularProgressIndicator(
-                  color: _themeStore.reverseThemeColorfulColor,
+                  color: Theme.of(context).highlightColor,
                   backgroundColor: Colors.transparent,
                 ),
               ),

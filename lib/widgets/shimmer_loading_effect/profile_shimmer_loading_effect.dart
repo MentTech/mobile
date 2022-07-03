@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
-import 'package:mobile/di/components/service_locator.dart';
-import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ProfileShimmerLoadingEffect extends StatelessWidget {
-  ProfileShimmerLoadingEffect({Key? key}) : super(key: key);
-
-  final ThemeStore _themeStore = getIt<ThemeStore>();
+  const ProfileShimmerLoadingEffect({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +41,7 @@ class ProfileShimmerLoadingEffect extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           _ShimmerSection(
+            context,
             child: Container(
               height: Dimens.medium_text,
               width: DeviceUtils.getScaledWidth(context, 0.35),
@@ -58,6 +55,7 @@ class ProfileShimmerLoadingEffect extends StatelessWidget {
             height: Dimens.vertical_margin,
           ),
           _ShimmerSection(
+            context,
             child: Container(
               height: Dimens.medium_text * 5,
               width: double.infinity,
@@ -82,6 +80,7 @@ class ProfileShimmerLoadingEffect extends StatelessWidget {
       ),
       child: Center(
         child: _ShimmerSection(
+          context,
           child: Container(
             width: DeviceUtils.getScaledWidth(context, 0.8),
             height: double.infinity,
@@ -113,6 +112,7 @@ class ProfileShimmerLoadingEffect extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _ShimmerSection(
+                  context,
                   child: Container(
                     width: double.infinity,
                     height: Dimens.medium_text,
@@ -123,6 +123,7 @@ class ProfileShimmerLoadingEffect extends StatelessWidget {
                   ),
                 ),
                 _ShimmerSection(
+                  context,
                   child: Container(
                     width: 50,
                     height: Dimens.medium_text,
@@ -133,6 +134,7 @@ class ProfileShimmerLoadingEffect extends StatelessWidget {
                   ),
                 ),
                 _ShimmerSection(
+                  context,
                   child: Container(
                     width: 150,
                     height: Dimens.medium_text,
@@ -146,6 +148,7 @@ class ProfileShimmerLoadingEffect extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _ShimmerSection(
+                      context,
                       child: Container(
                         width: 50,
                         height: Dimens.medium_text,
@@ -156,6 +159,7 @@ class ProfileShimmerLoadingEffect extends StatelessWidget {
                       ),
                     ),
                     _ShimmerSection(
+                      context,
                       child: Container(
                         width: 50,
                         height: Dimens.medium_text,
@@ -174,6 +178,7 @@ class ProfileShimmerLoadingEffect extends StatelessWidget {
             width: Dimens.extra_large_horizontal_margin,
           ),
           _ShimmerSection(
+            context,
             child: Container(
               width: DeviceUtils.getScaledWidth(context, 0.35),
               height: 200,
@@ -189,11 +194,11 @@ class ProfileShimmerLoadingEffect extends StatelessWidget {
   }
 
   // ignore: non_constant_identifier_names
-  Widget _ShimmerSection({required Widget child}) {
+  Widget _ShimmerSection(BuildContext context, {required Widget child}) {
     return Shimmer.fromColors(
       child: child,
-      baseColor: _themeStore.light.withOpacity(0.5),
-      highlightColor: _themeStore.themeColorfulColorShimmer,
+      baseColor: Theme.of(context).primaryColorLight.withOpacity(0.5),
+      highlightColor: Theme.of(context).primaryColor,
       direction: ShimmerDirection.ltr,
       period: const Duration(milliseconds: 3000),
     );

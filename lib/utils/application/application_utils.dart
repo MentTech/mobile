@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/dimens.dart';
@@ -8,6 +6,7 @@ import 'package:mobile/ui/authorization/authorization_screen.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ApplicationUtils {
   static Row buildFetchWidget(
@@ -97,7 +96,6 @@ class ApplicationUtils {
           title: AppLocalizations.of(context).translate(titleKey),
           duration: Duration(seconds: duration),
         ).show(context).then((_) {
-          log("message" + messageKey);
           if (messageKey == "unauthorized_key_translate") {
             Routes.routeReplaceAllAndPush(context, const AuthorizationScreen());
           }
@@ -129,5 +127,15 @@ class ApplicationUtils {
     }
 
     return const SizedBox.shrink();
+  }
+
+  static Widget shimmerSection(BuildContext context, {required Widget child}) {
+    return Shimmer.fromColors(
+      child: child,
+      baseColor: Theme.of(context).primaryColorLight.withOpacity(0.5),
+      highlightColor: Theme.of(context).primaryColor,
+      direction: ShimmerDirection.ltr,
+      period: const Duration(milliseconds: 3000),
+    );
   }
 }

@@ -98,7 +98,7 @@ class _SesstionDetailState extends State<SesstionDetail> {
             builder: (context) {
               return Visibility(
                 visible: _commonStore.isLoading,
-                child: CustomProgressIndicatorWidget(),
+                child: const CustomProgressIndicatorWidget(),
               );
             },
           )

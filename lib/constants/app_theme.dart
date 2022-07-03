@@ -43,6 +43,11 @@ final ThemeData themeData = ThemeData(
   hintColor: Colors.black54,
   iconTheme: const IconThemeData(color: Colors.black54),
   textTheme: const TextTheme(
+    headlineSmall: TextStyle(
+      color: AppColors.darkTextTheme,
+      fontSize: Dimens.medium_text,
+      fontWeight: FontWeight.w700,
+    ),
     titleLarge: TextStyle(
       color: Colors.black87,
       fontSize: Dimens.ultra_large_text,
@@ -95,6 +100,11 @@ final ThemeData themeDataDark = ThemeData(
   hintColor: Colors.white60,
   iconTheme: const IconThemeData(color: Colors.white70),
   primaryTextTheme: const TextTheme(
+    headlineSmall: TextStyle(
+      color: AppColors.lightTextTheme,
+      fontSize: Dimens.medium_text,
+      fontWeight: FontWeight.w700,
+    ),
     titleLarge: TextStyle(
       color: Colors.white70,
       fontSize: Dimens.ultra_large_text,

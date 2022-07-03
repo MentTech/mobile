@@ -8,6 +8,7 @@ import 'package:mobile/constants/strings.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/authen/authen_store.dart';
 import 'package:mobile/stores/authen_form/authen_form_store.dart';
+import 'package:mobile/stores/notification/notification_store.dart';
 import 'package:mobile/stores/search_store.dart/search_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
@@ -173,7 +174,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
                 visible: _authenStore.isLoading ||
                     _userStore.isLoading ||
                     _searchStore.isLoading,
-                child: CustomProgressIndicatorWidget(),
+                child: const CustomProgressIndicatorWidget(),
               );
             },
           ),
@@ -497,6 +498,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
   _showSuccessMessage(String key,
       {int duration = Properties.delayTimeInSecond}) {
     if (key.isNotEmpty) {
+      getIt<NotificationStore>().fetchAllNotifications();
       _searchStore.initializeDatabase().then((_) {
         FlushbarHelper.createSuccess(
           message: AppLocalizations.of(context).translate(key),

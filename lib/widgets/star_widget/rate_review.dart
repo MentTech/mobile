@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/dimens.dart';
-import 'package:mobile/di/components/service_locator.dart';
-import 'package:mobile/stores/theme/theme_store.dart';
 
 class RateReview extends StatefulWidget {
   const RateReview({
@@ -30,7 +28,6 @@ class _RateReviewState extends State<RateReview> {
   int rate = 0;
 
   // store:---------------------------------------------------------------------
-  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   // final state:---------------------------------------------------------------
   late final Color choosenColor;
@@ -40,7 +37,7 @@ class _RateReviewState extends State<RateReview> {
     super.initState();
 
     rate = widget.rate;
-    choosenColor = widget.chooseColor ?? _themeStore.ratingColor;
+    choosenColor = widget.chooseColor ?? Theme.of(context).selectedRowColor;
   }
 
   @override

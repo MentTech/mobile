@@ -79,7 +79,7 @@ class _MentorProfileState extends State<MentorProfile> {
           Observer(
             builder: (BuildContext context) {
               if (_mentorStore.isLoading) {
-                return ProfileShimmerLoadingEffect();
+                return const ProfileShimmerLoadingEffect();
               } else {
                 if (_mentorStore.hasMentor) {
                   return CustomScrollView(

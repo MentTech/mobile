@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/app_theme.dart';
-import 'package:mobile/constants/strings.dart';
 import 'package:mobile/data/repository.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/authen/authen_store.dart';
@@ -13,6 +12,7 @@ import 'package:mobile/stores/search_store.dart/search_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/ui/splash/splash.dart';
+import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
 import 'package:provider/provider.dart';
@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
         builder: (_) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            title: Strings.appName,
+            title: DeviceUtils.packageInfo!.appName, //Strings.appName,
             theme: _themeStore.darkMode ? themeDataDark : themeData,
             routes: Routes.routes,
             locale: Locale(_languageStore.locale),

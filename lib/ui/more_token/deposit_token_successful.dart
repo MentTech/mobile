@@ -70,7 +70,7 @@ class DepositTokenSuccessFul extends StatelessWidget {
             AppLocalizations.of(context)
                 .translate("create_request_to_top_up_title"),
             style: TextStyle(
-              color: _themeStore.reverseThemeColor,
+              color: Theme.of(context).indicatorColor,
               fontSize: Dimens.medium_text,
               fontWeight: FontWeight.w600,
             ),
@@ -81,7 +81,7 @@ class DepositTokenSuccessFul extends StatelessWidget {
           Text(
             AppLocalizations.of(context).translate("transfer_infor_message"),
             style: TextStyle(
-              color: _themeStore.reverseThemeColor,
+              color: Theme.of(context).indicatorColor,
               fontSize: Dimens.small_text,
             ),
           ),
@@ -94,14 +94,14 @@ class DepositTokenSuccessFul extends StatelessWidget {
               Text(
                 AppLocalizations.of(context).translate("phone_number_lable"),
                 style: TextStyle(
-                  color: _themeStore.reverseThemeColor,
+                  color: Theme.of(context).indicatorColor,
                   fontSize: Dimens.lightly_medium_text,
                 ),
               ),
               Text(
                 "0123456789",
                 style: TextStyle(
-                  color: _themeStore.reverseThemeColorfulColor,
+                  color: Theme.of(context).primaryColor,
                   fontSize: Dimens.lightly_medium_text,
                 ),
               ),
@@ -116,14 +116,14 @@ class DepositTokenSuccessFul extends StatelessWidget {
               Text(
                 AppLocalizations.of(context).translate("account_number"),
                 style: TextStyle(
-                  color: _themeStore.reverseThemeColor,
+                  color: Theme.of(context).indicatorColor,
                   fontSize: Dimens.lightly_medium_text,
                 ),
               ),
               Text(
                 "123456789",
                 style: TextStyle(
-                  color: _themeStore.reverseThemeColorfulColor,
+                  color: Theme.of(context).primaryColor,
                   fontSize: Dimens.lightly_medium_text,
                 ),
               ),
@@ -138,14 +138,14 @@ class DepositTokenSuccessFul extends StatelessWidget {
               Text(
                 AppLocalizations.of(context).translate("bank_label"),
                 style: TextStyle(
-                  color: _themeStore.reverseThemeColor,
+                  color: Theme.of(context).indicatorColor,
                   fontSize: Dimens.lightly_medium_text,
                 ),
               ),
               Text(
                 "Vietcombank",
                 style: TextStyle(
-                  color: _themeStore.reverseThemeColorfulColor,
+                  color: Theme.of(context).primaryColor,
                   fontSize: Dimens.lightly_medium_text,
                 ),
               ),
@@ -160,14 +160,14 @@ class DepositTokenSuccessFul extends StatelessWidget {
               Text(
                 AppLocalizations.of(context).translate("account_name"),
                 style: TextStyle(
-                  color: _themeStore.reverseThemeColor,
+                  color: Theme.of(context).indicatorColor,
                   fontSize: Dimens.lightly_medium_text,
                 ),
               ),
               Text(
                 "Nguyen Van A",
                 style: TextStyle(
-                  color: _themeStore.reverseThemeColorfulColor,
+                  color: Theme.of(context).primaryColor,
                   fontSize: Dimens.lightly_medium_text,
                 ),
               ),
@@ -179,7 +179,7 @@ class DepositTokenSuccessFul extends StatelessWidget {
           Text(
             AppLocalizations.of(context).translate("transfer_content"),
             style: TextStyle(
-              color: _themeStore.reverseThemeColor,
+              color: Theme.of(context).indicatorColor,
               fontSize: Dimens.lightly_medium_text,
             ),
           ),
@@ -190,7 +190,7 @@ class DepositTokenSuccessFul extends StatelessWidget {
                 " - " +
                 AppLocalizations.of(context).translate("token_deposit_payment"),
             style: TextStyle(
-              color: _themeStore.reverseThemeColorfulColor,
+              color: Theme.of(context).primaryColor,
               fontSize: Dimens.lightly_medium_text,
             ),
           ),

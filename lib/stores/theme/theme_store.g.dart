@@ -27,13 +27,6 @@ mixin _$ThemeStore on _ThemeStore, Store {
   String get appIcon => (_$appIconComputed ??=
           Computed<String>(() => super.appIcon, name: '_ThemeStore.appIcon'))
       .value;
-  Computed<double>? _$opacityThemeComputed;
-
-  @override
-  double get opacityTheme =>
-      (_$opacityThemeComputed ??= Computed<double>(() => super.opacityTheme,
-              name: '_ThemeStore.opacityTheme'))
-          .value;
   Computed<Color>? _$themeColorfulColorComputed;
 
   @override
@@ -41,22 +34,6 @@ mixin _$ThemeStore on _ThemeStore, Store {
           Computed<Color>(() => super.themeColorfulColor,
               name: '_ThemeStore.themeColorfulColor'))
       .value;
-  Computed<Color>? _$themeColorfulColorShimmerComputed;
-
-  @override
-  Color get themeColorfulColorShimmer =>
-      (_$themeColorfulColorShimmerComputed ??= Computed<Color>(
-              () => super.themeColorfulColorShimmer,
-              name: '_ThemeStore.themeColorfulColorShimmer'))
-          .value;
-  Computed<Color>? _$reverseThemeColorfulColorComputed;
-
-  @override
-  Color get reverseThemeColorfulColor =>
-      (_$reverseThemeColorfulColorComputed ??= Computed<Color>(
-              () => super.reverseThemeColorfulColor,
-              name: '_ThemeStore.reverseThemeColorfulColor'))
-          .value;
   Computed<Color>? _$themeColorComputed;
 
   @override
@@ -70,20 +47,6 @@ mixin _$ThemeStore on _ThemeStore, Store {
   Color get themeThemeColor => (_$themeThemeColorComputed ??= Computed<Color>(
           () => super.themeThemeColor,
           name: '_ThemeStore.themeThemeColor'))
-      .value;
-  Computed<Color>? _$reverseThemeColorComputed;
-
-  @override
-  Color get reverseThemeColor => (_$reverseThemeColorComputed ??=
-          Computed<Color>(() => super.reverseThemeColor,
-              name: '_ThemeStore.reverseThemeColor'))
-      .value;
-  Computed<List<Color>>? _$linearGradientColorsComputed;
-
-  @override
-  List<Color> get linearGradientColors => (_$linearGradientColorsComputed ??=
-          Computed<List<Color>>(() => super.linearGradientColors,
-              name: '_ThemeStore.linearGradientColors'))
       .value;
   Computed<List<Color>>? _$lineToLineGradientColorsComputed;
 
@@ -108,20 +71,6 @@ mixin _$ThemeStore on _ThemeStore, Store {
       (_$_lineToLineGradientColorsLightComputed ??= Computed<List<Color>>(
               () => super._lineToLineGradientColorsLight,
               name: '_ThemeStore._lineToLineGradientColorsLight'))
-          .value;
-  Computed<Color>? _$textChoosedComputed;
-
-  @override
-  Color get textChoosed =>
-      (_$textChoosedComputed ??= Computed<Color>(() => super.textChoosed,
-              name: '_ThemeStore.textChoosed'))
-          .value;
-  Computed<Color>? _$ratingColorComputed;
-
-  @override
-  Color get ratingColor =>
-      (_$ratingColorComputed ??= Computed<Color>(() => super.ratingColor,
-              name: '_ThemeStore.ratingColor'))
           .value;
 
   late final _$_darkModeAtom =
@@ -155,17 +104,10 @@ mixin _$ThemeStore on _ThemeStore, Store {
 darkMode: ${darkMode},
 modeName: ${modeName},
 appIcon: ${appIcon},
-opacityTheme: ${opacityTheme},
 themeColorfulColor: ${themeColorfulColor},
-themeColorfulColorShimmer: ${themeColorfulColorShimmer},
-reverseThemeColorfulColor: ${reverseThemeColorfulColor},
 themeColor: ${themeColor},
 themeThemeColor: ${themeThemeColor},
-reverseThemeColor: ${reverseThemeColor},
-linearGradientColors: ${linearGradientColors},
-lineToLineGradientColors: ${lineToLineGradientColors},
-textChoosed: ${textChoosed},
-ratingColor: ${ratingColor}
+lineToLineGradientColors: ${lineToLineGradientColors}
     ''';
   }
 }

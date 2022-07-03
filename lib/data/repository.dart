@@ -6,6 +6,7 @@ import 'package:mobile/data/network/apis/auth/auth_api.dart';
 import 'package:mobile/data/network/apis/common/common_api.dart';
 import 'package:mobile/data/network/apis/mentee/mentee_api.dart';
 import 'package:mobile/data/network/apis/mentor/mentor_api.dart';
+import 'package:mobile/data/network/apis/notification/notification_api.dart';
 import 'package:mobile/data/network/apis/transaction/transaction_api.dart';
 import 'package:mobile/data/sharedpref/shared_preference_helper.dart';
 
@@ -19,6 +20,7 @@ class Repository {
   final MenteeAPI _menteeAPI;
   final CommonAPI _commonAPI;
   final TransactionAPI _transactionAPI;
+  final NotifitcationAPI _notifitcationAPI;
 
   // shared pref object
   final SharedPreferenceHelper _sharedPrefsHelper;
@@ -30,6 +32,7 @@ class Repository {
     this._menteeAPI,
     this._commonAPI,
     this._transactionAPI,
+    this._notifitcationAPI,
     this._sharedPrefsHelper,
     // this._postDataSource,
   );
@@ -164,6 +167,53 @@ class Repository {
     }).catchError((error) {
       log("Fetch Userinfor failing");
       return {"error": "Fetch fail"};
+    });
+  }
+
+  // Notification notification: ------------------------------------------------
+  Future<Map<String, dynamic>?> fetchAllNotifications({
+    required String authToken,
+    required Map<String, dynamic> params,
+  }) async {
+    return _notifitcationAPI
+        .fetchAllNotifications(authToken: authToken, params: params)
+        .catchError((error) {
+      return {
+        "statusCode": 500,
+        "message": error.toString(),
+      };
+    });
+  }
+
+  Future<Map<String, dynamic>?> markMultiNotificationsAsRead({
+    required String authToken,
+    required List<int> markReadedIds,
+  }) async {
+    return _notifitcationAPI.markMultiNotificationsAsRead(
+      authToken: authToken,
+      body: {
+        "ids": markReadedIds,
+      },
+    ).catchError((error) {
+      return {
+        "statusCode": 500,
+        "message": error.toString(),
+      };
+    });
+  }
+
+  Future<Map<String, dynamic>?> markNotificationAsRead({
+    required String authToken,
+    required int notificationId,
+  }) async {
+    return _notifitcationAPI
+        .markNotificationAsRead(
+            authToken: authToken, notificationId: notificationId)
+        .catchError((error) {
+      return {
+        "statusCode": 500,
+        "message": error.toString(),
+      };
     });
   }
 

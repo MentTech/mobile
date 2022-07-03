@@ -92,7 +92,7 @@ class _PasswordChangerScreenState extends State<PasswordChangerScreen> {
             builder: (context) {
               return Visibility(
                 visible: _authenStore.isLoading,
-                child: CustomProgressIndicatorWidget(),
+                child: const CustomProgressIndicatorWidget(),
               );
             },
           ),

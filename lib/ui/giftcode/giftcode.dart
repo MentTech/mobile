@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/dimens.dart';
@@ -62,11 +60,6 @@ class _GiftCodeScreenState extends State<GiftCodeScreen> {
       ),
       messageNotification: Observer(
         builder: (_) {
-          log("message " +
-              _userStore.success.toString() +
-              " - " +
-              _userStore.getFailedMessageKey);
-
           return _userStore.success
               ? ApplicationUtils.showSuccessMessage(
                   context,
@@ -84,7 +77,7 @@ class _GiftCodeScreenState extends State<GiftCodeScreen> {
         builder: (context) {
           return Visibility(
             visible: _userStore.isLoading,
-            child: CustomProgressIndicatorWidget(),
+            child: const CustomProgressIndicatorWidget(),
           );
         },
       ),

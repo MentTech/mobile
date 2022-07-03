@@ -63,13 +63,13 @@ class AdvancedSettings extends StatelessWidget {
               const EdgeInsets.symmetric(horizontal: Dimens.horizontal_padding),
           leading: Icon(
             Icons.translate,
-            color: _themeStore.reverseThemeColor,
+            color: Theme.of(context).indicatorColor,
           ),
           title: Text(
             AppLocalizations.of(context).translate("home_tv_choose_language"),
             style: TextStyle(
               fontSize: Dimens.lightly_medium_text,
-              color: _themeStore.reverseThemeColor,
+              color: Theme.of(context).indicatorColor,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -78,7 +78,7 @@ class AdvancedSettings extends StatelessWidget {
                 AppLocalizations.of(context).translate("unknown_translate"),
             style: TextStyle(
               fontSize: Dimens.small_text,
-              color: _themeStore.reverseThemeColor,
+              color: Theme.of(context).indicatorColor,
             ),
           ),
         ),
@@ -108,13 +108,13 @@ class AdvancedSettings extends StatelessWidget {
               const EdgeInsets.symmetric(horizontal: Dimens.horizontal_padding),
           leading: Icon(
             Icons.settings_display_outlined,
-            color: _themeStore.reverseThemeColor,
+            color: Theme.of(context).indicatorColor,
           ),
           title: Text(
             AppLocalizations.of(context).translate("home_tv_choose_theme"),
             style: TextStyle(
               fontSize: Dimens.lightly_medium_text,
-              color: _themeStore.reverseThemeColor,
+              color: Theme.of(context).indicatorColor,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -122,7 +122,7 @@ class AdvancedSettings extends StatelessWidget {
             _themeStore.modeName,
             style: TextStyle(
               fontSize: Dimens.small_text,
-              color: _themeStore.reverseThemeColor,
+              color: Theme.of(context).indicatorColor,
             ),
           ),
         ),
@@ -177,7 +177,7 @@ class LanguagePopup extends StatelessWidget {
               children: [
                 Icon(
                   Icons.translate,
-                  color: _themeStore.reverseThemeColor,
+                  color: Theme.of(context).indicatorColor,
                 ),
                 const SizedBox(
                   width: 10,
@@ -186,7 +186,7 @@ class LanguagePopup extends StatelessWidget {
                   AppLocalizations.of(context)
                       .translate("home_tv_choose_language"),
                   style: TextStyle(
-                    color: _themeStore.reverseThemeColor,
+                    color: Theme.of(context).indicatorColor,
                     fontSize: Dimens.medium_text,
                     fontWeight: FontWeight.w500,
                   ),
@@ -198,7 +198,7 @@ class LanguagePopup extends StatelessWidget {
             thickness: 0.5,
             color: Color.alphaBlend(
               Theme.of(context).primaryColor.withAlpha(100),
-              _themeStore.reverseThemeColor,
+              Theme.of(context).indicatorColor,
             ),
           ),
           Expanded(
@@ -213,7 +213,7 @@ class LanguagePopup extends StatelessWidget {
                         style: TextStyle(
                           fontSize: Dimens.small_text,
                           color: selectLocale == object.locale
-                              ? _themeStore.reverseThemeColor
+                              ? Theme.of(context).indicatorColor
                               : _themeStore.themeColor,
                         ),
                       ),
@@ -271,7 +271,7 @@ class ThemePopup extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.settings_display_outlined,
-                    color: _themeStore.reverseThemeColor,
+                    color: Theme.of(context).indicatorColor,
                   ),
                   const SizedBox(
                     width: 10,
@@ -280,7 +280,7 @@ class ThemePopup extends StatelessWidget {
                     AppLocalizations.of(context)
                         .translate("home_tv_choose_theme"),
                     style: TextStyle(
-                      color: _themeStore.reverseThemeColor,
+                      color: Theme.of(context).indicatorColor,
                       fontSize: Dimens.medium_text,
                       fontWeight: FontWeight.w500,
                     ),
@@ -291,7 +291,7 @@ class ThemePopup extends StatelessWidget {
             thickness: 0.5,
             color: Color.alphaBlend(
               Theme.of(context).primaryColor.withAlpha(100),
-              _themeStore.reverseThemeColor,
+              Theme.of(context).indicatorColor,
             ),
           ),
           Expanded(
@@ -305,7 +305,7 @@ class ThemePopup extends StatelessWidget {
                         object.mode!,
                         style: TextStyle(
                           color: selectTheme == object.val
-                              ? _themeStore.reverseThemeColor
+                              ? Theme.of(context).indicatorColor
                               : _themeStore.themeColor,
                         ),
                       ),

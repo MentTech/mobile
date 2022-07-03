@@ -68,7 +68,7 @@ class TransactionTicketItem extends StatelessWidget {
                         .translate(transaction.type.toTranslateCode()),
                     style: TextStyle(
                       color: Color.alphaBlend(
-                          (textColor ?? _themeStore.reverseThemeColor)
+                          (textColor ?? Theme.of(context).indicatorColor)
                               .withAlpha(150),
                           transaction.status.toColorType()),
                       fontSize: Dimens.small_text,
@@ -79,7 +79,7 @@ class TransactionTicketItem extends StatelessWidget {
                     transaction.createAt.toDateTimeDealString(),
                     style: TextStyle(
                       color: Color.alphaBlend(
-                          (textColor ?? _themeStore.reverseThemeColor)
+                          (textColor ?? Theme.of(context).indicatorColor)
                               .withAlpha(150),
                           transaction.status.toColorType()),
                       fontSize: Dimens.small_text,
@@ -92,7 +92,7 @@ class TransactionTicketItem extends StatelessWidget {
             subtitle: ReadMoreText(
               transaction.message,
               style: TextStyle(
-                color: textColor ?? _themeStore.reverseThemeColor,
+                color: textColor ?? Theme.of(context).indicatorColor,
                 fontSize: Dimens.small_text,
               ),
               trimLines: 1,
@@ -110,14 +110,14 @@ class TransactionTicketItem extends StatelessWidget {
                 Text(
                   "${transaction.amount} ",
                   style: TextStyle(
-                    color: textColor ?? _themeStore.reverseThemeColor,
+                    color: textColor ?? Theme.of(context).indicatorColor,
                     fontSize: Dimens.small_text,
                   ),
                 ),
                 Icon(
                   Icons.token_rounded,
                   size: Dimens.medium_text,
-                  color: textColor ?? _themeStore.reverseThemeColor,
+                  color: textColor ?? Theme.of(context).indicatorColor,
                 ),
               ],
             ),
