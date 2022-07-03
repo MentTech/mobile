@@ -1,9 +1,14 @@
+import 'dart:developer';
+
+import 'package:mobile/data/network/constants/endpoints.dart';
 import 'package:mobile/data/repository.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/notification/notification.dart';
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobile/stores/notification/type_showing_notification.dart';
 import 'package:mobx/mobx.dart';
+
+import 'package:socket_io_client/socket_io_client.dart' as io;
 
 part 'notification_store.g.dart';
 
@@ -16,6 +21,12 @@ abstract class _NotificationStore with Store {
   // store for handling error messages
   final MessageStore _messageStore = getIt<MessageStore>();
 
+  // websocket
+  io.Socket socket = io.io(
+    Endpoints.baseUrl,
+    io.OptionBuilder().disableAutoConnect().build(),
+  );
+
   // constructor:---------------------------------------------------------------
   _NotificationStore(Repository repository) : _repository = repository {
     // setting up disposers
@@ -23,6 +34,35 @@ abstract class _NotificationStore with Store {
 
     // fetch all notifications when start app
     // fetchAllNotifications();
+  }
+
+  // connect to server by websocket
+  void connectSocket() {
+    // socket setup
+    socket.connect();
+
+    socket.onConnect((data) async {
+      log('onConnect: ');
+      print(data);
+
+      await _repository.authToken.then((accessToken) {
+        if (accessToken != null && accessToken.isNotEmpty) {
+          socket.emit('auth:connect', accessToken);
+        } else {
+          _messageStore.setErrorMessageByCode(401);
+
+          socket.dispose();
+
+          success = false;
+        }
+      });
+    });
+
+    // listen event
+    socket.on('notification', (data) {
+      log("data from notification event");
+      print(data);
+    });
   }
 
   // disposers:-----------------------------------------------------------------
@@ -246,5 +286,7 @@ abstract class _NotificationStore with Store {
     for (final d in _disposers) {
       d();
     }
+
+    // disconnect to websocket
   }
 }

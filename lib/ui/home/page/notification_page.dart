@@ -47,38 +47,32 @@ class NotificationPage extends StatelessWidget {
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 Container(
-                  margin: const EdgeInsets.symmetric(
-                    vertical: Dimens.extra_large_vertical_margin,
+                  margin: const EdgeInsets.only(
+                    top: Dimens.extra_large_vertical_margin,
                   ),
                   child: _buildFilterNotificationButtons(context),
                 ),
-                Container(
-                  margin: const EdgeInsets.symmetric(
-                    vertical: Dimens.vertical_margin,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        AppLocalizations.of(context).translate("lastest"),
-                        style: Theme.of(context).textTheme.bodyMedium,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context).translate("lastest"),
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        _notificationStore.readAllUnreadedNotification();
+                      },
+                      child: Text(
+                        AppLocalizations.of(context).translate("read_all"),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall!
+                            .copyWith(color: Theme.of(context).highlightColor),
                       ),
-                      TextButton(
-                        onPressed: () {
-                          _notificationStore.readAllUnreadedNotification();
-                        },
-                        child: Text(
-                          AppLocalizations.of(context).translate("read_all"),
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall!
-                              .copyWith(
-                                  color: Theme.of(context).highlightColor),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 Expanded(
                   child: _buildNotificationView(context),

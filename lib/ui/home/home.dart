@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:mobile/di/components/service_locator.dart';
+import 'package:mobile/stores/notification/notification_store.dart';
 
 import 'page/home_page.dart';
 import 'page/message_page.dart';
@@ -54,6 +56,20 @@ class _HomeScreenState extends State<HomeScreen> {
   void onBottomChanged(int index) {
     pageController.animateToPage(index,
         duration: durationEffect, curve: curveEffect);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    getIt<NotificationStore>().connectSocket();
+  }
+
+  @override
+  void dispose() {
+    getIt<NotificationStore>().dispose();
+
+    super.dispose();
   }
 
   @override
