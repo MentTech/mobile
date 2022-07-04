@@ -263,7 +263,8 @@ class NotificationPage extends StatelessWidget {
             ),
             _buildSelectableButton(
               context,
-              text: AppLocalizations.of(context).translate("waiting_translate"),
+              text: AppLocalizations.of(context)
+                  .translate("unread_notification_translate"),
               isSelected: _notificationStore.notificationFilter ==
                   NotificationFilter.unread,
               ontap: () {

@@ -84,7 +84,8 @@ class ResponseCode {
     403: "wrong_current_password_translate",
     404: "gift_code_not_found_translate",
     407: "proxy_authentication_required",
-    500: "Internal Server Error",
+    422: "already_registered_program",
+    500: "internal_eerver_error",
   };
 
   final Map<Code, String> successCode = <Code, String>{

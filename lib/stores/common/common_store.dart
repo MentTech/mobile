@@ -30,6 +30,9 @@ abstract class _CommonStore with Store {
   void _setupDisposers() {
     _disposers = [
       reaction((_) => success, (_) => success = false, delay: 200),
+      reaction((_) => successInRegisterProgram,
+          (_) => successInRegisterProgram = false,
+          delay: 200),
       reaction((_) => requestFuture.status, (FutureStatus status) {
         if (status == FutureStatus.fulfilled) {
           if (callback != null) {
@@ -58,6 +61,9 @@ abstract class _CommonStore with Store {
   // observable variables:------------------------------------------------------
   @observable
   bool success = false;
+
+  @observable
+  bool successInRegisterProgram = false;
 
   @observable
   ObservableFuture<Map<String, dynamic>?> requestFuture = emptyResponse;
@@ -89,6 +95,12 @@ abstract class _CommonStore with Store {
 
   @computed
   Session? get sessionObserver => session;
+
+  @computed
+  String get getSuccessMessageKey => messageStore.successMessagekey;
+
+  @computed
+  String get getFailedMessageKey => messageStore.errorMessagekey;
 
   // actions:-------------------------------------------------------------------
   @action
@@ -157,7 +169,7 @@ abstract class _CommonStore with Store {
   }
 
   @action
-  Future<bool?> registerProgramOfMentor({
+  Future<void> registerProgramOfMentor({
     required int mentorID,
     required int programID,
     required Map<String, String> body,
@@ -166,11 +178,10 @@ abstract class _CommonStore with Store {
 
     if (null == accessToken) {
       messageStore.setErrorMessageByCode(401);
-      messageStore.notifyExpiredTokenStatus();
 
       success = false;
 
-      return null;
+      return;
     }
 
     final future = _repository.registerProgram(
@@ -183,20 +194,23 @@ abstract class _CommonStore with Store {
 
     future.then((res) {
       try {
-        rateModels = ObservableList.of(RateModelList.fromJson(res!).rateModels);
+        if (res!["statusCode"] == null) {
+          // program parser
 
-        success = true;
+          successInRegisterProgram = true;
+        } else {
+          int code = res["statusCode"] as int;
+
+          messageStore.setErrorMessageByCode(code);
+
+          successInRegisterProgram = false;
+        }
       } catch (e) {
-        // res['message']
-        // messageStore.errorMessage = e.toString();
-        // messageStore.successMessage =
-        //     "[fetchProgramRate] error to get Program Rate List";
+        messageStore.setErrorMessageByCode(500);
 
-        success = false;
+        successInRegisterProgram = false;
       }
     });
-
-    return true;
   }
 
   @action

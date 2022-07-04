@@ -12,6 +12,9 @@ class Dimens {
   /// small horizontal padding value: 6.0
   static const double small_horizontal_padding = 6.0;
 
+  /// semi horizontal padding value: 9.0
+  static const double semi_horizontal_padding = 9.0;
+
   /// normal horizontal padding value: 12.0
   static const double horizontal_padding = 12.0;
 
@@ -37,6 +40,9 @@ class Dimens {
   static const double large_vertical_padding = 18.0;
 
   // margin
+  /// more small horizontal margin value: 3.0
+  static const double more_horizontal_margin = 3.0;
+
   /// small horizontal margin value: 6.0
   static const double horizontal_margin = 6.0;
 

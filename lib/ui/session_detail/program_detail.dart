@@ -4,12 +4,10 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
-import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/common/program/program.dart';
-import 'package:mobile/models/mentor/mentor.dart';
 import 'package:mobile/models/rate/rate.dart';
 import 'package:mobile/stores/common/common_store.dart';
-import 'package:mobile/stores/theme/theme_store.dart';
+import 'package:mobile/stores/mentor/mentor_store.dart';
 import 'package:mobile/ui/mentor_detail/mentor_profile.dart';
 import 'package:mobile/utils/application/application_utils.dart';
 import 'package:mobile/utils/device/device_utils.dart';
@@ -21,17 +19,14 @@ import 'package:mobile/widgets/star_widget/start_rate_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:mobile/utils/extension/datetime_extension.dart';
-import 'package:shimmer/shimmer.dart';
 
 class ProgramDetailContainer extends StatefulWidget {
   const ProgramDetailContainer({
     Key? key,
     required this.programDetail,
-    required this.mentorModel,
   }) : super(key: key);
 
   final Program programDetail;
-  final MentorModel? mentorModel;
 
   @override
   State<ProgramDetailContainer> createState() => _ProgramDetailContainerState();
@@ -39,9 +34,9 @@ class ProgramDetailContainer extends StatefulWidget {
 
 class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
   // store:---------------------------------------------------------------------
-  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   late final CommonStore _commonStore;
+  late final MentorStore _mentorStore;
 
   // controller:----------------------------------------------------------------
   final RefreshController _refreshController =
@@ -50,6 +45,9 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
   @override
   void initState() {
     super.initState();
+
+    _mentorStore = Provider.of<MentorStore>(context, listen: false);
+    _mentorStore.fetchAMentor(widget.programDetail.mentorId);
 
     _commonStore = Provider.of<CommonStore>(context, listen: false);
   }
@@ -69,16 +67,18 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(
+                height: kBottomNavigationBarHeight,
+              ),
               _buildHeaderContent(),
               _buildCoinContent(),
               widget.programDetail.createAt != null
                   ? Text(
                       "${AppLocalizations.of(context).translate('create_at_translate')} ${widget.programDetail.createAt!.toFulltimeString()}",
-                      style: const TextStyle(
-                        fontSize: Dimens.small_text,
-                        color: Colors.white70,
-                        height: 1.5,
-                      ),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall!
+                          .copyWith(height: 1.5),
                     )
                   : const SizedBox(),
               //     // ReadMoreText(
@@ -114,43 +114,33 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
                 ),
               ),
 
-              Stack(
-                alignment: Alignment.bottomCenter,
+// contact infor inplement here
+
+              Container(
+                margin: const EdgeInsets.symmetric(
+                    vertical: Dimens.vertical_margin),
+                child: Divider(
+                  color: Theme.of(context).highlightColor,
+                  thickness: 1.5,
+                ),
+              ),
+
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Divider(
-                    color: Colors.white70,
-                    thickness: 2.5,
-                    indent: Dimens.large_horizontal_margin,
-                    endIndent: Dimens.large_horizontal_margin,
-                  ),
                   Row(
-                    mainAxisSize: MainAxisSize.max,
+                    mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)
-                                .translate("discusstion"),
-                            style: const TextStyle(
-                              fontSize: Dimens.lightly_medium_text,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white70,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Divider(
-                            color: _themeStore.themeColor,
-                            thickness: 1,
-                            indent: Dimens.large_horizontal_margin,
-                            endIndent: Dimens.large_horizontal_margin,
-                          ),
-                        ],
+                      Text(
+                        AppLocalizations.of(context).translate("discusstion"),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .copyWith(fontWeight: FontWeight.w500),
                       ),
                       StarRateWidget(
                         rating:
@@ -159,8 +149,34 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
                       ),
                     ],
                   ),
+                  const SizedBox(
+                    height: Dimens.vertical_margin,
+                  ),
+                  Stack(
+                    children: [
+                      SizedBox(
+                        width: DeviceUtils.getScaledWidth(context, 0.5),
+                        child: Divider(
+                          color: Theme.of(context).highlightColor,
+                          thickness: 3,
+                          indent: Dimens.large_horizontal_margin,
+                          endIndent: Dimens.large_horizontal_margin,
+                        ),
+                      ),
+                      SizedBox(
+                        width: DeviceUtils.getScaledWidth(context, 1.0),
+                        child: Divider(
+                          color: Theme.of(context).indicatorColor,
+                          thickness: 1,
+                          indent: Dimens.large_horizontal_margin,
+                          endIndent: Dimens.large_horizontal_margin,
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
+
               SizedBox(
                 height: DeviceUtils.getScaledHeight(context, 0.5),
                 child: Observer(
@@ -172,13 +188,13 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
                       header: ApplicationUtils.fetchHeaderStatus(context),
                       footer: ApplicationUtils.fetchFooterStatus(),
                       onRefresh: () async {
-                        if (widget.mentorModel != null &&
+                        if (_mentorStore.hasMentor &&
                             _commonStore.prevProgramRatePage()) {
                           _commonStore.callback =
                               () => _refreshController.refreshCompleted();
 
                           await _commonStore
-                              .fetchProgramRateList(widget.mentorModel!.id,
+                              .fetchProgramRateList(_mentorStore.getMentor!.id,
                                   widget.programDetail.id)
                               .then(
                             (_) {
@@ -195,10 +211,10 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
                         }
                       },
                       onLoading: () async {
-                        if (widget.mentorModel != null &&
+                        if (_mentorStore.hasMentor &&
                             _commonStore.nextProgramRatePage()) {
                           await _commonStore
-                              .fetchProgramRateList(widget.mentorModel!.id,
+                              .fetchProgramRateList(_mentorStore.getMentor!.id,
                                   widget.programDetail.id)
                               .then((_) {
                             FlushbarHelper.createSuccess(
@@ -250,20 +266,20 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
           GlassmorphismContainer(
             padding: const EdgeInsets.symmetric(
               vertical: Dimens.more_small_vertical_padding,
-              horizontal: Dimens.more_small_horizontal_padding,
+              horizontal: Dimens.semi_horizontal_padding,
             ),
             child: SymbolsItem(
-              symbol: const Icon(
-                Icons.monetization_on_outlined,
-                size: Dimens.large_text,
-                color: Colors.white70,
+              spacing: Dimens.more_horizontal_margin,
+              symbol: IconTheme(
+                data: Theme.of(context).iconTheme,
+                child: const Icon(
+                  Icons.monetization_on_outlined,
+                  size: Dimens.large_text,
+                ),
               ),
               child: Text(
                 widget.programDetail.credit.toString(),
-                style: const TextStyle(
-                  fontSize: Dimens.small_text,
-                  color: Colors.white70,
-                ),
+                style: Theme.of(context).textTheme.bodySmall!,
               ),
             ),
             blur: Properties.blur_glass_morphism,
@@ -272,15 +288,15 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
           const SizedBox(
             width: Dimens.vertical_margin,
           ),
-          widget.mentorModel != null
-              ? Text(
-                  widget.mentorModel?.userMentor.category.name ?? "",
-                  style: const TextStyle(
-                    fontSize: Dimens.lightly_medium_text,
-                    color: Colors.white70,
-                  ),
-                )
-              : _ShimmerSection(
+          Observer(
+            builder: (_) {
+              if (_mentorStore.hasMentor) {
+                return Text(
+                  _mentorStore.getMentor!.userMentor.category.name,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                );
+              } else {
+                return ApplicationUtils.shimmerSection(
                   context,
                   child: Container(
                     height: Dimens.medium_text,
@@ -292,7 +308,10 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
                       borderRadius: Dimens.kMaxBorderRadius,
                     ),
                   ),
-                ),
+                );
+              }
+            },
+          ),
         ],
       ),
     );
@@ -305,33 +324,25 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
       children: [
         Expanded(
           flex: 3,
-          child: Text(
-            widget.programDetail.title +
-                "\n${AppLocalizations.of(context).translate('with_translate')} " +
-                (widget.mentorModel?.name ?? ""),
-            style: const TextStyle(
-              fontSize: Dimens.large_text,
-              color: Colors.white,
-              height: 1.5,
-            ),
-          ),
+          child: Observer(builder: (_) {
+            return Text(
+              widget.programDetail.title +
+                  "\n${AppLocalizations.of(context).translate('with_translate')} " +
+                  (_mentorStore.getMentor?.name ??
+                      AppLocalizations.of(context)
+                          .translate("unknown_translate")),
+              style:
+                  Theme.of(context).textTheme.bodyLarge!.copyWith(height: 1.5),
+            );
+          }),
         ),
         Expanded(
           flex: 1,
-          child: NetworkImageWidget(url: widget.mentorModel?.avatar),
+          child: Observer(builder: (_) {
+            return NetworkImageWidget(url: _mentorStore.getMentor?.avatar);
+          }),
         ),
       ],
-    );
-  }
-
-  // ignore: non_constant_identifier_names
-  Widget _ShimmerSection(BuildContext context, {required Widget child}) {
-    return Shimmer.fromColors(
-      child: child,
-      baseColor: _themeStore.light.withOpacity(0.5),
-      highlightColor: Theme.of(context).primaryColor,
-      direction: ShimmerDirection.ltr,
-      period: const Duration(milliseconds: 3000),
     );
   }
 }

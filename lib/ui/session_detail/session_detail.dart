@@ -5,7 +5,6 @@ import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/common/session/session.dart';
 import 'package:mobile/stores/common/common_store.dart';
-import 'package:mobile/stores/mentor/mentor_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/ui/session_detail/program_detail.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
@@ -35,7 +34,6 @@ class SesstionDetail extends StatefulWidget {
 class _SesstionDetailState extends State<SesstionDetail> {
   // stored:--------------------------------------------------------------------
   final ThemeStore _themeStore = getIt<ThemeStore>();
-  late final MentorStore _mentorStore;
   late final CommonStore _commonStore;
 
   // text controller:-----------------------------------------------------------
@@ -47,10 +45,6 @@ class _SesstionDetailState extends State<SesstionDetail> {
   @override
   void initState() {
     super.initState();
-
-    _mentorStore = Provider.of<MentorStore>(context, listen: false);
-
-    _mentorStore.fetchAMentor(widget.session.program.mentorId);
 
     _commonStore = Provider.of<CommonStore>(context, listen: false);
     _commonStore.setSessionObserver(widget.session);
@@ -73,13 +67,8 @@ class _SesstionDetailState extends State<SesstionDetail> {
                 Expanded(
                   child: Observer(
                     builder: (context) {
-                      if (!_mentorStore.hasMentor) {
-                        _mentorStore
-                            .fetchAMentor(widget.session.program.mentorId);
-                      }
                       return ProgramDetailContainer(
                         programDetail: widget.session.program,
-                        mentorModel: _mentorStore.getMentor,
                       );
                     },
                   ),

@@ -24,7 +24,10 @@ abstract class _NotificationStore with Store {
   // websocket
   io.Socket socket = io.io(
     Endpoints.baseUrl,
-    io.OptionBuilder().disableAutoConnect().build(),
+    io.OptionBuilder()
+        .setTransports(['websocket']) // for Flutter or Dart VM
+        .disableAutoConnect()
+        .build(),
   );
 
   // constructor:---------------------------------------------------------------
@@ -41,11 +44,14 @@ abstract class _NotificationStore with Store {
     // socket setup
     socket.connect();
 
+    log("[message] [socket io] set up");
+
     socket.onConnect((data) async {
-      log('onConnect: ');
+      log('[socket io] onConnect: ');
       print(data);
 
       await _repository.authToken.then((accessToken) {
+        log("message [socket io]: accesstoken: >$accessToken<");
         if (accessToken != null && accessToken.isNotEmpty) {
           socket.emit('auth:connect', accessToken);
         } else {
@@ -60,7 +66,7 @@ abstract class _NotificationStore with Store {
 
     // listen event
     socket.on('notification', (data) {
-      log("data from notification event");
+      log("[socket io] data from notification event");
       print(data);
     });
   }

@@ -11,12 +11,12 @@ import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/ui/program_register/program_confirm.dart';
 import 'package:mobile/ui/program_register/program_register_detail.dart';
 import 'package:mobile/ui/program_register/program_register_form.dart';
+import 'package:mobile/utils/application/application_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
 import 'package:mobile/widgets/progress_indicator_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:mobile/utils/extension/string_extension.dart';
 
 class ProgramRegisterScreen extends StatelessWidget {
   ProgramRegisterScreen({Key? key}) : super(key: key);
@@ -52,7 +52,8 @@ class ProgramRegisterScreen extends StatelessWidget {
                     titleWidget: Text(
                       AppLocalizations.of(context)
                           .translate("fill_register_fields_note_translate")
-                          .format([mentorStore.program?.title ?? ""]),
+                      // .format([mentorStore.program?.title ?? ""])
+                      ,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
@@ -131,10 +132,10 @@ class ProgramRegisterScreen extends StatelessWidget {
                   child: Text(
                     AppLocalizations.of(context)
                         .translate("cancel_button_translate"),
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .copyWith(color: Colors.red.shade500),
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: Colors.red.shade500,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.1),
                   ),
                 ),
               ),
@@ -160,17 +161,25 @@ class ProgramRegisterScreen extends StatelessWidget {
               );
             },
           ),
-          // Observer(
-          //   // validator
-          //   builder: (_) {
-          //     return commonStore.isRegisteringDone
-          //         ? _showSuccessMessage(
-          //             context,
-          //             AppLocalizations.of(context)
-          //                 .translate("register_session_status_success"))
-          //         : const SizedBox.shrink();
-          //   },
-          // ),
+          Observer(
+            // validator
+            builder: (_) {
+              return commonStore.successInRegisterProgram
+                  ? ApplicationUtils.showSuccessMessage(
+                      context,
+                      "program_register_notification_title_translate",
+                      "register_session_status_success",
+                      callback: () {
+                        Routes.popRoute(context);
+                      },
+                    )
+                  : ApplicationUtils.showErrorMessage(
+                      context,
+                      "program_register_notification_title_translate",
+                      commonStore.getFailedMessageKey,
+                    );
+            },
+          ),
         ],
       ),
     );

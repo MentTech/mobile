@@ -43,6 +43,20 @@ mixin _$CommonStore on _CommonStore, Store {
           Computed<Session?>(() => super.sessionObserver,
               name: '_CommonStore.sessionObserver'))
       .value;
+  Computed<String>? _$getSuccessMessageKeyComputed;
+
+  @override
+  String get getSuccessMessageKey => (_$getSuccessMessageKeyComputed ??=
+          Computed<String>(() => super.getSuccessMessageKey,
+              name: '_CommonStore.getSuccessMessageKey'))
+      .value;
+  Computed<String>? _$getFailedMessageKeyComputed;
+
+  @override
+  String get getFailedMessageKey => (_$getFailedMessageKeyComputed ??=
+          Computed<String>(() => super.getFailedMessageKey,
+              name: '_CommonStore.getFailedMessageKey'))
+      .value;
 
   late final _$successAtom =
       Atom(name: '_CommonStore.success', context: context);
@@ -57,6 +71,23 @@ mixin _$CommonStore on _CommonStore, Store {
   set success(bool value) {
     _$successAtom.reportWrite(value, super.success, () {
       super.success = value;
+    });
+  }
+
+  late final _$successInRegisterProgramAtom =
+      Atom(name: '_CommonStore.successInRegisterProgram', context: context);
+
+  @override
+  bool get successInRegisterProgram {
+    _$successInRegisterProgramAtom.reportRead();
+    return super.successInRegisterProgram;
+  }
+
+  @override
+  set successInRegisterProgram(bool value) {
+    _$successInRegisterProgramAtom
+        .reportWrite(value, super.successInRegisterProgram, () {
+      super.successInRegisterProgram = value;
     });
   }
 
@@ -139,7 +170,7 @@ mixin _$CommonStore on _CommonStore, Store {
       AsyncAction('_CommonStore.registerProgramOfMentor', context: context);
 
   @override
-  Future<bool?> registerProgramOfMentor(
+  Future<void> registerProgramOfMentor(
       {required int mentorID,
       required int programID,
       required Map<String, String> body}) {
@@ -215,6 +246,7 @@ mixin _$CommonStore on _CommonStore, Store {
   String toString() {
     return '''
 success: ${success},
+successInRegisterProgram: ${successInRegisterProgram},
 requestFuture: ${requestFuture},
 requestRegisterSessionFuture: ${requestRegisterSessionFuture},
 rateModels: ${rateModels},
@@ -223,7 +255,9 @@ isLoading: ${isLoading},
 isRegistering: ${isRegistering},
 isRegisteringDone: ${isRegisteringDone},
 programLengthList: ${programLengthList},
-sessionObserver: ${sessionObserver}
+sessionObserver: ${sessionObserver},
+getSuccessMessageKey: ${getSuccessMessageKey},
+getFailedMessageKey: ${getFailedMessageKey}
     ''';
   }
 }
