@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:mobile/data/network/apis/auth/auth_api.dart';
+import 'package:mobile/data/network/apis/chat/chat_api.dart';
 import 'package:mobile/data/network/apis/common/common_api.dart';
 import 'package:mobile/data/network/apis/mentee/mentee_api.dart';
 import 'package:mobile/data/network/apis/mentor/mentor_api.dart';
@@ -21,6 +22,7 @@ class Repository {
   final CommonAPI _commonAPI;
   final TransactionAPI _transactionAPI;
   final NotifitcationAPI _notifitcationAPI;
+  final ChatAPI _chatAPI;
 
   // shared pref object
   final SharedPreferenceHelper _sharedPrefsHelper;
@@ -33,6 +35,7 @@ class Repository {
     this._commonAPI,
     this._transactionAPI,
     this._notifitcationAPI,
+    this._chatAPI,
     this._sharedPrefsHelper,
     // this._postDataSource,
   );
@@ -226,6 +229,77 @@ class Repository {
     return _notifitcationAPI
         .markNotificationAsRead(
             authToken: authToken, notificationId: notificationId)
+        .catchError((error) {
+      return {
+        "statusCode": 500,
+        "message": error.toString(),
+      };
+    });
+  }
+
+  // Chat Api: -----------------------------------------------------------------
+  Future<Map<String, dynamic>?> getChatRoomInformation({
+    required String authToken,
+    required int sessionId,
+  }) async {
+    return _chatAPI
+        .getChatRoomInformation(authToken: authToken, sessionId: sessionId)
+        .catchError((error) {
+      return {
+        "statusCode": 500,
+        "message": error.toString(),
+      };
+    });
+  }
+
+  Future<Map<String, dynamic>?> getAllRooms({
+    required String authToken,
+  }) async {
+    return _chatAPI.getAllRooms(authToken: authToken).catchError((error) {
+      return {
+        "statusCode": 500,
+        "message": error.toString(),
+      };
+    });
+  }
+
+  Future<Map<String, dynamic>?> getRoomInformation({
+    required String authToken,
+    required int roomId,
+  }) async {
+    return _chatAPI
+        .getRoomInformation(authToken: authToken, roomId: roomId)
+        .catchError((error) {
+      return {
+        "statusCode": 500,
+        "message": error.toString(),
+      };
+    });
+  }
+
+  Future<Map<String, dynamic>?> sendMessage({
+    required String authToken,
+    required int roomId,
+    required String message,
+  }) async {
+    return _chatAPI
+        .sendMessage(authToken: authToken, roomId: roomId, message: message)
+        .catchError((error) {
+      return {
+        "statusCode": 500,
+        "message": error.toString(),
+      };
+    });
+  }
+
+  Future<Map<String, dynamic>?> getAllMessages({
+    required String authToken,
+    required int roomId,
+    required Map<String, int> parameters,
+  }) async {
+    return _chatAPI
+        .getAllMessages(
+            authToken: authToken, roomId: roomId, parameters: parameters)
         .catchError((error) {
       return {
         "statusCode": 500,

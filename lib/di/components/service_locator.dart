@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobile/data/network/apis/auth/auth_api.dart';
+import 'package:mobile/data/network/apis/chat/chat_api.dart';
 import 'package:mobile/data/network/apis/common/common_api.dart';
 import 'package:mobile/data/network/apis/mentee/mentee_api.dart';
 import 'package:mobile/data/network/apis/mentor/mentor_api.dart';
@@ -75,6 +76,12 @@ Future<void> setupLocator() async {
     ),
   );
 
+  getIt.registerSingleton(
+    ChatAPI(
+      getIt<DioClient>(),
+    ),
+  );
+
   // data sources
   // getIt.registerSingleton(PostDataSource(await getIt.getAsync<Database>()));
 
@@ -86,6 +93,7 @@ Future<void> setupLocator() async {
     getIt<CommonAPI>(),
     getIt<TransactionAPI>(),
     getIt<NotifitcationAPI>(),
+    getIt<ChatAPI>(),
     getIt<SharedPreferenceHelper>(),
     // getIt<PostDataSource>(),
   ));

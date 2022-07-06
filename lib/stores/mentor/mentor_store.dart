@@ -136,6 +136,11 @@ abstract class _MentorStore with Store {
 
       return true;
     }
+
+    if (listMentors.isEmpty) {
+      return true;
+    }
+
     return false;
   }
 

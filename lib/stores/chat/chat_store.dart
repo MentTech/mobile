@@ -4,18 +4,16 @@ import 'package:flutter/widgets.dart';
 import 'package:mobile/data/network/constants/endpoints.dart';
 import 'package:mobile/data/repository.dart';
 import 'package:mobile/di/components/service_locator.dart';
-import 'package:mobile/models/notification/notification.dart';
 import 'package:mobile/stores/message/message_store.dart';
-import 'package:mobile/stores/notification/type_showing_notification.dart';
 import 'package:mobx/mobx.dart';
 
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
-part 'notification_store.g.dart';
+part 'chat_store.g.dart';
 
-class NotificationStore = _NotificationStore with _$NotificationStore;
+class ChatStore = _ChatStore with _$ChatStore;
 
-abstract class _NotificationStore with Store {
+abstract class _ChatStore with Store {
   // repository instance
   final Repository _repository;
 
@@ -29,7 +27,7 @@ abstract class _NotificationStore with Store {
   );
 
   // constructor:---------------------------------------------------------------
-  _NotificationStore(Repository repository) : _repository = repository {
+  _ChatStore(Repository repository) : _repository = repository {
     // setting up disposers
     _setupDisposers();
 
@@ -84,37 +82,17 @@ abstract class _NotificationStore with Store {
       ObservableFuture.value(null);
 
   // non-observable variables:--------------------------------------------------
-  List<int> unreadedMessageIds = [];
-
-  List<NotificationModel> unreadedNotifications = <NotificationModel>[];
 
   // observable variables:------------------------------------------------------
   @observable
   bool success = false;
 
   @observable
-  // ignore: prefer_final_fields
-  NotificationFilter _notificationFilter = NotificationFilter.all;
-
-  @observable
   ObservableFuture<Map<String, dynamic>?> requestFuture = emptyResponse;
-
-  @observable
-  ObservableList<NotificationModel> notifications =
-      ObservableList<NotificationModel>();
 
   // computed:------------------------------------------------------------------
   @computed
   bool get isLoading => requestFuture.status == FutureStatus.pending;
-
-  @computed
-  NotificationFilter get notificationFilter => _notificationFilter;
-
-  @computed
-  int get notificationLengthList => notifications.length;
-
-  @computed
-  bool get hasNotification => notifications.isNotEmpty;
 
   @computed
   String get getSuccessMessageKey => _messageStore.successMessagekey;
@@ -123,14 +101,178 @@ abstract class _NotificationStore with Store {
   String get getFailedMessageKey => _messageStore.errorMessagekey;
 
   // actions:-------------------------------------------------------------------
+
   @action
-  void changeNotificationMethodFilter(NotificationFilter notificationFilter) {
-    _notificationFilter = notificationFilter;
+  Future<void> getChatRoomInformation(
+    int sessionId,
+  ) async {
+    String? accessToken = await _repository.authToken;
+
+    if (null == accessToken) {
+      _messageStore.setErrorMessageByCode(401);
+
+      success = false;
+
+      return;
+    }
+
+    final future = _repository.getChatRoomInformation(
+      authToken: accessToken,
+      sessionId: sessionId,
+    );
+
+    requestFuture = ObservableFuture(future);
+
+    future.then((res) {
+      try {
+        if (res!["statusCode"] == null) {
+          // [TODO] implement here
+
+          success = true;
+        } else {
+          int code = res["statusCode"] as int;
+
+          _messageStore.setErrorMessageByCode(code);
+
+          success = false;
+        }
+      } catch (e) {
+        _messageStore.setErrorMessageByCode(500);
+
+        success = false;
+      }
+    });
   }
 
   @action
-  Future<void> fetchAllNotifications([
-    Map<String, dynamic> params = const {
+  Future<void> getAllRooms() async {
+    String? accessToken = await _repository.authToken;
+
+    if (null == accessToken) {
+      _messageStore.setErrorMessageByCode(401);
+
+      success = false;
+
+      return;
+    }
+
+    final future = _repository.getAllRooms(
+      authToken: accessToken,
+    );
+
+    requestFuture = ObservableFuture(future);
+
+    future.then((res) {
+      try {
+        if (res!["statusCode"] == null) {
+          // [TODO] implement here
+
+          success = true;
+        } else {
+          int code = res["statusCode"] as int;
+
+          _messageStore.setErrorMessageByCode(code);
+
+          success = false;
+        }
+      } catch (e) {
+        _messageStore.setErrorMessageByCode(500);
+
+        success = false;
+      }
+    });
+  }
+
+  @action
+  Future<void> getRoomInformation({
+    required int roomId,
+  }) async {
+    String? accessToken = await _repository.authToken;
+
+    if (null == accessToken) {
+      _messageStore.setErrorMessageByCode(401);
+
+      success = false;
+
+      return;
+    }
+
+    final future = _repository.getRoomInformation(
+      authToken: accessToken,
+      roomId: roomId,
+    );
+
+    requestFuture = ObservableFuture(future);
+
+    future.then((res) {
+      try {
+        if (res!["statusCode"] == null) {
+          // [TODO] implement here
+
+          success = true;
+        } else {
+          int code = res["statusCode"] as int;
+
+          _messageStore.setErrorMessageByCode(code);
+
+          success = false;
+        }
+      } catch (e) {
+        _messageStore.setErrorMessageByCode(500);
+
+        success = false;
+      }
+    });
+  }
+
+  @action
+  Future<void> sendMessage({
+    required int roomId,
+    required String message,
+  }) async {
+    String? accessToken = await _repository.authToken;
+
+    if (null == accessToken) {
+      _messageStore.setErrorMessageByCode(401);
+
+      success = false;
+
+      return;
+    }
+
+    final future = _repository.sendMessage(
+      authToken: accessToken,
+      roomId: roomId,
+      message: message,
+    );
+
+    requestFuture = ObservableFuture(future);
+
+    future.then((res) {
+      try {
+        if (res!["statusCode"] == null) {
+          // [TODO] implement here
+
+          success = true;
+        } else {
+          int code = res["statusCode"] as int;
+
+          _messageStore.setErrorMessageByCode(code);
+
+          success = false;
+        }
+      } catch (e) {
+        _messageStore.setErrorMessageByCode(500);
+
+        success = false;
+      }
+    });
+  }
+
+  @action
+  Future<void> fetchAllMessages(
+    int roomId, [
+    Map<String, int> params = const {
       "limit": 20,
       "skip": 0,
     },
@@ -145,9 +287,10 @@ abstract class _NotificationStore with Store {
       return;
     }
 
-    final future = _repository.fetchAllNotifications(
+    final future = _repository.getAllMessages(
       authToken: accessToken,
-      params: params,
+      roomId: roomId,
+      parameters: params,
     );
 
     requestFuture = ObservableFuture(future);
@@ -155,108 +298,7 @@ abstract class _NotificationStore with Store {
     future.then((res) {
       try {
         if (res!["statusCode"] == null) {
-          notifications =
-              ObservableList.of(NotificationList.fromJson(res).notifications);
-
-          unreadedMessageIds.clear();
-          unreadedNotifications.clear();
-          for (NotificationModel noti in notifications) {
-            if (!noti.isRead) {
-              unreadedMessageIds.add(noti.id);
-              unreadedNotifications.add(noti);
-            }
-          }
-
-          success = true;
-        } else {
-          int code = res["statusCode"] as int;
-
-          _messageStore.setErrorMessageByCode(code);
-
-          success = false;
-        }
-      } catch (e) {
-        _messageStore.setErrorMessageByCode(500);
-
-        success = false;
-      }
-    });
-  }
-
-  @action
-  Future<void> readAllUnreadedNotification() async {
-    String? accessToken = await _repository.authToken;
-
-    if (null == accessToken) {
-      _messageStore.setErrorMessageByCode(401);
-
-      success = false;
-
-      return;
-    }
-
-    final future = _repository.markMultiNotificationsAsRead(
-      authToken: accessToken,
-      markReadedIds: unreadedMessageIds,
-    );
-
-    // requestFuture = ObservableFuture(future);
-
-    future.then((res) {
-      try {
-        if (res!["statusCode"] == null) {
-          for (var noti in notifications) {
-            noti = noti.toReadedModel();
-          }
-
-          unreadedMessageIds = [];
-
-          success = true;
-        } else {
-          int code = res["statusCode"] as int;
-
-          _messageStore.setErrorMessageByCode(code);
-
-          success = false;
-        }
-      } catch (e) {
-        _messageStore.setErrorMessageByCode(500);
-
-        success = false;
-      }
-    });
-  }
-
-  @action
-  Future<void> markNotificationAsRead(int notificationId) async {
-    String? accessToken = await _repository.authToken;
-
-    if (null == accessToken) {
-      _messageStore.setErrorMessageByCode(401);
-
-      success = false;
-
-      return;
-    }
-
-    final future = _repository.markNotificationAsRead(
-      authToken: accessToken,
-      notificationId: notificationId,
-    );
-
-    // requestFuture = ObservableFuture(future);
-
-    future.then((res) {
-      try {
-        if (res!["statusCode"] == null) {
-          for (var noti in notifications) {
-            if (noti.id == notificationId) {
-              noti = noti.toReadedModel();
-              break;
-            }
-          }
-
-          unreadedMessageIds.remove(notificationId);
+          // [TODO] implement here
 
           success = true;
         } else {
@@ -275,17 +317,6 @@ abstract class _NotificationStore with Store {
   }
 
   // general methods:-----------------------------------------------------------
-  List<NotificationModel> getFilteredNotificationList() {
-    if (_notificationFilter == NotificationFilter.all) {
-      return notifications;
-    } else {
-      // NotificationFilter.unread
-      return unreadedNotifications;
-    }
-  }
-
-  NotificationModel getNotificationContentAt(int index) =>
-      notifications.elementAt(index);
 
   void dispose() {
     for (final d in _disposers) {

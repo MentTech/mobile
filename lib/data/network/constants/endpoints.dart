@@ -165,4 +165,32 @@ class Endpoints {
       baseUrl + "/notification/:notificationId";
 
   //:---------------------------------------------------------------------------
+
+  ///
+  /// Chat Apis
+  ///
+
+  ///
+  /// Chat proxy
+  ///
+  static const String _chatProxy = "/chat";
+
+  /// Get chat room information
+  static const String getChatRoomInformation =
+      _chatProxy + "/session/:sessionId";
+
+  /// Get all rooms
+  static const String getAllRooms = _chatProxy + "/room";
+
+  /// Get room information
+  static const String getRoomInformation = _chatProxy + "/room/:roomId";
+
+  /// Send message to that room
+  static const String sendMessageToRoom = _chatProxy + "/room/:roomId";
+
+  /// Get all message of that room
+  static const String getAllMessageOfRoom =
+      _chatProxy + "/room/:roomId/message";
+
+  //:---------------------------------------------------------------------------
 }
