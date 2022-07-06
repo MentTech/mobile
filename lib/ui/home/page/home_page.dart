@@ -47,6 +47,7 @@ class _HomePageState extends State<HomePage> {
 
     _userStore = Provider.of<UserStore>(context, listen: false);
     _userStore.fetchFavouriteMentors(callback: () {
+      log("[message] fetch fav mentor");
       _mentorStore.fetchFavouriteMentors(_userStore.favouriteMentorIdList);
       _mentorStore.fetchRecommendMentors();
     });

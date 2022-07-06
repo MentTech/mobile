@@ -35,12 +35,17 @@ class ErrorContentWidget extends StatelessWidget {
                 height: DeviceUtils.getScaledHeight(context, 0.3)),
             Text(
               titleError,
+              textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     color: Colors.red,
                   ),
             ),
+            const SizedBox(
+              height: Dimens.extra_large_vertical_margin,
+            ),
             Text(
               contentError,
+              textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     color: Colors.red,
                   ),

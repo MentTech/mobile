@@ -3,7 +3,6 @@ import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/models/common/program/program.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/glassmorphism_widget_button.dart';
-import 'package:mobile/widgets/star_widget/start_rate_widget.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SessionTicketItem extends StatelessWidget {
@@ -64,10 +63,10 @@ class SessionTicketItem extends StatelessWidget {
                   .copyWith(fontWeight: FontWeight.w500),
             ),
           ),
-          subtitle: StarRateWidget(
-            rateColor: Theme.of(context).selectedRowColor,
-            rating: 3.5, //program.rate,
-          ),
+          // subtitle: StarRateWidget(
+          //   rateColor: Theme.of(context).selectedRowColor,
+          //   rating: 3.5, //program.rate,
+          // ),
           // ReadMoreText(
           //   program.detail,
           //   style: TextStyle(

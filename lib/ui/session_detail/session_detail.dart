@@ -68,7 +68,7 @@ class _SesstionDetailState extends State<SesstionDetail> {
                   child: Observer(
                     builder: (context) {
                       return ProgramDetailContainer(
-                        programDetail: widget.session.program,
+                        sessionDetail: widget.session,
                       );
                     },
                   ),

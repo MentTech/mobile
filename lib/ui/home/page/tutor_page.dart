@@ -20,7 +20,6 @@ import 'package:mobile/widgets/popup_template/hero_popup_routes.dart';
 import 'package:mobile/widgets/textfield/textfield_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:readmore/readmore.dart';
 
 class TutorPage extends StatefulWidget {
   const TutorPage({Key? key}) : super(key: key);
@@ -582,12 +581,20 @@ class ShortImformationItem extends StatelessWidget {
             Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
-              child: ReadMoreText(
-                mentorModel.userMentor.introduction ?? "",
+              child: Text(
+                returnJobString(
+                  mentorModel.userMentor.experiences[0].title,
+                  AppLocalizations.of(context).translate("at"),
+                  mentorModel.userMentor.experiences[0].company,
+                ),
                 style: Theme.of(context).textTheme.bodySmall,
-                trimLines: 3,
-                trimLength: 50,
               ),
+              // ReadMoreText(
+              //   mentorModel.userMentor.introduction ?? "",
+              //   style: Theme.of(context).textTheme.bodySmall,
+              //   trimLines: 3,
+              //   trimLength: 50,
+              // ),
             ),
             // mentorModel.userMentor.linkedin != null
             //     ? Align(
@@ -611,6 +618,22 @@ class ShortImformationItem extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String returnJobString(String? job, String linkingWord, String? company) {
+    String result = "";
+
+    if (job != null && company != null) {
+      if (job.isNotEmpty) {
+        result += job;
+      }
+
+      if (company.isNotEmpty) {
+        result += " $linkingWord $company";
+      }
+    }
+
+    return result;
   }
 }
 

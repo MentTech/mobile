@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/dimens.dart';
@@ -60,9 +58,6 @@ class _SesstionDetailState extends State<SesstionDetailScreen> {
       _commonStore.setSessionObserver(session);
     }
 
-    log('message: whyyyyyyyyyyyyyyyyy');
-    log(session?.toJson().toString() ?? "");
-
     return session;
   }
 
@@ -72,49 +67,48 @@ class _SesstionDetailState extends State<SesstionDetailScreen> {
       appbarName:
           AppLocalizations.of(context).translate("session_detail_translate"),
       child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: FutureBuilder<Session?>(
-                future: loadData(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return _buildShimmerLoadingPage();
-                  } else {
-                    if (snapshot.hasError) {
-                      return ErrorContentWidget(
-                        titleError: AppLocalizations.of(context).translate(
-                            "session_detail_notification_title_translate"),
-                        contentError: snapshot.error.toString(),
-                      );
-                    } else {
-                      if (snapshot.hasData) {
-                        return ProgramDetailContainer(
-                          programDetail: snapshot.data!.program,
-                        );
-                      } else {
-                        return ErrorContentWidget(
-                          titleError: AppLocalizations.of(context).translate(
-                              "session_detail_notification_title_translate"),
-                          contentError: AppLocalizations.of(context).translate(
-                            _userStore.getFailedMessageKey,
-                          ),
-                        );
-                      }
-                    }
-                  }
-                },
-              ),
-            ),
-            const SizedBox(
-              height: Dimens.medium_vertical_margin,
-            ),
-            _buildActionMethod(),
-            const SizedBox(
-              height: Dimens.extra_large_vertical_margin,
-            ),
-          ],
+        child: FutureBuilder<Session?>(
+          future: loadData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return _buildShimmerLoadingPage();
+            } else {
+              if (snapshot.hasError) {
+                return ErrorContentWidget(
+                  titleError: AppLocalizations.of(context)
+                      .translate("session_detail_notification_title_translate"),
+                  contentError: snapshot.error.toString(),
+                );
+              } else {
+                if (snapshot.hasData) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                          child: ProgramDetailContainer(
+                        sessionDetail: snapshot.data!,
+                      )),
+                      const SizedBox(
+                        height: Dimens.medium_vertical_margin,
+                      ),
+                      _buildActionMethod(),
+                      const SizedBox(
+                        height: Dimens.extra_large_vertical_margin,
+                      ),
+                    ],
+                  );
+                } else {
+                  return ErrorContentWidget(
+                    titleError: AppLocalizations.of(context).translate(
+                        "session_detail_notification_title_translate"),
+                    contentError: AppLocalizations.of(context).translate(
+                      _userStore.getFailedMessageKey,
+                    ),
+                  );
+                }
+              }
+            }
+          },
         ),
       ),
       messageNotification: Observer(

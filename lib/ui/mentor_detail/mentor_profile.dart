@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:like_button/like_button.dart';
 import 'package:mobile/constants/assets.dart';
@@ -30,7 +31,6 @@ import 'package:mobile/widgets/item/session_ticket_item.dart';
 import 'package:mobile/widgets/shimmer_loading_effect/profile_shimmer_loading_effect.dart';
 import 'package:mobile/widgets/star_widget/start_rate_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:readmore/readmore.dart';
 
 class MentorProfile extends StatefulWidget {
   const MentorProfile({
@@ -148,12 +148,31 @@ class _MentorProfileState extends State<MentorProfile> {
         "${AppLocalizations.of(context).translate("introduction_translate")}: ",
         style: Theme.of(context).textTheme.bodyMedium,
       ),
-      contentWidget: ReadMoreText(
-        userMentor.introduction ?? "",
-        style: Theme.of(context).textTheme.bodySmall,
-        trimLines: 5,
-        trimLength: 300,
+      contentWidget: Html(
+        data: userMentor.introduction ?? "",
+        shrinkWrap: true,
+        style: {
+          "li": Style(
+            color: Theme.of(context).indicatorColor,
+            fontSize: const FontSize(Dimens.small_text),
+          ),
+          "p": Style(
+            color: Theme.of(context).indicatorColor,
+            fontSize: const FontSize(Dimens.small_text),
+          ),
+          "span": Style(
+            color: Theme.of(context).indicatorColor,
+            fontSize: const FontSize(Dimens.small_text),
+          ),
+        },
       ),
+
+      //  ReadMoreText(
+      //   userMentor.introduction ?? "",
+      //   style: Theme.of(context).textTheme.bodySmall,
+      //   trimLines: 5,
+      //   trimLength: 300,
+      // ),
       spaceBetween: Dimens.medium_vertical_margin,
       padding: const EdgeInsets.symmetric(
         horizontal: Dimens.horizontal_padding,
