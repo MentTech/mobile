@@ -12,7 +12,9 @@ RateModel _$RateModelFromJson(Map<String, dynamic> json) => RateModel(
       rating: (json['rating'] as num).toDouble(),
       comment: json['comment'] as String,
       createAt: DateTime.parse(json['createAt'] as String),
-      user: SubFastAccessUser.fromJson(json['user'] as Map<String, dynamic>),
+      user: json['user'] == null
+          ? null
+          : SubFastAccessUser.fromJson(json['user'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$RateModelToJson(RateModel instance) => <String, dynamic>{

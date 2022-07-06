@@ -3,6 +3,7 @@ import 'package:mobile/constants/properties.dart';
 import 'package:mobile/effects/navigate/screen_transition.dart';
 import 'package:mobile/ui/advanced_settings/advanced_settings.dart';
 import 'package:mobile/ui/authorization/authorization_screen.dart';
+import 'package:mobile/ui/chat_screen/chat_screen.dart';
 import 'package:mobile/ui/giftcode/giftcode.dart';
 import 'package:mobile/ui/home/home.dart';
 import 'package:mobile/ui/more_token/deposit_token.dart';
@@ -28,6 +29,7 @@ class Routes {
   static const String changePasswordSettings = '/change_password_settings';
   static const String depositToken = '/deposit_token';
   static const String applyGiftcode = '/apply_giftcode';
+  static const String chat = '/chat';
   // static const String mentorProfile = '/mentor_profile';
   static const String testScreen = '/test_screen';
 
@@ -45,6 +47,7 @@ class Routes {
     depositToken: (BuildContext context) => const DepositToken(),
     applyGiftcode: (BuildContext context) => const GiftCodeScreen(),
     // mentorProfile: (BuildContext context) => const MentorProfile(),
+    chat: (BuildContext context) => const ChatScreen(),
     testScreen: (BuildContext context) => const TestScreen(),
   };
 

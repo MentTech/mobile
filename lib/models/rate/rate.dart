@@ -9,7 +9,7 @@ class RateModel {
   final double rating;
   final String comment;
   final DateTime createAt;
-  final SubFastAccessUser user;
+  final SubFastAccessUser? user;
 
   RateModel({
     required this.id,

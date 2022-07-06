@@ -135,7 +135,6 @@ abstract class _CommonStore with Store {
 
     if (null == accessToken) {
       messageStore.setErrorMessageByCode(401);
-      messageStore.notifyExpiredTokenStatus();
 
       success = false;
 

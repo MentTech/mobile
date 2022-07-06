@@ -267,7 +267,7 @@ class MentorAPI {
     required String comment,
   }) async {
     try {
-      final res = await _dioClient.delete(
+      final res = await _dioClient.post(
         Endpoints.reviewSessionProgram
             .replaceAll(":mentorId", "$mentorID")
             .replaceAll(":programId", "$programID")

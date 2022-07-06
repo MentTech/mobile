@@ -23,39 +23,37 @@ class CommentItem extends StatelessWidget {
         vertical: Dimens.vertical_padding,
       ),
       child: ListTile(
-        leading: NetworkImageWidget(
-          url: rateModel.user.avatar,
+        leading: ClipOval(
+          child: NetworkImageWidget(
+            url: rateModel.user?.avatar,
+          ),
         ),
         title: Text(
-          rateModel.user.name,
+          rateModel.user?.name ??
+              AppLocalizations.of(context).translate("unknown_translate"),
           style: Theme.of(context).textTheme.bodySmall,
         ),
         subtitle: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            RateReview(
+              onReviewChange: null,
+              canReact: false,
+              rate: rateModel.rating.round(),
+              chooseColor: Theme.of(context).selectedRowColor,
+              sizeStar: Dimens.lightly_medium_text,
+              mainAxisAlignment: MainAxisAlignment.start,
+            ),
             Container(
               margin: const EdgeInsets.symmetric(
                   vertical: Dimens.small_vertical_margin),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  RateReview(
-                    onReviewChange: null,
-                    canReact: false,
-                    rate: rateModel.rating.round(),
-                    chooseColor: Theme.of(context).selectedRowColor,
-                    sizeStar: Dimens.lightly_medium_text,
-                  ),
-                  Text(
-                    timeago.format(
-                      rateModel.createAt,
-                      locale: AppLocalizations.of(context).locale.languageCode,
-                    ),
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ],
+              child: Text(
+                timeago.format(
+                  rateModel.createAt,
+                  locale: AppLocalizations.of(context).locale.languageCode,
+                ),
+                style: Theme.of(context).textTheme.bodySmall,
               ),
             ),
             ReadMoreText(

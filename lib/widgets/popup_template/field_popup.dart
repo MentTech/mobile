@@ -65,7 +65,7 @@ class _FieldPopupTemplateState extends State<FieldPopupTemplate> {
               ),
             ),
             const Divider(
-              thickness: 1.1,
+              thickness: 1.3,
               color: Colors.white,
             ),
             widget.middleChild ?? const SizedBox(),
@@ -82,14 +82,25 @@ class _FieldPopupTemplateState extends State<FieldPopupTemplate> {
                       buttonText: widget.agreeText,
                       buttonColor: Colors.transparent,
                       textColor: widget.textAgreeColor,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: Dimens.small_vertical_padding,
+                        horizontal: Dimens.horizontal_padding,
+                      ),
                       onPressed: () {
                         Navigator.of(context, rootNavigator: true).pop(true);
                       },
+                    ),
+                    const SizedBox(
+                      width: Dimens.medium_vertical_margin,
                     ),
                     RoundedButtonWidget(
                       buttonText: widget.disagreeText,
                       buttonColor: Colors.transparent,
                       textColor: widget.textDisagreeColor,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: Dimens.small_vertical_padding,
+                        horizontal: Dimens.horizontal_padding,
+                      ),
                       onPressed: () {
                         Navigator.of(context, rootNavigator: true).pop(false);
                       },
@@ -105,23 +116,22 @@ class _FieldPopupTemplateState extends State<FieldPopupTemplate> {
   }
 
   Widget _buildField(TextFieldContent textFieldContent) {
-    return Container(
-      alignment: Alignment.center,
-      child: TextFieldWidget(
-        hint: textFieldContent.hint,
-        inputType: textFieldContent.textInputType,
-        iconData: textFieldContent.iconData,
-        isObscure: textFieldContent.isObscure,
-        textController: textFieldContent.textEditingController,
-        inputAction: TextInputAction.done,
-        autoFocus: false,
-        onChanged: textFieldContent.valueChangedCallback,
-        errorText: textFieldContent.errorText,
-        numberLines: textFieldContent.numberLines,
-        textStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: Dimens.small_text,
-        ),
+    return TextFieldWidget(
+      hint: textFieldContent.hint,
+      inputType: textFieldContent.textInputType,
+      iconData: textFieldContent.iconData,
+      isObscure: textFieldContent.isObscure,
+      textController: textFieldContent.textEditingController,
+      inputAction: TextInputAction.done,
+      autoFocus: false,
+      onChanged: textFieldContent.valueChangedCallback,
+      errorText: textFieldContent.errorText,
+      numberLines: textFieldContent.numberLines,
+      isIcon: false,
+      cursorColor: Colors.white,
+      textStyle: const TextStyle(
+        color: Colors.white,
+        fontSize: Dimens.small_text,
       ),
     );
   }

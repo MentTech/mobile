@@ -20,13 +20,15 @@ class TextFieldWidget extends StatelessWidget {
   final TextStyle? textStyle;
   final int numberLines;
   final bool hasBorder;
+  final Color? cursorColor;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: margin,
       child: TextFormField(
-        cursorColor: Theme.of(context).textSelectionTheme.cursorColor,
+        cursorColor:
+            cursorColor ?? Theme.of(context).textSelectionTheme.cursorColor,
         controller: textController,
         focusNode: focusNode,
         onFieldSubmitted: onFieldSubmitted,
@@ -86,12 +88,12 @@ class TextFieldWidget extends StatelessWidget {
                       .copyWith(color: Theme.of(context).hintColor),
               errorText: errorText,
               counterText: '',
-              icon: IconTheme(
-                data: Theme.of(context).iconTheme,
-                child: SizedBox(
-                  child: icon ?? (isIcon ? Icon(iconData) : null),
-                ),
-              ),
+              icon: isIcon
+                  ? IconTheme(
+                      data: Theme.of(context).iconTheme,
+                      child: SizedBox(child: icon ?? Icon(iconData)),
+                    )
+                  : null,
             ),
       ),
     );
@@ -117,5 +119,6 @@ class TextFieldWidget extends StatelessWidget {
     this.textStyle,
     this.numberLines = 1,
     this.hasBorder = false,
+    this.cursorColor,
   }) : super(key: key);
 }

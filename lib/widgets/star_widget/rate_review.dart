@@ -10,6 +10,7 @@ class RateReview extends StatefulWidget {
     this.canReact = true,
     this.chooseColor,
     this.sizeStar,
+    this.mainAxisAlignment = MainAxisAlignment.spaceAround,
   }) : super(key: key);
 
   final EdgeInsets padding;
@@ -18,6 +19,7 @@ class RateReview extends StatefulWidget {
   final ValueChanged<int>? onReviewChange;
   final Color? chooseColor;
   final double? sizeStar;
+  final MainAxisAlignment mainAxisAlignment;
 
   @override
   State<RateReview> createState() => _RateReviewState();
@@ -37,6 +39,12 @@ class _RateReviewState extends State<RateReview> {
     super.initState();
 
     rate = widget.rate;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
     choosenColor = widget.chooseColor ?? Theme.of(context).selectedRowColor;
   }
 
@@ -47,7 +55,7 @@ class _RateReviewState extends State<RateReview> {
       child: Row(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: widget.mainAxisAlignment,
         children: List.generate(
           5,
           (index) => _buildStarButton(

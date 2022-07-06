@@ -19,7 +19,9 @@ Session _$SessionFromJson(Map<String, dynamic> json) => Session(
       additional: json['additional'] == null
           ? null
           : Additional.fromJson(json['additional'] as Map<String, dynamic>),
-      rating: (json['rating'] as num?)?.toDouble() ?? 0,
+      rating: json['rating'] == null
+          ? null
+          : RateModel.fromJson(json['rating'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$SessionToJson(Session instance) => <String, dynamic>{

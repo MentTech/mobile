@@ -155,9 +155,9 @@ class _SesstionDetailState extends State<SesstionDetailScreen> {
                                   _buildReviewPopup(),
                                   400,
                                   300,
-                                  blur: Properties.lightly_blur_glass_morphism,
+                                  blur: Properties.medium_blur_glass_morphism,
                                   opacity:
-                                      Properties.lightly_opacity_glass_morphism,
+                                      Properties.medium_opacity_glass_morphism,
                                 ).then(
                                   (bool? isSend) {
                                     if (isSend ?? false) {
@@ -191,10 +191,10 @@ class _SesstionDetailState extends State<SesstionDetailScreen> {
                                       _buildMarkDonePopup(),
                                       150,
                                       300,
-                                      blur: Properties
-                                          .lightly_blur_glass_morphism,
+                                      blur:
+                                          Properties.medium_blur_glass_morphism,
                                       opacity: Properties
-                                          .lightly_opacity_glass_morphism,
+                                          .medium_opacity_glass_morphism,
                                     ).then(
                                       (bool? isSend) {
                                         if (isSend ?? false) {
@@ -223,10 +223,10 @@ class _SesstionDetailState extends State<SesstionDetailScreen> {
                                       _buildUnregisterPopup(),
                                       150,
                                       300,
-                                      blur: Properties
-                                          .lightly_blur_glass_morphism,
+                                      blur:
+                                          Properties.medium_blur_glass_morphism,
                                       opacity: Properties
-                                          .lightly_opacity_glass_morphism,
+                                          .medium_opacity_glass_morphism,
                                     ).then(
                                       (bool? isSend) {
                                         if (isSend ?? false) {

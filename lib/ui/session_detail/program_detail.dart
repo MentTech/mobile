@@ -13,6 +13,7 @@ import 'package:mobile/ui/mentor_detail/mentor_profile.dart';
 import 'package:mobile/utils/application/application_utils.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
+import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/container/image_container/network_image_widget.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/glassmorphism_text_button.dart';
@@ -167,7 +168,7 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
                   .copyWith(fontWeight: FontWeight.w500),
             ),
             StarRateWidget(
-              rating: programDetail.averageRating?.average ?? 0.0,
+              rating: widget.sessionDetail.rating?.rating ?? 0.0,
               count: programDetail.averageRating?.count ?? 0,
             ),
           ],
@@ -449,7 +450,7 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
                       blur: Properties.blur_glass_morphism,
                       opacity: Properties.opacity_glass_morphism,
                       onTap: () {
-                        //
+                        Routes.navigatorSupporter(context, Routes.chat);
                       },
                     ),
                   ),
