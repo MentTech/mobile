@@ -10,6 +10,7 @@ import 'package:mobile/models/user/user.dart';
 import 'package:mobile/stores/enum/session_status_enum.dart';
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
+import 'package:mobile/utils/extension/datetime_extension.dart';
 
 part 'user_store.g.dart';
 
@@ -91,6 +92,9 @@ abstract class _UserStore with Store {
   ObservableList<Session> sessions = ObservableList();
 
   @observable
+  ObservableList<Session> nextSessions = ObservableList<Session>();
+
+  @observable
   TransactionContent? _transactionContent;
 
   List<int> favouriteMentorIdList = [];
@@ -126,6 +130,9 @@ abstract class _UserStore with Store {
   int get sizeSessionList => sessions.length;
 
   @computed
+  int get sizeNextSessionList => nextSessions.length;
+
+  @computed
   int get sizeTransactionList => _transactionContent?.transactions.length ?? 0;
 
   @computed
@@ -139,6 +146,13 @@ abstract class _UserStore with Store {
   Session? getSessionAt(int index) {
     if (index < sessions.length) {
       return sessions.elementAt(index);
+    }
+    return null;
+  }
+
+  Session? getNextSessionAt(int index) {
+    if (index < nextSessions.length) {
+      return nextSessions.elementAt(index);
     }
     return null;
   }
@@ -269,6 +283,50 @@ abstract class _UserStore with Store {
     });
 
     return Future.value(false);
+  }
+
+  @action
+  Future<void> fetchNextSessions() async {
+    String? accessToken = await _repository.authToken;
+
+    if (null == accessToken) {
+      messageStore.setErrorMessageByCode(401);
+
+      success = false;
+
+      return;
+    }
+
+    final future = _repository.fetchSessionsOfUser(
+      authToken: accessToken,
+      parameters: {
+        "expectedStartDate": DateTime.now().toDateString(),
+      },
+    );
+
+    requestSessionFuture = ObservableFuture(future);
+
+    future.then((res) {
+      try {
+        if (res!["statusCode"] == null) {
+          // [TODO] implement here
+          nextSessions = ObservableList.of(
+              Sessions.fromJson(res).sessions.reversed.toList());
+
+          success = true;
+        } else {
+          int code = res["statusCode"] as int;
+
+          messageStore.setErrorMessageByCode(code);
+
+          success = false;
+        }
+      } catch (e) {
+        messageStore.setErrorMessageByCode(500);
+
+        success = false;
+      }
+    });
   }
 
   @action

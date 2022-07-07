@@ -20,12 +20,12 @@ class MenteeAPI {
 
   Future<Map<String, dynamic>?> fetchSessionsOfUser({
     required String authToken,
-    // required Map<String, dynamic> parameters,
+    required Map<String, dynamic> parameters,
   }) async {
     try {
       final res = await _dioClient.get(
         Endpoints.sessionRegisterProgram,
-        // queryParameters: parameters,
+        queryParameters: parameters,
         options: Options(
           followRedirects: false,
           validateStatus: (status) => true,

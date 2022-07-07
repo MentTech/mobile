@@ -306,6 +306,7 @@ class _SesstionDetailState extends State<SesstionDetailScreen> {
     );
   }
 
+  // [TODO] buid shimmer
   Widget _buildShimmerLoadingPage() {
     return const SizedBox.shrink();
   }

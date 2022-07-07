@@ -57,12 +57,12 @@ class Repository {
 
   Future<Map<String, dynamic>?> fetchSessionsOfUser({
     required String authToken,
-    // required Map<String, dynamic> parameters,
+    Map<String, dynamic>? parameters,
   }) async {
     return await _menteeAPI
         .fetchSessionsOfUser(
       authToken: authToken,
-      // parameters: parameters,
+      parameters: parameters ?? {},
     )
         .then((resVal) {
       return resVal;

@@ -16,6 +16,10 @@ extension DateTimeExtension on DateTime {
   }
 
   String toBirthdayString() {
+    return DateFormat("yyyy-MM-dd").format(this);
+  }
+
+  String toDateString() {
     return DateFormat("dd/MM/yyyy").format(this);
   }
 
