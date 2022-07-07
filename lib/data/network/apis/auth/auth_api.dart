@@ -125,7 +125,7 @@ class AuthAPI {
         if (res["message"] == "Unauthorized") {
           res["statusCode"] = 401;
         } else {
-          res["statusCode"] = 403;
+          res["statusCode"] = 405;
         }
         return res;
       }

@@ -165,14 +165,13 @@ class ChatAPI {
         ),
       );
 
-      // if (res is List) {
-      //   return {
-      //     "data": res,
-      //   };
-      // } else {
-      //   return res;
-      // }
-      return res;
+      if (res is List) {
+        return {
+          "data": res,
+        };
+      } else {
+        return res;
+      }
     } catch (e) {
       log(e.toString());
       rethrow;

@@ -12,8 +12,8 @@ RoomInformation _$RoomInformationFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       sessionId: json['sessionId'] as int,
       isActive: json['isActive'] as bool,
-      createAt: json['createAt'] as String,
-      updatedAt: json['updatedAt'] as String,
+      createAt: DateTime.parse(json['createAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
       participants: (json['participants'] as List<dynamic>)
           .map((e) => Participants.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -25,8 +25,8 @@ Map<String, dynamic> _$RoomInformationToJson(RoomInformation instance) =>
       'name': instance.name,
       'sessionId': instance.sessionId,
       'isActive': instance.isActive,
-      'createAt': instance.createAt,
-      'updatedAt': instance.updatedAt,
+      'createAt': instance.createAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
       'participants': instance.participants,
     };
 

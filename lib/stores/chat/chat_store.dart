@@ -1,9 +1,13 @@
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mobile/data/network/constants/endpoints.dart';
 import 'package:mobile/data/repository.dart';
 import 'package:mobile/di/components/service_locator.dart';
+import 'package:mobile/models/chat/chat_room_information.dart';
+import 'package:mobile/models/chat/message_chat.dart';
+import 'package:mobile/models/chat/room_information.dart';
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
 
@@ -82,6 +86,8 @@ abstract class _ChatStore with Store {
       ObservableFuture.value(null);
 
   // non-observable variables:--------------------------------------------------
+  ChatRoomInformation? chatRoomInformation;
+  RoomInformation? roomInformation;
 
   // observable variables:------------------------------------------------------
   @observable
@@ -89,6 +95,9 @@ abstract class _ChatStore with Store {
 
   @observable
   ObservableFuture<Map<String, dynamic>?> requestFuture = emptyResponse;
+
+  @observable
+  ObservableList<ChatMessage> chatMessages = ObservableList<ChatMessage>();
 
   // computed:------------------------------------------------------------------
   @computed
@@ -103,7 +112,7 @@ abstract class _ChatStore with Store {
   // actions:-------------------------------------------------------------------
 
   @action
-  Future<void> getChatRoomInformation(
+  Future<bool> getChatRoomInformation(
     int sessionId,
   ) async {
     String? accessToken = await _repository.authToken;
@@ -113,7 +122,7 @@ abstract class _ChatStore with Store {
 
       success = false;
 
-      return;
+      return Future.value(false);
     }
 
     final future = _repository.getChatRoomInformation(
@@ -123,10 +132,13 @@ abstract class _ChatStore with Store {
 
     requestFuture = ObservableFuture(future);
 
-    future.then((res) {
+    return await future.then((res) async {
       try {
         if (res!["statusCode"] == null) {
           // [TODO] implement here
+          chatRoomInformation = ChatRoomInformation.fromJson(res);
+
+          await getRoomInformation(roomId: chatRoomInformation!.id);
 
           success = true;
         } else {
@@ -141,6 +153,7 @@ abstract class _ChatStore with Store {
 
         success = false;
       }
+      return Future.value(success);
     });
   }
 
@@ -184,7 +197,7 @@ abstract class _ChatStore with Store {
   }
 
   @action
-  Future<void> getRoomInformation({
+  Future<bool> getRoomInformation({
     required int roomId,
   }) async {
     String? accessToken = await _repository.authToken;
@@ -194,7 +207,7 @@ abstract class _ChatStore with Store {
 
       success = false;
 
-      return;
+      return Future.value(false);
     }
 
     final future = _repository.getRoomInformation(
@@ -204,10 +217,11 @@ abstract class _ChatStore with Store {
 
     requestFuture = ObservableFuture(future);
 
-    future.then((res) {
+    return await future.then((res) {
       try {
         if (res!["statusCode"] == null) {
           // [TODO] implement here
+          roomInformation = RoomInformation.fromJson(res);
 
           success = true;
         } else {
@@ -222,6 +236,7 @@ abstract class _ChatStore with Store {
 
         success = false;
       }
+      return Future.value(success);
     });
   }
 
@@ -299,6 +314,8 @@ abstract class _ChatStore with Store {
       try {
         if (res!["statusCode"] == null) {
           // [TODO] implement here
+          chatMessages =
+              ObservableList.of(ChatMessageList.fromJson(res).chatMessages);
 
           success = true;
         } else {

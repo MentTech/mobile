@@ -81,8 +81,9 @@ class ResponseCode {
   final Map<int, String> responseCode = <int, String>{
     401: "unauthorized_key_translate",
     402: "unauthorized_wrong_credential_key_translate",
-    403: "wrong_current_password_translate",
+    403: "session_already_done",
     404: "gift_code_not_found_translate",
+    405: "wrong_current_password_translate",
     407: "proxy_authentication_required",
     422: "already_registered_program",
     500: "internal_eerver_error",

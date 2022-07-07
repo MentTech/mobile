@@ -61,11 +61,27 @@ mixin _$ChatStore on _ChatStore, Store {
     });
   }
 
+  late final _$chatMessagesAtom =
+      Atom(name: '_ChatStore.chatMessages', context: context);
+
+  @override
+  ObservableList<ChatMessage> get chatMessages {
+    _$chatMessagesAtom.reportRead();
+    return super.chatMessages;
+  }
+
+  @override
+  set chatMessages(ObservableList<ChatMessage> value) {
+    _$chatMessagesAtom.reportWrite(value, super.chatMessages, () {
+      super.chatMessages = value;
+    });
+  }
+
   late final _$getChatRoomInformationAsyncAction =
       AsyncAction('_ChatStore.getChatRoomInformation', context: context);
 
   @override
-  Future<void> getChatRoomInformation(int sessionId) {
+  Future<bool> getChatRoomInformation(int sessionId) {
     return _$getChatRoomInformationAsyncAction
         .run(() => super.getChatRoomInformation(sessionId));
   }
@@ -82,7 +98,7 @@ mixin _$ChatStore on _ChatStore, Store {
       AsyncAction('_ChatStore.getRoomInformation', context: context);
 
   @override
-  Future<void> getRoomInformation({required int roomId}) {
+  Future<bool> getRoomInformation({required int roomId}) {
     return _$getRoomInformationAsyncAction
         .run(() => super.getRoomInformation(roomId: roomId));
   }
@@ -111,6 +127,7 @@ mixin _$ChatStore on _ChatStore, Store {
     return '''
 success: ${success},
 requestFuture: ${requestFuture},
+chatMessages: ${chatMessages},
 isLoading: ${isLoading},
 getSuccessMessageKey: ${getSuccessMessageKey},
 getFailedMessageKey: ${getFailedMessageKey}

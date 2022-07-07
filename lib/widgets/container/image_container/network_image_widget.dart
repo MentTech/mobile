@@ -39,12 +39,12 @@ class NetworkImageWidget extends StatelessWidget {
                 child: CircularProgressIndicator(),
               ),
               errorWidget: (BuildContext context, String url, dynamic error) {
-                if (error.statusCode == 403) {
-                  // Code to handle 403 error corrections on the database.
-                  // Not implemented when experiencing this issue.
-                } else if (error.statusCode == 404) {
-                  // log("File Not Found");
-                }
+                // if (error.statusCode == 403) {
+                //   // Code to handle 403 error corrections on the database.
+                //   // Not implemented when experiencing this issue.
+                // } else if (error.statusCode == 404) {
+                //   // log("File Not Found");
+                // }
                 return alternativeUrl != null
                     ? Image.network(alternativeUrl!)
                     : const Icon(Icons.person_outline_rounded);

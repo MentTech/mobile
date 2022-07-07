@@ -4,9 +4,11 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
+import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/common/program/program.dart';
 import 'package:mobile/models/common/session/session.dart';
 import 'package:mobile/models/rate/rate.dart';
+import 'package:mobile/stores/chat/chat_store.dart';
 import 'package:mobile/stores/common/common_store.dart';
 import 'package:mobile/stores/mentor/mentor_store.dart';
 import 'package:mobile/ui/mentor_detail/mentor_profile.dart';
@@ -450,7 +452,20 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
                       blur: Properties.blur_glass_morphism,
                       opacity: Properties.opacity_glass_morphism,
                       onTap: () {
-                        Routes.navigatorSupporter(context, Routes.chat);
+                        final ChatStore chatStore = getIt<ChatStore>();
+                        chatStore
+                            .getChatRoomInformation(widget.sessionDetail.id)
+                            .then((bool response) {
+                          if (response) {
+                            Routes.navigatorSupporter(context, Routes.chat);
+                          } else {
+                            ApplicationUtils.showErrorMessage(
+                              context,
+                              "chatroom_title_translate",
+                              chatStore.getFailedMessageKey,
+                            );
+                          }
+                        });
                       },
                     ),
                   ),

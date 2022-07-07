@@ -12,8 +12,8 @@ ChatRoomInformation _$ChatRoomInformationFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       sessionId: json['sessionId'] as int,
       isActive: json['isActive'] as bool,
-      createAt: json['createAt'] as String,
-      updatedAt: json['updatedAt'] as String,
+      createAt: DateTime.parse(json['createAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
 
 Map<String, dynamic> _$ChatRoomInformationToJson(
@@ -23,6 +23,6 @@ Map<String, dynamic> _$ChatRoomInformationToJson(
       'name': instance.name,
       'sessionId': instance.sessionId,
       'isActive': instance.isActive,
-      'createAt': instance.createAt,
-      'updatedAt': instance.updatedAt,
+      'createAt': instance.createAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
     };

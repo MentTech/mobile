@@ -9,8 +9,8 @@ class RoomInformation extends Equatable {
   final String name;
   final int sessionId;
   final bool isActive;
-  final String createAt;
-  final String updatedAt;
+  final DateTime createAt;
+  final DateTime updatedAt;
   final List<Participants> participants;
 
   const RoomInformation({

@@ -13,6 +13,7 @@ import 'package:mobile/data/repository.dart';
 import 'package:mobile/data/sharedpref/shared_preference_helper.dart';
 import 'package:mobile/di/module/local_module.dart';
 import 'package:mobile/di/module/network_module.dart';
+import 'package:mobile/stores/chat/chat_store.dart';
 import 'package:mobile/stores/language/language_store.dart';
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobile/stores/notification/notification_store.dart';
@@ -102,6 +103,7 @@ Future<void> setupLocator() async {
   getIt.registerSingleton(LanguageStore(getIt<Repository>()));
   getIt.registerSingleton(ThemeStore(getIt<Repository>()));
   getIt.registerSingleton(NotificationStore(getIt<Repository>()));
+  getIt.registerSingleton(ChatStore(getIt<Repository>()));
   // getIt.registerSingleton(CommonStore(getIt<Repository>()));
 
   // getIt.registerSingleton(MessageStore());
