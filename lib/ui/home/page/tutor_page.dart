@@ -33,7 +33,7 @@ class _TutorPageState extends State<TutorPage> {
   final TextEditingController _searchController = TextEditingController();
 
   final RefreshController _refreshController =
-      RefreshController(initialRefresh: true);
+      RefreshController(initialRefresh: false);
 
   // store:---------------------------------------------------------------------
   final ThemeStore _themeStore = getIt<ThemeStore>();

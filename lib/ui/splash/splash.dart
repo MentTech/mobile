@@ -5,6 +5,7 @@ import 'package:mobile/constants/properties.dart';
 import 'package:mobile/constants/strings.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/authen/authen_store.dart';
+import 'package:mobile/stores/mentor/mentor_store.dart';
 import 'package:mobile/stores/notification/notification_store.dart';
 import 'package:mobile/stores/search_store.dart/search_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
@@ -69,6 +70,15 @@ class _SplashScreenState extends State<SplashScreen> {
               .initializeDatabase()
               .then(
             (_) {
+              final MentorStore mentorStore =
+                  Provider.of<MentorStore>(context, listen: false);
+              if (mentorStore.prevPage()) {
+                mentorStore.searchMentors({
+                  "orderBy": "name",
+                  "order": "asc",
+                });
+              }
+
               Routes.authenticatedRoute(context);
             },
           );
