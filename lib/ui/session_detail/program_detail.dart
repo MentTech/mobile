@@ -48,7 +48,7 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
 
   // controller:----------------------------------------------------------------
   final RefreshController _refreshController =
-      RefreshController(initialRefresh: true);
+      RefreshController(initialRefresh: false);
 
   @override
   void initState() {
@@ -60,6 +60,8 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
     _mentorStore.fetchAMentor(programDetail.mentorId);
 
     _commonStore = Provider.of<CommonStore>(context, listen: false);
+    _commonStore.initRateCommentFetching(
+        programDetail.mentorId, programDetail.id);
   }
 
   @override
@@ -221,19 +223,18 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
                 _commonStore.callback =
                     () => _refreshController.refreshCompleted();
 
-                await _commonStore
-                    .fetchProgramRateList(
-                        _mentorStore.getMentor!.id, programDetail.id)
-                    .then(
-                  (_) {
-                    FlushbarHelper.createSuccess(
-                      message: AppLocalizations.of(context)
-                          .translate("home_tv_success"),
-                      title: AppLocalizations.of(context)
-                          .translate('load_success'),
-                    ).show(context);
-                  },
-                );
+                await _commonStore.fetchProgramRateList(
+                    _mentorStore.getMentor!.id, programDetail.id);
+                //     .then(
+                //   (_) {
+                //     FlushbarHelper.createSuccess(
+                //       message: AppLocalizations.of(context)
+                //           .translate("home_tv_success"),
+                //       title: AppLocalizations.of(context)
+                //           .translate('load_success'),
+                //     ).show(context);
+                //   },
+                // );
               } else {
                 _refreshController.refreshCompleted();
               }

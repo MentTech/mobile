@@ -162,6 +162,8 @@
   "order_end": "------------------------------------------------------------------------------------",
   "chatroom_title_translate": "Notice from chatroom",
   "chatroom_end": "---------------------------------------------------------------------------------",
+  "next_sessions_title_translate": "Next sessions in future",
+  "next_sessions_end": "----------------------------------------------------------------------------",
   "notification_title_translate": "Notification center",
   "no_notification": "There are no notifications",
   "unread_notification_translate": "Unreaded",

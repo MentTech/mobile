@@ -176,6 +176,10 @@ class ProgramConfirmContainer extends StatelessWidget {
               color: Theme.of(context).indicatorColor,
               fontSize: const FontSize(Dimens.small_text),
             ),
+            "span": Style(
+              color: Theme.of(context).indicatorColor,
+              fontSize: const FontSize(Dimens.small_text),
+            ),
           },
         ),
       ],

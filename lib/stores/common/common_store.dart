@@ -168,6 +168,12 @@ abstract class _CommonStore with Store {
   }
 
   @action
+  void initRateCommentFetching(int mentorID, int programID) {
+    programRatePage = 1;
+    fetchProgramRateList(mentorID, programID);
+  }
+
+  @action
   Future<void> registerProgramOfMentor({
     required int mentorID,
     required int programID,

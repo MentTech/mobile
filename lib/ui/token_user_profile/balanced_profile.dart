@@ -413,6 +413,7 @@ class _BalancedProfileState extends State<BalancedProfile> {
               ),
               Text(
                 text,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   color: statusColor,
                   fontSize: 10,

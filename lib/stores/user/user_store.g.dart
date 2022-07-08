@@ -63,6 +63,13 @@ mixin _$UserStore on _UserStore, Store {
       (_$sizeSessionListComputed ??= Computed<int>(() => super.sizeSessionList,
               name: '_UserStore.sizeSessionList'))
           .value;
+  Computed<int>? _$sizeNextSessionListComputed;
+
+  @override
+  int get sizeNextSessionList => (_$sizeNextSessionListComputed ??=
+          Computed<int>(() => super.sizeNextSessionList,
+              name: '_UserStore.sizeNextSessionList'))
+      .value;
   Computed<int>? _$sizeTransactionListComputed;
 
   @override
@@ -262,6 +269,22 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
+  late final _$nextSessionsAtom =
+      Atom(name: '_UserStore.nextSessions', context: context);
+
+  @override
+  ObservableList<Session> get nextSessions {
+    _$nextSessionsAtom.reportRead();
+    return super.nextSessions;
+  }
+
+  @override
+  set nextSessions(ObservableList<Session> value) {
+    _$nextSessionsAtom.reportWrite(value, super.nextSessions, () {
+      super.nextSessions = value;
+    });
+  }
+
   late final _$_transactionContentAtom =
       Atom(name: '_UserStore._transactionContent', context: context);
 
@@ -310,6 +333,14 @@ mixin _$UserStore on _UserStore, Store {
   @override
   Future<bool> fetchUserSessions() {
     return _$fetchUserSessionsAsyncAction.run(() => super.fetchUserSessions());
+  }
+
+  late final _$fetchNextSessionsAsyncAction =
+      AsyncAction('_UserStore.fetchNextSessions', context: context);
+
+  @override
+  Future<void> fetchNextSessions() {
+    return _$fetchNextSessionsAsyncAction.run(() => super.fetchNextSessions());
   }
 
   late final _$fetchSessionAsyncAction =
@@ -385,6 +416,7 @@ sessionStatus: ${sessionStatus},
 sessionFetchingData: ${sessionFetchingData},
 session: ${session},
 sessions: ${sessions},
+nextSessions: ${nextSessions},
 isLoading: ${isLoading},
 isUploadingAvatar: ${isUploadingAvatar},
 isPushingFavMentorData: ${isPushingFavMentorData},
@@ -393,6 +425,7 @@ isTransactionLoading: ${isTransactionLoading},
 getSession: ${getSession},
 hasSession: ${hasSession},
 sizeSessionList: ${sizeSessionList},
+sizeNextSessionList: ${sizeNextSessionList},
 sizeTransactionList: ${sizeTransactionList},
 getSuccessMessageKey: ${getSuccessMessageKey},
 getFailedMessageKey: ${getFailedMessageKey}
