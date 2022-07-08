@@ -52,6 +52,8 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
   //focus node:-----------------------------------------------------------------
   final FocusNode _passwordFocusNode = FocusNode();
 
+  late final double textFieldHeight;
+
   // animate
   // ignore: unused_field
   late Animation<double> _authenAnimation;
@@ -64,6 +66,8 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
   @override
   void initState() {
     super.initState();
+
+    textFieldHeight = Dimens.text_field_height * 1.3;
 
     _authenAnimationController = AnimationController(
       vsync: this,
@@ -237,7 +241,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
     return Container(
       clipBehavior: Clip.none,
       alignment: Alignment.center,
-      height: Dimens.text_field_height,
+      height: textFieldHeight + Dimens.vertical_padding,
       child: Observer(
         builder: (_) {
           return TextFieldWidget(
@@ -265,8 +269,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
     return Container(
       clipBehavior: Clip.none,
       alignment: Alignment.center,
-      height:
-          _forgotPassowrdAnimationController.value * Dimens.text_field_height,
+      height: _forgotPassowrdAnimationController.value * textFieldHeight,
       child: _forgotPassowrdAnimationController.value >= 0.3
           ? Opacity(
               opacity: _forgotPassowrdAnimationController.value,
@@ -298,7 +301,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
     return Container(
       clipBehavior: Clip.none,
       alignment: Alignment.center,
-      height: _authenAnimationController.value * Dimens.text_field_height,
+      height: _authenAnimationController.value * textFieldHeight,
       child: _authenAnimationController.value >= 0.3
           ? Opacity(
               opacity: _authenAnimationController.value,
@@ -328,7 +331,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
     return Container(
       clipBehavior: Clip.none,
       alignment: Alignment.center,
-      height: _authenAnimationController.value * Dimens.text_field_height,
+      height: _authenAnimationController.value * textFieldHeight,
       child: _authenAnimationController.value >= 0.3
           ? Opacity(
               opacity: _authenAnimationController.value,
@@ -430,11 +433,14 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
         buttonColor: Colors.transparent,
         onPressed: () async {
           if (_store.isForgotPasswordState) {
+            _store.validateForgotPassword();
             conditional = _store.canForgetPassword;
           } else {
             if (_store.stateAuthen == AuthenState.signin) {
+              _store.validateLogin();
               conditional = _store.canLogin;
             } else {
+              _store.validateRegister();
               conditional = _store.canRegister;
             }
           }

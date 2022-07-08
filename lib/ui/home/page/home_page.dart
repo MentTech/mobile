@@ -47,7 +47,6 @@ class _HomePageState extends State<HomePage> {
 
     _userStore = Provider.of<UserStore>(context, listen: false);
     _userStore.fetchFavouriteMentors(callback: () {
-      log("[message] fetch fav mentor");
       _mentorStore.fetchFavouriteMentors(_userStore.favouriteMentorIdList);
       _mentorStore.fetchRecommendMentors();
     });
@@ -135,141 +134,139 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Expanded _buildHomePageContent() {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-            horizontal: Dimens.horizontal_padding,
-            vertical: Dimens.vertical_padding),
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                  height: kBottomNavigationBarHeight +
-                      Dimens.large_vertical_padding),
-              WrapNamedListWidget(
-                themeColor: Theme.of(context).indicatorColor,
-                namedContainer: AppLocalizations.of(context)
-                    .translate("programs_translate"),
-                margin: const EdgeInsets.symmetric(
-                  vertical: Dimens.large_vertical_margin,
+  Widget _buildHomePageContent() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+          horizontal: Dimens.horizontal_padding,
+          vertical: Dimens.vertical_padding),
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(
+                height:
+                    kBottomNavigationBarHeight + Dimens.large_vertical_padding),
+            WrapNamedListWidget(
+              themeColor: Theme.of(context).indicatorColor,
+              namedContainer:
+                  AppLocalizations.of(context).translate("programs_translate"),
+              margin: const EdgeInsets.symmetric(
+                vertical: Dimens.large_vertical_margin,
+              ),
+              children: <Widget>[
+                GlassmorphismWidgetButton(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      IconTheme(
+                        data: Theme.of(context)
+                            .iconTheme
+                            .copyWith(size: Dimens.large_text),
+                        child: const Icon(
+                          Icons.dashboard,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: Dimens.vertical_margin,
+                      ),
+                      Text(
+                        AppLocalizations.of(context)
+                            .translate("sessions_translate"),
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall!
+                            .copyWith(letterSpacing: 0.2),
+                      ),
+                    ],
+                  ),
+                  alignment: Alignment.center,
+                  width: 100,
+                  blur: Properties.blur_glass_morphism,
+                  opacity: Properties.opacity_glass_morphism,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Dimens.horizontal_padding,
+                    vertical: Dimens.vertical_padding,
+                  ),
+                  radius: 15,
+                  onTap: () {
+                    Routes.navigatorSupporter(
+                      context,
+                      Routes.sessionManager,
+                    );
+                  },
                 ),
-                children: <Widget>[
-                  GlassmorphismWidgetButton(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        IconTheme(
-                          data: Theme.of(context)
-                              .iconTheme
-                              .copyWith(size: Dimens.large_text),
-                          child: const Icon(
-                            Icons.dashboard,
-                          ),
+                GlassmorphismWidgetButton(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      IconTheme(
+                        data: Theme.of(context)
+                            .iconTheme
+                            .copyWith(size: Dimens.large_text),
+                        child: const Icon(
+                          Icons.receipt_long_rounded,
                         ),
-                        const SizedBox(
-                          height: Dimens.vertical_margin,
-                        ),
-                        Text(
-                          AppLocalizations.of(context)
-                              .translate("sessions_translate"),
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall!
-                              .copyWith(letterSpacing: 0.2),
-                        ),
-                      ],
-                    ),
-                    alignment: Alignment.center,
-                    width: 100,
-                    blur: Properties.blur_glass_morphism,
-                    opacity: Properties.opacity_glass_morphism,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: Dimens.horizontal_padding,
-                      vertical: Dimens.vertical_padding,
-                    ),
-                    radius: 15,
-                    onTap: () {
-                      // Routes.navigatorSupporter(
-                      //   context,
-                      //   Routes.tokenProfile,
-                      // );
-                    },
+                      ),
+                      const SizedBox(
+                        height: Dimens.vertical_margin,
+                      ),
+                      Text(
+                        AppLocalizations.of(context)
+                            .translate("transaction_translate"),
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall!
+                            .copyWith(letterSpacing: 0.2),
+                      ),
+                    ],
                   ),
-                  GlassmorphismWidgetButton(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        IconTheme(
-                          data: Theme.of(context)
-                              .iconTheme
-                              .copyWith(size: Dimens.large_text),
-                          child: const Icon(
-                            Icons.receipt_long_rounded,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: Dimens.vertical_margin,
-                        ),
-                        Text(
-                          AppLocalizations.of(context)
-                              .translate("transaction_translate"),
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall!
-                              .copyWith(letterSpacing: 0.2),
-                        ),
-                      ],
-                    ),
-                    alignment: Alignment.center,
-                    width: 100,
-                    blur: Properties.blur_glass_morphism,
-                    opacity: Properties.opacity_glass_morphism,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: Dimens.horizontal_padding,
-                      vertical: Dimens.vertical_padding,
-                    ),
-                    radius: 15,
-                    onTap: () {
-                      Routes.navigatorSupporter(
-                        context,
-                        Routes.tokenProfile,
-                      );
-                    },
+                  alignment: Alignment.center,
+                  width: 100,
+                  blur: Properties.blur_glass_morphism,
+                  opacity: Properties.opacity_glass_morphism,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Dimens.horizontal_padding,
+                    vertical: Dimens.vertical_padding,
                   ),
-                ],
-              ),
-              // try to lazy loading for favourite mentor
-              Text(
-                AppLocalizations.of(context).translate("home_favourite_list"),
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).indicatorColor,
-                    ),
-              ),
-              _buildFavouriteContent(),
-              const SizedBox(
-                height: Dimens.extra_large_vertical_margin,
-              ),
-              Text(
-                AppLocalizations.of(context).translate("home_recommended_list"),
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).indicatorColor,
-                    ),
-              ),
-              _buildRecommendedContent(),
-              const SizedBox(
-                height: kBottomNavigationBarHeight,
-              ),
-            ],
-          ),
+                  radius: 15,
+                  onTap: () {
+                    Routes.navigatorSupporter(
+                      context,
+                      Routes.tokenProfile,
+                    );
+                  },
+                ),
+              ],
+            ),
+            // try to lazy loading for favourite mentor
+            Text(
+              AppLocalizations.of(context).translate("home_favourite_list"),
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).indicatorColor,
+                  ),
+            ),
+            _buildFavouriteContent(),
+            const SizedBox(
+              height: Dimens.extra_large_vertical_margin,
+            ),
+            Text(
+              AppLocalizations.of(context).translate("home_recommended_list"),
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).indicatorColor,
+                  ),
+            ),
+            _buildRecommendedContent(),
+            const SizedBox(
+              height: kBottomNavigationBarHeight,
+            ),
+          ],
         ),
       ),
     );

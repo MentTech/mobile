@@ -17,7 +17,7 @@ import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:mobile/widgets/item/comment_item.dart';
 import 'package:mobile/widgets/star_widget/start_rate_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:mobile/utils/extension/datetime_extension.dart';
 

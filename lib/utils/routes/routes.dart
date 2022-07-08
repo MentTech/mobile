@@ -9,6 +9,7 @@ import 'package:mobile/ui/home/home.dart';
 import 'package:mobile/ui/more_token/deposit_token.dart';
 import 'package:mobile/ui/password_changer/password_changer.dart';
 import 'package:mobile/ui/program_register/program_register_screen.dart';
+import 'package:mobile/ui/session_manager/session_manager.dart';
 import 'package:mobile/ui/splash/splash.dart';
 import 'package:mobile/ui/test_screen/test_screen.dart';
 import 'package:mobile/ui/token_user_profile/balanced_profile.dart';
@@ -30,6 +31,7 @@ class Routes {
   static const String depositToken = '/deposit_token';
   static const String applyGiftcode = '/apply_giftcode';
   static const String chat = '/chat';
+  static const String sessionManager = '/session_manager';
   // static const String mentorProfile = '/mentor_profile';
   static const String testScreen = '/test_screen';
 
@@ -48,6 +50,7 @@ class Routes {
     applyGiftcode: (BuildContext context) => const GiftCodeScreen(),
     // mentorProfile: (BuildContext context) => const MentorProfile(),
     chat: (BuildContext context) => const ChatScreen(),
+    sessionManager: (BuildContext context) => const SessionManager(),
     testScreen: (BuildContext context) => const TestScreen(),
   };
 

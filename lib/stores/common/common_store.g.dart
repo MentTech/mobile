@@ -232,6 +232,17 @@ mixin _$CommonStore on _CommonStore, Store {
   }
 
   @override
+  void initRateCommentFetching(int mentorID, int programID) {
+    final _$actionInfo = _$_CommonStoreActionController.startAction(
+        name: '_CommonStore.initRateCommentFetching');
+    try {
+      return super.initRateCommentFetching(mentorID, programID);
+    } finally {
+      _$_CommonStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setSessionObserver(Session session) {
     final _$actionInfo = _$_CommonStoreActionController.startAction(
         name: '_CommonStore.setSessionObserver');

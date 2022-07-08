@@ -10,16 +10,18 @@ import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
+import 'package:mobile/widgets/app_icon_widget.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
 import 'package:mobile/widgets/container/image_container/network_image_widget.dart';
 import 'package:mobile/widgets/container/section_container/linear_named_list_widget.dart';
+import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/glassmorphism_text_button.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatelessWidget {
   SettingsPage({Key? key}) : super(key: key);
 
-  final ThemeStore themeStore = getIt<ThemeStore>();
+  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class SettingsPage extends StatelessWidget {
       children: [
         Observer(builder: (_) {
           return LinearGradientBackground(
-            colors: themeStore.lineToLineGradientColors,
+            colors: _themeStore.lineToLineGradientColors,
             stops: null,
           );
         }),
@@ -182,9 +184,112 @@ class SettingsPage extends StatelessWidget {
                                   context, Routes.advancedSettings);
                             },
                           ),
+                          const SizedBox(height: Dimens.small_vertical_margin),
+                          GlassmorphismContainer(
+                            alignmentGeometry: Alignment.centerLeft,
+                            padding: EdgeInsets.zero,
+                            child: AboutListTile(
+                              dense: true,
+                              child: Text(
+                                AppLocalizations.of(context)
+                                    .translate("about_us"),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: 0.2,
+                                    ),
+                              ),
+                              applicationIcon: AppIconWidget(
+                                  image: _themeStore.appIcon,
+                                  dimenImage:
+                                      DeviceUtils.getScaledWidth(context, 0.1)),
+                              applicationName: DeviceUtils.packageInfo!.appName,
+                              applicationVersion:
+                                  DeviceUtils.packageInfo!.version,
+                              applicationLegalese: "Copyright by Jett",
+                              aboutBoxChildren: [
+                                const SizedBox(
+                                  height: Dimens.vertical_margin,
+                                ),
+                                Text(
+                                  "Ứng dụng thuộc Thực tập đồ án tốt nghiệp",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .copyWith(
+                                        height: 1.2,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                ),
+                                Text(
+                                  "Hệ thống kết nối người hướng dẫn và người cần dạy kèm",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .copyWith(
+                                        height: 1.2,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                                const SizedBox(
+                                  height: Dimens.vertical_margin,
+                                ),
+                                Text(
+                                  "Nhóm gồm 4 thành viên:",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .copyWith(
+                                        height: 1.2,
+                                      ),
+                                ),
+                                Text(
+                                  "Nguyễn Điền Thanh Phong - 18120221",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .copyWith(
+                                        height: 1.2,
+                                      ),
+                                ),
+                                Text(
+                                  "Vũ Lê Tuấn - 18120256",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .copyWith(
+                                        height: 1.2,
+                                      ),
+                                ),
+                                Text(
+                                  "Lê Quốc Đạt - 18120305",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .copyWith(
+                                        height: 1.2,
+                                      ),
+                                ),
+                                Text(
+                                  "Lê Thọ Đạt - 18120306",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .copyWith(
+                                        height: 1.2,
+                                      ),
+                                ),
+                              ],
+                            ),
+                            blur: Properties.blur_glass_morphism,
+                            opacity: Properties.opacity_glass_morphism,
+                            radius: 15,
+                          ),
                           // GlassmorphismTextButton(
                           //   text: "text ui",
-                          //   textColor: themeStore.reverseThemeColor,
+                          //   textColor: _themeStore.reverseThemeColor,
                           //   blur: Properties.blur_glass_morphism,
                           //   opacity: Properties.opacity_glass_morphism,
                           //   padding: const EdgeInsets.symmetric(

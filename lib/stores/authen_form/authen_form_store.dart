@@ -127,18 +127,24 @@ abstract class _AuthenticatorFormStore with Store {
 
   @action
   void setSignup() {
+    formErrorStore.resetAll();
+
     stateAuthen = AuthenState.signup;
     isForgotPasswordState = false;
   }
 
   @action
   void setSignin() {
+    formErrorStore.resetAll();
+
     stateAuthen = AuthenState.signin;
     isForgotPasswordState = false;
   }
 
   @action
   void setForgotPassword() {
+    formErrorStore.resetAll();
+
     stateAuthen = AuthenState.signin;
     isForgotPasswordState = true;
   }
@@ -211,6 +217,22 @@ abstract class _AuthenticatorFormStore with Store {
     validateName(name);
   }
 
+  void validateForgotPassword() {
+    validateUserEmail(userEmail);
+  }
+
+  void validateLogin() {
+    validateUserEmail(userEmail);
+    validatePassword(password);
+  }
+
+  void validateRegister() {
+    validateUserEmail(userEmail);
+    validatePassword(password);
+    validateConfirmPassword(confirmPassword);
+    validateName(name);
+  }
+
   void validatePasswordChanger() {
     validateOldPassword(oldPassword);
     validatePassword(password);
@@ -252,4 +274,12 @@ abstract class _FormErrorStore with Store {
   @computed
   bool get hasErrorInRenewPassword =>
       password != null || confirmPassword != null || oldPassword != null;
+
+  @action
+  void resetAll() {
+    userEmail = null;
+    password = null;
+    confirmPassword = null;
+    name = null;
+  }
 }

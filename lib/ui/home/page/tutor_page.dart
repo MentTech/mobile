@@ -19,7 +19,7 @@ import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:mobile/widgets/popup_template/hero_popup_routes.dart';
 import 'package:mobile/widgets/textfield/textfield_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 class TutorPage extends StatefulWidget {
   const TutorPage({Key? key}) : super(key: key);

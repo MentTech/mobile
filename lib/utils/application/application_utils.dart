@@ -5,7 +5,7 @@ import 'package:mobile/constants/properties.dart';
 import 'package:mobile/ui/authorization/authorization_screen.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ApplicationUtils {

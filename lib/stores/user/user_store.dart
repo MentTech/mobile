@@ -238,18 +238,33 @@ abstract class _UserStore with Store {
     String? accessToken = await _repository.authToken;
 
     if (null == accessToken) {
+      messageStore.setErrorMessageByCode(401);
+
       success = false;
+
+      return;
     }
 
-    final future = _repository.fetchFavouriteMentors(authToken: accessToken!);
+    final future = _repository.fetchFavouriteMentors(authToken: accessToken);
 
     future.then((res) {
-      favouriteMentorIdList.addAll(res!["ids"]!.cast<int>());
-
-      callback?.call();
       try {
-        success = true;
+        if (res!["statusCode"] == null) {
+          favouriteMentorIdList.addAll(res["ids"]!.cast<int>());
+
+          callback?.call();
+
+          success = true;
+        } else {
+          int code = res["statusCode"] as int;
+
+          messageStore.setErrorMessageByCode(code);
+
+          success = false;
+        }
       } catch (e) {
+        messageStore.setErrorMessageByCode(500);
+
         success = false;
       }
     });
