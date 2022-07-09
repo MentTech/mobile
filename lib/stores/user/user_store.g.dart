@@ -91,6 +91,14 @@ mixin _$UserStore on _UserStore, Store {
           Computed<String>(() => super.getFailedMessageKey,
               name: '_UserStore.getFailedMessageKey'))
       .value;
+  Computed<SessionStatus>? _$currentSessionFetchStatusComputed;
+
+  @override
+  SessionStatus get currentSessionFetchStatus =>
+      (_$currentSessionFetchStatusComputed ??= Computed<SessionStatus>(
+              () => super.currentSessionFetchStatus,
+              name: '_UserStore.currentSessionFetchStatus'))
+          .value;
 
   late final _$successAtom = Atom(name: '_UserStore.success', context: context);
 
@@ -104,6 +112,22 @@ mixin _$UserStore on _UserStore, Store {
   set success(bool value) {
     _$successAtom.reportWrite(value, super.success, () {
       super.success = value;
+    });
+  }
+
+  late final _$triggerChangeAtom =
+      Atom(name: '_UserStore.triggerChange', context: context);
+
+  @override
+  bool get triggerChange {
+    _$triggerChangeAtom.reportRead();
+    return super.triggerChange;
+  }
+
+  @override
+  set triggerChange(bool value) {
+    _$triggerChangeAtom.reportWrite(value, super.triggerChange, () {
+      super.triggerChange = value;
     });
   }
 
@@ -406,6 +430,7 @@ mixin _$UserStore on _UserStore, Store {
   String toString() {
     return '''
 success: ${success},
+triggerChange: ${triggerChange},
 requestFuture: ${requestFuture},
 requestUploadAvatarFuture: ${requestUploadAvatarFuture},
 requestFavEventFuture: ${requestFavEventFuture},
@@ -428,7 +453,8 @@ sizeSessionList: ${sizeSessionList},
 sizeNextSessionList: ${sizeNextSessionList},
 sizeTransactionList: ${sizeTransactionList},
 getSuccessMessageKey: ${getSuccessMessageKey},
-getFailedMessageKey: ${getFailedMessageKey}
+getFailedMessageKey: ${getFailedMessageKey},
+currentSessionFetchStatus: ${currentSessionFetchStatus}
     ''';
   }
 }

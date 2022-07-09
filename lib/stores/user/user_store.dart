@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -35,6 +36,35 @@ abstract class _UserStore with Store {
   void _setupDisposers() {
     _disposers = [
       reaction((_) => success, (_) => success = false, delay: 200),
+      reaction((_) => triggerChange, (_) => triggerChange = false, delay: 200),
+      reaction(
+        (_) => sessions,
+        (_) {
+          triggerChange = true;
+        },
+        // equals: (ObservableList<Session>? l1, ObservableList<Session>? l2) {
+        //   log("work? " +
+        //       ((null == l1 || null == l2).toString() +
+        //           ((l1?.length ?? 0) != (l2?.length ?? 1)).toString()));
+        //   if (null == l1 || null == l2) {
+        //     return true;
+        //   }
+
+        //   if (l1.length != l2.length) {
+        //     return true;
+        //   }
+
+        //   // if l1.length == l2.length
+        //   int count = l1.length;
+        //   for (var i = 0; i < count; i++) {
+        //     if (l1.elementAt(i) != l2.elementAt(i)) {
+        //       return true;
+        //     }
+        //   }
+        //   log("false");
+        //   return false;
+        // },
+      ),
       // reaction((_) => accessToken, (_) => accessToken = null, delay: 200),
       // reaction((_) => requestFuture.status, (FutureStatus status) {
       //   if (status == FutureStatus.fulfilled) {
@@ -54,6 +84,9 @@ abstract class _UserStore with Store {
   // store variables:-----------------------------------------------------------
   @observable
   bool success = false;
+
+  @observable
+  bool triggerChange = false;
 
   @observable
   ObservableFuture<Map<String, dynamic>?> requestFuture = emptyLoginResponse;
@@ -141,6 +174,7 @@ abstract class _UserStore with Store {
   @computed
   String get getFailedMessageKey => messageStore.errorMessagekey;
 
+  @computed
   SessionStatus get currentSessionFetchStatus => sessionStatus;
 
   Session? getSessionAt(int index) {
@@ -172,12 +206,17 @@ abstract class _UserStore with Store {
     this.sessionStatus = sessionStatus;
     sessionFetchingData.updateStatus(sessionStatus);
 
-    sessions.clear();
+    // sessions.clear();
+    List<Session> tempSessionList = <Session>[];
+    log(sessionFetchingData.toMapJson().toString());
     for (Session session in originSessions) {
       if (sessionFetchingData.checkSameStatus(session)) {
-        sessions.add(session);
+        tempSessionList.add(session);
+        log(session.toJson().toString());
       }
     }
+    // sessions.addAll(tempSessionList);
+    sessions = ObservableList.of(tempSessionList.reversed);
   }
 
   @action
@@ -275,8 +314,14 @@ abstract class _UserStore with Store {
     String? accessToken = await _repository.authToken;
 
     if (null == accessToken) {
+      messageStore.setErrorMessageByCode(401);
+
+      success = false;
       return Future.value(false);
     }
+
+    sessionStatus = SessionStatus.all;
+    sessionFetchingData.updateStatus(sessionStatus);
 
     final future = _repository.fetchSessionsOfUser(
       authToken: accessToken,
@@ -284,20 +329,29 @@ abstract class _UserStore with Store {
     );
     requestSessionFuture = ObservableFuture(future);
 
-    await future.then((res) {
+    return await future.then((res) {
       try {
-        originSessions = Sessions.fromJson(res!).sessions;
-        sessions = ObservableList.of(originSessions.reversed.toList());
-        success = true;
-        return Future.value(true);
+        if (res!["statusCode"] == null) {
+          originSessions = Sessions.fromJson(res).sessions;
+          sessions = ObservableList.of(originSessions.reversed);
+
+          success = true;
+        } else {
+          int code = res["statusCode"] as int;
+
+          messageStore.setErrorMessageByCode(code);
+
+          success = false;
+        }
+
+        return Future.value(success);
       } catch (e) {
-        // res['message']
+        messageStore.setErrorMessageByCode(500);
+
         success = false;
         return Future.value(false);
       }
     });
-
-    return Future.value(false);
   }
 
   @action
@@ -544,35 +598,35 @@ class SessionFetchingData {
 
   void updateStatus(SessionStatus sessionStatus) {
     switch (sessionStatus) {
+      case SessionStatus.waiting:
+        isAll = false;
+        isAccepted = false;
+        isDone = false;
+        isCanceled = false;
+        break;
       case SessionStatus.confirmed:
         isAll = false;
-        isCanceled = false;
         isAccepted = true;
         isDone = false;
+        isCanceled = false;
         break;
       case SessionStatus.completed:
         isAll = false;
-        isCanceled = false;
         isAccepted = true;
         isDone = true;
+        isCanceled = false;
         break;
       case SessionStatus.canceled:
         isAll = false;
-        isCanceled = true;
         isAccepted = false;
         isDone = true;
-        break;
-      case SessionStatus.waiting:
-        isAll = false;
-        isCanceled = false;
-        isAccepted = false;
-        isDone = false;
+        isCanceled = true;
         break;
       default: // SessionStatus.all
         isAll = true;
-        isCanceled = false;
         isAccepted = false;
         isDone = false;
+        isCanceled = false;
         break;
     }
   }

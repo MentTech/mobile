@@ -288,7 +288,7 @@ class SettingsPage extends StatelessWidget {
                             radius: 15,
                           ),
                           // GlassmorphismTextButton(
-                          //   text: "text ui",
+                          //   text: "test ui",
                           //   textColor: _themeStore.reverseThemeColor,
                           //   blur: Properties.blur_glass_morphism,
                           //   opacity: Properties.opacity_glass_morphism,

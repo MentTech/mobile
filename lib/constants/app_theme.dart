@@ -34,6 +34,10 @@ final ThemeData themeData = ThemeData(
   highlightColor: AppColors.darkTextTheme,
   selectedRowColor: Colors.yellow.shade600,
   indicatorColor: Colors.black87,
+  disabledColor: Color.alphaBlend(
+    Colors.white.withOpacity(0.3),
+    AppColors.darkTextTheme,
+  ),
   bottomAppBarColor: Color.alphaBlend(
       AppColors.lightTextTheme.withOpacity(0.7), Colors.black87),
   dividerColor: AppColors.lightTextTheme,
@@ -91,6 +95,10 @@ final ThemeData themeDataDark = ThemeData(
   highlightColor: AppColors.lightTextTheme,
   selectedRowColor: Colors.yellow.shade800,
   indicatorColor: Colors.white70,
+  disabledColor: Color.alphaBlend(
+    Colors.white.withOpacity(0.7),
+    AppColors.lightTextTheme,
+  ),
   bottomAppBarColor: Color.alphaBlend(
       AppColors.darkTextTheme.withOpacity(0.7), Colors.black87),
   dividerColor: AppColors.darkTextTheme,
@@ -99,7 +107,7 @@ final ThemeData themeDataDark = ThemeData(
   splashColor: AppColors.darkTextTheme.withOpacity(0.5),
   hintColor: Colors.white60,
   iconTheme: const IconThemeData(color: Colors.white70),
-  primaryTextTheme: const TextTheme(
+  textTheme: const TextTheme(
     headlineSmall: TextStyle(
       color: AppColors.lightTextTheme,
       fontSize: Dimens.medium_text,

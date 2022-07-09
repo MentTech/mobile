@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/dimens.dart';
@@ -57,9 +59,14 @@ class _SessionManagerState extends State<SessionManager> {
                 return _buildRowControllButtonOnBottomSheet(context);
               },
             ),
+            const SizedBox(
+              height: Dimens.large_vertical_margin,
+            ),
             Expanded(
               child: Observer(
                 builder: (_) {
+                  log("rebuild here");
+                  _userStore.triggerChange;
                   return ListView.builder(
                     padding: const EdgeInsets.only(
                       top: Dimens.large_vertical_padding,
@@ -131,56 +138,60 @@ class _SessionManagerState extends State<SessionManager> {
     }
   }
 
-  Row _buildRowControllButtonOnBottomSheet(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        _buildSelectedButton(
-          iconData: Icons.clear_all,
-          text: AppLocalizations.of(context).translate("all_translate"),
-          isSelected: _userStore.currentSessionFetchStatus == SessionStatus.all,
-          ontap: () {
-            _userStore.updateSessionStatus(SessionStatus.all);
-          },
-        ),
-        _buildSelectedButton(
-          iconData: Icons.pending_actions,
-          text: AppLocalizations.of(context).translate("waiting_translate"),
-          isSelected:
-              _userStore.currentSessionFetchStatus == SessionStatus.waiting,
-          ontap: () {
-            _userStore.updateSessionStatus(SessionStatus.waiting);
-          },
-        ),
-        _buildSelectedButton(
-          iconData: Icons.recommend,
-          text: AppLocalizations.of(context).translate("confirmed_translate"),
-          isSelected:
-              _userStore.currentSessionFetchStatus == SessionStatus.confirmed,
-          ontap: () {
-            _userStore.updateSessionStatus(SessionStatus.confirmed);
-          },
-        ),
-        _buildSelectedButton(
-          iconData: Icons.fact_check,
-          text: AppLocalizations.of(context).translate("completed_translate"),
-          isSelected:
-              _userStore.currentSessionFetchStatus == SessionStatus.completed,
-          ontap: () {
-            _userStore.updateSessionStatus(SessionStatus.completed);
-          },
-        ),
-        _buildSelectedButton(
-          iconData: Icons.disabled_visible,
-          text: AppLocalizations.of(context).translate("canceled_translate"),
-          isSelected:
-              _userStore.currentSessionFetchStatus == SessionStatus.canceled,
-          ontap: () {
-            _userStore.updateSessionStatus(SessionStatus.canceled);
-          },
-        ),
-      ],
+  Widget _buildRowControllButtonOnBottomSheet(BuildContext context) {
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          _buildSelectedButton(
+            iconData: Icons.clear_all,
+            text: AppLocalizations.of(context).translate("all_translate"),
+            isSelected:
+                _userStore.currentSessionFetchStatus == SessionStatus.all,
+            ontap: () {
+              _userStore.updateSessionStatus(SessionStatus.all);
+            },
+          ),
+          _buildSelectedButton(
+            iconData: Icons.pending_actions,
+            text: AppLocalizations.of(context).translate("waiting_translate"),
+            isSelected:
+                _userStore.currentSessionFetchStatus == SessionStatus.waiting,
+            ontap: () {
+              _userStore.updateSessionStatus(SessionStatus.waiting);
+            },
+          ),
+          _buildSelectedButton(
+            iconData: Icons.recommend,
+            text: AppLocalizations.of(context).translate("confirmed_translate"),
+            isSelected:
+                _userStore.currentSessionFetchStatus == SessionStatus.confirmed,
+            ontap: () {
+              _userStore.updateSessionStatus(SessionStatus.confirmed);
+            },
+          ),
+          _buildSelectedButton(
+            iconData: Icons.fact_check,
+            text: AppLocalizations.of(context).translate("completed_translate"),
+            isSelected:
+                _userStore.currentSessionFetchStatus == SessionStatus.completed,
+            ontap: () {
+              _userStore.updateSessionStatus(SessionStatus.completed);
+            },
+          ),
+          _buildSelectedButton(
+            iconData: Icons.disabled_visible,
+            text: AppLocalizations.of(context).translate("canceled_translate"),
+            isSelected:
+                _userStore.currentSessionFetchStatus == SessionStatus.canceled,
+            ontap: () {
+              _userStore.updateSessionStatus(SessionStatus.canceled);
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -191,18 +202,28 @@ class _SessionManagerState extends State<SessionManager> {
     required bool isSelected,
   }) {
     final Color statusColor = isSelected
-        ? Theme.of(context).highlightColor
-        : Color.alphaBlend(
-            Theme.of(context).indicatorColor.withOpacity(0.7),
-            Colors.white70,
-          );
+        ? Color.alphaBlend(
+            Theme.of(context).selectedRowColor.withOpacity(0.5),
+            Colors.white,
+          )
+        : Colors.white70;
 
-    return SizedBox(
-      height: DeviceUtils.getScaledWidth(context, 0.16),
+    final Color textColor = isSelected
+        ? Color.alphaBlend(
+            Theme.of(context).selectedRowColor.withOpacity(0.7),
+            Theme.of(context).highlightColor,
+          )
+        : Theme.of(context).disabledColor;
+
+    return Container(
+      height: DeviceUtils.getScaledWidth(context, 0.20),
+      margin:
+          const EdgeInsets.symmetric(horizontal: Dimens.more_horizontal_margin),
       child: AspectRatio(
         aspectRatio: 1 / 1,
         child: GlassmorphismWidgetButton(
           background: statusColor,
+          border: textColor,
           radius: 10,
           alignment: Alignment.center,
           child: Column(
@@ -210,16 +231,16 @@ class _SessionManagerState extends State<SessionManager> {
             children: [
               Icon(
                 iconData,
-                color: statusColor,
+                color: textColor,
                 size: Dimens.large_text,
               ),
               Text(
                 text,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: statusColor,
-                  fontSize: 10,
-                ),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall!
+                    .copyWith(color: textColor, fontSize: 12),
               ),
             ],
           ),
