@@ -6,10 +6,9 @@ import 'package:mobile/models/language/language.dart';
 import 'package:mobile/stores/language/language_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
-import 'package:mobile/widgets/appbar/custom_appbar_in_stack.dart';
-import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:mobile/widgets/popup_template/hero_popup_routes.dart';
+import 'package:mobile/widgets/template/glassmorphism_appbar_only.dart';
 
 class AdvancedSettings extends StatelessWidget {
   AdvancedSettings({Key? key}) : super(key: key);
@@ -19,36 +18,24 @@ class AdvancedSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          LinearGradientBackground(
-            colors: _themeStore.lineToLineGradientColors,
-            stops: null,
-          ),
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: <Widget>[
-                  const SizedBox(
-                    height: kBottomNavigationBarHeight +
-                        Dimens.large_vertical_margin,
-                  ),
-                  _buildLanguageSession(context),
-                  const SizedBox(
-                    height: Dimens.large_vertical_margin,
-                  ),
-                  _buildThemeSession(context),
-                ],
-              ),
+    return GlassmorphismGradientScaffoldAppbar(
+      safeAreaTop: true,
+      appbarName:
+          AppLocalizations.of(context).translate("advanced_settings_translate"),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          children: <Widget>[
+            const SizedBox(
+              height: kBottomNavigationBarHeight + Dimens.large_vertical_margin,
             ),
-          ),
-          CustomInStackAppBar(
-            nameAppbar: AppLocalizations.of(context)
-                .translate("advanced_settings_translate"),
-          ),
-        ],
+            _buildLanguageSession(context),
+            const SizedBox(
+              height: Dimens.large_vertical_margin,
+            ),
+            _buildThemeSession(context),
+          ],
+        ),
       ),
     );
   }

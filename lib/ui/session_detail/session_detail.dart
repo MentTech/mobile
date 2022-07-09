@@ -116,7 +116,7 @@ class _SesstionDetailState extends State<SesstionDetail> {
                           vertical: Dimens.small_vertical_padding,
                           horizontal: Dimens.horizontal_padding,
                         ),
-                        textColor: Colors.white70,
+                        textColor: Theme.of(context).indicatorColor,
                         blur: Properties.blur_glass_morphism,
                         opacity: Properties.opacity_glass_morphism,
                         onTap: () {
@@ -150,7 +150,7 @@ class _SesstionDetailState extends State<SesstionDetail> {
                               vertical: Dimens.small_vertical_padding,
                               horizontal: Dimens.horizontal_padding,
                             ),
-                            textColor: Colors.white70,
+                            textColor: Theme.of(context).indicatorColor,
                             blur: Properties.blur_glass_morphism,
                             opacity: Properties.opacity_glass_morphism,
                             onTap: () {
@@ -179,7 +179,7 @@ class _SesstionDetailState extends State<SesstionDetail> {
                               vertical: Dimens.small_vertical_padding,
                               horizontal: Dimens.horizontal_padding,
                             ),
-                            textColor: Colors.white70,
+                            textColor: Theme.of(context).indicatorColor,
                             blur: Properties.blur_glass_morphism,
                             opacity: Properties.opacity_glass_morphism,
                             onTap: () {

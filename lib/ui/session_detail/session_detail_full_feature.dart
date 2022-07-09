@@ -64,52 +64,51 @@ class _SesstionDetailState extends State<SesstionDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return GlassmorphismGradientScaffoldAppbar(
+      safeAreaTop: true,
       appbarName:
           AppLocalizations.of(context).translate("session_detail_translate"),
-      child: SafeArea(
-        child: FutureBuilder<Session?>(
-          future: loadData(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return _buildShimmerLoadingPage();
+      child: FutureBuilder<Session?>(
+        future: loadData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return _buildShimmerLoadingPage();
+          } else {
+            if (snapshot.hasError) {
+              return ErrorContentWidget(
+                titleError: AppLocalizations.of(context)
+                    .translate("session_detail_notification_title_translate"),
+                contentError: snapshot.error.toString(),
+              );
             } else {
-              if (snapshot.hasError) {
+              if (snapshot.hasData) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                        child: ProgramDetailContainer(
+                      sessionDetail: snapshot.data!,
+                    )),
+                    const SizedBox(
+                      height: Dimens.medium_vertical_margin,
+                    ),
+                    _buildActionMethod(),
+                    const SizedBox(
+                      height: Dimens.extra_large_vertical_margin,
+                    ),
+                  ],
+                );
+              } else {
                 return ErrorContentWidget(
                   titleError: AppLocalizations.of(context)
                       .translate("session_detail_notification_title_translate"),
-                  contentError: snapshot.error.toString(),
+                  contentError: AppLocalizations.of(context).translate(
+                    _userStore.getFailedMessageKey,
+                  ),
                 );
-              } else {
-                if (snapshot.hasData) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                          child: ProgramDetailContainer(
-                        sessionDetail: snapshot.data!,
-                      )),
-                      const SizedBox(
-                        height: Dimens.medium_vertical_margin,
-                      ),
-                      _buildActionMethod(),
-                      const SizedBox(
-                        height: Dimens.extra_large_vertical_margin,
-                      ),
-                    ],
-                  );
-                } else {
-                  return ErrorContentWidget(
-                    titleError: AppLocalizations.of(context).translate(
-                        "session_detail_notification_title_translate"),
-                    contentError: AppLocalizations.of(context).translate(
-                      _userStore.getFailedMessageKey,
-                    ),
-                  );
-                }
               }
             }
-          },
-        ),
+          }
+        },
       ),
       messageNotification: Observer(
         builder: (_) {

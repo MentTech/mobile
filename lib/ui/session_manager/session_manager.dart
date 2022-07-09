@@ -44,48 +44,47 @@ class _SessionManagerState extends State<SessionManager> {
   @override
   Widget build(BuildContext context) {
     return GlassmorphismGradientScaffoldAppbar(
+      safeAreaTop: true,
       appbarName: AppLocalizations.of(context)
           .translate("session_manager_title_translate"),
-      child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: kBottomNavigationBarHeight + Dimens.vertical_margin,
-            ),
-            Observer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const SizedBox(
+            height: kBottomNavigationBarHeight + Dimens.vertical_margin,
+          ),
+          Observer(
+            builder: (_) {
+              return _buildRowControllButtonOnBottomSheet(context);
+            },
+          ),
+          const SizedBox(
+            height: Dimens.large_vertical_margin,
+          ),
+          Expanded(
+            child: Observer(
               builder: (_) {
-                return _buildRowControllButtonOnBottomSheet(context);
+                log("rebuild here");
+                _userStore.triggerChange;
+                return ListView.builder(
+                  padding: const EdgeInsets.only(
+                    top: Dimens.large_vertical_padding,
+                    right: Dimens.horizontal_padding,
+                    left: Dimens.horizontal_padding,
+                  ),
+                  itemBuilder: (context, index) {
+                    Session? session = _userStore.getSessionAt(index);
+                    return _buildSessionItemInBottomSheet(session, context);
+                  },
+                  itemCount: !_userStore.isSessionLoading
+                      ? _userStore.sizeSessionList
+                      : 5,
+                );
               },
             ),
-            const SizedBox(
-              height: Dimens.large_vertical_margin,
-            ),
-            Expanded(
-              child: Observer(
-                builder: (_) {
-                  log("rebuild here");
-                  _userStore.triggerChange;
-                  return ListView.builder(
-                    padding: const EdgeInsets.only(
-                      top: Dimens.large_vertical_padding,
-                      right: Dimens.horizontal_padding,
-                      left: Dimens.horizontal_padding,
-                    ),
-                    itemBuilder: (context, index) {
-                      Session? session = _userStore.getSessionAt(index);
-                      return _buildSessionItemInBottomSheet(session, context);
-                    },
-                    itemCount: !_userStore.isSessionLoading
-                        ? _userStore.sizeSessionList
-                        : 5,
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

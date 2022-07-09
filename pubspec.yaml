@@ -139,6 +139,10 @@ dependencies:
 
   shimmer: 
 
+  #schedule
+  table_calendar: ^3.0.6
+  percent_indicator: ^4.2.2
+
   # chat implement
   flutter_chat_ui: 
   flutter_chat_types: ^3.4.3

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
@@ -13,6 +12,7 @@ import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/widgets/container/image_container/network_image_widget.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:mobile/utils/extension/datetime_extension.dart';
+import 'package:mobile/widgets/html_widget/html_description.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ProgramConfirmContainer extends StatelessWidget {
@@ -164,24 +164,9 @@ class ProgramConfirmContainer extends StatelessWidget {
         //   trimLines: 5,
         //   trimMode: TrimMode.Line,
         // ),
-        Html(
+        HtmlDesciption(
           data: program.detail,
-          shrinkWrap: true,
-          style: {
-            "li": Style(
-              color: Theme.of(context).indicatorColor,
-              fontSize: const FontSize(Dimens.small_text),
-            ),
-            "p": Style(
-              color: Theme.of(context).indicatorColor,
-              fontSize: const FontSize(Dimens.small_text),
-            ),
-            "span": Style(
-              color: Theme.of(context).indicatorColor,
-              fontSize: const FontSize(Dimens.small_text),
-            ),
-          },
-        ),
+        )
       ],
     );
   }

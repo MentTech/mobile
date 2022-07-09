@@ -9,18 +9,16 @@ import 'package:mobile/models/user/user.dart';
 import 'package:mobile/stores/enum/payment_method.dart';
 import 'package:mobile/stores/form/deposit_token_form_store.dart';
 import 'package:mobile/stores/order/order_store.dart';
-import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/ui/more_token/deposit_token_successful.dart';
 import 'package:mobile/utils/application/application_utils.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
-import 'package:mobile/widgets/appbar/custom_appbar_in_stack.dart';
-import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
 import 'package:mobile/utils/extension/int_extension.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/glassmorphism_widget_button.dart';
 import 'package:mobile/widgets/progress_indicator_widget.dart';
+import 'package:mobile/widgets/template/glassmorphism_appbar_only.dart';
 import 'package:mobile/widgets/textfield/textfield_name_before.dart';
 import 'package:provider/provider.dart';
 
@@ -40,7 +38,6 @@ class _DepositTokenState extends State<DepositToken> {
 
   //stores:---------------------------------------------------------------------
   final OrderStore _orderStore = OrderStore(getIt<Repository>());
-  final ThemeStore _themeStore = getIt<ThemeStore>();
   final DepositTokenFormStore _depositTokenFormStore = DepositTokenFormStore();
 
   // attributes:----------------------------------------------------------------
@@ -83,75 +80,62 @@ class _DepositTokenState extends State<DepositToken> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        fit: StackFit.passthrough,
-        children: [
-          LinearGradientBackground(
-            colors: _themeStore.lineToLineGradientColors,
-            stops: null,
-          ),
-          SafeArea(
-            bottom: false,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: Dimens.horizontal_padding,
-                  vertical: Dimens.vertical_padding),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          const SizedBox(
-                            height: kBottomNavigationBarHeight,
-                          ),
-                          _buildLoadTokenMethod(),
-                          _buildLoadTokenForm(),
-                          const SizedBox(
-                            height: kBottomNavigationBarHeight,
-                          ),
-                        ],
-                      ),
+    return GlassmorphismGradientScaffoldAppbar(
+      safeAreaTop: true,
+      appbarName: AppLocalizations.of(context).translate("deposit_title"),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+            horizontal: Dimens.horizontal_padding,
+            vertical: Dimens.vertical_padding),
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    const SizedBox(
+                      height: kBottomNavigationBarHeight,
                     ),
-                  ),
-                  _buildPayUpButton(),
-                ],
+                    _buildLoadTokenMethod(),
+                    _buildLoadTokenForm(),
+                    const SizedBox(
+                      height: kBottomNavigationBarHeight,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          CustomInStackAppBar(
-            nameAppbar: AppLocalizations.of(context).translate("deposit_title"),
-          ),
-          Observer(
-            builder: (context) {
-              return Visibility(
-                visible: _orderStore.isLoading,
-                child: const CustomProgressIndicatorWidget(),
-              );
-            },
-          ),
-          Observer(
-            // validator
-            builder: (_) {
-              return _orderStore.isSuccess
-                  ? ApplicationUtils.showSuccessMessage(
-                      context,
-                      "transaction_notification_title_translate",
-                      _orderStore.getSuccessMessageKey,
-                      callback: (() {
-                        Routes.route(context, DepositTokenSuccessFul());
-                      }),
-                    )
-                  : ApplicationUtils.showErrorMessage(
-                      context,
-                      "transaction_notification_title_translate",
-                      _orderStore.getFailedMessageKey,
-                    );
-            },
-          ),
-        ],
+            _buildPayUpButton(),
+          ],
+        ),
+      ),
+      progressIndicator: Observer(
+        builder: (context) {
+          return Visibility(
+            visible: _orderStore.isLoading,
+            child: const CustomProgressIndicatorWidget(),
+          );
+        },
+      ),
+      messageNotification: Observer(
+        // validator
+        builder: (_) {
+          return _orderStore.isSuccess
+              ? ApplicationUtils.showSuccessMessage(
+                  context,
+                  "transaction_notification_title_translate",
+                  _orderStore.getSuccessMessageKey,
+                  callback: (() {
+                    Routes.route(context, DepositTokenSuccessFul());
+                  }),
+                )
+              : ApplicationUtils.showErrorMessage(
+                  context,
+                  "transaction_notification_title_translate",
+                  _orderStore.getFailedMessageKey,
+                );
+        },
       ),
     );
   }

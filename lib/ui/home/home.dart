@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/notification/notification_store.dart';
-import 'package:mobile/ui/home/page/next_sessions_page.dart';
+import 'package:mobile/ui/home/page/schedule_page.dart';
 
 import 'page/home_page.dart';
-import 'page/next_sessions_page.dart';
 import 'page/notification_page.dart';
 import 'page/settings_page.dart';
 import 'page/tutor_page.dart';
@@ -42,7 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> pageList = [
     const TutorPage(),
-    const NextSessionsPage(),
+    // const NextSessionsPage(),
+    const SchedulePage(),
     const HomePage(),
     NotificationPage(),
     SettingsPage(),
