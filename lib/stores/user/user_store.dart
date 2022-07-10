@@ -369,7 +369,7 @@ abstract class _UserStore with Store {
     final future = _repository.fetchSessionsOfUser(
       authToken: accessToken,
       parameters: {
-        "expectedStartDate": DateTime.now().toDateString(),
+        "expectedStartDate": DateTime.now().toDDMMYYYYString(),
       },
     );
 

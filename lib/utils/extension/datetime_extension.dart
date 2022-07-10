@@ -7,20 +7,48 @@ extension DateTimeExtension on DateTime {
     return DateTime(this.year - year, month, day);
   }
 
+  DateTime tomorrow({bool toUTC = false}) {
+    if (toUTC) {
+      return DateTime(year, month, day + 1).toUtc();
+    } else {
+      return DateTime(year, month, day + 1);
+    }
+  }
+
+  DateTime today({bool toUTC = false}) {
+    if (toUTC) {
+      return DateTime(year, month, day).toUtc();
+    } else {
+      return DateTime(year, month, day);
+    }
+  }
+
   String toFulltimeString() {
     return DateFormat("hh:mm:ss, dd/MM/yyyy").format(this);
+  }
+
+  String toPresentedTime({bool toUTC = false}) {
+    return DateFormat("hh:mm:ss").format(toUTC ? toUtc() : this);
+  }
+
+  String toMeridiemPattern({bool toUTC = false}) {
+    return DateFormat("a").format(toUTC ? toUtc() : this);
   }
 
   String toDateTimeDealString() {
     return DateFormat("dd/MM/yyyy, hh:mm:ss a").format(this);
   }
 
-  String toBirthdayString() {
-    return DateFormat("yyyy-MM-dd").format(this);
+  String toZDateString({bool toUTC = false}) {
+    return DateFormat("yyyy-MM-dd").format(toUTC ? toUtc() : this);
   }
 
-  String toDateString() {
-    return DateFormat("dd/MM/yyyy").format(this);
+  String toDDMMYYYYString({bool toUTC = false}) {
+    return DateFormat("dd/MM/yyyy").format(toUTC ? toUtc() : this);
+  }
+
+  String toMonthNameString({String? locale}) {
+    return DateFormat("MMM", locale).format(this);
   }
 
   String toMMMMYYYYLocaleString(BuildContext context) {
@@ -32,11 +60,11 @@ extension DateTimeExtension on DateTime {
 }
 
 extension StringToDate on String {
-  DateTime parseFromBithdayString({bool utc = false}) {
+  DateTime parseFromDDMMYYYYString({bool utc = false}) {
     return DateFormat("dd/MM/yyyy").parse(this, utc);
   }
 
-  bool isBirthdayString() {
+  bool isDDMMYYYYString() {
     final isBirthdayStringForm =
         (RegExp(r'\d\d\/\d\d\/\d+').firstMatch(this)?.group(0)?.length ?? -1) ==
             length;
@@ -53,8 +81,8 @@ extension StringToDate on String {
     return isBirthdayStringForm && isDateString;
   }
 
-  String parseFromBithdayToIso8601String() {
-    return parseFromBithdayString(utc: true).toIso8601String();
+  String parseFromDDMMYYYYToIso8601String() {
+    return parseFromDDMMYYYYString(utc: true).toIso8601String();
   }
 
   String capitalizeFirstCharacter() {

@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:grouped_list/grouped_list.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
+import 'package:mobile/di/components/service_locator.dart';
+import 'package:mobile/models/common/session/session.dart';
+import 'package:mobile/stores/schedule/schedule_store.dart';
+import 'package:mobile/stores/theme/theme_store.dart';
+import 'package:mobile/utils/application/application_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
+import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
+import 'package:mobile/widgets/card/event_card.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
-import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'package:mobile/utils/extension/datetime_extension.dart';
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({Key? key}) : super(key: key);
@@ -13,14 +23,24 @@ class SchedulePage extends StatefulWidget {
 }
 
 class _SchedulePageState extends State<SchedulePage> {
-  // late ScheduleStore scheduleStore;
+  // controller:----------------------------------------------------------------
 
-  final RefreshController refreshController =
-      RefreshController(initialRefresh: false);
+  // store:---------------------------------------------------------------------
+
+  final ScheduleStore _scheduleStore = getIt<ScheduleStore>();
+  final ThemeStore _themeStore = getIt<ThemeStore>();
+
+  // variable:------------------------------------------------------------------
+  DateTime _selectedDate = DateTime.now();
+  DateTime _focusedDate = DateTime.now();
 
   late final List<Tab> _tab;
 
   late final TabBar _tabBar;
+
+  final double _heightTabBar = 150;
+  late final double _positionedTopHeaderTabBar;
+  late final double _positionedToBuild;
 
   @override
   void initState() {
@@ -31,11 +51,25 @@ class _SchedulePageState extends State<SchedulePage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    // scheduleStore = Provider.of<ScheduleStore>(context);
-
     _tab = [
-      Tab(text: AppLocalizations.of(context).translate("calendar_translate")),
-      Tab(text: AppLocalizations.of(context).translate("list_translate")),
+      Tab(
+        child: Text(
+          AppLocalizations.of(context).translate("calendar_translate"),
+          style: Theme.of(context)
+              .textTheme
+              .bodySmall!
+              .copyWith(color: Colors.white),
+        ),
+      ),
+      Tab(
+        child: Text(
+          AppLocalizations.of(context).translate("list_translate"),
+          style: Theme.of(context)
+              .textTheme
+              .bodySmall!
+              .copyWith(color: Colors.white),
+        ),
+      ),
     ];
 
     _tabBar = TabBar(
@@ -49,586 +83,240 @@ class _SchedulePageState extends State<SchedulePage> {
       labelStyle: Theme.of(context).textTheme.bodyMedium,
       isScrollable: true,
     );
+
+    _positionedTopHeaderTabBar =
+        _heightTabBar - _tabBar.preferredSize.height / 2;
+
+    _positionedToBuild = _heightTabBar + _tabBar.preferredSize.height;
   }
 
   @override
   void dispose() {
-    refreshController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: _tab.length,
-        child: Column(
-          children: [
-            Container(
-              color: Colors.red,
-              child: GlassmorphismContainer(
-                child: Stack(
-                  fit: StackFit.passthrough,
+      length: _tab.length,
+      child: Stack(
+        children: [
+          LinearGradientBackground(
+            colors: _themeStore.lineToLineGradientColors,
+            stops: null,
+          ),
+          CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: SizedBox(height: _positionedToBuild),
+              ),
+              SliverFillRemaining(
+                child: TabBarView(
+                  physics: const NeverScrollableScrollPhysics(),
                   children: [
-                    SafeArea(
-                      child: Text(
-                        AppLocalizations.of(context)
-                            .translate('next_sessions_title_translate'),
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge!
-                            .copyWith(fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                    // PreferredSize(
-                    //   preferredSize: _tabBar.preferredSize,
-                    //   child: Container(
-                    //     padding: const EdgeInsets.all(4),
-                    //     decoration: BoxDecoration(
-                    //       color: Colors.grey.shade600,
-                    //       borderRadius: BorderRadius.circular(20),
-                    //     ),
-                    //     child: _tabBar,
-                    //   ),
-                    // ),
+                    _buildCalendarTabView(context),
+                    _buildGroupListTabView(context),
                   ],
                 ),
-                blur: Properties.blur_glass_morphism,
-                opacity: Properties.opacity_glass_morphism,
               ),
-            ),
-            // Expanded(
-            //   child: TabBarView(
-            //     children: [
-            //       _buildCalendarTabView(context),
-            //       _buildGroupListTabView(context),
-            //     ],
-            //   ),
-            // ),
-          ],
-        ));
+              const SliverToBoxAdapter(
+                child: SizedBox(height: kBottomNavigationBarHeight),
+              ),
+            ],
+          ),
+          _buildHeader(context),
+          _buildTabHeader(),
+          Observer(
+            builder: (_) {
+              return _scheduleStore.success
+                  ? const SizedBox.shrink()
+                  : ApplicationUtils.showErrorMessage(
+                      context,
+                      "Find_sessions_error_translate",
+                      _scheduleStore.getFailedMessageKey,
+                    );
+            },
+          ),
+        ],
+      ),
+    );
+  }
 
-    // Container(
-    //   padding: const EdgeInsets.symmetric(
-    //       horizontal: Dimens.horizontal_padding,
-    //       vertical: Dimens.vertical_padding),
-    //   child: Column(
-    //     crossAxisAlignment: CrossAxisAlignment.stretch,
-    //     children: <Widget>[
-    //       // Text(
-    //       //   AppLocalizations.of(context).translate("upcoming_title"),
-    //       //   style: TextStyle(
-    //       //     fontFamily: FontFamily.gilroy,
-    //       //     fontSize: Dimens.large_text,
-    //       //     color: Theme.of(context).primaryColor.withAlpha(200),
-    //       //     letterSpacing: 2,
-    //       //   ),
-    //       // ),
-    //       // const SizedBox(
-    //       //   height: 10,
-    //       // ),
-    //       Expanded(
-    //         child: Observer(
-    //           builder: (_) {
-    //             return Container();
-    //             // SmartRefresher(
-    //             //     controller: refreshController,
-    //             //     enablePullUp: true,
-    //             //     enablePullDown: true,
-    //             //     header: FetchMethodWidget.fetchHeaderStatus(context),
-    //             //     footer: FetchMethodWidget.fetchFooterStatus(),
-    //             //     onRefresh: () async {
-    //             //       if (curPage > 1) {
-    //             //         curPage--;
-    //             //       }
-    //             //       await scheduleStore
-    //             //           .fetchUpcomingSchedule(page: curPage)
-    //             //           .then(
-    //             //               (value) => refreshController.refreshCompleted());
-    //             //     },
-    //             //     onLoading: () async {
-    //             //       await scheduleStore
-    //             //           .fetchUpcomingSchedule(page: curPage)
-    //             //           .then((value) {
-    //             //         if (value) {
-    //             //           curPage++;
-    //             //         }
-    //             //         refreshController.loadComplete();
-    //             //       });
-    //             //     },
-    //             //     child: ListView.builder(
-    //             //       itemBuilder: (context, index) {
-    //             //         return _buildItem(context,
-    //             //             scheduleStore.upcomingScheduleList![index]);
-    //             //       },
-    //             //       itemCount:
-    //             //           scheduleStore.upcomingScheduleList?.length ?? 0,
-    //             //     ));
-    //           },
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
+  Positioned _buildTabHeader() {
+    return Positioned.fill(
+      top: _positionedTopHeaderTabBar,
+      bottom: null,
+      child: Center(
+        child: PreferredSize(
+          preferredSize: _tabBar.preferredSize,
+          child: GlassmorphismContainer(
+            child: _tabBar,
+            blur: Properties.hevily_blur_glass_morphism,
+            opacity: Properties.hevily_opacity_glass_morphism,
+            padding: const EdgeInsets.all(2),
+            background: Theme.of(context).highlightColor,
+          ),
+        ),
+      ),
+    );
+  }
+
+  GlassmorphismContainer _buildHeader(BuildContext context) {
+    return GlassmorphismContainer(
+      width: double.infinity,
+      height: _heightTabBar,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+            horizontal: Dimens.horizontal_padding,
+            vertical: Dimens.vertical_padding),
+        child: SafeArea(
+          bottom: false,
+          child: Text(
+            AppLocalizations.of(context)
+                .translate('next_sessions_title_translate'),
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge!
+                .copyWith(fontWeight: FontWeight.w500),
+          ),
+        ),
+      ),
+      blur: Properties.blur_glass_morphism,
+      opacity: Properties.opacity_glass_morphism,
+      radius: Dimens.kBorderRadiusValue,
+    );
   }
 
   Widget _buildGroupListTabView(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(),
-
-      // Padding(
-      //   padding: const EdgeInsets.symmetric(
-      //       horizontal: 30 * _scaleScreen, vertical: 20 * _scaleScreen),
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.start,
-      //     crossAxisAlignment: CrossAxisAlignment.start,
-      //     children: [
-      //       Container(
-      //         padding: const EdgeInsets.symmetric(
-      //             horizontal: 16 * _scaleScreen, vertical: 16 * _scaleScreen),
-      //         width: double.infinity,
-      //         decoration: BoxDecoration(
-      //           color: Theme.of(context).indicatorColor,
-      //           borderRadius: Dimens.kBorderRadius,
-      //         ),
-      //         child: Column(
-      //           children: [
-      //             Container(
-      //               decoration: const BoxDecoration(
-      //                 color: Colors.white70,
-      //                 borderRadius: BorderRadius.only(
-      //                   topLeft: Radius.circular(15),
-      //                   topRight: Radius.circular(15),
-      //                 ),
-      //               ),
-      //               padding: const EdgeInsets.symmetric(
-      //                   horizontal: 16 * _scaleScreen,
-      //                   vertical: 16 * _scaleScreen),
-      //               margin: const EdgeInsets.only(bottom: 8 * _scaleScreen),
-      //               child: Row(
-      //                 children: [
-      //                   Expanded(
-      //                       child: Column(
-      //                     children: [
-      //                       Image.asset('assets/eat.png'),
-      //                       Text(
-      //                         '860',
-      //                         style: Theme.of(context)
-      //                             .textTheme
-      //                             .bodySmall!
-      //                             .copyWith(
-      //                               fontWeight: FontWeight.bold,
-      //                               fontSize: 18,
-      //                             ),
-      //                       ),
-      //                       Text(
-      //                         'Ate',
-      //                         style: Theme.of(context).textTheme.bodySmall,
-      //                       ),
-      //                     ],
-      //                   )),
-      //                   CircularPercentIndicator(
-      //                     radius: 100,
-      //                     lineWidth: 15,
-      //                     animation: true,
-      //                     percent: 0.7,
-      //                     center: Column(
-      //                       crossAxisAlignment: CrossAxisAlignment.center,
-      //                       mainAxisAlignment: MainAxisAlignment.center,
-      //                       children: [
-      //                         Text(
-      //                           "1625",
-      //                           style: Theme.of(context).textTheme.bodySmall,
-      //                         ),
-      //                         Text(
-      //                           "kCal Left",
-      //                           style: Theme.of(context).textTheme.bodySmall,
-      //                         ),
-      //                       ],
-      //                     ),
-      //                     backgroundColor: const Color(0xffebebeb),
-      //                     circularStrokeCap: CircularStrokeCap.round,
-      //                     progressColor: Theme.of(context).primaryColor,
-      //                     animationDuration: 1000,
-      //                   ),
-      //                   Expanded(
-      //                       child: Column(
-      //                     children: [
-      //                       Image.asset('assets/calo.png'),
-      //                       Text(
-      //                         '120',
-      //                         style: Theme.of(context).textTheme.bodySmall,
-      //                       ),
-      //                       Text(
-      //                         'Ate',
-      //                         style: Theme.of(context).textTheme.bodySmall,
-      //                       ),
-      //                     ],
-      //                   )),
-      //                 ],
-      //               ),
-      //             ),
-      //             Container(
-      //               decoration: const BoxDecoration(
-      //                 color: Colors.white,
-      //                 borderRadius: BorderRadius.only(
-      //                   bottomRight: Radius.circular(15),
-      //                   bottomLeft: Radius.circular(15),
-      //                 ),
-      //               ),
-      //               padding: const EdgeInsets.symmetric(
-      //                   vertical: 10 * _scaleScreen, horizontal: 16),
-      //               child: Row(
-      //                 children: [
-      //                   Expanded(
-      //                     child: Padding(
-      //                       padding: const EdgeInsets.symmetric(horizontal: 8),
-      //                       child: Column(
-      //                         children: [
-      //                           Text(
-      //                             'Carb',
-      //                             style: Theme.of(context).textTheme.bodySmall,
-      //                           ),
-      //                           Padding(
-      //                             padding: const EdgeInsets.symmetric(
-      //                                 vertical: 4 * _scaleScreen),
-      //                             child: LinearProgressIndicator(
-      //                               backgroundColor: Colors.grey,
-      //                               color: Theme.of(context).primaryColor,
-      //                               value: 46 / 158,
-      //                             ),
-      //                           ),
-      //                           Text(
-      //                             '46 / 158',
-      //                             style: Theme.of(context).textTheme.bodySmall,
-      //                           ),
-      //                         ],
-      //                       ),
-      //                     ),
-      //                   ),
-      //                   Expanded(
-      //                     child: Padding(
-      //                       padding: const EdgeInsets.symmetric(horizontal: 16),
-      //                       child: Column(
-      //                         children: [
-      //                           Text(
-      //                             'Protein',
-      //                             style: Theme.of(context).textTheme.bodySmall,
-      //                           ),
-      //                           Padding(
-      //                             padding: const EdgeInsets.symmetric(
-      //                                 vertical: 4 * _scaleScreen),
-      //                             child: LinearProgressIndicator(
-      //                               backgroundColor: Colors.grey,
-      //                               color: Theme.of(context).primaryColor,
-      //                               value: 46 / 158,
-      //                             ),
-      //                           ),
-      //                           Text(
-      //                             '46 / 158',
-      //                             style: Theme.of(context).textTheme.bodySmall,
-      //                           ),
-      //                         ],
-      //                       ),
-      //                     ),
-      //                   ),
-      //                   Expanded(
-      //                     child: Padding(
-      //                       padding: const EdgeInsets.symmetric(horizontal: 8),
-      //                       child: Column(
-      //                         children: [
-      //                           Text(
-      //                             'Fat',
-      //                             style: Theme.of(context).textTheme.bodySmall,
-      //                           ),
-      //                           Padding(
-      //                             padding: const EdgeInsets.symmetric(
-      //                                 vertical: 4 * _scaleScreen),
-      //                             child: LinearProgressIndicator(
-      //                               backgroundColor: Colors.grey,
-      //                               color: Theme.of(context).primaryColor,
-      //                               value: 46 / 158,
-      //                             ),
-      //                           ),
-      //                           Text(
-      //                             '46 / 158',
-      //                             style: Theme.of(context).textTheme.bodySmall,
-      //                           ),
-      //                         ],
-      //                       ),
-      //                     ),
-      //                   ),
-      //                 ],
-      //               ),
-      //             ),
-      //           ],
-      //         ),
-      //       ),
-      //       Padding(
-      //         padding: const EdgeInsets.symmetric(vertical: 8 * _scaleScreen),
-      //         child: Row(
-      //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //           children: [
-      //             Text(
-      //               'Your food log',
-      //               style: Theme.of(context).textTheme.bodySmall,
-      //             ),
-      //             ElevatedButton(
-      //               onPressed: () {},
-      //               child: Row(
-      //                 children: [
-      //                   Icon(
-      //                     Icons.add_circle,
-      //                     size: 16 * _scaleScreen,
-      //                     color: Theme.of(context).indicatorColor,
-      //                   ),
-      //                   Text('Meal',
-      //                       style: Theme.of(context).textTheme.bodySmall)
-      //                 ],
-      //               ),
-      //               style: ElevatedButton.styleFrom(
-      //                 elevation: 0,
-      //                 shape: RoundedRectangleBorder(
-      //                     borderRadius: BorderRadius.circular(10)),
-      //                 primary: Colors.grey.withOpacity(0.5),
-      //               ),
-      //             ),
-      //           ],
-      //         ),
-      //       ),
-      //       Container(
-      //         margin: const EdgeInsets.symmetric(vertical: 6 * _scaleScreen),
-      //         padding: const EdgeInsets.symmetric(
-      //             vertical: 12 * _scaleScreen, horizontal: 16 * _scaleScreen),
-      //         decoration: BoxDecoration(
-      //           borderRadius: Dimens.kBorderRadius,
-      //           color: Colors.white,
-      //           boxShadow: [
-      //             BoxShadow(
-      //               color: Colors.grey.withOpacity(0.5),
-      //               spreadRadius: 2,
-      //               blurRadius: 5,
-      //               offset: const Offset(0, 2), // changes position of shadow
-      //             ),
-      //           ],
-      //         ),
-      //         child: Column(
-      //           children: [
-      //             ListTile(
-      //               leading: Image.asset("assets/breakfast.png"),
-      //               title: Text(
-      //                 'Breakfast',
-      //                 style: Theme.of(context).textTheme.bodySmall,
-      //               ),
-      //               contentPadding: EdgeInsets.zero,
-      //               trailing: IconButton(
-      //                 onPressed: () {},
-      //                 icon: Icon(
-      //                   Icons.add_circle,
-      //                   color: Theme.of(context).primaryColor,
-      //                   size: 30 * _scaleScreen,
-      //                 ),
-      //               ),
-      //             ),
-      //           ],
-      //         ),
-      //       ),
-      //       Container(
-      //         margin: const EdgeInsets.symmetric(vertical: 6 * _scaleScreen),
-      //         padding: const EdgeInsets.symmetric(
-      //             vertical: 12 * _scaleScreen, horizontal: 16 * _scaleScreen),
-      //         decoration: BoxDecoration(
-      //           borderRadius: Dimens.kBorderRadius,
-      //           color: Colors.white,
-      //           boxShadow: [
-      //             BoxShadow(
-      //               color: Colors.grey.withOpacity(0.5),
-      //               spreadRadius: 2,
-      //               blurRadius: 5,
-      //               offset: const Offset(0, 2), // changes position of shadow
-      //             ),
-      //           ],
-      //         ),
-      //         child: Column(
-      //           children: [
-      //             ListTile(
-      //               leading: Image.asset("assets/lunch.png"),
-      //               title: Text(
-      //                 'Lunch',
-      //                 style: Theme.of(context).textTheme.bodySmall,
-      //               ),
-      //               contentPadding: EdgeInsets.zero,
-      //               trailing: IconButton(
-      //                 onPressed: () {},
-      //                 icon: Icon(
-      //                   Icons.add_circle,
-      //                   color: Theme.of(context).primaryColor,
-      //                   size: 30 * _scaleScreen,
-      //                 ),
-      //               ),
-      //             ),
-      //           ],
-      //         ),
-      //       ),
-      //       Container(
-      //         margin: const EdgeInsets.symmetric(vertical: 6 * _scaleScreen),
-      //         padding: const EdgeInsets.symmetric(
-      //             vertical: 12 * _scaleScreen, horizontal: 16 * _scaleScreen),
-      //         decoration: BoxDecoration(
-      //           borderRadius: Dimens.kBorderRadius,
-      //           color: Colors.white,
-      //           boxShadow: [
-      //             BoxShadow(
-      //               color: Colors.grey.withOpacity(0.5),
-      //               spreadRadius: 2,
-      //               blurRadius: 5,
-      //               offset: const Offset(0, 2), // changes position of shadow
-      //             ),
-      //           ],
-      //         ),
-      //         child: Column(
-      //           children: [
-      //             ListTile(
-      //               leading: Image.asset("assets/dinner.png"),
-      //               title: Text(
-      //                 'Dinner',
-      //                 style: Theme.of(context).textTheme.bodySmall,
-      //               ),
-      //               contentPadding: EdgeInsets.zero,
-      //               trailing: IconButton(
-      //                 onPressed: () {},
-      //                 icon: Icon(
-      //                   Icons.add_circle,
-      //                   color: Theme.of(context).primaryColor,
-      //                   size: 30 * _scaleScreen,
-      //                 ),
-      //               ),
-      //             ),
-      //           ],
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
+    return Observer(
+      builder: (_) {
+        return GroupedListView<Session, String>(
+          elements: _scheduleStore.listListSessions,
+          groupBy: (element) => element.expectedDate!.toDDMMYYYYString(),
+          groupSeparatorBuilder: (String groupByValue) => Text(groupByValue),
+          itemBuilder: (context, Session element) =>
+              Text(element.program.title),
+          itemComparator: (item1, item2) =>
+              item1.expectedDate!.compareTo(item2.expectedDate!), // optional
+          useStickyGroupSeparators: true, // optional
+          floatingHeader: true, // optional
+          order: GroupedListOrder.ASC, // optional
+        );
+      },
     );
   }
 
   Widget _buildCalendarTabView(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(),
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding:
+              const EdgeInsets.symmetric(horizontal: Dimens.horizontal_padding),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  IconTheme(
+                    data: Theme.of(context).iconTheme,
+                    child: const Icon(
+                      Icons.calendar_today_outlined,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: Dimens.vertical_margin,
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: _selectedDate.toMonthNameString(
+                              locale: AppLocalizations.of(context)
+                                  .locale
+                                  .languageCode),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(fontWeight: FontWeight.w700),
+                        ),
+                        TextSpan(
+                          text: "  ${_selectedDate.year}",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(fontWeight: FontWeight.w400),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _selectedDate = DateTime.now();
+                    _focusedDate = DateTime.now();
+                  });
+                },
+                child: Text(
+                  AppLocalizations.of(context).translate("today"),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .copyWith(fontWeight: FontWeight.w500),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(
+          height: Dimens.vertical_margin,
+        ),
+        TableCalendar(
+          focusedDay: _focusedDate,
+          firstDay: DateTime.now(),
+          lastDay: DateTime.now().add(const Duration(days: 7)),
+          calendarFormat: CalendarFormat.week,
+          headerVisible: false,
+          selectedDayPredicate: (day) {
+            return isSameDay(_selectedDate, day);
+          },
+          daysOfWeekHeight: Dimens.medium_text,
+          onDaySelected: (selectedDay, focusedDay) {
+            setState(() {
+              if (selectedDay.compareTo(_selectedDate) != 0) {
+                _scheduleStore.fetchSessionsByDate(date: selectedDay);
 
-      // Padding(
-      //   padding: const EdgeInsets.symmetric(horizontal: 30 * _scaleScreen),
-      //   child: Column(
-      //     children: [
-      //       Container(
-      //         padding: const EdgeInsets.symmetric(
-      //             horizontal: 16 * _scaleScreen, vertical: 16 * _scaleScreen),
-      //         margin: const EdgeInsets.symmetric(vertical: 16 * _scaleScreen),
-      //         width: double.infinity,
-      //         decoration: BoxDecoration(
-      //           borderRadius: Dimens.kBorderRadius,
-      //           color: Theme.of(context).indicatorColor,
-      //         ),
-      //         child: Row(
-      //           children: [
-      //             Expanded(
-      //                 child: Column(
-      //               children: [
-      //                 Text(
-      //                   'Workout',
-      //                   style: Theme.of(context).textTheme.bodySmall,
-      //                 ),
-      //                 Text(
-      //                   '0',
-      //                   style: Theme.of(context).textTheme.bodySmall,
-      //                 ),
-      //               ],
-      //             )),
-      //             Expanded(
-      //                 child: Container(
-      //               child: Column(
-      //                 children: [
-      //                   Text(
-      //                     'kcal',
-      //                     style: Theme.of(context).textTheme.bodySmall,
-      //                   ),
-      //                   Text(
-      //                     '0',
-      //                     style: Theme.of(context).textTheme.bodySmall,
-      //                   )
-      //                 ],
-      //               ),
-      //               decoration: BoxDecoration(
-      //                 border: Border(
-      //                   right:
-      //                       BorderSide(color: Colors.grey.shade700, width: 1),
-      //                   left: BorderSide(color: Colors.grey.shade700, width: 1),
-      //                 ),
-      //               ),
-      //             )),
-      //             Expanded(
-      //               child: Column(
-      //                 children: [
-      //                   Text(
-      //                     'Time (min)',
-      //                     style:
-      //                         Theme.of(context).textTheme.bodySmall!.copyWith(
-      //                               fontWeight: FontWeight.w600,
-      //                             ),
-      //                   ),
-      //                   Text(
-      //                     '0',
-      //                     style:
-      //                         Theme.of(context).textTheme.bodySmall!.copyWith(
-      //                               fontWeight: FontWeight.w600,
-      //                             ),
-      //                   ),
-      //                 ],
-      //               ),
-      //             ),
-      //           ],
-      //         ),
-      //       ),
-      //       TableCalendar(
-      //         firstDay: DateTime.utc(2010, 10, 16),
-      //         lastDay: DateTime.utc(2030, 3, 14),
-      //         focusedDay: DateTime.now(),
-      //         calendarStyle: const CalendarStyle(),
-      //       ),
-      //     ],
-      //   ),
-      // ),
+                _selectedDate = selectedDay;
+                _focusedDate = focusedDay;
+              }
+            });
+          },
+          onPageChanged: (focusedDay) {
+            _focusedDate = focusedDay;
+          },
+        ),
+        Observer(
+          builder: (_) {
+            if (_scheduleStore.isCalendarLoading) {
+              return Container(); // build shimmer
+            } else {
+              return ListView.builder(
+                scrollDirection: Axis.vertical,
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (_, index) => EventCard(
+                  session: _scheduleStore.getCalendarSessionsAt(index)!,
+                  onViewDetailTap: () {},
+                  onSendMessageTap: () {},
+                ),
+                itemCount: _scheduleStore.sizeCalendarSessions,
+              );
+            }
+          },
+        ),
+      ],
     );
   }
-
-  // Widget _buildItem(BuildContext context, Schedule schedule) {
-  //   return ScheduleCard(
-  //     schedule: schedule,
-  //     cancelMeeting:
-  //         (DateTime.now().add(const Duration(hours: 2)).millisecondsSinceEpoch >
-  //                 schedule.scheduleDetailInfo!.startPeriodTimestamp)
-  //             ? null
-  //             : () {
-  //                 cancelMeeting(context, schedule.scheduleDetailId);
-  //               },
-  //     enterMeeting: () {
-  //       enterMeeting(context, schedule);
-  //     },
-  //   );
-  // }
-
-  // void cancelMeeting(BuildContext context, String scheduleDetailId) {
-  //   FunctionHelper.showSlidePopupDialog(
-  //       context,
-  //       CancelSchedulePopup(
-  //         scheduleDetailId: scheduleDetailId,
-  //       ),
-  //       150);
-  // }
-
-  // void enterMeeting(BuildContext context, Schedule schedule) {
-  //   scheduleStore.setScheduleDetail(schedule).then((value) {
-  //     Navigator.of(context).pushNamed(Routes.jitsiVideoCall);
-  //   });
-  // }
 }

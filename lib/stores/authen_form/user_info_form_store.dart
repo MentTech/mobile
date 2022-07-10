@@ -98,7 +98,7 @@ abstract class _UserInfoFormStore with Store {
   void validateBirthday(String value) {
     if (value.isEmpty) {
       formErrorStore.birthday = "Birthday can't be empty";
-    } else if (!value.isBirthdayString()) {
+    } else if (!value.isDDMMYYYYString()) {
       formErrorStore.birthday = "This is a invalid date";
     } else {
       formErrorStore.birthday = null;
@@ -123,7 +123,7 @@ abstract class _UserInfoFormStore with Store {
     return {
       "email": email,
       "name": name,
-      "birthday": birthday.parseFromBithdayToIso8601String(),
+      "birthday": birthday.parseFromDDMMYYYYToIso8601String(),
       "phone": phone,
     };
   }

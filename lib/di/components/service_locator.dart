@@ -17,6 +17,7 @@ import 'package:mobile/stores/chat/chat_store.dart';
 import 'package:mobile/stores/language/language_store.dart';
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobile/stores/notification/notification_store.dart';
+import 'package:mobile/stores/schedule/schedule_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -104,6 +105,7 @@ Future<void> setupLocator() async {
   getIt.registerSingleton(ThemeStore(getIt<Repository>()));
   getIt.registerSingleton(NotificationStore(getIt<Repository>()));
   getIt.registerSingleton(ChatStore(getIt<Repository>()));
+  getIt.registerSingleton(ScheduleStore(getIt<Repository>()));
   // getIt.registerSingleton(CommonStore(getIt<Repository>()));
 
   // getIt.registerSingleton(MessageStore());

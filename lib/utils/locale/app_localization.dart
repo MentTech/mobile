@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -40,6 +41,10 @@ class AppLocalizations {
 
   // This method will be called from every widget which needs a localized text
   String translate(String key) {
+    if (localizedStrings[key] == null) {
+      log("message key: " + key);
+      return key;
+    }
     return localizedStrings[key]!;
   }
 }

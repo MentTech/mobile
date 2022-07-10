@@ -155,9 +155,10 @@ abstract class _MentorStore with Store {
 
     if (null == accessToken) {
       messageStore.setErrorMessageByCode(401);
-      messageStore.notifyExpiredTokenStatus();
 
       success = false;
+
+      return;
     }
 
     parameterQuery.addAll({
@@ -169,17 +170,21 @@ abstract class _MentorStore with Store {
     requestFuture = ObservableFuture(future);
 
     future.then((res) {
-      // totalPage = res!["totalPage"];
-      // listMentors = ObservableList.of(MentorModelList.fromJson(res).list);
       try {
-        totalPage = res!["totalPage"];
-        listMentors = ObservableList.of(MentorModelList.fromJson(res).list);
+        if (res!["statusCode"] == null) {
+          totalPage = res["totalPage"];
+          listMentors = ObservableList.of(MentorModelList.fromJson(res).list);
 
-        success = true;
+          success = true;
+        } else {
+          int code = res["statusCode"] as int;
+
+          messageStore.setErrorMessageByCode(code);
+
+          success = false;
+        }
       } catch (e) {
-        // res['message']
-        // messageStore.errorMessage = e.toString();
-        // messageStore.successMessage = "";
+        messageStore.setErrorMessageByCode(500);
 
         success = false;
       }
@@ -192,7 +197,6 @@ abstract class _MentorStore with Store {
 
     if (null == accessToken) {
       messageStore.setErrorMessageByCode(401);
-      messageStore.notifyExpiredTokenStatus();
 
       success = false;
     }
@@ -200,22 +204,21 @@ abstract class _MentorStore with Store {
     final future = _repository.fetchRecommendedMentors();
 
     future.then((res) {
-      if (res!["statusCode"] == null) {
-        recommendedMentorList =
-            ObservableList.of(MentorModelList.fromJson(res).list);
-
-        success = true;
-      } else {
-        int code = res["statusCode"] as int;
-
-        messageStore.setErrorMessageByCode(code);
-      }
       try {
-        success = true;
+        if (res!["statusCode"] == null) {
+          recommendedMentorList =
+              ObservableList.of(MentorModelList.fromJson(res).list);
+
+          success = true;
+        } else {
+          int code = res["statusCode"] as int;
+
+          messageStore.setErrorMessageByCode(code);
+
+          success = false;
+        }
       } catch (e) {
-        // // res['message']
-        // messageStore.errorMessage = e.toString();
-        // messageStore.successMessage = "";
+        messageStore.setErrorMessageByCode(500);
 
         success = false;
       }
@@ -228,7 +231,6 @@ abstract class _MentorStore with Store {
 
     if (null == accessToken) {
       messageStore.setErrorMessageByCode(401);
-      messageStore.notifyExpiredTokenStatus();
 
       success = false;
     }
@@ -239,14 +241,22 @@ abstract class _MentorStore with Store {
     );
 
     future.then((res) {
-      favouriteMentorList =
-          ObservableList.of(MentorModelList.fromJson(res!).list);
       try {
+        if (res!["statusCode"] == null) {
+          favouriteMentorList =
+              ObservableList.of(MentorModelList.fromJson(res).list);
+
+          success = true;
+        } else {
+          int code = res["statusCode"] as int;
+
+          messageStore.setErrorMessageByCode(code);
+
+          success = false;
+        }
         success = true;
       } catch (e) {
-        // res['message']
-        // messageStore.errorMessage = e.toString();
-        // messageStore.successMessage = "";
+        messageStore.setErrorMessageByCode(500);
 
         success = false;
       }
@@ -259,7 +269,6 @@ abstract class _MentorStore with Store {
 
     if (null == accessToken) {
       messageStore.setErrorMessageByCode(401);
-      messageStore.notifyExpiredTokenStatus();
 
       success = false;
 
@@ -271,13 +280,19 @@ abstract class _MentorStore with Store {
 
     future.then((res) {
       try {
-        mentorModel = MentorModel.fromJson(res!);
+        if (res!["statusCode"] == null) {
+          mentorModel = MentorModel.fromJson(res);
 
-        success = true;
+          success = true;
+        } else {
+          int code = res["statusCode"] as int;
+
+          messageStore.setErrorMessageByCode(code);
+
+          success = false;
+        }
       } catch (e) {
-        // res['message']
-        // messageStore.errorMessage = e.toString();
-        // messageStore.successMessage = "";
+        messageStore.setErrorMessageByCode(500);
 
         success = false;
       }
@@ -290,7 +305,6 @@ abstract class _MentorStore with Store {
 
     if (null == accessToken) {
       messageStore.setErrorMessageByCode(401);
-      messageStore.notifyExpiredTokenStatus();
 
       success = false;
 
@@ -298,9 +312,7 @@ abstract class _MentorStore with Store {
     }
 
     if (null == mentorModel) {
-      // messageStore.successMessage = "";
-      // messageStore.errorMessage = "There are no MentorModel";
-      messageStore.notifyExpiredTokenStatus();
+      messageStore.setErrorMessageByCode(500);
 
       success = false;
 
@@ -313,13 +325,19 @@ abstract class _MentorStore with Store {
 
     future.then((res) {
       try {
-        program = Program.fromJson(res!);
+        if (res!["statusCode"] == null) {
+          program = Program.fromJson(res);
 
-        success = true;
+          success = true;
+        } else {
+          int code = res["statusCode"] as int;
+
+          messageStore.setErrorMessageByCode(code);
+
+          success = false;
+        }
       } catch (e) {
-        // res['message']
-        // messageStore.errorMessage = e.toString();
-        // messageStore.successMessage = "";
+        messageStore.setErrorMessageByCode(500);
 
         success = false;
       }

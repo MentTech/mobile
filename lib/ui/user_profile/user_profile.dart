@@ -57,7 +57,7 @@ class _UserProfileState extends State<UserProfile> {
 
     String birthdayString =
         (user.birthday ?? DateTime.now().subtractYear(year: 18))
-            .toBirthdayString();
+            .toZDateString(toUTC: true);
     _birthdayController.text = birthdayString;
     _phoneController.text = user.phone ?? "";
 
