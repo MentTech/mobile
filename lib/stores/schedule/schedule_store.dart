@@ -115,6 +115,9 @@ abstract class _ScheduleStore with Store {
     final future = _repository.fetchSessionsOfUser(
       authToken: accessToken,
       parameters: {
+        "isAccepted": true,
+        "done": false,
+        "isCanceled": false,
         "expectedStartDate": DateTime.now().toDDMMYYYYString(toUTC: true),
       },
     );
@@ -159,6 +162,9 @@ abstract class _ScheduleStore with Store {
     final future = _repository.fetchSessionsOfUser(
       authToken: accessToken,
       parameters: {
+        "isAccepted": true,
+        "done": false,
+        "isCanceled": false,
         "expectedStartDate": date.today(toUTC: true).toIso8601String(),
         "expectedEndDate": date.tomorrow(toUTC: true).toIso8601String(),
       },

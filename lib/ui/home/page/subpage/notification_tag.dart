@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
+import 'package:mobile/models/mentor/mentor.dart';
 import 'package:mobile/models/notification/notification.dart';
 import 'package:mobile/stores/mentor/mentor_store.dart';
+import 'package:mobile/stores/model_notification/model_notification.dart';
 import 'package:mobile/ui/session_detail/session_detail_full_feature.dart';
 import 'package:mobile/utils/application/application_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/container/image_container/network_image_widget.dart';
+import 'package:mobile/widgets/errors_widget/error_widget.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/glassmorphism_widget_button.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -20,8 +23,8 @@ class NotificationTag extends StatefulWidget {
     required this.callback,
   }) : super(key: key);
 
-  final NotificationModel notificationModel;
   final VoidCallback callback;
+  final NotificationModel notificationModel;
 
   @override
   State<NotificationTag> createState() => _NotificationTagState();
@@ -29,13 +32,21 @@ class NotificationTag extends StatefulWidget {
 
 class _NotificationTagState extends State<NotificationTag> {
   late final MentorStore _mentorStore;
+  late final NotificationModelStore _notificationModelStore;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _notificationModelStore = NotificationModelStore(widget.notificationModel);
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
     _mentorStore = Provider.of<MentorStore>(context, listen: false);
-    _mentorStore.fetchAMentor(widget.notificationModel.actorId);
+    // _mentorStore.fetchAMentor(widget.notificationModel.actorId);
   }
 
   @override
@@ -45,6 +56,8 @@ class _NotificationTagState extends State<NotificationTag> {
       child: GlassmorphismWidgetButton(
         onTap: () {
           widget.callback.call();
+
+          _notificationModelStore.read();
 
           Routes.route(
             context,
@@ -62,25 +75,33 @@ class _NotificationTagState extends State<NotificationTag> {
           children: [
             Expanded(
               flex: 2,
-              child: Observer(
-                builder: (_) => _mentorStore.isLoading
-                    ? ApplicationUtils.shimmerSection(
-                        context,
-                        child: Container(
-                          height: Dimens.medium_text * 4,
-                          width: Dimens.medium_text * 4,
-                          decoration: const BoxDecoration(
-                              color: Colors.black87, shape: BoxShape.circle),
+              child: FutureBuilder<MentorModel?>(
+                future: futureFetchMentor(),
+                builder: (_, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return ApplicationUtils.shimmerSection(
+                      context,
+                      child: Container(
+                        height: Dimens.medium_text * 4,
+                        width: Dimens.medium_text * 4,
+                        decoration: const BoxDecoration(
+                            color: Colors.black87, shape: BoxShape.circle),
+                      ),
+                    );
+                  } else {
+                    if (snapshot.hasError) {
+                      return const ErrorContentWidget(
+                          titleError: "", contentError: "");
+                    } else {
+                      return ClipOval(
+                        child: NetworkImageWidget(
+                          url: snapshot.data?.avatar,
+                          radius: Dimens.medium_text * 4,
                         ),
-                      )
-                    : _mentorStore.hasMentor
-                        ? ClipOval(
-                            child: NetworkImageWidget(
-                              url: _mentorStore.getMentor!.avatar,
-                              radius: Dimens.medium_text * 4,
-                            ),
-                          )
-                        : const SizedBox.shrink(),
+                      );
+                    }
+                  }
+                },
               ),
             ),
             const SizedBox(
@@ -88,41 +109,46 @@ class _NotificationTagState extends State<NotificationTag> {
             ),
             Expanded(
               flex: 8,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.notificationModel.message,
-                    style: widget.notificationModel.isRead
-                        ? Theme.of(context).textTheme.bodySmall
-                        : Theme.of(context).textTheme.bodySmall!.copyWith(
-                              color: Theme.of(context).highlightColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                  ),
-                  Text(
-                    timeago.format(
-                      widget.notificationModel.createAt,
-                      locale: AppLocalizations.of(context).locale.languageCode,
+              child: Observer(builder: (_) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.notificationModel.message,
+                      style: _notificationModelStore.isRead
+                          ? Theme.of(context).textTheme.bodySmall
+                          : Theme.of(context).textTheme.bodySmall!.copyWith(
+                                color: Theme.of(context).highlightColor,
+                                fontWeight: FontWeight.bold,
+                              ),
                     ),
-                    style: widget.notificationModel.isRead
-                        ? Theme.of(context).textTheme.bodySmall
-                        : Theme.of(context).textTheme.bodySmall!.copyWith(
-                              color: Theme.of(context).highlightColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                  ),
-                ],
-              ),
+                    Text(
+                      timeago.format(
+                        widget.notificationModel.createAt,
+                        locale:
+                            AppLocalizations.of(context).locale.languageCode,
+                      ),
+                      style: _notificationModelStore.isRead
+                          ? Theme.of(context).textTheme.bodySmall
+                          : Theme.of(context).textTheme.bodySmall!.copyWith(
+                                color: Theme.of(context).highlightColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                    ),
+                  ],
+                );
+              }),
             ),
             Expanded(
               flex: 1,
-              child: widget.notificationModel.isRead
-                  ? const SizedBox.shrink()
-                  : IconTheme(
-                      data: Theme.of(context).iconTheme,
-                      child: const Icon(Icons.fiber_manual_record_rounded),
-                    ),
+              child: SizedBox.shrink(
+                child: _notificationModelStore.isRead
+                    ? null
+                    : IconTheme(
+                        data: Theme.of(context).iconTheme,
+                        child: const Icon(Icons.fiber_manual_record_rounded),
+                      ),
+              ),
             ),
           ],
         ),
@@ -131,5 +157,9 @@ class _NotificationTagState extends State<NotificationTag> {
         radius: Dimens.kBorderRadiusValue,
       ),
     );
+  }
+
+  Future<MentorModel?> futureFetchMentor() async {
+    return await _mentorStore.responseMentor(_notificationModelStore.actorId);
   }
 }

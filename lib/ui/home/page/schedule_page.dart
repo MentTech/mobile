@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:grouped_list/grouped_list.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
@@ -12,6 +11,7 @@ import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
 import 'package:mobile/widgets/card/event_card.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
+import 'package:sticky_grouped_list/sticky_grouped_list.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:mobile/utils/extension/datetime_extension.dart';
 
@@ -50,6 +50,9 @@ class _SchedulePageState extends State<SchedulePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
+    _scheduleStore.fetchAllSessionsByList();
+    _scheduleStore.fetchSessionsByDate(date: _selectedDate);
 
     _tab = [
       Tab(
@@ -190,17 +193,21 @@ class _SchedulePageState extends State<SchedulePage> {
   Widget _buildGroupListTabView(BuildContext context) {
     return Observer(
       builder: (_) {
-        return GroupedListView<Session, String>(
+        return StickyGroupedListView<Session, DateTime>(
           elements: _scheduleStore.listListSessions,
-          groupBy: (element) => element.expectedDate!.toDDMMYYYYString(),
-          groupSeparatorBuilder: (String groupByValue) => Text(groupByValue),
-          itemBuilder: (context, Session element) =>
-              Text(element.program.title),
+          groupBy: (element) => element.expectedDate!.today(toUTC: false),
+          groupSeparatorBuilder: (Session groupByValue) => Text(
+            groupByValue.expectedDate!.toDDMMYYYYString(),
+          ),
+          itemBuilder: (context, Session element) => Text(
+            element.program.title,
+          ),
           itemComparator: (item1, item2) =>
-              item1.expectedDate!.compareTo(item2.expectedDate!), // optional
-          useStickyGroupSeparators: true, // optional
-          floatingHeader: true, // optional
-          order: GroupedListOrder.ASC, // optional
+              item1.expectedDate!.compareTo(item2.expectedDate!),
+          groupComparator: (item1, item2) => item1.compareTo(item2),
+          floatingHeader: true,
+          order: StickyGroupedListOrder.ASC,
+          physics: const BouncingScrollPhysics(),
         );
       },
     );

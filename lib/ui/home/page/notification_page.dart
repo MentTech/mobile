@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:grouped_list/grouped_list.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
 import 'package:mobile/di/components/service_locator.dart';
@@ -14,7 +13,9 @@ import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/glassmorphism_widget_button.dart';
+import 'package:sticky_grouped_list/sticky_grouped_list.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:mobile/utils/extension/datetime_extension.dart';
 
 class NotificationPage extends StatelessWidget {
   NotificationPage({Key? key}) : super(key: key);
@@ -39,7 +40,7 @@ class NotificationPage extends StatelessWidget {
                 horizontal: Dimens.horizontal_padding,
                 vertical: Dimens.vertical_padding),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
                   AppLocalizations.of(context)
@@ -218,13 +219,12 @@ class NotificationPage extends StatelessWidget {
   }
 
   Widget _buildNotificationList(BuildContext context) {
-    return GroupedListView<NotificationModel, String>(
+    return StickyGroupedListView<NotificationModel, DateTime>(
       elements: _notificationStore.getFilteredNotificationList(),
-      groupBy: (element) => timeago.format(
-        element.createAt,
-        locale: AppLocalizations.of(context).locale.languageCode,
-      ),
-      groupSeparatorBuilder: (String groupByValue) => Text(groupByValue),
+      groupBy: (element) => element.createAt.today(toUTC: false),
+      groupSeparatorBuilder: (NotificationModel groupByValue) {
+        return _getGroupSeparator(groupByValue, context);
+      },
       itemBuilder: (BuildContext context, NotificationModel element) =>
           NotificationTag(
               notificationModel: element,
@@ -234,10 +234,30 @@ class NotificationPage extends StatelessWidget {
       itemComparator: (item1, item2) =>
           item1.createAt.compareTo(item2.createAt),
       groupComparator: (item1, item2) => item1.compareTo(item2),
-      useStickyGroupSeparators: true,
       floatingHeader: true,
-      order: GroupedListOrder.ASC,
-      clipBehavior: Clip.none,
+      order: StickyGroupedListOrder.DESC,
+      physics: const BouncingScrollPhysics(),
+    );
+  }
+
+  SizedBox _getGroupSeparator(
+      NotificationModel groupByValue, BuildContext context) {
+    return SizedBox(
+      height: 50,
+      child: Align(
+        alignment: Alignment.center,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            timeago.format(
+              groupByValue.createAt,
+              locale: AppLocalizations.of(context).locale.languageCode,
+            ),
+            style: Theme.of(context).textTheme.bodySmall,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
     );
   }
 

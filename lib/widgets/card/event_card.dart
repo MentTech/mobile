@@ -29,9 +29,11 @@ class EventCard extends StatelessWidget {
                 width: 15,
                 height: 10,
                 decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
-                    borderRadius: const BorderRadiusDirectional.horizontal(
-                        end: Radius.circular(10))),
+                  color: Theme.of(context).highlightColor,
+                  borderRadius: const BorderRadiusDirectional.horizontal(
+                    end: Radius.circular(10),
+                  ),
+                ),
               ),
               Expanded(
                 child: Padding(
@@ -42,15 +44,25 @@ class EventCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       RichText(
-                          text: TextSpan(children: [
-                        TextSpan(
-                            text: session.expectedDate!.toPresentedTime(),
-                            style: Theme.of(context).textTheme.bodySmall),
-                        TextSpan(
-                            text:
-                                ' ${session.expectedDate!.toMeridiemPattern()}',
-                            style: Theme.of(context).textTheme.bodySmall),
-                      ])),
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                                text: session.expectedDate!.toPresentedTime(),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(fontWeight: FontWeight.w500)),
+                            TextSpan(
+                              text:
+                                  '  ${session.expectedDate!.toMeridiemPattern().toLowerCase()}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .copyWith(fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                      ),
                       // Text(
                       //     '${session.startTimestamp.toDifferentMinutes(session.endTimestamp)} ${AppLocalizations.of(context).translate('minutes')}',
                       //     style: Theme.of(context).textTheme.bodySmall),
@@ -70,7 +82,7 @@ class EventCard extends StatelessWidget {
                 border: Border.all(
                     color: Color.alphaBlend(
                         Theme.of(context).primaryColor.withAlpha(100),
-                        Colors.black45),
+                        Theme.of(context).highlightColor),
                     width: 1),
                 borderRadius: BorderRadius.circular(20),
               ),

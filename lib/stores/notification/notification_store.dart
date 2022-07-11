@@ -24,7 +24,7 @@ abstract class _NotificationStore with Store {
 
   // websocket
   io.Socket socket = io.io(
-    Endpoints.baseUrl,
+    Endpoints.apiUrl,
     io.OptionBuilder().disableAutoConnect().build(),
   );
 

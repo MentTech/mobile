@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class AppLocalizations {
   // localization variables
@@ -15,7 +16,9 @@ class AppLocalizations {
       _AppLocalizationsDelegate();
 
   // constructor
-  AppLocalizations(this.locale);
+  AppLocalizations(this.locale) {
+    timeago.setLocaleMessages('vi', timeago.ViMessages());
+  }
 
   // Helper method to keep the code in the widgets concise
   // Localizations are accessed using an InheritedWidget "of" syntax
