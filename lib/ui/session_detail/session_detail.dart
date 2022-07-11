@@ -6,6 +6,7 @@ import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/common/session/session.dart';
 import 'package:mobile/stores/common/common_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
+import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/ui/session_detail/program_detail.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
@@ -130,12 +131,28 @@ class _SesstionDetailState extends State<SesstionDetail> {
                           ).then(
                             (bool? isSend) {
                               if (isSend ?? false) {
-                                _commonStore.reviewSessionOfProgram(
+                                _commonStore
+                                    .reviewSessionOfProgram(
                                   ReviewModel(
                                     rate: rate,
                                     comment: commentReview.text,
                                   ),
-                                );
+                                )
+                                    .then((_) {
+                                  Session session =
+                                      _commonStore.sessionObserver!;
+                                  _commonStore.setSessionObserver(
+                                    Session(
+                                      id: session.id,
+                                      isAccepted: session.isAccepted,
+                                      isCanceled: session.isCanceled,
+                                      done: session.done,
+                                      program: session.program,
+                                    ),
+                                  );
+                                  Provider.of<UserStore>(context, listen: false)
+                                      .fetchUserSessions();
+                                });
                               }
                             },
                           );
@@ -157,7 +174,7 @@ class _SesstionDetailState extends State<SesstionDetail> {
                               DialogPopupPresenter.showSlidePopupDialog<bool>(
                                 context,
                                 _buildMarkDonePopup(),
-                                150,
+                                175,
                                 300,
                                 blur: Properties.lightly_blur_glass_morphism,
                                 opacity:
@@ -165,7 +182,24 @@ class _SesstionDetailState extends State<SesstionDetail> {
                               ).then(
                                 (bool? isSend) {
                                   if (isSend ?? false) {
-                                    _commonStore.markSessionOfProgramAsDone();
+                                    _commonStore
+                                        .markSessionOfProgramAsDone()
+                                        .then((_) {
+                                      Session session =
+                                          _commonStore.sessionObserver!;
+                                      _commonStore.setSessionObserver(
+                                        Session(
+                                          id: session.id,
+                                          isAccepted: session.isAccepted,
+                                          isCanceled: session.isCanceled,
+                                          done: true,
+                                          program: session.program,
+                                        ),
+                                      );
+                                      Provider.of<UserStore>(context,
+                                              listen: false)
+                                          .fetchUserSessions();
+                                    });
                                   }
                                 },
                               );
@@ -194,7 +228,24 @@ class _SesstionDetailState extends State<SesstionDetail> {
                               ).then(
                                 (bool? isSend) {
                                   if (isSend ?? false) {
-                                    _commonStore.unregisterSessionOfProgram();
+                                    _commonStore
+                                        .unregisterSessionOfProgram()
+                                        .then((_) {
+                                      Session session =
+                                          _commonStore.sessionObserver!;
+                                      _commonStore.setSessionObserver(
+                                        Session(
+                                          id: session.id,
+                                          isAccepted: session.isAccepted,
+                                          isCanceled: true,
+                                          done: session.done,
+                                          program: session.program,
+                                        ),
+                                      );
+                                      Provider.of<UserStore>(context,
+                                              listen: false)
+                                          .fetchUserSessions();
+                                    });
                                   }
                                 },
                               );
@@ -235,15 +286,16 @@ class _SesstionDetailState extends State<SesstionDetail> {
       child: ListTile(
         title: Text(
           AppLocalizations.of(context).translate("mark_session_as_done"),
-          style: const TextStyle(
-            color: Colors.white,
-          ),
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium!
+              .copyWith(color: Colors.white, fontWeight: FontWeight.w500),
         ),
         subtitle: Text(
           AppLocalizations.of(context).translate("want_to_change_question"),
-          style: const TextStyle(
-            color: Colors.white70,
-          ),
+          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                color: Colors.white70,
+              ),
         ),
       ),
     );

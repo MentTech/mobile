@@ -38,6 +38,10 @@ final ThemeData themeData = ThemeData(
     Colors.white.withOpacity(0.3),
     AppColors.darkTextTheme,
   ),
+  cardColor: Color.alphaBlend(
+    Colors.white.withAlpha(100),
+    AppColors.darkTextTheme,
+  ),
   bottomAppBarColor: Color.alphaBlend(
       AppColors.lightTextTheme.withOpacity(0.7), Colors.black87),
   dividerColor: AppColors.lightTextTheme,
@@ -97,6 +101,10 @@ final ThemeData themeDataDark = ThemeData(
   indicatorColor: Colors.white70,
   disabledColor: Color.alphaBlend(
     Colors.white.withOpacity(0.7),
+    AppColors.lightTextTheme,
+  ),
+  cardColor: Color.alphaBlend(
+    Colors.white.withAlpha(100),
     AppColors.lightTextTheme,
   ),
   bottomAppBarColor: Color.alphaBlend(

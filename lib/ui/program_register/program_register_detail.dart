@@ -43,7 +43,9 @@ class _ProgramRegisterDetailState extends State<ProgramRegisterDetail> {
     super.initState();
 
     _mentorStore = Provider.of<MentorStore>(context, listen: false);
+
     _commonStore = Provider.of<CommonStore>(context, listen: false);
+    _commonStore.programRatePage = 0;
   }
 
   @override

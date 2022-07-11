@@ -226,7 +226,6 @@ abstract class _CommonStore with Store {
 
     if (null == accessToken) {
       messageStore.setErrorMessageByCode(401);
-      messageStore.notifyExpiredTokenStatus();
 
       success = false;
 
@@ -241,17 +240,24 @@ abstract class _CommonStore with Store {
     );
     requestRegisterSessionFuture = ObservableFuture(future);
 
-    future.then(
+    await future.then(
       (res) {
         try {
-          callback?.call();
-          success = true;
-        } catch (e) {
-          // res['message']
-          // messageStore.errorMessage = e.toString();
-          // messageStore.successMessage = "";
+          if (res!["statusCode"] == null) {
+            callback?.call();
 
-          success = false;
+            success = true;
+          } else {
+            int code = res["statusCode"] as int;
+
+            messageStore.setErrorMessageByCode(code);
+
+            successInRegisterProgram = false;
+          }
+        } catch (e) {
+          messageStore.setErrorMessageByCode(500);
+
+          successInRegisterProgram = false;
         }
       },
     );
@@ -263,7 +269,6 @@ abstract class _CommonStore with Store {
 
     if (null == accessToken) {
       messageStore.setErrorMessageByCode(401);
-      messageStore.notifyExpiredTokenStatus();
 
       success = false;
 
@@ -278,16 +283,22 @@ abstract class _CommonStore with Store {
     );
     requestFuture = ObservableFuture(future);
 
-    future.then(
+    await future.then(
       (res) {
         try {
-          success = true;
-        } catch (e) {
-          // res['message']
-          // messageStore.errorMessage = e.toString();
-          // messageStore.successMessage = "";
+          if (res!["statusCode"] == null) {
+            success = true;
+          } else {
+            int code = res["statusCode"] as int;
 
-          success = false;
+            messageStore.setErrorMessageByCode(code);
+
+            successInRegisterProgram = false;
+          }
+        } catch (e) {
+          messageStore.setErrorMessageByCode(500);
+
+          successInRegisterProgram = false;
         }
       },
     );
@@ -299,7 +310,6 @@ abstract class _CommonStore with Store {
 
     if (null == accessToken) {
       messageStore.setErrorMessageByCode(401);
-      messageStore.notifyExpiredTokenStatus();
 
       success = false;
 
@@ -316,16 +326,22 @@ abstract class _CommonStore with Store {
     );
     requestFuture = ObservableFuture(future);
 
-    future.then(
+    await future.then(
       (res) {
         try {
-          success = true;
-        } catch (e) {
-          // res['message']
-          // messageStore.errorMessage = e.toString();
-          // messageStore.successMessage = "";
+          if (res!["statusCode"] == null) {
+            success = true;
+          } else {
+            int code = res["statusCode"] as int;
 
-          success = false;
+            messageStore.setErrorMessageByCode(code);
+
+            successInRegisterProgram = false;
+          }
+        } catch (e) {
+          messageStore.setErrorMessageByCode(500);
+
+          successInRegisterProgram = false;
         }
       },
     );

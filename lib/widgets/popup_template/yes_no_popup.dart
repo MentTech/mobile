@@ -43,14 +43,23 @@ class YesNoPopup extends StatelessWidget {
                   buttonText: agreeText,
                   buttonColor: Colors.transparent,
                   textColor: textAgreeColor,
+                  padding: const EdgeInsets.symmetric(
+                      vertical: Dimens.small_vertical_padding,
+                      horizontal: Dimens.horizontal_padding),
                   onPressed: () {
                     Navigator.of(context, rootNavigator: true).pop(true);
                   },
+                ),
+                const SizedBox(
+                  width: Dimens.lightly_medium_vertical_margin,
                 ),
                 RoundedButtonWidget(
                   buttonText: disagreeText,
                   buttonColor: Colors.transparent,
                   textColor: textDisagreeColor,
+                  padding: const EdgeInsets.symmetric(
+                      vertical: Dimens.small_vertical_padding,
+                      horizontal: Dimens.horizontal_padding),
                   onPressed: () {
                     Navigator.of(context, rootNavigator: true).pop(false);
                   },

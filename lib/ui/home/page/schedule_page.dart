@@ -196,11 +196,13 @@ class _SchedulePageState extends State<SchedulePage> {
         return StickyGroupedListView<Session, DateTime>(
           elements: _scheduleStore.listListSessions,
           groupBy: (element) => element.expectedDate!.today(toUTC: false),
-          groupSeparatorBuilder: (Session groupByValue) => Text(
-            groupByValue.expectedDate!.toDDMMYYYYString(),
-          ),
-          itemBuilder: (context, Session element) => Text(
-            element.program.title,
+          groupSeparatorBuilder: (Session groupByValue) {
+            return _getGroupSeparator(groupByValue, context);
+          },
+          itemBuilder: (context, Session element) => EventCard(
+            session: element,
+            // onViewDetailTap: () {},
+            // onSendMessageTap: () {},
           ),
           itemComparator: (item1, item2) =>
               item1.expectedDate!.compareTo(item2.expectedDate!),
@@ -210,6 +212,23 @@ class _SchedulePageState extends State<SchedulePage> {
           physics: const BouncingScrollPhysics(),
         );
       },
+    );
+  }
+
+  SizedBox _getGroupSeparator(Session groupByValue, BuildContext context) {
+    return SizedBox(
+      height: 50,
+      child: Align(
+        alignment: Alignment.center,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            groupByValue.expectedDate!.toDDMMYYYYString(),
+            style: Theme.of(context).textTheme.bodySmall,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
     );
   }
 
@@ -315,8 +334,8 @@ class _SchedulePageState extends State<SchedulePage> {
                 shrinkWrap: true,
                 itemBuilder: (_, index) => EventCard(
                   session: _scheduleStore.getCalendarSessionsAt(index)!,
-                  onViewDetailTap: () {},
-                  onSendMessageTap: () {},
+                  // onViewDetailTap: () {},
+                  // onSendMessageTap: () {},
                 ),
                 itemCount: _scheduleStore.sizeCalendarSessions,
               );

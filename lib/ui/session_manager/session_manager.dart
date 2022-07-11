@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/dimens.dart';
@@ -65,7 +63,6 @@ class _SessionManagerState extends State<SessionManager> {
           Expanded(
             child: Observer(
               builder: (_) {
-                log("rebuild here");
                 _userStore.triggerChange;
                 return ListView.builder(
                   padding: const EdgeInsets.only(

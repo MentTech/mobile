@@ -107,6 +107,10 @@ class _AuthorizationScreenState extends State<AuthorizationScreen>
       _userEmailController.text = _authenStore.userEmailAccount!;
       _store.setUserId(_authenStore.userEmailAccount!);
     }
+
+    // this is for demo for letures:
+    _passwordController.text = "123456";
+    _store.setPassword("123456");
   }
 
   @override

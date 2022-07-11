@@ -188,7 +188,7 @@ class _SesstionDetailState extends State<SesstionDetailScreen> {
                                         bool>(
                                       context,
                                       _buildMarkDonePopup(),
-                                      150,
+                                      175,
                                       300,
                                       blur:
                                           Properties.medium_blur_glass_morphism,
@@ -272,15 +272,16 @@ class _SesstionDetailState extends State<SesstionDetailScreen> {
       child: ListTile(
         title: Text(
           AppLocalizations.of(context).translate("mark_session_as_done"),
-          style: const TextStyle(
-            color: Colors.white,
-          ),
+          style: Theme.of(context)
+              .textTheme
+              .bodySmall!
+              .copyWith(color: Colors.white, fontWeight: FontWeight.w500),
         ),
         subtitle: Text(
           AppLocalizations.of(context).translate("want_to_change_question"),
-          style: const TextStyle(
-            color: Colors.white70,
-          ),
+          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                color: Colors.white70,
+              ),
         ),
       ),
     );
