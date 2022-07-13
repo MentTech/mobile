@@ -120,10 +120,10 @@ class _GiftCodeScreenState extends State<GiftCodeScreen> {
                 top: Dimens.large_vertical_margin,
               ),
               child: RoundedButtonWidget(
-                buttonText:
-                    AppLocalizations.of(context).translate("change_password"),
+                buttonText: AppLocalizations.of(context)
+                    .translate("receive_giftcode_translate"),
                 buttonColor: Colors.transparent,
-                textColor: Theme.of(context).primaryColor,
+                textColor: Theme.of(context).highlightColor,
                 onPressed: () async {
                   DeviceUtils.hideKeyboard(context);
                   _giftcodeFormStore.validateAll();

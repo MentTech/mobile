@@ -100,10 +100,7 @@ class DepositTokenSuccessFul extends StatelessWidget {
               ),
               Text(
                 "0123456789",
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontSize: Dimens.lightly_medium_text,
-                ),
+                style: Theme.of(context).textTheme.labelSmall,
               ),
             ],
           ),
@@ -122,10 +119,7 @@ class DepositTokenSuccessFul extends StatelessWidget {
               ),
               Text(
                 "123456789",
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontSize: Dimens.lightly_medium_text,
-                ),
+                style: Theme.of(context).textTheme.labelSmall,
               ),
             ],
           ),
@@ -144,10 +138,7 @@ class DepositTokenSuccessFul extends StatelessWidget {
               ),
               Text(
                 "Vietcombank",
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontSize: Dimens.lightly_medium_text,
-                ),
+                style: Theme.of(context).textTheme.labelSmall,
               ),
             ],
           ),
@@ -166,10 +157,7 @@ class DepositTokenSuccessFul extends StatelessWidget {
               ),
               Text(
                 "Nguyen Van A",
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontSize: Dimens.lightly_medium_text,
-                ),
+                style: Theme.of(context).textTheme.labelSmall,
               ),
             ],
           ),
@@ -189,10 +177,7 @@ class DepositTokenSuccessFul extends StatelessWidget {
                 AppLocalizations.of(context).translate("email") +
                 " - " +
                 AppLocalizations.of(context).translate("token_deposit_payment"),
-            style: TextStyle(
-              color: Theme.of(context).primaryColor,
-              fontSize: Dimens.lightly_medium_text,
-            ),
+            style: Theme.of(context).textTheme.labelSmall,
           ),
         ],
       ),

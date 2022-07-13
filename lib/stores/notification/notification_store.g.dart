@@ -51,6 +51,31 @@ mixin _$NotificationStore on _NotificationStore, Store {
           Computed<String>(() => super.getFailedMessageKey,
               name: '_NotificationStore.getFailedMessageKey'))
       .value;
+  Computed<List<NotificationModel>>? _$getFilteredNotificationListComputed;
+
+  @override
+  List<NotificationModel> get getFilteredNotificationList =>
+      (_$getFilteredNotificationListComputed ??=
+              Computed<List<NotificationModel>>(
+                  () => super.getFilteredNotificationList,
+                  name: '_NotificationStore.getFilteredNotificationList'))
+          .value;
+
+  late final _$triggerAtom =
+      Atom(name: '_NotificationStore.trigger', context: context);
+
+  @override
+  bool get trigger {
+    _$triggerAtom.reportRead();
+    return super.trigger;
+  }
+
+  @override
+  set trigger(bool value) {
+    _$triggerAtom.reportWrite(value, super.trigger, () {
+      super.trigger = value;
+    });
+  }
 
   late final _$successAtom =
       Atom(name: '_NotificationStore.success', context: context);
@@ -116,6 +141,14 @@ mixin _$NotificationStore on _NotificationStore, Store {
     });
   }
 
+  late final _$connectSocketAsyncAction =
+      AsyncAction('_NotificationStore.connectSocket', context: context);
+
+  @override
+  Future<dynamic> connectSocket() {
+    return _$connectSocketAsyncAction.run(() => super.connectSocket());
+  }
+
   late final _$fetchAllNotificationsAsyncAction =
       AsyncAction('_NotificationStore.fetchAllNotifications', context: context);
 
@@ -163,6 +196,7 @@ mixin _$NotificationStore on _NotificationStore, Store {
   @override
   String toString() {
     return '''
+trigger: ${trigger},
 success: ${success},
 requestFuture: ${requestFuture},
 notifications: ${notifications},
@@ -171,7 +205,8 @@ notificationFilter: ${notificationFilter},
 notificationLengthList: ${notificationLengthList},
 hasNotification: ${hasNotification},
 getSuccessMessageKey: ${getSuccessMessageKey},
-getFailedMessageKey: ${getFailedMessageKey}
+getFailedMessageKey: ${getFailedMessageKey},
+getFilteredNotificationList: ${getFilteredNotificationList}
     ''';
   }
 }

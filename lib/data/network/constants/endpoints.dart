@@ -1,7 +1,10 @@
 class Endpoints {
   Endpoints._();
 
-  /// api for: api data, socketio
+  /// api for: socketio
+  static const String socketUrl = "ws://api.menttech.live";
+
+  /// api for: api data
   static const String apiUrl = "https://api.menttech.live";
 
   /// base url

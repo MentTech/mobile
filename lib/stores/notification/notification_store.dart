@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/widgets.dart';
 import 'package:mobile/data/network/constants/endpoints.dart';
 import 'package:mobile/data/repository.dart';
 import 'package:mobile/di/components/service_locator.dart';
@@ -25,7 +24,10 @@ abstract class _NotificationStore with Store {
   // websocket
   io.Socket socket = io.io(
     Endpoints.apiUrl,
-    io.OptionBuilder().disableAutoConnect().build(),
+    io.OptionBuilder()
+        .setTimeout(5000)
+        .disableAutoConnect()
+        .setTransports(['websocket']).build(),
   );
 
   // constructor:---------------------------------------------------------------
@@ -37,45 +39,13 @@ abstract class _NotificationStore with Store {
     // fetchAllNotifications();
   }
 
-  // connect to server by websocket
-  void connectSocket() {
-    // socket setup
-
-    log("[message] [socket io] set up");
-
-    socket.onConnect((data) async {
-      log('[socket io] onConnect: ');
-      debugPrint(data);
-
-      await _repository.authToken.then((accessToken) {
-        log("message [socket io]: accesstoken: >$accessToken<");
-        if (accessToken != null && accessToken.isNotEmpty) {
-          socket.emit('auth:connect', accessToken);
-        } else {
-          _messageStore.setErrorMessageByCode(401);
-
-          socket.dispose();
-
-          success = false;
-        }
-      });
-    });
-
-    // listen event
-    socket.on('notification', (data) {
-      log("[socket io] data from notification event");
-      debugPrint(data);
-    });
-
-    socket.connect();
-  }
-
   // disposers:-----------------------------------------------------------------
   late List<ReactionDisposer> _disposers;
 
   void _setupDisposers() {
     _disposers = [
       reaction((_) => success, (_) => success = false, delay: 200),
+      reaction((_) => trigger, (_) => trigger = false, delay: 200),
     ];
   }
 
@@ -89,6 +59,9 @@ abstract class _NotificationStore with Store {
   List<NotificationModel> unreadedNotifications = <NotificationModel>[];
 
   // observable variables:------------------------------------------------------
+  @observable
+  bool trigger = false;
+
   @observable
   bool success = false;
 
@@ -122,7 +95,58 @@ abstract class _NotificationStore with Store {
   @computed
   String get getFailedMessageKey => _messageStore.errorMessagekey;
 
+  @computed
+  List<NotificationModel> get getFilteredNotificationList {
+    if (_notificationFilter == NotificationFilter.all) {
+      return notifications;
+    } else {
+      // NotificationFilter.unread
+      return unreadedNotifications;
+    }
+  }
+
   // actions:-------------------------------------------------------------------
+
+  // connect to server by websocket
+  @action
+  Future connectSocket() async {
+    // socket setup
+    await _repository.authToken.then((accessToken) {
+      if (accessToken != null && accessToken.isNotEmpty) {
+        log("[message] [socket io] set up");
+
+        socket.connect();
+
+        socket.emit('auth:connect', accessToken);
+
+        socket.onConnect((data) {
+          log("[socket io] connected " + socket.connected.toString());
+          log('[socket io] onConnect: ' + data.toString());
+        });
+
+        socket.onConnectError((data) {
+          log("[socket io] [onConnectError]" + data.toString());
+        });
+
+        socket.onError((data) {
+          log("[socket io] [onError]" + data.toString());
+        });
+
+        // listen event
+        socket.on('notification', (data) {
+          log("[socket io] data from notification event " + data.toString());
+          notifications.add(NotificationModel.fromJson(data));
+        });
+      } else {
+        _messageStore.setErrorMessageByCode(401);
+
+        socket.dispose();
+
+        success = false;
+      }
+    });
+  }
+
   @action
   void changeNotificationMethodFilter(NotificationFilter notificationFilter) {
     _notificationFilter = notificationFilter;
@@ -275,14 +299,6 @@ abstract class _NotificationStore with Store {
   }
 
   // general methods:-----------------------------------------------------------
-  List<NotificationModel> getFilteredNotificationList() {
-    if (_notificationFilter == NotificationFilter.all) {
-      return notifications;
-    } else {
-      // NotificationFilter.unread
-      return unreadedNotifications;
-    }
-  }
 
   NotificationModel getNotificationContentAt(int index) =>
       notifications.elementAt(index);

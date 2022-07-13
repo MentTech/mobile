@@ -219,26 +219,31 @@ class NotificationPage extends StatelessWidget {
   }
 
   Widget _buildNotificationList(BuildContext context) {
-    return StickyGroupedListView<NotificationModel, DateTime>(
-      elements: _notificationStore.getFilteredNotificationList(),
-      groupBy: (element) => element.createAt.today(toUTC: false),
-      groupSeparatorBuilder: (NotificationModel groupByValue) {
-        return _getGroupSeparator(groupByValue, context);
+    return Observer(
+      builder: (_) {
+        _notificationStore.trigger;
+        return StickyGroupedListView<NotificationModel, DateTime>(
+          elements: _notificationStore.getFilteredNotificationList,
+          groupBy: (element) => element.createAt.today(toUTC: false),
+          groupSeparatorBuilder: (NotificationModel groupByValue) {
+            return _getGroupSeparator(groupByValue, context);
+          },
+          itemBuilder: (BuildContext context, NotificationModel element) =>
+              NotificationTag(
+                  notificationModel: element,
+                  callback: () {
+                    if (!element.isRead) {
+                      _notificationStore.markNotificationAsRead(element.id);
+                    }
+                  }),
+          itemComparator: (item1, item2) =>
+              item1.createAt.compareTo(item2.createAt),
+          groupComparator: (item1, item2) => item1.compareTo(item2),
+          floatingHeader: true,
+          order: StickyGroupedListOrder.DESC,
+          physics: const BouncingScrollPhysics(),
+        );
       },
-      itemBuilder: (BuildContext context, NotificationModel element) =>
-          NotificationTag(
-              notificationModel: element,
-              callback: () {
-                if (!element.isRead) {
-                  _notificationStore.markNotificationAsRead(element.id);
-                }
-              }),
-      itemComparator: (item1, item2) =>
-          item1.createAt.compareTo(item2.createAt),
-      groupComparator: (item1, item2) => item1.compareTo(item2),
-      floatingHeader: true,
-      order: StickyGroupedListOrder.DESC,
-      physics: const BouncingScrollPhysics(),
     );
   }
 

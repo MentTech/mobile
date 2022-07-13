@@ -127,6 +127,7 @@ class _DepositTokenState extends State<DepositToken> {
                   "transaction_notification_title_translate",
                   _orderStore.getSuccessMessageKey,
                   callback: (() {
+                    DeviceUtils.hideKeyboard(context);
                     Routes.route(context, DepositTokenSuccessFul());
                   }),
                 )
