@@ -136,11 +136,11 @@ class _SesstionDetailState extends State<SesstionDetailScreen> {
                 children: [
                   observerSession.isCanceled
                       ? const SizedBox()
-                      : observerSession.done
+                      : (!observerSession.isAccepted)
                           ? GlassmorphismTextButton(
                               alignment: Alignment.center,
                               text: AppLocalizations.of(context)
-                                  .translate("review_about_session_translate"),
+                                  .translate("unregister_translate"),
                               padding: const EdgeInsets.symmetric(
                                 vertical: Dimens.small_vertical_padding,
                                 horizontal: Dimens.horizontal_padding,
@@ -151,8 +151,8 @@ class _SesstionDetailState extends State<SesstionDetailScreen> {
                               onTap: () {
                                 DialogPopupPresenter.showSlidePopupDialog<bool>(
                                   context,
-                                  _buildReviewPopup(),
-                                  400,
+                                  _buildUnregisterPopup(),
+                                  150,
                                   300,
                                   blur: Properties.medium_blur_glass_morphism,
                                   opacity:
@@ -160,18 +160,13 @@ class _SesstionDetailState extends State<SesstionDetailScreen> {
                                 ).then(
                                   (bool? isSend) {
                                     if (isSend ?? false) {
-                                      _commonStore.reviewSessionOfProgram(
-                                        ReviewModel(
-                                          rate: rate,
-                                          comment: commentReview.text,
-                                        ),
-                                      );
+                                      _commonStore.unregisterSessionOfProgram();
                                     }
                                   },
                                 );
                               },
                             )
-                          : observerSession.isAccepted
+                          : !observerSession.done
                               ? GlassmorphismTextButton(
                                   alignment: Alignment.center,
                                   text: AppLocalizations.of(context)
@@ -204,38 +199,48 @@ class _SesstionDetailState extends State<SesstionDetailScreen> {
                                     );
                                   },
                                 )
-                              : GlassmorphismTextButton(
-                                  alignment: Alignment.center,
-                                  text: AppLocalizations.of(context)
-                                      .translate("unregister_translate"),
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: Dimens.small_vertical_padding,
-                                    horizontal: Dimens.horizontal_padding,
-                                  ),
-                                  textColor: Theme.of(context).highlightColor,
-                                  blur: Properties.blur_glass_morphism,
-                                  opacity: Properties.opacity_glass_morphism,
-                                  onTap: () {
-                                    DialogPopupPresenter.showSlidePopupDialog<
-                                        bool>(
-                                      context,
-                                      _buildUnregisterPopup(),
-                                      150,
-                                      300,
-                                      blur:
-                                          Properties.medium_blur_glass_morphism,
-                                      opacity: Properties
-                                          .medium_opacity_glass_morphism,
-                                    ).then(
-                                      (bool? isSend) {
-                                        if (isSend ?? false) {
-                                          _commonStore
-                                              .unregisterSessionOfProgram();
-                                        }
+                              : observerSession.rating == null
+                                  ? GlassmorphismTextButton(
+                                      alignment: Alignment.center,
+                                      text: AppLocalizations.of(context)
+                                          .translate(
+                                              "review_about_session_translate"),
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: Dimens.small_vertical_padding,
+                                        horizontal: Dimens.horizontal_padding,
+                                      ),
+                                      textColor:
+                                          Theme.of(context).highlightColor,
+                                      blur: Properties.blur_glass_morphism,
+                                      opacity:
+                                          Properties.opacity_glass_morphism,
+                                      onTap: () {
+                                        DialogPopupPresenter
+                                            .showSlidePopupDialog<bool>(
+                                          context,
+                                          _buildReviewPopup(),
+                                          400,
+                                          300,
+                                          blur: Properties
+                                              .medium_blur_glass_morphism,
+                                          opacity: Properties
+                                              .medium_opacity_glass_morphism,
+                                        ).then(
+                                          (bool? isSend) {
+                                            if (isSend ?? false) {
+                                              _commonStore
+                                                  .reviewSessionOfProgram(
+                                                ReviewModel(
+                                                  rate: rate,
+                                                  comment: commentReview.text,
+                                                ),
+                                              );
+                                            }
+                                          },
+                                        );
                                       },
-                                    );
-                                  },
-                                ),
+                                    )
+                                  : const SizedBox.shrink(),
                 ],
               );
             },

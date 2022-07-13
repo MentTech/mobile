@@ -6,8 +6,8 @@ import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/common/session/session.dart';
 import 'package:mobile/stores/common/common_store.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
-import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/ui/session_detail/program_detail.dart';
+import 'package:mobile/utils/application/application_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
 import 'package:mobile/widgets/dialog_showing/slider_dialog.dart';
@@ -91,7 +91,23 @@ class _SesstionDetailState extends State<SesstionDetail> {
                 child: const CustomProgressIndicatorWidget(),
               );
             },
-          )
+          ),
+          Observer(
+            // validator
+            builder: (_) {
+              return _commonStore.triggerUpdateSession
+                  ? ApplicationUtils.showSuccessMessage(
+                      context,
+                      "session_notification_title_translate",
+                      _commonStore.getSuccessMessageKey,
+                    )
+                  : ApplicationUtils.showErrorMessage(
+                      context,
+                      "session_notification_title_translate",
+                      _commonStore.getFailedMessageKey,
+                    );
+            },
+          ),
         ],
       ),
     );
@@ -108,57 +124,36 @@ class _SesstionDetailState extends State<SesstionDetail> {
           children: [
             observerSession.isCanceled
                 ? const SizedBox()
-                : observerSession.done
+                : (!observerSession.isAccepted)
                     ? GlassmorphismTextButton(
                         alignment: Alignment.center,
                         text: AppLocalizations.of(context)
-                            .translate("review_about_session_translate"),
+                            .translate("unregister_translate"),
                         padding: const EdgeInsets.symmetric(
                           vertical: Dimens.small_vertical_padding,
                           horizontal: Dimens.horizontal_padding,
                         ),
-                        textColor: Theme.of(context).indicatorColor,
+                        textColor: Theme.of(context).highlightColor,
                         blur: Properties.blur_glass_morphism,
                         opacity: Properties.opacity_glass_morphism,
                         onTap: () {
                           DialogPopupPresenter.showSlidePopupDialog<bool>(
                             context,
-                            _buildReviewPopup(),
-                            400,
+                            _buildUnregisterPopup(),
+                            150,
                             300,
-                            blur: Properties.lightly_blur_glass_morphism,
-                            opacity: Properties.lightly_opacity_glass_morphism,
+                            blur: Properties.medium_blur_glass_morphism,
+                            opacity: Properties.medium_opacity_glass_morphism,
                           ).then(
                             (bool? isSend) {
                               if (isSend ?? false) {
-                                _commonStore
-                                    .reviewSessionOfProgram(
-                                  ReviewModel(
-                                    rate: rate,
-                                    comment: commentReview.text,
-                                  ),
-                                )
-                                    .then((_) {
-                                  Session session =
-                                      _commonStore.sessionObserver!;
-                                  _commonStore.setSessionObserver(
-                                    Session(
-                                      id: session.id,
-                                      isAccepted: session.isAccepted,
-                                      isCanceled: session.isCanceled,
-                                      done: session.done,
-                                      program: session.program,
-                                    ),
-                                  );
-                                  Provider.of<UserStore>(context, listen: false)
-                                      .fetchUserSessions();
-                                });
+                                _commonStore.unregisterSessionOfProgram();
                               }
                             },
                           );
                         },
                       )
-                    : observerSession.isAccepted
+                    : !observerSession.done
                         ? GlassmorphismTextButton(
                             alignment: Alignment.center,
                             text: AppLocalizations.of(context)
@@ -167,7 +162,7 @@ class _SesstionDetailState extends State<SesstionDetail> {
                               vertical: Dimens.small_vertical_padding,
                               horizontal: Dimens.horizontal_padding,
                             ),
-                            textColor: Theme.of(context).indicatorColor,
+                            textColor: Theme.of(context).highlightColor,
                             blur: Properties.blur_glass_morphism,
                             opacity: Properties.opacity_glass_morphism,
                             onTap: () {
@@ -176,81 +171,55 @@ class _SesstionDetailState extends State<SesstionDetail> {
                                 _buildMarkDonePopup(),
                                 175,
                                 300,
-                                blur: Properties.lightly_blur_glass_morphism,
+                                blur: Properties.medium_blur_glass_morphism,
                                 opacity:
-                                    Properties.lightly_opacity_glass_morphism,
+                                    Properties.medium_opacity_glass_morphism,
                               ).then(
                                 (bool? isSend) {
                                   if (isSend ?? false) {
-                                    _commonStore
-                                        .markSessionOfProgramAsDone()
-                                        .then((_) {
-                                      Session session =
-                                          _commonStore.sessionObserver!;
-                                      _commonStore.setSessionObserver(
-                                        Session(
-                                          id: session.id,
-                                          isAccepted: session.isAccepted,
-                                          isCanceled: session.isCanceled,
-                                          done: true,
-                                          program: session.program,
-                                        ),
-                                      );
-                                      Provider.of<UserStore>(context,
-                                              listen: false)
-                                          .fetchUserSessions();
-                                    });
+                                    _commonStore.markSessionOfProgramAsDone();
                                   }
                                 },
                               );
                             },
                           )
-                        : GlassmorphismTextButton(
-                            alignment: Alignment.center,
-                            text: AppLocalizations.of(context)
-                                .translate("unregister_translate"),
-                            padding: const EdgeInsets.symmetric(
-                              vertical: Dimens.small_vertical_padding,
-                              horizontal: Dimens.horizontal_padding,
-                            ),
-                            textColor: Theme.of(context).indicatorColor,
-                            blur: Properties.blur_glass_morphism,
-                            opacity: Properties.opacity_glass_morphism,
-                            onTap: () {
-                              DialogPopupPresenter.showSlidePopupDialog<bool>(
-                                context,
-                                _buildUnregisterPopup(),
-                                150,
-                                300,
-                                blur: Properties.lightly_blur_glass_morphism,
-                                opacity:
-                                    Properties.lightly_opacity_glass_morphism,
-                              ).then(
-                                (bool? isSend) {
-                                  if (isSend ?? false) {
-                                    _commonStore
-                                        .unregisterSessionOfProgram()
-                                        .then((_) {
-                                      Session session =
-                                          _commonStore.sessionObserver!;
-                                      _commonStore.setSessionObserver(
-                                        Session(
-                                          id: session.id,
-                                          isAccepted: session.isAccepted,
-                                          isCanceled: true,
-                                          done: session.done,
-                                          program: session.program,
-                                        ),
-                                      );
-                                      Provider.of<UserStore>(context,
-                                              listen: false)
-                                          .fetchUserSessions();
-                                    });
-                                  }
+                        : observerSession.rating == null
+                            ? GlassmorphismTextButton(
+                                alignment: Alignment.center,
+                                text: AppLocalizations.of(context).translate(
+                                    "review_about_session_translate"),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: Dimens.small_vertical_padding,
+                                  horizontal: Dimens.horizontal_padding,
+                                ),
+                                textColor: Theme.of(context).highlightColor,
+                                blur: Properties.blur_glass_morphism,
+                                opacity: Properties.opacity_glass_morphism,
+                                onTap: () {
+                                  DialogPopupPresenter.showSlidePopupDialog<
+                                      bool>(
+                                    context,
+                                    _buildReviewPopup(),
+                                    400,
+                                    300,
+                                    blur: Properties.medium_blur_glass_morphism,
+                                    opacity: Properties
+                                        .medium_opacity_glass_morphism,
+                                  ).then(
+                                    (bool? isSend) {
+                                      if (isSend ?? false) {
+                                        _commonStore.reviewSessionOfProgram(
+                                          ReviewModel(
+                                            rate: rate,
+                                            comment: commentReview.text,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  );
                                 },
-                              );
-                            },
-                          ),
+                              )
+                            : const SizedBox.shrink(),
           ],
         );
       },

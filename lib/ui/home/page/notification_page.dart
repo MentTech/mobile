@@ -229,7 +229,9 @@ class NotificationPage extends StatelessWidget {
           NotificationTag(
               notificationModel: element,
               callback: () {
-                _notificationStore.markNotificationAsRead(element.id);
+                if (!element.isRead) {
+                  _notificationStore.markNotificationAsRead(element.id);
+                }
               }),
       itemComparator: (item1, item2) =>
           item1.createAt.compareTo(item2.createAt),

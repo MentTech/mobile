@@ -75,6 +75,7 @@ enum Code {
   updateUserInfor,
   changePassword,
   applyGiftcode,
+  updateSession,
 }
 
 class ResponseCode {
@@ -94,6 +95,7 @@ class ResponseCode {
     Code.updateUserInfor: "update_user_profile_title_success",
     Code.changePassword: "change_password_success",
     Code.applyGiftcode: "apply_giftcode_success",
+    Code.updateSession: "update_session_success",
   };
 
   bool _authenticated = false;

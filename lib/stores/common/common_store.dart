@@ -30,6 +30,8 @@ abstract class _CommonStore with Store {
   void _setupDisposers() {
     _disposers = [
       reaction((_) => success, (_) => success = false, delay: 200),
+      reaction((_) => triggerUpdateSession, (_) => triggerUpdateSession = false,
+          delay: 1000),
       reaction((_) => successInRegisterProgram,
           (_) => successInRegisterProgram = false,
           delay: 200),
@@ -55,12 +57,16 @@ abstract class _CommonStore with Store {
 
   // non-observable variables:--------------------------------------------------
   final int totalPage = 0;
+  final limitRates = 6;
 
   int programRatePage = 0;
 
   // observable variables:------------------------------------------------------
   @observable
   bool success = false;
+
+  @observable
+  bool triggerUpdateSession = false;
 
   @observable
   bool successInRegisterProgram = false;
@@ -126,6 +132,11 @@ abstract class _CommonStore with Store {
 
       return true;
     }
+
+    if (rateModels.length < limitRates) {
+      return true;
+    }
+
     return false;
   }
 
@@ -145,7 +156,7 @@ abstract class _CommonStore with Store {
       mentorID: mentorID,
       programID: programID,
       query: {
-        "limit": 6,
+        "limit": limitRates,
         "page": programRatePage,
       },
     );
@@ -227,7 +238,7 @@ abstract class _CommonStore with Store {
     if (null == accessToken) {
       messageStore.setErrorMessageByCode(401);
 
-      success = false;
+      triggerUpdateSession = false;
 
       return;
     }
@@ -238,7 +249,7 @@ abstract class _CommonStore with Store {
       sessionID: session!.id,
       authToken: accessToken,
     );
-    requestRegisterSessionFuture = ObservableFuture(future);
+    requestFuture = ObservableFuture(future);
 
     await future.then(
       (res) {
@@ -246,18 +257,28 @@ abstract class _CommonStore with Store {
           if (res!["statusCode"] == null) {
             callback?.call();
 
-            success = true;
+            messageStore.setSuccessMessage(Code.updateSession);
+
+            session = Session(
+              id: session!.id,
+              isAccepted: false,
+              isCanceled: true,
+              done: false,
+              program: session!.program,
+            );
+
+            triggerUpdateSession = true;
           } else {
             int code = res["statusCode"] as int;
 
             messageStore.setErrorMessageByCode(code);
 
-            successInRegisterProgram = false;
+            triggerUpdateSession = false;
           }
         } catch (e) {
           messageStore.setErrorMessageByCode(500);
 
-          successInRegisterProgram = false;
+          triggerUpdateSession = false;
         }
       },
     );
@@ -270,7 +291,7 @@ abstract class _CommonStore with Store {
     if (null == accessToken) {
       messageStore.setErrorMessageByCode(401);
 
-      success = false;
+      triggerUpdateSession = false;
 
       return;
     }
@@ -287,18 +308,28 @@ abstract class _CommonStore with Store {
       (res) {
         try {
           if (res!["statusCode"] == null) {
-            success = true;
+            messageStore.setSuccessMessage(Code.updateSession);
+
+            session = Session(
+              id: session!.id,
+              isAccepted: true,
+              isCanceled: false,
+              done: true,
+              program: session!.program,
+            );
+
+            triggerUpdateSession = true;
           } else {
             int code = res["statusCode"] as int;
 
             messageStore.setErrorMessageByCode(code);
 
-            successInRegisterProgram = false;
+            triggerUpdateSession = false;
           }
         } catch (e) {
           messageStore.setErrorMessageByCode(500);
 
-          successInRegisterProgram = false;
+          triggerUpdateSession = false;
         }
       },
     );
@@ -311,7 +342,7 @@ abstract class _CommonStore with Store {
     if (null == accessToken) {
       messageStore.setErrorMessageByCode(401);
 
-      success = false;
+      triggerUpdateSession = false;
 
       return;
     }
@@ -330,18 +361,29 @@ abstract class _CommonStore with Store {
       (res) {
         try {
           if (res!["statusCode"] == null) {
-            success = true;
+            messageStore.setSuccessMessage(Code.updateSession);
+
+            session = Session(
+              id: session!.id,
+              isAccepted: true,
+              isCanceled: false,
+              done: true,
+              program: session!.program,
+              rating: RateModel.fromJson(res),
+            );
+
+            triggerUpdateSession = true;
           } else {
             int code = res["statusCode"] as int;
 
             messageStore.setErrorMessageByCode(code);
 
-            successInRegisterProgram = false;
+            triggerUpdateSession = false;
           }
         } catch (e) {
           messageStore.setErrorMessageByCode(500);
 
-          successInRegisterProgram = false;
+          triggerUpdateSession = false;
         }
       },
     );

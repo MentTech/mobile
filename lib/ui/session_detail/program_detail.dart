@@ -197,6 +197,9 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
       height: DeviceUtils.getScaledHeight(context, 0.5),
       child: Observer(
         builder: (_) {
+          if (_commonStore.triggerUpdateSession) {
+            _commonStore.programRatePage = 0;
+          }
           return SmartRefresher(
             controller: _refreshController,
             enablePullUp: true,

@@ -219,6 +219,12 @@ class MentorAPI {
         ),
       );
 
+      log(res.toString());
+
+      if (res is String) {
+        return {"data": res};
+      }
+
       return res;
       // return User.fromJson(res);
     } catch (e) {
@@ -250,6 +256,11 @@ class MentorAPI {
         ),
       );
 
+      log(res.toString());
+
+      if (res is String) {
+        return {"data": res};
+      }
       return res;
       // return User.fromJson(res);
     } catch (e) {
@@ -286,6 +297,12 @@ class MentorAPI {
           },
         ),
       );
+
+      log(res.toString());
+
+      if (res is String) {
+        return {"data": res};
+      }
 
       return res;
       // return User.fromJson(res);

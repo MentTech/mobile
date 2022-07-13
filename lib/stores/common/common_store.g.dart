@@ -74,6 +74,23 @@ mixin _$CommonStore on _CommonStore, Store {
     });
   }
 
+  late final _$triggerUpdateSessionAtom =
+      Atom(name: '_CommonStore.triggerUpdateSession', context: context);
+
+  @override
+  bool get triggerUpdateSession {
+    _$triggerUpdateSessionAtom.reportRead();
+    return super.triggerUpdateSession;
+  }
+
+  @override
+  set triggerUpdateSession(bool value) {
+    _$triggerUpdateSessionAtom.reportWrite(value, super.triggerUpdateSession,
+        () {
+      super.triggerUpdateSession = value;
+    });
+  }
+
   late final _$successInRegisterProgramAtom =
       Atom(name: '_CommonStore.successInRegisterProgram', context: context);
 
@@ -257,6 +274,7 @@ mixin _$CommonStore on _CommonStore, Store {
   String toString() {
     return '''
 success: ${success},
+triggerUpdateSession: ${triggerUpdateSession},
 successInRegisterProgram: ${successInRegisterProgram},
 requestFuture: ${requestFuture},
 requestRegisterSessionFuture: ${requestRegisterSessionFuture},
