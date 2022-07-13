@@ -57,7 +57,7 @@ class _UserProfileState extends State<UserProfile> {
 
     String birthdayString =
         (user.birthday ?? DateTime.now().subtractYear(year: 18))
-            .toZDateString(toUTC: true);
+            .toDDMMYYYYString(toUTC: true);
     _birthdayController.text = birthdayString;
     _phoneController.text = user.phone ?? "";
 
@@ -183,7 +183,9 @@ class _UserProfileState extends State<UserProfile> {
               child: Text(
                 AppLocalizations.of(context).translate("done_button_translate"),
                 style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                      color: AppColors.confirmColor,
+                      color: Color.alphaBlend(
+                          AppColors.confirmColor.withOpacity(0.8),
+                          Theme.of(context).indicatorColor),
                       fontWeight: FontWeight.w500,
                     ),
               ),
