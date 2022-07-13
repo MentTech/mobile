@@ -138,9 +138,7 @@ abstract class _ChatStore with Store {
           // [TODO] implement here
           chatRoomInformation = ChatRoomInformation.fromJson(res);
 
-          await getRoomInformation(roomId: chatRoomInformation!.id);
-
-          success = true;
+          success = await getRoomInformation(roomId: chatRoomInformation!.id);
         } else {
           int code = res["statusCode"] as int;
 

@@ -5,6 +5,7 @@ class RoundedButtonWidget extends StatelessWidget {
   final String buttonText;
   final Color buttonColor;
   final Color? textColor;
+  final Color? borderColor;
   final VoidCallback onPressed;
   final EdgeInsets padding;
 
@@ -13,6 +14,7 @@ class RoundedButtonWidget extends StatelessWidget {
     required this.buttonText,
     required this.buttonColor,
     this.textColor,
+    this.borderColor,
     required this.onPressed,
     this.padding = const EdgeInsets.symmetric(
         vertical: Dimens.vertical_padding,
@@ -26,7 +28,8 @@ class RoundedButtonWidget extends StatelessWidget {
         color: buttonColor,
         shape: StadiumBorder(
             side: BorderSide(
-                color: textColor?.withOpacity(0.5) ??
+                color: borderColor ??
+                    textColor?.withOpacity(0.5) ??
                     Theme.of(context).highlightColor,
                 width: 1.5)),
       ),
@@ -37,7 +40,8 @@ class RoundedButtonWidget extends StatelessWidget {
             color: buttonColor,
             shape: StadiumBorder(
               side: BorderSide(
-                  color: textColor?.withOpacity(0.5) ??
+                  color: borderColor ??
+                      textColor?.withOpacity(0.5) ??
                       Theme.of(context).dividerColor,
                   width: 1.5),
             ),

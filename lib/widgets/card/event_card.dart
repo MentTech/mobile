@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
+import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/common/session/session.dart';
+import 'package:mobile/stores/chat/chat_store.dart';
 import 'package:mobile/stores/common/common_store.dart';
 import 'package:mobile/ui/session_detail/session_detail_full_feature.dart';
+import 'package:mobile/utils/application/application_utils.dart';
 import 'package:mobile/utils/extension/datetime_extension.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
@@ -39,7 +42,7 @@ class _EventCardState extends State<EventCard> {
 
   // state variable:------------------------------------------------------------
   int rate = 0;
-  late final Session _session;
+  late Session _session;
 
   @override
   void initState() {
@@ -48,6 +51,13 @@ class _EventCardState extends State<EventCard> {
     _session = widget.session;
 
     _commonStore = Provider.of<CommonStore>(context, listen: false);
+  }
+
+  @override
+  void didUpdateWidget(covariant EventCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _session = widget.session;
   }
 
   @override
@@ -155,6 +165,7 @@ class _EventCardState extends State<EventCard> {
                       buttonText: AppLocalizations.of(context)
                           .translate('short_mark_as_done_translate'),
                       buttonColor: Theme.of(context).primaryColor,
+                      borderColor: Colors.white,
                       onPressed: () {
                         DialogPopupPresenter.showSlidePopupDialog<bool>(
                           context,
@@ -188,6 +199,7 @@ class _EventCardState extends State<EventCard> {
                       buttonText: AppLocalizations.of(context)
                           .translate('short_review_about_session_translate'),
                       buttonColor: Theme.of(context).primaryColor,
+                      borderColor: Colors.white,
                       onPressed: () {
                         DialogPopupPresenter.showSlidePopupDialog<bool>(
                           context,
@@ -236,8 +248,22 @@ class _EventCardState extends State<EventCard> {
               RoundedButtonWidget(
                 buttonText: AppLocalizations.of(context).translate('message'),
                 buttonColor: Theme.of(context).primaryColor,
+                borderColor: Colors.white,
                 onPressed: () {
-                  // onSendMessageTap.call();
+                  final ChatStore chatStore = getIt<ChatStore>();
+                  chatStore
+                      .getChatRoomInformation(_session.id)
+                      .then((bool response) {
+                    if (response) {
+                      Routes.navigatorSupporter(context, Routes.chat);
+                    } else {
+                      ApplicationUtils.showErrorMessage(
+                        context,
+                        "chatroom_title_translate",
+                        chatStore.getFailedMessageKey,
+                      );
+                    }
+                  });
                 },
               ),
             ],
@@ -290,8 +316,8 @@ class _EventCardState extends State<EventCard> {
                     ],
                   ),
                 ),
-                Text(_session.expectedDate!.toIso8601String(),
-                    style: Theme.of(context).textTheme.bodySmall),
+                // Text(_session.expectedDate!.toIso8601String(),
+                //     style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
           ),

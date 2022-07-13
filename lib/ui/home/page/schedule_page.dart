@@ -351,7 +351,11 @@ class _SchedulePageState extends State<SchedulePage> {
           child: Observer(
             builder: (_) {
               if (_scheduleStore.isCalendarLoading) {
-                return Container(); // build shimmer
+                return ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (_, index) => _buildShimmerEventCard(),
+                  itemCount: 5,
+                );
               } else {
                 return ListView.builder(
                   scrollDirection: Axis.vertical,
@@ -367,6 +371,198 @@ class _SchedulePageState extends State<SchedulePage> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildShimmerEventCard() {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: Dimens.vertical_margin),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 15,
+                height: 10,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).highlightColor,
+                  borderRadius: const BorderRadiusDirectional.horizontal(
+                    end: Radius.circular(10),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: Dimens.horizontal_padding,
+                    right: Dimens.extra_large_horizontal_padding),
+                child: ApplicationUtils.shimmerSection(
+                  context,
+                  child: Container(
+                    height: Dimens.medium_text,
+                    width: 150,
+                    decoration: BoxDecoration(
+                      color: Colors.black87,
+                      borderRadius: Dimens.kMaxBorderRadius,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(
+                vertical: Dimens.lightly_medium_vertical_margin,
+                horizontal: Dimens.extra_large_horizontal_margin),
+            padding: const EdgeInsets.symmetric(
+                vertical: Dimens.vertical_padding,
+                horizontal: Dimens.horizontal_padding),
+            alignment: Alignment.centerLeft,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.white, width: 1.5),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  horizontalTitleGap: 0,
+                  minVerticalPadding: 0,
+                  leading: IconTheme(
+                    data: Theme.of(context)
+                        .iconTheme
+                        .copyWith(size: Dimens.extra_large_text),
+                    child: const Icon(
+                      Icons.price_change_outlined,
+                    ),
+                  ),
+                  title: Column(
+                    children: [
+                      ApplicationUtils.shimmerSection(
+                        context,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                            vertical: Dimens.small_vertical_margin,
+                          ),
+                          height: Dimens.medium_text,
+                          width: 200,
+                          decoration: BoxDecoration(
+                            color: Colors.black87,
+                            borderRadius: Dimens.kMaxBorderRadius,
+                          ),
+                        ),
+                      ),
+                      ApplicationUtils.shimmerSection(
+                        context,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                            vertical: Dimens.small_vertical_margin,
+                          ),
+                          height: Dimens.medium_text,
+                          width: 200,
+                          decoration: BoxDecoration(
+                            color: Colors.black87,
+                            borderRadius: Dimens.kMaxBorderRadius,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  subtitle: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        Icons.star_rate_rounded,
+                        color: Theme.of(context).selectedRowColor,
+                        size: Dimens.medium_text,
+                      ),
+                      ApplicationUtils.shimmerSection(
+                        context,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                            vertical: Dimens.vertical_margin,
+                          ),
+                          height: Dimens.medium_text,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.black87,
+                            borderRadius: Dimens.kMaxBorderRadius,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ApplicationUtils.shimmerSection(
+                        context,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                            vertical: Dimens.small_vertical_margin,
+                          ),
+                          height: Dimens.medium_text,
+                          width: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.black87,
+                            borderRadius: Dimens.kMaxBorderRadius,
+                          ),
+                        ),
+                      ),
+                      IconTheme(
+                        data: Theme.of(context)
+                            .iconTheme
+                            .copyWith(size: Dimens.medium_text),
+                        child: const Icon(Icons.token_rounded),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ApplicationUtils.shimmerSection(
+                      context,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(
+                          vertical: Dimens.small_vertical_margin,
+                        ),
+                        height: Dimens.ultra_large_text,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.black87,
+                          borderRadius: Dimens.kMaxBorderRadius,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: Dimens.horizontal_margin,
+                    ),
+                    ApplicationUtils.shimmerSection(
+                      context,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(
+                          vertical: Dimens.small_vertical_margin,
+                        ),
+                        height: Dimens.ultra_large_text,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.black87,
+                          borderRadius: Dimens.kMaxBorderRadius,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const Divider(
+            height: 1,
+            color: Colors.white,
+          ),
+        ],
+      ),
     );
   }
 }
