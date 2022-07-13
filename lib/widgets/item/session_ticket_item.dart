@@ -101,7 +101,7 @@ class SessionTicketItem extends StatelessWidget {
                     .iconTheme
                     .copyWith(size: Dimens.medium_text),
                 child: const Icon(Icons.token_rounded),
-              )
+              ),
             ],
           ),
         ),

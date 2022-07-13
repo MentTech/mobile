@@ -141,14 +141,6 @@ mixin _$NotificationStore on _NotificationStore, Store {
     });
   }
 
-  late final _$connectSocketAsyncAction =
-      AsyncAction('_NotificationStore.connectSocket', context: context);
-
-  @override
-  Future<dynamic> connectSocket() {
-    return _$connectSocketAsyncAction.run(() => super.connectSocket());
-  }
-
   late final _$fetchAllNotificationsAsyncAction =
       AsyncAction('_NotificationStore.fetchAllNotifications', context: context);
 
@@ -181,6 +173,17 @@ mixin _$NotificationStore on _NotificationStore, Store {
 
   late final _$_NotificationStoreActionController =
       ActionController(name: '_NotificationStore', context: context);
+
+  @override
+  void addNewNotification(dynamic data) {
+    final _$actionInfo = _$_NotificationStoreActionController.startAction(
+        name: '_NotificationStore.addNewNotification');
+    try {
+      return super.addNewNotification(data);
+    } finally {
+      _$_NotificationStoreActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void changeNotificationMethodFilter(NotificationFilter notificationFilter) {

@@ -526,31 +526,32 @@ class ShortImformationItem extends StatelessWidget {
                     top: 0,
                     right: 0,
                     child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade600.withOpacity(0.65),
-                            borderRadius: const BorderRadius.only(
-                                bottomLeft: Radius.circular(
-                                    Dimens.kBorderUltraRadiusValue))),
-                        padding: const EdgeInsets.only(
-                          top: Dimens.small_vertical_padding,
-                          bottom: Dimens.small_vertical_padding,
-                          left: Dimens.large_horizontal_padding,
-                          right: Dimens.horizontal_padding,
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(
-                              Icons.star_rate_rounded,
-                              color: Theme.of(context).selectedRowColor,
-                              size: Dimens.medium_text,
-                            ),
-                            Text(
-                              " ${mentorModel.userMentor.rating}",
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
-                        )),
+                      decoration: BoxDecoration(
+                          color: Colors.grey.shade600.withOpacity(0.65),
+                          borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(
+                                  Dimens.kBorderUltraRadiusValue))),
+                      padding: const EdgeInsets.only(
+                        top: Dimens.small_vertical_padding,
+                        bottom: Dimens.small_vertical_padding,
+                        left: Dimens.large_horizontal_padding,
+                        right: Dimens.horizontal_padding,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            Icons.star_rate_rounded,
+                            color: Theme.of(context).selectedRowColor,
+                            size: Dimens.medium_text,
+                          ),
+                          Text(
+                            " ${mentorModel.userMentor.rating}",
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                    ),
                   )
                 ],
               ),

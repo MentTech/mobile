@@ -49,6 +49,45 @@ abstract class _NotificationStore with Store {
     ];
   }
 
+  // connect to server by websocket
+  Future connectSocket() async {
+    // socket setup
+    await _repository.authToken.then((accessToken) {
+      if (accessToken != null && accessToken.isNotEmpty) {
+        log("[message] [socket io] set up");
+
+        socket.connect();
+
+        socket.emit('auth:connect', accessToken);
+
+        socket.onConnect((data) {
+          log("[socket io] connected " + socket.connected.toString());
+          log('[socket io] onConnect: ' + data.toString());
+        });
+
+        socket.onConnectError((data) {
+          log("[socket io] [onConnectError]" + data.toString());
+        });
+
+        socket.onError((data) {
+          log("[socket io] [onError]" + data.toString());
+        });
+
+        // listen event
+        socket.on('notification', (data) {
+          log("[socket io] data from notification event " + data.toString());
+          addNewNotification(data);
+        });
+      } else {
+        _messageStore.setErrorMessageByCode(401);
+
+        socket.dispose();
+
+        success = false;
+      }
+    });
+  }
+
   // empty responses:-----------------------------------------------------------
   static ObservableFuture<Map<String, dynamic>?> emptyResponse =
       ObservableFuture.value(null);
@@ -106,45 +145,10 @@ abstract class _NotificationStore with Store {
   }
 
   // actions:-------------------------------------------------------------------
-
-  // connect to server by websocket
   @action
-  Future connectSocket() async {
-    // socket setup
-    await _repository.authToken.then((accessToken) {
-      if (accessToken != null && accessToken.isNotEmpty) {
-        log("[message] [socket io] set up");
-
-        socket.connect();
-
-        socket.emit('auth:connect', accessToken);
-
-        socket.onConnect((data) {
-          log("[socket io] connected " + socket.connected.toString());
-          log('[socket io] onConnect: ' + data.toString());
-        });
-
-        socket.onConnectError((data) {
-          log("[socket io] [onConnectError]" + data.toString());
-        });
-
-        socket.onError((data) {
-          log("[socket io] [onError]" + data.toString());
-        });
-
-        // listen event
-        socket.on('notification', (data) {
-          log("[socket io] data from notification event " + data.toString());
-          notifications.add(NotificationModel.fromJson(data));
-        });
-      } else {
-        _messageStore.setErrorMessageByCode(401);
-
-        socket.dispose();
-
-        success = false;
-      }
-    });
+  void addNewNotification(dynamic data) {
+    notifications.add(NotificationModel.fromJson(data));
+    trigger = true;
   }
 
   @action
