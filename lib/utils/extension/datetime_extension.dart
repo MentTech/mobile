@@ -11,7 +11,7 @@ extension DateTimeExtension on DateTime {
     if (toUTC) {
       return DateTime(year, month, day + 1).toUtc();
     } else {
-      return DateTime(year, month, day + 1);
+      return DateTime(year, month, day + 1).toLocal();
     }
   }
 
@@ -19,8 +19,20 @@ extension DateTimeExtension on DateTime {
     if (toUTC) {
       return DateTime(year, month, day).toUtc();
     } else {
-      return DateTime(year, month, day);
+      return DateTime(year, month, day).toLocal();
     }
+  }
+
+  DateTime before({required Duration duration, bool toUTC = false}) {
+    if (toUTC) {
+      return subtract(duration).toUtc();
+    } else {
+      return subtract(duration).toLocal();
+    }
+  }
+
+  String toHms({bool toUTC = false}) {
+    return DateFormat.Hms().format(toUTC ? toUtc() : toLocal());
   }
 
   String toFulltimeString() {
@@ -28,11 +40,11 @@ extension DateTimeExtension on DateTime {
   }
 
   String toPresentedTime({bool toUTC = false}) {
-    return DateFormat("hh:mm:ss").format(toUTC ? toUtc() : this);
+    return DateFormat("hh:mm:ss").format(toUTC ? toUtc() : toLocal());
   }
 
   String toMeridiemPattern({bool toUTC = false}) {
-    return DateFormat("a").format(toUTC ? toUtc() : this);
+    return DateFormat("a").format(toUTC ? toUtc() : toLocal());
   }
 
   String toDateTimeDealString() {
@@ -40,11 +52,11 @@ extension DateTimeExtension on DateTime {
   }
 
   String toZDateString({bool toUTC = false}) {
-    return DateFormat("yyyy-MM-dd").format(toUTC ? toUtc() : this);
+    return DateFormat("yyyy-MM-dd").format(toUTC ? toUtc() : toLocal());
   }
 
   String toDDMMYYYYString({bool toUTC = false}) {
-    return DateFormat("dd/MM/yyyy").format(toUTC ? toUtc() : this);
+    return DateFormat("dd/MM/yyyy").format(toUTC ? toUtc() : toLocal());
   }
 
   String toMonthNameString({String? locale}) {

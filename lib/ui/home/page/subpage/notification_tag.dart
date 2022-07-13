@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/dimens.dart';
@@ -43,10 +41,10 @@ class _NotificationTagState extends State<NotificationTag> {
 
     isRead = widget.notificationModel.isRead;
 
-    log("[notificaiton log] [initState] " +
-        widget.notificationModel.message +
-        " and isread: " +
-        widget.notificationModel.isRead.toString());
+    // log("[notificaiton log] [initState] " +
+    //     widget.notificationModel.message +
+    //     " and isread: " +
+    //     widget.notificationModel.isRead.toString());
     // _notificationModelStore = NotificationModelStore(widget.notificationModel);
   }
 
@@ -54,10 +52,10 @@ class _NotificationTagState extends State<NotificationTag> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    log("[notificaiton log] [didChangeDependencies] " +
-        widget.notificationModel.message +
-        " and isread: " +
-        widget.notificationModel.isRead.toString());
+    // log("[notificaiton log] [didChangeDependencies] " +
+    //     widget.notificationModel.message +
+    //     " and isread: " +
+    //     widget.notificationModel.isRead.toString());
 
     _mentorStore = Provider.of<MentorStore>(context, listen: false);
     // _mentorStore.fetchAMentor(widget.notificationModel.actorId);
@@ -67,10 +65,10 @@ class _NotificationTagState extends State<NotificationTag> {
   void didUpdateWidget(covariant NotificationTag oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    log("[notificaiton log] [didUpdateWidget] " +
-        widget.notificationModel.message +
-        " and isread: " +
-        widget.notificationModel.isRead.toString());
+    // log("[notificaiton log] [didUpdateWidget] " +
+    //     widget.notificationModel.message +
+    //     " and isread: " +
+    //     widget.notificationModel.isRead.toString());
 
     isRead = widget.notificationModel.isRead;
   }

@@ -109,6 +109,7 @@ class _SchedulePageState extends State<SchedulePage> {
             stops: null,
           ),
           CustomScrollView(
+            clipBehavior: Clip.none,
             slivers: [
               SliverToBoxAdapter(
                 child: SizedBox(height: _positionedToBuild),
@@ -118,6 +119,7 @@ class _SchedulePageState extends State<SchedulePage> {
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
                     _buildCalendarTabView(context),
+                    // const SizedBox(),
                     _buildGroupListTabView(context),
                   ],
                 ),
@@ -194,6 +196,8 @@ class _SchedulePageState extends State<SchedulePage> {
     return Observer(
       builder: (_) {
         return StickyGroupedListView<Session, DateTime>(
+          padding: const EdgeInsets.only(
+              bottom: kBottomNavigationBarHeight + Dimens.vertical_margin),
           elements: _scheduleStore.listListSessions,
           groupBy: (element) => element.expectedDate!.today(toUTC: false),
           groupSeparatorBuilder: (Session groupByValue) {
@@ -302,8 +306,28 @@ class _SchedulePageState extends State<SchedulePage> {
         TableCalendar(
           focusedDay: _focusedDate,
           firstDay: DateTime.now(),
-          lastDay: DateTime.now().add(const Duration(days: 7)),
+          lastDay: DateTime.now().add(const Duration(days: 14)),
           calendarFormat: CalendarFormat.week,
+          calendarStyle: CalendarStyle(
+            selectedDecoration: BoxDecoration(
+              color: Color.alphaBlend(
+                Colors.orange.withOpacity(0.9),
+                Theme.of(context).highlightColor.withOpacity(0.5),
+              ),
+              shape: BoxShape.circle,
+            ),
+            todayDecoration: BoxDecoration(
+              color: Color.alphaBlend(
+                Colors.orange.shade300.withOpacity(0.7),
+                Theme.of(context).primaryColor.withOpacity(0.4),
+              ),
+              shape: BoxShape.circle,
+            ),
+            disabledTextStyle: TextStyle(
+                color: Color.alphaBlend(
+                    Theme.of(context).primaryColor.withOpacity(0.2),
+                    Colors.white)),
+          ),
           headerVisible: false,
           selectedDayPredicate: (day) {
             return isSameDay(_selectedDate, day);
@@ -323,24 +347,24 @@ class _SchedulePageState extends State<SchedulePage> {
             _focusedDate = focusedDay;
           },
         ),
-        Observer(
-          builder: (_) {
-            if (_scheduleStore.isCalendarLoading) {
-              return Container(); // build shimmer
-            } else {
-              return ListView.builder(
-                scrollDirection: Axis.vertical,
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (_, index) => EventCard(
-                  session: _scheduleStore.getCalendarSessionsAt(index)!,
-                  // onViewDetailTap: () {},
-                  // onSendMessageTap: () {},
-                ),
-                itemCount: _scheduleStore.sizeCalendarSessions,
-              );
-            }
-          },
+        Expanded(
+          child: Observer(
+            builder: (_) {
+              if (_scheduleStore.isCalendarLoading) {
+                return Container(); // build shimmer
+              } else {
+                return ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (_, index) => EventCard(
+                    session: _scheduleStore.getCalendarSessionsAt(index)!,
+                    // onViewDetailTap: () {},
+                    // onSendMessageTap: () {},
+                  ),
+                  itemCount: _scheduleStore.sizeCalendarSessions,
+                );
+              }
+            },
+          ),
         ),
       ],
     );

@@ -290,9 +290,8 @@ class _EventCardState extends State<EventCard> {
                     ],
                   ),
                 ),
-                // Text(
-                //     '${_session.startTimestamp.toDifferentMinutes(_session.endTimestamp)} ${AppLocalizations.of(context).translate('minutes')}',
-                //     style: Theme.of(context).textTheme.bodySmall),
+                Text(_session.expectedDate!.toIso8601String(),
+                    style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
           ),

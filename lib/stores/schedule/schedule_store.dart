@@ -116,9 +116,10 @@ abstract class _ScheduleStore with Store {
       authToken: accessToken,
       parameters: {
         "isAccepted": true,
-        "done": false,
         "isCanceled": false,
-        "expectedStartDate": DateTime.now().toDDMMYYYYString(toUTC: true),
+        "expectedStartDate": DateTime.now()
+            .before(duration: const Duration(hours: 2), toUTC: true)
+            .toIso8601String(),
       },
     );
 
@@ -159,13 +160,22 @@ abstract class _ScheduleStore with Store {
       return;
     }
 
+    final String expectedStartDate;
+
+    if (DateTime.now().today().compareTo(date.today()) == 0) {
+      expectedStartDate = DateTime.now()
+          .before(duration: const Duration(hours: 2), toUTC: true)
+          .toIso8601String();
+    } else {
+      expectedStartDate = date.today(toUTC: true).toIso8601String();
+    }
+
     final future = _repository.fetchSessionsOfUser(
       authToken: accessToken,
       parameters: {
         "isAccepted": true,
-        "done": false,
         "isCanceled": false,
-        "expectedStartDate": date.today(toUTC: true).toIso8601String(),
+        "expectedStartDate": expectedStartDate,
         "expectedEndDate": date.tomorrow(toUTC: true).toIso8601String(),
       },
     );
@@ -175,9 +185,21 @@ abstract class _ScheduleStore with Store {
     await future.then((res) {
       try {
         if (res!["statusCode"] == null) {
-          // [TODO] implement here
-          sessionsByCalendar = ObservableList.of(
-              Sessions.fromJson(res).sessions.reversed.toList());
+          List<Session> sessionList = Sessions.fromJson(res).sessions.toList();
+
+          sessionList.sort(
+            (s1, s2) {
+              return s1.expectedDate!.compareTo(s2.expectedDate!);
+              // return s1.expectedDate!
+              //     .toHms(toUTC: false)
+              //     .compareTo(s2.expectedDate!.toHms(toUTC: false));
+            },
+          );
+
+          sessionsByCalendar = ObservableList.of(sessionList);
+
+          // sessionsByCalendar = ObservableList.of(
+          //     Sessions.fromJson(res).sessions.reversed.toList());
 
           success = true;
         } else {
