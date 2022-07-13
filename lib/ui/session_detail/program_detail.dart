@@ -442,20 +442,12 @@ class _ProgramDetailContainerState extends State<ProgramDetailContainer> {
                       blur: Properties.blur_glass_morphism,
                       opacity: Properties.opacity_glass_morphism,
                       onTap: () {
-                        final ChatStore chatStore = getIt<ChatStore>();
-                        chatStore
-                            .getChatRoomInformation(widget.sessionDetail.id)
-                            .then((bool response) {
-                          if (response) {
-                            Routes.navigatorSupporter(context, Routes.chat);
-                          } else {
-                            ApplicationUtils.showErrorMessage(
-                              context,
-                              "chatroom_title_translate",
-                              chatStore.getFailedMessageKey,
-                            );
-                          }
-                        });
+                        ChatStore chatStore = getIt<ChatStore>();
+                        chatStore.sessionID = widget.sessionDetail.id;
+                        chatStore.mentorID =
+                            widget.sessionDetail.program.mentorId;
+
+                        Routes.navigatorSupporter(context, Routes.chat);
                       },
                     ),
                   ),

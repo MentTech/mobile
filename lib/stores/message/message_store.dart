@@ -76,6 +76,8 @@ enum Code {
   changePassword,
   applyGiftcode,
   updateSession,
+  getChatRoom,
+  getRoomContent,
 }
 
 class ResponseCode {
@@ -96,6 +98,8 @@ class ResponseCode {
     Code.changePassword: "change_password_success",
     Code.applyGiftcode: "apply_giftcode_success",
     Code.updateSession: "update_session_success",
+    Code.getChatRoom: "get_chat_room_success",
+    Code.getRoomContent: "get_room_content_success",
   };
 
   bool _authenticated = false;

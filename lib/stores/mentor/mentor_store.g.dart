@@ -256,6 +256,14 @@ mixin _$MentorStore on _MentorStore, Store {
     return _$fetchAMentorAsyncAction.run(() => super.fetchAMentor(mentorID));
   }
 
+  late final _$fetchMentorAsyncAction =
+      AsyncAction('_MentorStore.fetchMentor', context: context);
+
+  @override
+  Future<MentorModel?> fetchMentor(int mentorID) {
+    return _$fetchMentorAsyncAction.run(() => super.fetchMentor(mentorID));
+  }
+
   late final _$responseMentorAsyncAction =
       AsyncAction('_MentorStore.responseMentor', context: context);
 

@@ -161,6 +161,8 @@
   "change_password_success": "Bạn đã đổi mật khẩu thành công",
   "apply_giftcode_success": "Bạn đã áp dụng mã quà tặng thành công",
   "update_session_success": "Bạn đã cập nhật phiên cố vấn thành công",
+  "get_chat_room_success": "Bạn đã vào phòng trò chuyện thành công",
+  "get_room_content_success": "Bạn đã lấy nội dung của phòng thành công",
   "gift_code_not_found_translate": "Không tìm thấy mã quà tặng",
   "success_translate_end": "------------------------------------------------------------------------",
   "giftcode_translate": "Nhập mã quà tặng của bạn",

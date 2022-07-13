@@ -1,7 +1,8 @@
+// ignore_for_file: unused_field, unnecessary_getters_setters
+
 import 'dart:developer';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:mobile/data/network/constants/endpoints.dart';
 import 'package:mobile/data/repository.dart';
 import 'package:mobile/di/components/service_locator.dart';
@@ -27,7 +28,10 @@ abstract class _ChatStore with Store {
   // websocket
   io.Socket socket = io.io(
     Endpoints.apiUrl,
-    io.OptionBuilder().disableAutoConnect().build(),
+    io.OptionBuilder()
+        .setTimeout(5000)
+        .disableAutoConnect()
+        .setTransports(['websocket']).build(),
   );
 
   // constructor:---------------------------------------------------------------
@@ -40,36 +44,48 @@ abstract class _ChatStore with Store {
   }
 
   // connect to server by websocket
-  void connectSocket() {
+  Future connectSocket() async {
     // socket setup
+    await _repository.authToken.then((accessToken) {
+      if (accessToken != null && accessToken.isNotEmpty) {
+        log("[Chat] [socket io] set up");
 
-    log("[message] [socket io] set up");
+        socket.connect();
 
-    socket.onConnect((data) async {
-      log('[socket io] onConnect: ');
-      debugPrint(data);
+        socket.emit('auth:connect', accessToken);
 
-      await _repository.authToken.then((accessToken) {
-        log("message [socket io]: accesstoken: >$accessToken<");
-        if (accessToken != null && accessToken.isNotEmpty) {
-          socket.emit('auth:connect', accessToken);
-        } else {
-          _messageStore.setErrorMessageByCode(401);
+        socket.onConnect((data) {
+          log("[Chat] [socket io] connected " + socket.connected.toString());
+          log('[Chat] [socket io] onConnect: ' + data.toString());
 
-          socket.dispose();
+          successInConnectSocket = true;
+        });
 
-          success = false;
-        }
-      });
+        socket.onConnectError((data) {
+          log("[Chat] [socket io] [onConnectError]" + data.toString());
+        });
+
+        socket.onError((data) {
+          log("[Chat] [socket io] [onError]" + data.toString());
+        });
+
+        // listen event
+        socket.on('notification', (data) {
+          log("[Chat] [socket io] data from notification event " +
+              data.toString());
+        });
+
+        socket.on('chat:${roomInformation!.id}', (data) {
+          addNewMessageFromSocket(data);
+        });
+      } else {
+        _messageStore.setErrorMessageByCode(401);
+
+        socket.dispose();
+
+        success = false;
+      }
     });
-
-    // listen event
-    socket.on('notification', (data) {
-      log("[socket io] data from notification event");
-      debugPrint(data);
-    });
-
-    socket.connect();
   }
 
   // disposers:-----------------------------------------------------------------
@@ -78,6 +94,30 @@ abstract class _ChatStore with Store {
   void _setupDisposers() {
     _disposers = [
       reaction((_) => success, (_) => success = false, delay: 200),
+      reaction((_) => successInGetRoom, (_) => successInGetRoom = false,
+          delay: 200),
+      reaction((_) => successInGetMessage, (_) => successInGetMessage = false,
+          delay: 200),
+      reaction(
+          (_) => successInConnectSocket, (_) => successInConnectSocket = false,
+          delay: 200),
+      reaction(
+        (_) => chatMessages,
+        (_) {
+          for (var element in chatMessages) {
+            chats.add(
+              types.TextMessage(
+                author: types.User(
+                  id: element.userId.toString(),
+                ),
+                id: element.id.toString(),
+                text: element.content,
+              ),
+            );
+          }
+        },
+        delay: 200,
+      ),
     ];
   }
 
@@ -89,7 +129,30 @@ abstract class _ChatStore with Store {
   ChatRoomInformation? chatRoomInformation;
   RoomInformation? roomInformation;
 
+  int _sessionId = -1;
+  set sessionID(int id) {
+    _sessionId = id;
+  }
+
+  int _mentorId = -1;
+  set mentorID(int id) {
+    _mentorId = id;
+  }
+
+  int get mentorID => _mentorId;
+
+  List<types.Message> chats = [];
+
   // observable variables:------------------------------------------------------
+  @observable
+  bool successInGetRoom = false;
+
+  @observable
+  bool successInConnectSocket = false;
+
+  @observable
+  bool successInGetMessage = false;
+
   @observable
   bool success = false;
 
@@ -112,22 +175,20 @@ abstract class _ChatStore with Store {
   // actions:-------------------------------------------------------------------
 
   @action
-  Future<bool> getChatRoomInformation(
-    int sessionId,
-  ) async {
+  Future<bool> getChatRoomInformation() async {
     String? accessToken = await _repository.authToken;
 
     if (null == accessToken) {
       _messageStore.setErrorMessageByCode(401);
 
-      success = false;
+      successInGetRoom = false;
 
       return Future.value(false);
     }
 
     final future = _repository.getChatRoomInformation(
       authToken: accessToken,
-      sessionId: sessionId,
+      sessionId: _sessionId,
     );
 
     requestFuture = ObservableFuture(future);
@@ -138,20 +199,28 @@ abstract class _ChatStore with Store {
           // [TODO] implement here
           chatRoomInformation = ChatRoomInformation.fromJson(res);
 
-          success = await getRoomInformation(roomId: chatRoomInformation!.id);
+          if (chatRoomInformation!.participants.isNotEmpty) {
+            successInGetRoom = true;
+          } else {
+            successInGetRoom =
+                await getRoomInformation(roomId: chatRoomInformation!.id);
+          }
+
+          _messageStore.setSuccessMessage(Code.getChatRoom);
         } else {
           int code = res["statusCode"] as int;
 
           _messageStore.setErrorMessageByCode(code);
 
-          success = false;
+          successInGetRoom = false;
         }
       } catch (e) {
         _messageStore.setErrorMessageByCode(500);
 
-        success = false;
+        successInGetRoom = false;
       }
-      return Future.value(success);
+
+      return Future.value(successInGetRoom);
     });
   }
 
@@ -203,7 +272,7 @@ abstract class _ChatStore with Store {
     if (null == accessToken) {
       _messageStore.setErrorMessageByCode(401);
 
-      success = false;
+      successInGetRoom = false;
 
       return Future.value(false);
     }
@@ -220,28 +289,29 @@ abstract class _ChatStore with Store {
         if (res!["statusCode"] == null) {
           // [TODO] implement here
           roomInformation = RoomInformation.fromJson(res);
+          chatRoomInformation!.participants
+              .addAll(roomInformation!.participants);
 
-          success = true;
+          successInGetRoom = true;
         } else {
           int code = res["statusCode"] as int;
 
           _messageStore.setErrorMessageByCode(code);
 
-          success = false;
+          successInGetRoom = false;
         }
       } catch (e) {
         _messageStore.setErrorMessageByCode(500);
 
-        success = false;
+        successInGetRoom = false;
       }
-      return Future.value(success);
+      return Future.value(successInGetRoom);
     });
   }
 
   @action
   Future<void> sendMessage({
-    required int roomId,
-    required String message,
+    required types.TextMessage message,
   }) async {
     String? accessToken = await _repository.authToken;
 
@@ -255,8 +325,8 @@ abstract class _ChatStore with Store {
 
     final future = _repository.sendMessage(
       authToken: accessToken,
-      roomId: roomId,
-      message: message,
+      roomId: chatRoomInformation!.id,
+      message: message.text.trim(),
     );
 
     requestFuture = ObservableFuture(future);
@@ -265,6 +335,13 @@ abstract class _ChatStore with Store {
       try {
         if (res!["statusCode"] == null) {
           // [TODO] implement here
+          ChatMessage chatMessage = ChatMessage.fromJson(res);
+
+          for (var chat in chatMessages) {
+            if (chat.content.compareTo(chatMessage.content) == 0) {
+              chat = chatMessage;
+            }
+          }
 
           success = true;
         } else {
@@ -283,10 +360,9 @@ abstract class _ChatStore with Store {
   }
 
   @action
-  Future<void> fetchAllMessages(
-    int roomId, [
+  Future<void> fetchAllMessages([
     Map<String, int> params = const {
-      "limit": 20,
+      "limit": 40,
       "skip": 0,
     },
   ]) async {
@@ -295,14 +371,14 @@ abstract class _ChatStore with Store {
     if (null == accessToken) {
       _messageStore.setErrorMessageByCode(401);
 
-      success = false;
+      successInGetMessage = false;
 
       return;
     }
 
     final future = _repository.getAllMessages(
       authToken: accessToken,
-      roomId: roomId,
+      roomId: chatRoomInformation!.id,
       parameters: params,
     );
 
@@ -315,21 +391,35 @@ abstract class _ChatStore with Store {
           chatMessages =
               ObservableList.of(ChatMessageList.fromJson(res).chatMessages);
 
-          success = true;
+          successInGetMessage = true;
         } else {
           int code = res["statusCode"] as int;
 
           _messageStore.setErrorMessageByCode(code);
 
-          success = false;
+          successInGetMessage = false;
         }
       } catch (e) {
         _messageStore.setErrorMessageByCode(500);
 
-        success = false;
+        successInGetMessage = false;
       }
     });
   }
+
+  @action
+  void addNewMessageFromSocket(dynamic data) {
+    chatMessages.add(ChatMessage.fromJson(data));
+  }
+
+  // @action
+  // void addNewMessageFromUser(String message) {
+  //   socket.emit('chat:send_message', {
+  //       "roomId": Number(router.query.roomId),
+  //       "message":message,
+  //     });
+  //   chatMessages.add(ChatMessage.fromJson(data));
+  // }
 
   // general methods:-----------------------------------------------------------
 

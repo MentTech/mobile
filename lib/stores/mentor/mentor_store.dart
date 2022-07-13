@@ -300,6 +300,38 @@ abstract class _MentorStore with Store {
   }
 
   @action
+  Future<MentorModel?> fetchMentor(int mentorID) async {
+    String? accessToken = await _repository.authToken;
+
+    if (null == accessToken) {
+      messageStore.setErrorMessageByCode(401);
+
+      return null;
+    }
+
+    final future = _repository.fetchMentor(mentorID);
+    requestFuture = ObservableFuture(future);
+
+    return await future.then((res) {
+      try {
+        if (res!["statusCode"] == null) {
+          return MentorModel.fromJson(res);
+        } else {
+          int code = res["statusCode"] as int;
+
+          messageStore.setErrorMessageByCode(code);
+
+          return null;
+        }
+      } catch (e) {
+        messageStore.setErrorMessageByCode(500);
+
+        return null;
+      }
+    });
+  }
+
+  @action
   Future<MentorModel?> responseMentor(int mentorID) async {
     String? accessToken = await _repository.authToken;
 

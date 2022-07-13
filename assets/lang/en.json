@@ -161,6 +161,8 @@
   "change_password_success": "You have changed your password successfully",
   "apply_giftcode_success": "You have applied giftcode successfully",
   "update_session_success": "You have updated Session successfully",
+  "get_chat_room_success": "You have entered chat room successfully",
+  "get_room_content_success": "You have gotten room's content successfully",
   "gift_code_not_found_translate": "Gift code is not found",
   "success_translate_end": "------------------------------------------------------------------------",
   "giftcode_translate": "Type your Giftcode",

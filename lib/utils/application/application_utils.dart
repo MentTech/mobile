@@ -88,6 +88,7 @@ class ApplicationUtils {
     String titleKey,
     String messageKey, {
     int duration = Properties.delayTimeInSecond,
+    VoidCallback? callback,
   }) {
     if (messageKey.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -99,6 +100,7 @@ class ApplicationUtils {
           if (messageKey == "unauthorized_key_translate") {
             Routes.routeReplaceAllAndPush(context, const AuthorizationScreen());
           }
+          callback?.call();
         });
       });
     }

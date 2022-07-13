@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:mobile/models/chat/room_information.dart';
 
 part 'chat_room_information.g.dart';
 
@@ -11,6 +12,7 @@ class ChatRoomInformation extends Equatable {
   final bool isActive;
   final DateTime createAt;
   final DateTime updatedAt;
+  final List<Participants> participants;
 
   const ChatRoomInformation({
     required this.id,
@@ -19,6 +21,7 @@ class ChatRoomInformation extends Equatable {
     required this.isActive,
     required this.createAt,
     required this.updatedAt,
+    this.participants = const [],
   });
 
   factory ChatRoomInformation.fromJson(Map<String, dynamic> json) =>

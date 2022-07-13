@@ -30,6 +30,55 @@ mixin _$ChatStore on _ChatStore, Store {
               name: '_ChatStore.getFailedMessageKey'))
       .value;
 
+  late final _$successInGetRoomAtom =
+      Atom(name: '_ChatStore.successInGetRoom', context: context);
+
+  @override
+  bool get successInGetRoom {
+    _$successInGetRoomAtom.reportRead();
+    return super.successInGetRoom;
+  }
+
+  @override
+  set successInGetRoom(bool value) {
+    _$successInGetRoomAtom.reportWrite(value, super.successInGetRoom, () {
+      super.successInGetRoom = value;
+    });
+  }
+
+  late final _$successInConnectSocketAtom =
+      Atom(name: '_ChatStore.successInConnectSocket', context: context);
+
+  @override
+  bool get successInConnectSocket {
+    _$successInConnectSocketAtom.reportRead();
+    return super.successInConnectSocket;
+  }
+
+  @override
+  set successInConnectSocket(bool value) {
+    _$successInConnectSocketAtom
+        .reportWrite(value, super.successInConnectSocket, () {
+      super.successInConnectSocket = value;
+    });
+  }
+
+  late final _$successInGetMessageAtom =
+      Atom(name: '_ChatStore.successInGetMessage', context: context);
+
+  @override
+  bool get successInGetMessage {
+    _$successInGetMessageAtom.reportRead();
+    return super.successInGetMessage;
+  }
+
+  @override
+  set successInGetMessage(bool value) {
+    _$successInGetMessageAtom.reportWrite(value, super.successInGetMessage, () {
+      super.successInGetMessage = value;
+    });
+  }
+
   late final _$successAtom = Atom(name: '_ChatStore.success', context: context);
 
   @override
@@ -81,9 +130,9 @@ mixin _$ChatStore on _ChatStore, Store {
       AsyncAction('_ChatStore.getChatRoomInformation', context: context);
 
   @override
-  Future<bool> getChatRoomInformation(int sessionId) {
+  Future<bool> getChatRoomInformation() {
     return _$getChatRoomInformationAsyncAction
-        .run(() => super.getChatRoomInformation(sessionId));
+        .run(() => super.getChatRoomInformation());
   }
 
   late final _$getAllRoomsAsyncAction =
@@ -107,24 +156,41 @@ mixin _$ChatStore on _ChatStore, Store {
       AsyncAction('_ChatStore.sendMessage', context: context);
 
   @override
-  Future<void> sendMessage({required int roomId, required String message}) {
+  Future<void> sendMessage({required types.TextMessage message}) {
     return _$sendMessageAsyncAction
-        .run(() => super.sendMessage(roomId: roomId, message: message));
+        .run(() => super.sendMessage(message: message));
   }
 
   late final _$fetchAllMessagesAsyncAction =
       AsyncAction('_ChatStore.fetchAllMessages', context: context);
 
   @override
-  Future<void> fetchAllMessages(int roomId,
-      [Map<String, int> params = const {"limit": 20, "skip": 0}]) {
+  Future<void> fetchAllMessages(
+      [Map<String, int> params = const {"limit": 40, "skip": 0}]) {
     return _$fetchAllMessagesAsyncAction
-        .run(() => super.fetchAllMessages(roomId, params));
+        .run(() => super.fetchAllMessages(params));
+  }
+
+  late final _$_ChatStoreActionController =
+      ActionController(name: '_ChatStore', context: context);
+
+  @override
+  void addNewMessageFromSocket(dynamic data) {
+    final _$actionInfo = _$_ChatStoreActionController.startAction(
+        name: '_ChatStore.addNewMessageFromSocket');
+    try {
+      return super.addNewMessageFromSocket(data);
+    } finally {
+      _$_ChatStoreActionController.endAction(_$actionInfo);
+    }
   }
 
   @override
   String toString() {
     return '''
+successInGetRoom: ${successInGetRoom},
+successInConnectSocket: ${successInConnectSocket},
+successInGetMessage: ${successInGetMessage},
 success: ${success},
 requestFuture: ${requestFuture},
 chatMessages: ${chatMessages},

@@ -6,7 +6,6 @@ import 'package:mobile/models/common/session/session.dart';
 import 'package:mobile/stores/chat/chat_store.dart';
 import 'package:mobile/stores/common/common_store.dart';
 import 'package:mobile/ui/session_detail/session_detail_full_feature.dart';
-import 'package:mobile/utils/application/application_utils.dart';
 import 'package:mobile/utils/extension/datetime_extension.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/utils/routes/routes.dart';
@@ -250,20 +249,11 @@ class _EventCardState extends State<EventCard> {
                 buttonColor: Theme.of(context).primaryColor,
                 borderColor: Colors.white,
                 onPressed: () {
-                  final ChatStore chatStore = getIt<ChatStore>();
-                  chatStore
-                      .getChatRoomInformation(_session.id)
-                      .then((bool response) {
-                    if (response) {
-                      Routes.navigatorSupporter(context, Routes.chat);
-                    } else {
-                      ApplicationUtils.showErrorMessage(
-                        context,
-                        "chatroom_title_translate",
-                        chatStore.getFailedMessageKey,
-                      );
-                    }
-                  });
+                  ChatStore chatStore = getIt<ChatStore>();
+                  chatStore.sessionID = _session.id;
+                  chatStore.mentorID = _session.program.mentorId;
+
+                  Routes.navigatorSupporter(context, Routes.chat);
                 },
               ),
             ],
