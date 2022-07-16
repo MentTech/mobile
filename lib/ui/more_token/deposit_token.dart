@@ -126,10 +126,10 @@ class _DepositTokenState extends State<DepositToken> {
                   context,
                   "transaction_notification_title_translate",
                   _orderStore.getSuccessMessageKey,
-                  callback: (() {
+                  callback: () {
                     DeviceUtils.hideKeyboard(context);
                     Routes.route(context, DepositTokenSuccessFul());
-                  }),
+                  },
                 )
               : ApplicationUtils.showErrorMessage(
                   context,
@@ -359,8 +359,8 @@ class _DepositTokenState extends State<DepositToken> {
     return Observer(
       builder: (_) {
         return TextFieldNameWidget(
-          frontFlex: 3,
-          backFlex: 19,
+          frontFlex: 5,
+          backFlex: 20,
           labelText:
               AppLocalizations.of(context).translate("token_label_translate"),
           errorText: _depositTokenFormStore.formErrorStore.token,

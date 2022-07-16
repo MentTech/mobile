@@ -17,7 +17,7 @@ SessionTypeModel _$SessionTypeModelFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$SessionTypeModelToJson(SessionTypeModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'name': _$SessionTypeEnumMap[instance.sessionType],
+      'name': _$SessionTypeEnumMap[instance.sessionType]!,
       'createAt': instance.createAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
     };

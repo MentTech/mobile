@@ -19,9 +19,9 @@ Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
     <String, dynamic>{
       'id': instance.id,
       'amount': instance.amount,
-      'type': _$TransactionTypeEnumMap[instance.type],
+      'type': _$TransactionTypeEnumMap[instance.type]!,
       'message': instance.message,
-      'status': _$StatusTypeEnumMap[instance.status],
+      'status': _$StatusTypeEnumMap[instance.status]!,
       'createAt': instance.createAt.toIso8601String(),
     };
 

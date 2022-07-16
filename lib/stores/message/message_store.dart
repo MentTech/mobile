@@ -73,6 +73,7 @@ abstract class _MessageStore with Store {
 enum Code {
   authenticated,
   updateUserInfor,
+  createTopup,
   changePassword,
   applyGiftcode,
   updateSession,
@@ -84,7 +85,8 @@ class ResponseCode {
   final Map<int, String> responseCode = <int, String>{
     401: "unauthorized_key_translate",
     402: "unauthorized_wrong_credential_key_translate",
-    403: "session_already_done",
+    // 403: "session_already_done",
+    403: "not_activated_account",
     404: "gift_code_not_found_translate",
     405: "wrong_current_password_translate",
     407: "proxy_authentication_required",
@@ -100,6 +102,7 @@ class ResponseCode {
     Code.updateSession: "update_session_success",
     Code.getChatRoom: "get_chat_room_success",
     Code.getRoomContent: "get_room_content_success",
+    Code.createTopup: "create_topup_request_success",
   };
 
   bool _authenticated = false;

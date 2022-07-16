@@ -115,22 +115,6 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
-  late final _$triggerChangeAtom =
-      Atom(name: '_UserStore.triggerChange', context: context);
-
-  @override
-  bool get triggerChange {
-    _$triggerChangeAtom.reportRead();
-    return super.triggerChange;
-  }
-
-  @override
-  set triggerChange(bool value) {
-    _$triggerChangeAtom.reportWrite(value, super.triggerChange, () {
-      super.triggerChange = value;
-    });
-  }
-
   late final _$requestFutureAtom =
       Atom(name: '_UserStore.requestFuture', context: context);
 
@@ -227,6 +211,21 @@ mixin _$UserStore on _UserStore, Store {
   set user(UserModel? value) {
     _$userAtom.reportWrite(value, super.user, () {
       super.user = value;
+    });
+  }
+
+  late final _$balanceAtom = Atom(name: '_UserStore.balance', context: context);
+
+  @override
+  int get balance {
+    _$balanceAtom.reportRead();
+    return super.balance;
+  }
+
+  @override
+  set balance(int value) {
+    _$balanceAtom.reportWrite(value, super.balance, () {
+      super.balance = value;
     });
   }
 
@@ -337,7 +336,7 @@ mixin _$UserStore on _UserStore, Store {
       AsyncAction('_UserStore.fetchMyTransactions', context: context);
 
   @override
-  Future<void> fetchMyTransactions() {
+  Future<bool> fetchMyTransactions() {
     return _$fetchMyTransactionsAsyncAction
         .run(() => super.fetchMyTransactions());
   }
@@ -416,6 +415,17 @@ mixin _$UserStore on _UserStore, Store {
       ActionController(name: '_UserStore', context: context);
 
   @override
+  Session? getSessionAt(int index) {
+    final _$actionInfo = _$_UserStoreActionController.startAction(
+        name: '_UserStore.getSessionAt');
+    try {
+      return super.getSessionAt(index);
+    } finally {
+      _$_UserStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void updateSessionStatus(SessionStatus sessionStatus) {
     final _$actionInfo = _$_UserStoreActionController.startAction(
         name: '_UserStore.updateSessionStatus');
@@ -430,13 +440,13 @@ mixin _$UserStore on _UserStore, Store {
   String toString() {
     return '''
 success: ${success},
-triggerChange: ${triggerChange},
 requestFuture: ${requestFuture},
 requestUploadAvatarFuture: ${requestUploadAvatarFuture},
 requestFavEventFuture: ${requestFavEventFuture},
 requestSessionFuture: ${requestSessionFuture},
 requestTransactionFuture: ${requestTransactionFuture},
 user: ${user},
+balance: ${balance},
 sessionStatus: ${sessionStatus},
 sessionFetchingData: ${sessionFetchingData},
 session: ${session},

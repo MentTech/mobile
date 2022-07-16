@@ -63,7 +63,7 @@ class _SessionManagerState extends State<SessionManager> {
           Expanded(
             child: Observer(
               builder: (_) {
-                _userStore.triggerChange;
+                List<Session> sessions = _userStore.sessions;
                 return ListView.builder(
                   padding: const EdgeInsets.only(
                     top: Dimens.large_vertical_padding,
@@ -71,43 +71,31 @@ class _SessionManagerState extends State<SessionManager> {
                     left: Dimens.horizontal_padding,
                   ),
                   itemBuilder: (context, index) {
-                    Session? session = _userStore.getSessionAt(index);
-                    return _buildSessionItemInBottomSheet(session, context);
+                    return Container(
+                      margin: const EdgeInsets.only(
+                        bottom: Dimens.medium_vertical_margin,
+                      ),
+                      child: SessionTicketItem(
+                        program: sessions[index].program,
+                        statusColor: decideColorOfSession(sessions[index]),
+                        margin: const EdgeInsets.only(
+                          top: Dimens.vertical_margin,
+                        ),
+                        callbackIfProgramNotNull: () {
+                          Routes.route(
+                            context,
+                            SesstionDetail(session: sessions[index]),
+                          );
+                        },
+                      ),
+                    );
                   },
-                  itemCount: !_userStore.isSessionLoading
-                      ? _userStore.sizeSessionList
-                      : 5,
+                  itemCount: _userStore.sizeSessionList,
                 );
               },
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Container _buildSessionItemInBottomSheet(
-      Session? session, BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(
-        bottom: Dimens.medium_vertical_margin,
-      ),
-      child: SessionTicketItem(
-        program: session?.program,
-        statusColor: decideColorOfSession(session),
-        margin: const EdgeInsets.only(
-          top: Dimens.vertical_margin,
-        ),
-        blur: Properties.blur_glass_morphism,
-        opacity: Properties.opacity_glass_morphism,
-        callbackIfProgramNotNull: () {
-          Routes.route(
-            context,
-            SesstionDetail(
-              session: session!,
-            ),
-          );
-        },
       ),
     );
   }

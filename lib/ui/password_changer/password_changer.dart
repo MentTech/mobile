@@ -203,7 +203,7 @@ class _PasswordChangerScreenState extends State<PasswordChangerScreen> {
       child: RoundedButtonWidget(
         buttonText: AppLocalizations.of(context).translate("change_password"),
         buttonColor: Colors.transparent,
-        textColor: Theme.of(context).primaryColor,
+        textColor: Theme.of(context).highlightColor,
         onPressed: () async {
           DeviceUtils.hideKeyboard(context);
           _formStore.validatePasswordChanger();

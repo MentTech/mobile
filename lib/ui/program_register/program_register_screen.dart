@@ -84,7 +84,7 @@ class ProgramRegisterScreen extends StatelessWidget {
                 ),
                 showSkipButton: false,
                 showNextButton: ((mentorStore.hasProgram &&
-                        userStore.user!.coin > mentorStore.program!.credit) &&
+                        userStore.balance > mentorStore.program!.credit) &&
                     (!_programRegisterFormStore.onPage ||
                         _programRegisterFormStore.canRegisterProgram)),
                 next: Text(

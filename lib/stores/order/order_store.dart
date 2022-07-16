@@ -152,7 +152,7 @@ abstract class _OrderStore with Store {
     future.then((res) {
       try {
         if (res!["statusCode"] == null) {
-          messageStore.setSuccessMessage(Code.updateUserInfor);
+          messageStore.setSuccessMessage(Code.createTopup);
 
           currentOrder = Order.fromJson(res);
 

@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -36,11 +35,12 @@ abstract class _UserStore with Store {
   void _setupDisposers() {
     _disposers = [
       reaction((_) => success, (_) => success = false, delay: 200),
-      reaction((_) => triggerChange, (_) => triggerChange = false, delay: 200),
+      // reaction((_) => triggerChange, (_) => triggerChange = false, delay: 200),
       reaction(
         (_) => sessions,
         (_) {
-          triggerChange = true;
+          // triggerChange = true;
+          // log("[reaction] message trigger reaction");
         },
         // equals: (ObservableList<Session>? l1, ObservableList<Session>? l2) {
         //   log("work? " +
@@ -86,9 +86,6 @@ abstract class _UserStore with Store {
   bool success = false;
 
   @observable
-  bool triggerChange = false;
-
-  @observable
   ObservableFuture<Map<String, dynamic>?> requestFuture = emptyLoginResponse;
 
   @observable
@@ -109,6 +106,9 @@ abstract class _UserStore with Store {
 
   @observable
   UserModel? user;
+
+  @observable
+  int balance = 0;
 
   @observable
   SessionStatus sessionStatus = SessionStatus.all;
@@ -177,13 +177,6 @@ abstract class _UserStore with Store {
   @computed
   SessionStatus get currentSessionFetchStatus => sessionStatus;
 
-  Session? getSessionAt(int index) {
-    if (index < sessions.length) {
-      return sessions.elementAt(index);
-    }
-    return null;
-  }
-
   Session? getNextSessionAt(int index) {
     if (index < nextSessions.length) {
       return nextSessions.elementAt(index);
@@ -201,22 +194,27 @@ abstract class _UserStore with Store {
   int getFavIdAt(int index) => favouriteMentorIdList.elementAt(index);
 
   // actions:-------------------------------------------------------------------
+
+  @action
+  Session? getSessionAt(int index) {
+    if (index < sessions.length) {
+      return sessions.elementAt(index);
+    }
+    return null;
+  }
+
   @action
   void updateSessionStatus(SessionStatus sessionStatus) {
     this.sessionStatus = sessionStatus;
     sessionFetchingData.updateStatus(sessionStatus);
 
-    // sessions.clear();
-    List<Session> tempSessionList = <Session>[];
-    log(sessionFetchingData.toMapJson().toString());
+    sessions.clear();
     for (Session session in originSessions) {
       if (sessionFetchingData.checkSameStatus(session)) {
-        tempSessionList.add(session);
-        log(session.toJson().toString());
+        sessions.add(session);
       }
     }
-    // sessions.addAll(tempSessionList);
-    sessions = ObservableList.of(tempSessionList.reversed);
+    sessions = ObservableList.of(sessions.reversed);
   }
 
   @action
@@ -232,43 +230,67 @@ abstract class _UserStore with Store {
 
     await future.then((res) {
       try {
-        user = UserModel.fromJson(res!);
-        success = true;
+        if (res!["statusCode"] == null) {
+          user = UserModel.fromJson(res);
+
+          balance = user!.coin;
+
+          success = true;
+        } else {
+          int code = res["statusCode"] as int;
+
+          messageStore.setErrorMessageByCode(code);
+
+          success = false;
+        }
       } catch (e) {
-        // res['message']
+        messageStore.setErrorMessageByCode(500);
         success = false;
       }
+
+      return success;
     });
 
     return Future.value(success);
   }
 
   @action
-  Future<void> fetchMyTransactions() async {
+  Future<bool> fetchMyTransactions() async {
     String? accessToken = await _repository.authToken;
 
     if (null == accessToken) {
-      return;
+      return false;
     }
 
     final future = _repository.fetchTransactions(authToken: accessToken);
     requestTransactionFuture = ObservableFuture(future);
 
-    future.then((res) {
+    return await future.then((res) {
       try {
-        TransactionContent transactionContent =
-            TransactionContent.fromJson(res!);
-        _transactionContent = TransactionContent(
-            balance: transactionContent.balance,
-            transactions: transactionContent.transactions.reversed.toList());
+        if (res!["statusCode"] == null) {
+          TransactionContent transactionContent =
+              TransactionContent.fromJson(res);
 
-        success = true;
-        return Future.value(true);
+          _transactionContent = TransactionContent(
+              balance: transactionContent.balance,
+              transactions: transactionContent.transactions.reversed.toList());
+
+          balance = transactionContent.balance;
+
+          success = true;
+        } else {
+          int code = res["statusCode"] as int;
+
+          messageStore.setErrorMessageByCode(code);
+
+          success = false;
+        }
       } catch (e) {
-        // res['message']
+        messageStore.setErrorMessageByCode(500);
         success = false;
-        return Future.value(false);
       }
+
+      return success;
     });
   }
 
@@ -486,7 +508,7 @@ abstract class _UserStore with Store {
     String? accessToken = await _repository.authToken;
 
     if (null == accessToken) {
-      return Future.value(false);
+      return false;
     }
 
     final Future<Map<String, dynamic>?> future =
@@ -494,18 +516,24 @@ abstract class _UserStore with Store {
 
     requestUploadAvatarFuture = ObservableFuture(future);
 
-    future.then((res) {
+    return await future.then((res) {
       try {
-        success = true;
-        return Future.value(true);
-      } catch (e) {
-        // res['message']
-        success = false;
-        return Future.value(false);
-      }
-    });
+        if (res!["statusCode"] == null) {
+          success = true;
+        } else {
+          int code = res["statusCode"] as int;
 
-    return Future.value(true);
+          messageStore.setErrorMessageByCode(code);
+
+          success = false;
+        }
+      } catch (e) {
+        messageStore.setErrorMessageByCode(500);
+        success = false;
+      }
+
+      return success;
+    });
   }
 
   @action
@@ -570,6 +598,8 @@ abstract class _UserStore with Store {
           int code = res["statusCode"] as int;
 
           messageStore.setErrorMessageByCode(code);
+
+          success = false;
         }
       } catch (e) {
         messageStore.setErrorMessageByCode(304);
