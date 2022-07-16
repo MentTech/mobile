@@ -1,4 +1,4 @@
-enum SessionStatus {
+enum Status {
   all,
   waiting,
   confirmed,

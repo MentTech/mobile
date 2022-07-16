@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/dimens.dart';
@@ -6,6 +8,7 @@ import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/common/session/session.dart';
 import 'package:mobile/models/common/transaction/transaction.dart';
 import 'package:mobile/stores/enum/session_status_enum.dart';
+import 'package:mobile/stores/enum/status_type_enum.dart';
 import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/utils/device/device_utils.dart';
@@ -14,6 +17,7 @@ import 'package:mobile/utils/routes/routes.dart';
 import 'package:mobile/widgets/app_icon_widget.dart';
 import 'package:mobile/widgets/background_colorful/linear_gradient_background.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
+import 'package:mobile/widgets/glassmorphism_widgets/glassmorphism_widget_button.dart';
 import 'package:mobile/widgets/item/transaction_ticket_item.dart';
 import 'package:provider/provider.dart';
 
@@ -175,14 +179,19 @@ class _BalancedProfileState extends State<BalancedProfile> {
               ),
             ),
           ),
-          // Observer(
-          //   builder: (_) {
-          //     return _buildRowControllButtonOnBottomSheet(context);
-          //   },
-          // ),
+          Observer(
+            builder: (_) {
+              return _buildRowControllButtonOnBottomSheet(context);
+            },
+          ),
+          const SizedBox(
+            height: 5,
+          ),
           Expanded(
             child: Observer(
               builder: (_) {
+                StatusType? currentType =
+                    _userStore.currentTransactionFetchStatus;
                 return ListView.builder(
                   padding: const EdgeInsets.only(
                     top: Dimens.large_vertical_padding,
@@ -190,8 +199,19 @@ class _BalancedProfileState extends State<BalancedProfile> {
                     left: Dimens.horizontal_padding,
                   ),
                   itemBuilder: (_, index) {
+                    log("[reaction] trigger  rebuild");
                     Transaction? transaction =
                         _userStore.getTransactionAt(index);
+
+                    if (currentType != null // all
+                            &&
+                            transaction != null // has value
+                            &&
+                            transaction.status != currentType // not in filter
+                        ) {
+                      return const SizedBox.shrink();
+                    }
+
                     return _buildTransactionItemInBottomSheet(
                       transaction,
                       context,
@@ -209,75 +229,56 @@ class _BalancedProfileState extends State<BalancedProfile> {
     );
   }
 
-  // Row _buildRowControllButtonOnBottomSheet(BuildContext context) {
-  //   return Row(
-  //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //     crossAxisAlignment: CrossAxisAlignment.center,
-  //     children: [
-  //       _buildSelectedButton(
-  //         iconData: Icons.clear_all,
-  //         text: AppLocalizations.of(context).translate("all_translate"),
-  //         isSelected: _userStore.currentSessionFetchStatus == SessionStatus.all,
-  //         ontap: () {
-  //           _userStore.updateSessionStatus(SessionStatus.all);
-  //         },
-  //       ),
-  //       _buildSelectedButton(
-  //         iconData: Icons.pending_actions,
-  //         text: AppLocalizations.of(context).translate("waiting_translate"),
-  //         isSelected:
-  //             _userStore.currentSessionFetchStatus == SessionStatus.waiting,
-  //         ontap: () {
-  //           _userStore.updateSessionStatus(SessionStatus.waiting);
-  //         },
-  //       ),
-  //       _buildSelectedButton(
-  //         iconData: Icons.recommend,
-  //         text: AppLocalizations.of(context).translate("confirmed_translate"),
-  //         isSelected:
-  //             _userStore.currentSessionFetchStatus == SessionStatus.confirmed,
-  //         ontap: () {
-  //           _userStore.updateSessionStatus(SessionStatus.confirmed);
-  //         },
-  //       ),
-  //       _buildSelectedButton(
-  //         iconData: Icons.fact_check,
-  //         text: AppLocalizations.of(context).translate("completed_translate"),
-  //         isSelected:
-  //             _userStore.currentSessionFetchStatus == SessionStatus.completed,
-  //         ontap: () {
-  //           _userStore.updateSessionStatus(SessionStatus.completed);
-  //         },
-  //       ),
-  //       _buildSelectedButton(
-  //         iconData: Icons.disabled_visible,
-  //         text: AppLocalizations.of(context).translate("canceled_translate"),
-  //         isSelected:
-  //             _userStore.currentSessionFetchStatus == SessionStatus.canceled,
-  //         ontap: () {
-  //           _userStore.updateSessionStatus(SessionStatus.canceled);
-  //         },
-  //       ),
-  //     ],
-  //   );
-  // }
+  Row _buildRowControllButtonOnBottomSheet(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        _buildSelectedButton(
+          iconData: Icons.clear_all,
+          text: AppLocalizations.of(context).translate("all_translate"),
+          isSelected: _userStore.currentTransactionFetchStatus == null,
+          ontap: () {
+            _userStore.updateTransactionStatus(null);
+          },
+        ),
+        _buildSelectedButton(
+          iconData: Icons.hourglass_top_rounded,
+          text: AppLocalizations.of(context).translate("waiting_translate"),
+          isSelected:
+              _userStore.currentTransactionFetchStatus == StatusType.HOLD,
+          ontap: () {
+            _userStore.updateTransactionStatus(StatusType.HOLD);
+          },
+        ),
+        _buildSelectedButton(
+          iconData: Icons.checklist_rtl_rounded,
+          text: AppLocalizations.of(context).translate("completed_translate"),
+          isSelected:
+              _userStore.currentTransactionFetchStatus == StatusType.SUCCESS,
+          ontap: () {
+            _userStore.updateTransactionStatus(StatusType.SUCCESS);
+          },
+        ),
+      ],
+    );
+  }
 
   Color decideColorOfSession(Session? session) {
     if (null == session) {
       return Colors.white;
     }
 
-    SessionStatus sessionStatus =
-        SessionFetchingData.parseSessionStatus(session);
+    Status sessionStatus = SessionFetchingData.parseSessionStatus(session);
 
     switch (sessionStatus) {
-      case SessionStatus.waiting:
+      case Status.waiting:
         return Colors.yellow;
-      case SessionStatus.confirmed:
+      case Status.confirmed:
         return Colors.green;
-      case SessionStatus.completed:
+      case Status.completed:
         return Colors.blue;
-      case SessionStatus.canceled:
+      case Status.canceled:
         return Colors.red;
       default:
         return Colors.white;
@@ -367,50 +368,60 @@ class _BalancedProfileState extends State<BalancedProfile> {
     );
   }
 
-  // Widget _buildSelectedButton({
-  //   required IconData iconData,
-  //   required String text,
-  //   required VoidCallback ontap,
-  //   required bool isSelected,
-  // }) {
-  //   final Color statusColor = isSelected
-  //       ? Theme.of(context).highlightColor
-  //       : Color.alphaBlend(
-  //           Theme.of(context).indicatorColor.withOpacity(0.7),
-  //           Colors.white70,
-  //         );
+  Widget _buildSelectedButton({
+    required IconData iconData,
+    required String text,
+    required VoidCallback ontap,
+    required bool isSelected,
+  }) {
+    final Color statusColor = isSelected
+        ? Color.alphaBlend(
+            Theme.of(context).selectedRowColor.withOpacity(0.5),
+            Colors.white,
+          )
+        : Colors.white70;
 
-  //   return SizedBox(
-  //     height: DeviceUtils.getScaledWidth(context, 0.16),
-  //     child: AspectRatio(
-  //       aspectRatio: 1 / 1,
-  //       child: GlassmorphismWidgetButton(
-  //         background: statusColor,
-  //         radius: 10,
-  //         alignment: Alignment.center,
-  //         child: Column(
-  //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //           children: [
-  //             Icon(
-  //               iconData,
-  //               color: statusColor,
-  //               size: Dimens.large_text,
-  //             ),
-  //             Text(
-  //               text,
-  //               textAlign: TextAlign.center,
-  //               style: TextStyle(
-  //                 color: statusColor,
-  //                 fontSize: 10,
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //         onTap: ontap,
-  //         blur: Properties.blur_glass_morphism,
-  //         opacity: Properties.opacity_glass_morphism,
-  //       ),
-  //     ),
-  //   );
-  // }
+    final Color textColor = isSelected
+        ? Color.alphaBlend(
+            Theme.of(context).selectedRowColor.withOpacity(0.7),
+            Theme.of(context).highlightColor,
+          )
+        : Theme.of(context).disabledColor;
+
+    return Container(
+      height: DeviceUtils.getScaledWidth(context, 0.20),
+      margin:
+          const EdgeInsets.symmetric(horizontal: Dimens.more_horizontal_margin),
+      child: AspectRatio(
+        aspectRatio: 1 / 1,
+        child: GlassmorphismWidgetButton(
+          background: statusColor,
+          border: textColor,
+          radius: 10,
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Icon(
+                iconData,
+                color: textColor,
+                size: Dimens.large_text,
+              ),
+              Text(
+                text,
+                textAlign: TextAlign.center,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall!
+                    .copyWith(color: textColor, fontSize: 12),
+              ),
+            ],
+          ),
+          onTap: ontap,
+          blur: Properties.blur_glass_morphism,
+          opacity: Properties.opacity_glass_morphism,
+        ),
+      ),
+    );
+  }
 }

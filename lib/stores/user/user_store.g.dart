@@ -91,13 +91,21 @@ mixin _$UserStore on _UserStore, Store {
           Computed<String>(() => super.getFailedMessageKey,
               name: '_UserStore.getFailedMessageKey'))
       .value;
-  Computed<SessionStatus>? _$currentSessionFetchStatusComputed;
+  Computed<Status>? _$currentSessionFetchStatusComputed;
 
   @override
-  SessionStatus get currentSessionFetchStatus =>
-      (_$currentSessionFetchStatusComputed ??= Computed<SessionStatus>(
+  Status get currentSessionFetchStatus =>
+      (_$currentSessionFetchStatusComputed ??= Computed<Status>(
               () => super.currentSessionFetchStatus,
               name: '_UserStore.currentSessionFetchStatus'))
+          .value;
+  Computed<StatusType?>? _$currentTransactionFetchStatusComputed;
+
+  @override
+  StatusType? get currentTransactionFetchStatus =>
+      (_$currentTransactionFetchStatusComputed ??= Computed<StatusType?>(
+              () => super.currentTransactionFetchStatus,
+              name: '_UserStore.currentTransactionFetchStatus'))
           .value;
 
   late final _$successAtom = Atom(name: '_UserStore.success', context: context);
@@ -233,15 +241,31 @@ mixin _$UserStore on _UserStore, Store {
       Atom(name: '_UserStore.sessionStatus', context: context);
 
   @override
-  SessionStatus get sessionStatus {
+  Status get sessionStatus {
     _$sessionStatusAtom.reportRead();
     return super.sessionStatus;
   }
 
   @override
-  set sessionStatus(SessionStatus value) {
+  set sessionStatus(Status value) {
     _$sessionStatusAtom.reportWrite(value, super.sessionStatus, () {
       super.sessionStatus = value;
+    });
+  }
+
+  late final _$transactionStatusAtom =
+      Atom(name: '_UserStore.transactionStatus', context: context);
+
+  @override
+  StatusType? get transactionStatus {
+    _$transactionStatusAtom.reportRead();
+    return super.transactionStatus;
+  }
+
+  @override
+  set transactionStatus(StatusType? value) {
+    _$transactionStatusAtom.reportWrite(value, super.transactionStatus, () {
+      super.transactionStatus = value;
     });
   }
 
@@ -426,11 +450,22 @@ mixin _$UserStore on _UserStore, Store {
   }
 
   @override
-  void updateSessionStatus(SessionStatus sessionStatus) {
+  void updateSessionStatus(Status sessionStatus) {
     final _$actionInfo = _$_UserStoreActionController.startAction(
         name: '_UserStore.updateSessionStatus');
     try {
       return super.updateSessionStatus(sessionStatus);
+    } finally {
+      _$_UserStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void updateTransactionStatus(StatusType? transactionStatus) {
+    final _$actionInfo = _$_UserStoreActionController.startAction(
+        name: '_UserStore.updateTransactionStatus');
+    try {
+      return super.updateTransactionStatus(transactionStatus);
     } finally {
       _$_UserStoreActionController.endAction(_$actionInfo);
     }
@@ -448,6 +483,7 @@ requestTransactionFuture: ${requestTransactionFuture},
 user: ${user},
 balance: ${balance},
 sessionStatus: ${sessionStatus},
+transactionStatus: ${transactionStatus},
 sessionFetchingData: ${sessionFetchingData},
 session: ${session},
 sessions: ${sessions},
@@ -464,7 +500,8 @@ sizeNextSessionList: ${sizeNextSessionList},
 sizeTransactionList: ${sizeTransactionList},
 getSuccessMessageKey: ${getSuccessMessageKey},
 getFailedMessageKey: ${getFailedMessageKey},
-currentSessionFetchStatus: ${currentSessionFetchStatus}
+currentSessionFetchStatus: ${currentSessionFetchStatus},
+currentTransactionFetchStatus: ${currentTransactionFetchStatus}
     ''';
   }
 }

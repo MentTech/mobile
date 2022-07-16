@@ -41,7 +41,7 @@ class TransactionTicketItem extends StatelessWidget {
   Widget build(BuildContext context) {
     if (null != transaction) {
       return _buildAvailableItem(context, transaction!);
-    }
+      }
 
     return _buildShimmerTransactionTicketItem();
   }

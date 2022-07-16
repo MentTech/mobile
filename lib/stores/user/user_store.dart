@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -8,6 +9,7 @@ import 'package:mobile/models/common/session/sessions.dart';
 import 'package:mobile/models/common/transaction/transaction.dart';
 import 'package:mobile/models/user/user.dart';
 import 'package:mobile/stores/enum/session_status_enum.dart';
+import 'package:mobile/stores/enum/status_type_enum.dart';
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:mobile/utils/extension/datetime_extension.dart';
@@ -74,6 +76,9 @@ abstract class _UserStore with Store {
       //     }
       //   }
       // }),
+      reaction((_) => transactionStatus, (_) {
+        log("[reaction] message trigger reaction");
+      }),
     ];
   }
 
@@ -111,7 +116,10 @@ abstract class _UserStore with Store {
   int balance = 0;
 
   @observable
-  SessionStatus sessionStatus = SessionStatus.all;
+  Status sessionStatus = Status.all;
+
+  @observable
+  StatusType? transactionStatus;
 
   @observable
   SessionFetchingData sessionFetchingData = SessionFetchingData();
@@ -175,7 +183,10 @@ abstract class _UserStore with Store {
   String get getFailedMessageKey => messageStore.errorMessagekey;
 
   @computed
-  SessionStatus get currentSessionFetchStatus => sessionStatus;
+  Status get currentSessionFetchStatus => sessionStatus;
+
+  @computed
+  StatusType? get currentTransactionFetchStatus => transactionStatus;
 
   Session? getNextSessionAt(int index) {
     if (index < nextSessions.length) {
@@ -204,7 +215,7 @@ abstract class _UserStore with Store {
   }
 
   @action
-  void updateSessionStatus(SessionStatus sessionStatus) {
+  void updateSessionStatus(Status sessionStatus) {
     this.sessionStatus = sessionStatus;
     sessionFetchingData.updateStatus(sessionStatus);
 
@@ -215,6 +226,11 @@ abstract class _UserStore with Store {
       }
     }
     sessions = ObservableList.of(sessions.reversed);
+  }
+
+  @action
+  void updateTransactionStatus(StatusType? transactionStatus) {
+    this.transactionStatus = transactionStatus;
   }
 
   @action
@@ -342,7 +358,7 @@ abstract class _UserStore with Store {
       return Future.value(false);
     }
 
-    sessionStatus = SessionStatus.all;
+    sessionStatus = Status.all;
     sessionFetchingData.updateStatus(sessionStatus);
 
     final future = _repository.fetchSessionsOfUser(
@@ -626,33 +642,33 @@ class SessionFetchingData {
   bool isDone = false;
   bool isAll = false;
 
-  void updateStatus(SessionStatus sessionStatus) {
+  void updateStatus(Status sessionStatus) {
     switch (sessionStatus) {
-      case SessionStatus.waiting:
+      case Status.waiting:
         isAll = false;
         isAccepted = false;
         isDone = false;
         isCanceled = false;
         break;
-      case SessionStatus.confirmed:
+      case Status.confirmed:
         isAll = false;
         isAccepted = true;
         isDone = false;
         isCanceled = false;
         break;
-      case SessionStatus.completed:
+      case Status.completed:
         isAll = false;
         isAccepted = true;
         isDone = true;
         isCanceled = false;
         break;
-      case SessionStatus.canceled:
+      case Status.canceled:
         isAll = false;
         isAccepted = false;
         isDone = true;
         isCanceled = true;
         break;
-      default: // SessionStatus.all
+      default: // Status.all
         isAll = true;
         isAccepted = false;
         isDone = false;
@@ -661,15 +677,15 @@ class SessionFetchingData {
     }
   }
 
-  static SessionStatus parseSessionStatus(Session session) {
+  static Status parseSessionStatus(Session session) {
     if (session.isCanceled) {
-      return SessionStatus.canceled;
+      return Status.canceled;
     } else if (session.done) {
-      return SessionStatus.completed;
+      return Status.completed;
     } else if (session.isAccepted) {
-      return SessionStatus.confirmed;
+      return Status.confirmed;
     } else {
-      return SessionStatus.waiting;
+      return Status.waiting;
     }
   }
 

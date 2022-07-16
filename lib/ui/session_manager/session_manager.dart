@@ -105,17 +105,16 @@ class _SessionManagerState extends State<SessionManager> {
       return Colors.white;
     }
 
-    SessionStatus sessionStatus =
-        SessionFetchingData.parseSessionStatus(session);
+    Status sessionStatus = SessionFetchingData.parseSessionStatus(session);
 
     switch (sessionStatus) {
-      case SessionStatus.waiting:
+      case Status.waiting:
         return Colors.yellow;
-      case SessionStatus.confirmed:
+      case Status.confirmed:
         return Colors.green;
-      case SessionStatus.completed:
+      case Status.completed:
         return Colors.blue;
-      case SessionStatus.canceled:
+      case Status.canceled:
         return Colors.red;
       default:
         return Colors.white;
@@ -132,46 +131,43 @@ class _SessionManagerState extends State<SessionManager> {
           _buildSelectedButton(
             iconData: Icons.clear_all,
             text: AppLocalizations.of(context).translate("all_translate"),
-            isSelected:
-                _userStore.currentSessionFetchStatus == SessionStatus.all,
+            isSelected: _userStore.currentSessionFetchStatus == Status.all,
             ontap: () {
-              _userStore.updateSessionStatus(SessionStatus.all);
+              _userStore.updateSessionStatus(Status.all);
             },
           ),
           _buildSelectedButton(
             iconData: Icons.pending_actions,
             text: AppLocalizations.of(context).translate("waiting_translate"),
-            isSelected:
-                _userStore.currentSessionFetchStatus == SessionStatus.waiting,
+            isSelected: _userStore.currentSessionFetchStatus == Status.waiting,
             ontap: () {
-              _userStore.updateSessionStatus(SessionStatus.waiting);
+              _userStore.updateSessionStatus(Status.waiting);
             },
           ),
           _buildSelectedButton(
             iconData: Icons.recommend,
             text: AppLocalizations.of(context).translate("confirmed_translate"),
             isSelected:
-                _userStore.currentSessionFetchStatus == SessionStatus.confirmed,
+                _userStore.currentSessionFetchStatus == Status.confirmed,
             ontap: () {
-              _userStore.updateSessionStatus(SessionStatus.confirmed);
+              _userStore.updateSessionStatus(Status.confirmed);
             },
           ),
           _buildSelectedButton(
             iconData: Icons.fact_check,
             text: AppLocalizations.of(context).translate("completed_translate"),
             isSelected:
-                _userStore.currentSessionFetchStatus == SessionStatus.completed,
+                _userStore.currentSessionFetchStatus == Status.completed,
             ontap: () {
-              _userStore.updateSessionStatus(SessionStatus.completed);
+              _userStore.updateSessionStatus(Status.completed);
             },
           ),
           _buildSelectedButton(
             iconData: Icons.disabled_visible,
             text: AppLocalizations.of(context).translate("canceled_translate"),
-            isSelected:
-                _userStore.currentSessionFetchStatus == SessionStatus.canceled,
+            isSelected: _userStore.currentSessionFetchStatus == Status.canceled,
             ontap: () {
-              _userStore.updateSessionStatus(SessionStatus.canceled);
+              _userStore.updateSessionStatus(Status.canceled);
             },
           ),
         ],
