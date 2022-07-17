@@ -107,6 +107,21 @@ mixin _$UserStore on _UserStore, Store {
               () => super.currentTransactionFetchStatus,
               name: '_UserStore.currentTransactionFetchStatus'))
           .value;
+  Computed<List<double>>? _$toPieChartComputed;
+
+  @override
+  List<double> get toPieChart =>
+      (_$toPieChartComputed ??= Computed<List<double>>(() => super.toPieChart,
+              name: '_UserStore.toPieChart'))
+          .value;
+  Computed<Map<DateTime, Tuple2<double, double>>>? _$toBarChartComputed;
+
+  @override
+  Map<DateTime, Tuple2<double, double>> get toBarChart =>
+      (_$toBarChartComputed ??= Computed<Map<DateTime, Tuple2<double, double>>>(
+              () => super.toBarChart,
+              name: '_UserStore.toBarChart'))
+          .value;
 
   late final _$successAtom = Atom(name: '_UserStore.success', context: context);
 
@@ -501,7 +516,9 @@ sizeTransactionList: ${sizeTransactionList},
 getSuccessMessageKey: ${getSuccessMessageKey},
 getFailedMessageKey: ${getFailedMessageKey},
 currentSessionFetchStatus: ${currentSessionFetchStatus},
-currentTransactionFetchStatus: ${currentTransactionFetchStatus}
+currentTransactionFetchStatus: ${currentTransactionFetchStatus},
+toPieChart: ${toPieChart},
+toBarChart: ${toBarChart}
     ''';
   }
 }

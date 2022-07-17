@@ -12,6 +12,8 @@ class Assets {
   // SGV picture
   static const String facebookSVGLogo = "assets/icons/facebook-logo.svg";
   static const String googleSVGLogo = "assets/icons/google-logo.svg";
+  static const String paymentIntoSystem = "assets/svg/chuyen_tien_mentor.svg";
+  static const String transferToMentor = "assets/svg/nap_vao_he_thong.svg";
 
   // assets images in app
   static const String settingsBackgroundAssets =

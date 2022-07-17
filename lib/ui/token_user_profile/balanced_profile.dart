@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/dimens.dart';
@@ -20,6 +18,10 @@ import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/glassmorphism_widget_button.dart';
 import 'package:mobile/widgets/item/transaction_ticket_item.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
+
+import 'chart/piechart_transaction.dart';
+import 'chart/barchart_transaction.dart';
 
 class BalancedProfile extends StatefulWidget {
   const BalancedProfile({Key? key}) : super(key: key);
@@ -40,6 +42,10 @@ class _BalancedProfileState extends State<BalancedProfile> {
   // attribute:-----------------------------------------------------------------
   late double deviceHeight;
 
+  late double minChildSize;
+
+  late double maxChildSize;
+
   @override
   void initState() {
     super.initState();
@@ -55,60 +61,71 @@ class _BalancedProfileState extends State<BalancedProfile> {
     _userStore.fetchUserSessions();
 
     deviceHeight = DeviceUtils.getScaledHeight(context, 1.0);
+
+    minChildSize = kBottomNavigationBarHeight *
+        2 /
+        DeviceUtils.getScaledHeight(context, 1.0);
+
+    maxChildSize = 0.85 - minChildSize;
   }
 
   @override
   Widget build(BuildContext context) {
-    double minChildSize = kBottomNavigationBarHeight *
-        2 /
-        DeviceUtils.getScaledHeight(context, 1.0);
-    double maxChildSize = 0.85 - minChildSize;
-
     return Scaffold(
       body: Stack(
-        fit: StackFit.expand,
         children: <Widget>[
           LinearGradientBackground(
             colors: _themeStore.lineToLineGradientColors,
             stops: null,
           ),
-          SafeArea(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                _buildMainWidget(),
-                // _buildTransactionArea(),
-              ],
-            ),
-          ),
+          _buildTransactionArea(),
+          _buildMainWidget(),
           _buildDraggableBottomSheet(minChildSize, maxChildSize, context),
         ],
       ),
     );
   }
 
-  // Expanded _buildTransactionArea() {
-  //   return Expanded(
-  //     child: Observer(
-  //       builder: (_) {
-  //         return ListView.builder(
-  //           padding: const EdgeInsets.only(
-  //             top: Dimens.large_vertical_padding,
-  //             right: Dimens.horizontal_padding,
-  //             left: Dimens.horizontal_padding,
-  //           ),
-  //           itemBuilder: (_, index) {
-  //             Transaction? transaction = _userStore.getTransactionAt(index);
-  //             return _buildTransactionItemInBottomSheet(transaction, context);
-  //           },
-  //           itemCount: !_userStore.isTransactionLoading
-  //               ? _userStore.sizeTransactionList
-  //               : 5,
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
+  Widget _buildTransactionArea() {
+    return Observer(
+      builder: (_) {
+        return ListView(
+          children: [
+            SizedBox(
+              height: deviceHeight * 0.2,
+            ),
+            Observer(
+              builder: (_) {
+                List<double> pieData = _userStore.toPieChart;
+
+                return Visibility(
+                  visible: pieData.isNotEmpty,
+                  child: TransactionPieChart(data: pieData),
+                );
+              },
+            ),
+            const SizedBox(
+              height: Dimens.ultra_extra_large_vertical_margin,
+            ),
+            Observer(
+              builder: (_) {
+                Map<DateTime, Tuple2<double, double>> barData =
+                    _userStore.toBarChart;
+
+                return Visibility(
+                  visible: barData.isNotEmpty,
+                  child: TransactionBarChart(data: barData),
+                );
+              },
+            ),
+            SizedBox(
+              height: deviceHeight * 0.2,
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   Container _buildTransactionItemInBottomSheet(
       Transaction? transaction, BuildContext context) {
@@ -199,7 +216,6 @@ class _BalancedProfileState extends State<BalancedProfile> {
                     left: Dimens.horizontal_padding,
                   ),
                   itemBuilder: (_, index) {
-                    log("[reaction] trigger  rebuild");
                     Transaction? transaction =
                         _userStore.getTransactionAt(index);
 
@@ -286,85 +302,91 @@ class _BalancedProfileState extends State<BalancedProfile> {
   }
 
   Widget _buildMainWidget() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: Dimens.large_horizontal_padding,
-        vertical: Dimens.vertical_padding,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
+    return GlassmorphismContainer(
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Dimens.large_horizontal_padding,
+            vertical: Dimens.vertical_padding,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
               Row(
-                children: <Widget>[
-                  AppIconWidget(
-                    dimenImage: Dimens.extra_large_text,
-                    image: _themeStore.appIcon,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: <Widget>[
+                      AppIconWidget(
+                        dimenImage: Dimens.extra_large_text,
+                        image: _themeStore.appIcon,
+                      ),
+                      const SizedBox(
+                        width: Dimens.large_horizontal_margin,
+                      ),
+                      Text(
+                        DeviceUtils.packageInfo!.appName,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 1.2,
+                            ),
+                      )
+                    ],
                   ),
-                  const SizedBox(
-                    width: Dimens.large_horizontal_margin,
+                  IconButton(
+                    onPressed: () {
+                      Routes.navigatorSupporter(context, Routes.depositToken);
+                    },
+                    icon: Icon(
+                      Icons.local_atm_rounded,
+                      color: Theme.of(context).indicatorColor,
+                      size: Dimens.extra_large_text,
+                    ),
                   ),
-                  Text(
-                    DeviceUtils.packageInfo!.appName,
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 1.2,
-                        ),
-                  )
                 ],
               ),
-              IconButton(
-                onPressed: () {
-                  Routes.navigatorSupporter(context, Routes.depositToken);
-                },
-                icon: Icon(
-                  Icons.local_atm_rounded,
-                  color: Theme.of(context).indicatorColor,
-                  size: Dimens.extra_large_text,
+              Padding(
+                padding: const EdgeInsets.only(
+                  bottom: Dimens.large_vertical_margin,
+                  top: Dimens.extra_large_vertical_margin,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)
+                          .translate("your_balance_translate"),
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.token_rounded,
+                          size: Dimens.large_text,
+                        ),
+                        const SizedBox(
+                          width: Dimens.horizontal_margin,
+                        ),
+                        Observer(builder: (_) {
+                          return Text(
+                            _userStore.balance.toString(),
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          );
+                        }),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-              bottom: Dimens.large_vertical_margin,
-              top: Dimens.extra_large_vertical_margin,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  AppLocalizations.of(context)
-                      .translate("your_balance_translate"),
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(
-                      Icons.token_rounded,
-                      size: Dimens.large_text,
-                    ),
-                    const SizedBox(
-                      width: Dimens.horizontal_margin,
-                    ),
-                    Observer(builder: (_) {
-                      return Text(
-                        _userStore.balance.toString(),
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      );
-                    }),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
+      blur: Properties.blur_glass_morphism,
+      opacity: Properties.opacity_glass_morphism,
     );
   }
 

@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -13,6 +12,7 @@ import 'package:mobile/stores/enum/status_type_enum.dart';
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:mobile/utils/extension/datetime_extension.dart';
+import 'package:tuple/tuple.dart';
 
 part 'user_store.g.dart';
 
@@ -77,7 +77,7 @@ abstract class _UserStore with Store {
       //   }
       // }),
       reaction((_) => transactionStatus, (_) {
-        log("[reaction] message trigger reaction");
+        // log("[reaction] message trigger reaction");
       }),
     ];
   }
@@ -187,6 +187,86 @@ abstract class _UserStore with Store {
 
   @computed
   StatusType? get currentTransactionFetchStatus => transactionStatus;
+
+  @computed
+  List<double> get toPieChart {
+    // if (_transactionContent != null) {
+    //   int countSuccess = _transactionContent!.transactions
+    //       .where((element) => element.status == StatusType.SUCCESS)
+    //       .toList()
+    //       .length;
+
+    //   double percent =
+    //       countSuccess * 1.0 / _transactionContent!.transactions.length * 100;
+
+    //   return [percent, 100 - percent];
+    // }
+
+    if (_transactionContent != null) {
+      int countSuccess = _transactionContent!.transactions
+          .where((element) => element.amount > 0)
+          .toList()
+          .length;
+
+      double percent =
+          countSuccess * 1.0 / _transactionContent!.transactions.length * 100;
+
+      return [percent, 100 - percent];
+    }
+
+    // if (_transactionContent != null) {
+    //   int total = 0;
+    //   int sum = 0;
+
+    //   for (var element in _transactionContent!.transactions) {
+    //     if (element.amount > 0) {
+    //       sum += element.amount;
+    //     }
+    //     total += element.amount;
+    //   }
+
+    //   double percent = (sum * 1.0 / total).roundToDouble();
+
+    //   return [percent, 100 - percent];
+    // }
+
+    return [];
+  }
+
+  @computed
+  Map<DateTime, Tuple2<double, double>> get toBarChart {
+    Map<DateTime, Tuple2<double, double>> result = {};
+
+    if (_transactionContent != null) {
+      for (var element in _transactionContent!.transactions) {
+        DateTime elementDate = element.createAt.today();
+
+        if (result.containsKey(elementDate)) {
+          if (element.amount < 0) {
+            result[elementDate] = result[elementDate]!
+                .withItem2(result[elementDate]!.item2 - element.amount);
+          } else {
+            result[elementDate] = result[elementDate]!
+                .withItem1(result[elementDate]!.item1 + element.amount);
+          }
+        } else {
+          if (element.amount < 0) {
+            result[elementDate] = Tuple2(0, -element.amount.toDouble());
+          } else {
+            result[elementDate] = Tuple2(element.amount.toDouble(), 0);
+          }
+        }
+      }
+
+      result.forEach((key, value) {
+        result[key] = value
+            .withItem1((value.item1 / 1000))
+            .withItem2((value.item2 / 1000));
+      });
+    }
+
+    return result;
+  }
 
   Session? getNextSessionAt(int index) {
     if (index < nextSessions.length) {
