@@ -30,42 +30,29 @@ abstract class _ThemeStore with Store {
   String get appIcon => _darkMode ? Assets.appLogoDark : Assets.appLogoLight;
 
   @computed
-  Color get themeColorfulColor =>
-      _darkMode ? AppColors.darkTextTheme : AppColors.lightTextTheme;
-
-  @computed
-  Color get themeColor => _darkMode ? dark : light;
-
-  @computed
-  Color get themeThemeColor => _darkMode ? darkTheme : lightTheme;
-
-  @computed
   List<Color> get lineToLineGradientColors =>
       darkMode ? _lineToLineGradientColorsDark : _lineToLineGradientColorsLight;
 
   @computed
   List<Color> get _lineToLineGradientColorsDark => [
-        Color.alphaBlend(
-          themeThemeColor.withAlpha(150),
-          themeColorfulColor,
-        ),
-        themeColorfulColor,
-        Color.alphaBlend(
-          themeThemeColor.withAlpha(150),
-          themeColorfulColor,
-        ),
+        Colors.black87,
+        AppColors.darkTextTheme,
+        Colors.black87,
       ];
 
   @computed
   List<Color> get _lineToLineGradientColorsLight => [
         Color.alphaBlend(
-          themeThemeColor,
-          themeColorfulColor,
+          AppColors.lightTextTheme.withOpacity(0.3),
+          Colors.white,
         ),
-        themeColorfulColor,
         Color.alphaBlend(
-          themeThemeColor,
-          themeColorfulColor,
+          AppColors.lightTextTheme.withOpacity(0.5),
+          Colors.white,
+        ),
+        Color.alphaBlend(
+          AppColors.lightTextTheme.withOpacity(0.3),
+          Colors.white,
         ),
       ];
 
@@ -82,19 +69,6 @@ abstract class _ThemeStore with Store {
   }
 
   // general methods:-----------------------------------------------------------
-
-  List<double> get linearGradientStops => const [0, 0.35, 0.7];
-
-  Color get textNotChoosed => Colors.grey.shade700;
-
-  Color get darkTheme => Colors.black54;
-  Color get lightTheme => Colors.white60;
-
-  Color get dark => Colors.black87;
-  Color get light => Colors.white70;
-
-  Color get darkColorful => AppColors.darkTextTheme;
-  Color get lightColorful => AppColors.lightTextTheme;
 
   Future init() async {
     _darkMode = _repository.isDarkMode;

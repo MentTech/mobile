@@ -32,7 +32,7 @@ final ThemeData themeData = ThemeData(
       MaterialColor(AppColors.darkBlue[500]!.value, AppColors.darkBlue),
   primaryColor: AppColors.lightTextTheme,
   highlightColor: AppColors.darkTextTheme,
-  selectedRowColor: Colors.yellow.shade600,
+  selectedRowColor: Colors.orange.shade600,
   indicatorColor: Colors.black87,
   disabledColor: Color.alphaBlend(
     Colors.white.withOpacity(0.3),
@@ -97,7 +97,7 @@ final ThemeData themeDataDark = ThemeData(
   brightness: Brightness.dark,
   primaryColor: AppColors.darkTextTheme,
   highlightColor: AppColors.lightTextTheme,
-  selectedRowColor: Colors.yellow.shade800,
+  selectedRowColor: Colors.orange.shade800,
   indicatorColor: Colors.white70,
   disabledColor: Color.alphaBlend(
     Colors.white.withOpacity(0.7),

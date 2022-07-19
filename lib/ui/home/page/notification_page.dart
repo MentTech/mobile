@@ -325,11 +325,14 @@ class NotificationPage extends StatelessWidget {
         text,
         style: Theme.of(context).textTheme.bodySmall!.copyWith(
               color: isSelected
-                  ? Theme.of(context).selectedRowColor
+                  ? Color.alphaBlend(
+                      Theme.of(context).selectedRowColor.withOpacity(0.7),
+                      Theme.of(context).highlightColor)
                   : Color.alphaBlend(
                       Theme.of(context).highlightColor.withOpacity(0.7),
                       Theme.of(context).highlightColor,
                     ),
+              fontWeight: isSelected ? FontWeight.w500 : null,
             ),
       ),
       onTap: ontap,

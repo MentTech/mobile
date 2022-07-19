@@ -27,27 +27,6 @@ mixin _$ThemeStore on _ThemeStore, Store {
   String get appIcon => (_$appIconComputed ??=
           Computed<String>(() => super.appIcon, name: '_ThemeStore.appIcon'))
       .value;
-  Computed<Color>? _$themeColorfulColorComputed;
-
-  @override
-  Color get themeColorfulColor => (_$themeColorfulColorComputed ??=
-          Computed<Color>(() => super.themeColorfulColor,
-              name: '_ThemeStore.themeColorfulColor'))
-      .value;
-  Computed<Color>? _$themeColorComputed;
-
-  @override
-  Color get themeColor =>
-      (_$themeColorComputed ??= Computed<Color>(() => super.themeColor,
-              name: '_ThemeStore.themeColor'))
-          .value;
-  Computed<Color>? _$themeThemeColorComputed;
-
-  @override
-  Color get themeThemeColor => (_$themeThemeColorComputed ??= Computed<Color>(
-          () => super.themeThemeColor,
-          name: '_ThemeStore.themeThemeColor'))
-      .value;
   Computed<List<Color>>? _$lineToLineGradientColorsComputed;
 
   @override
@@ -104,9 +83,6 @@ mixin _$ThemeStore on _ThemeStore, Store {
 darkMode: ${darkMode},
 modeName: ${modeName},
 appIcon: ${appIcon},
-themeColorfulColor: ${themeColorfulColor},
-themeColor: ${themeColor},
-themeThemeColor: ${themeThemeColor},
 lineToLineGradientColors: ${lineToLineGradientColors}
     ''';
   }

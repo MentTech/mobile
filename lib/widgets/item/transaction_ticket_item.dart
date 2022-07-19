@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
-import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/common/transaction/transaction.dart';
-import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
 import 'package:mobile/widgets/glassmorphism_widgets/container_style.dart';
 import 'package:readmore/readmore.dart';
@@ -13,7 +11,7 @@ import 'package:mobile/stores/enum/transaction_type_enum.dart';
 import 'package:mobile/stores/enum/status_type_enum.dart';
 
 class TransactionTicketItem extends StatelessWidget {
-  TransactionTicketItem({
+  const TransactionTicketItem({
     Key? key,
     required this.transaction,
     this.textColor,
@@ -35,15 +33,13 @@ class TransactionTicketItem extends StatelessWidget {
   final EdgeInsets padding;
   final EdgeInsets margin;
 
-  final ThemeStore _themeStore = getIt<ThemeStore>();
-
   @override
   Widget build(BuildContext context) {
     if (null != transaction) {
       return _buildAvailableItem(context, transaction!);
-      }
+    }
 
-    return _buildShimmerTransactionTicketItem();
+    return _buildShimmerTransactionTicketItem(context);
   }
 
   Container _buildAvailableItem(BuildContext context, Transaction transaction) {
@@ -129,7 +125,7 @@ class TransactionTicketItem extends StatelessWidget {
     );
   }
 
-  Widget _buildShimmerTransactionTicketItem() {
+  Widget _buildShimmerTransactionTicketItem(BuildContext context) {
     return Shimmer.fromColors(
       child: Container(
         margin: margin,
@@ -190,8 +186,8 @@ class TransactionTicketItem extends StatelessWidget {
           opacity: opacity,
         ),
       ),
-      baseColor: _themeStore.light,
-      highlightColor: _themeStore.themeColorfulColor,
+      baseColor: Colors.white70,
+      highlightColor: Theme.of(context).primaryColor,
       direction: ShimmerDirection.ltr,
     );
   }

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/constants/properties.dart';
-import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/models/common/program/program.dart';
 import 'package:mobile/models/mentor/mentor.dart';
 import 'package:mobile/stores/form/program_register_form_store.dart';
-import 'package:mobile/stores/theme/theme_store.dart';
 import 'package:mobile/ui/mentor_detail/mentor_profile.dart';
 import 'package:mobile/utils/device/device_utils.dart';
 import 'package:mobile/utils/locale/app_localization.dart';
@@ -16,14 +14,13 @@ import 'package:mobile/widgets/html_widget/html_description.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ProgramConfirmContainer extends StatelessWidget {
-  ProgramConfirmContainer({
+  const ProgramConfirmContainer({
     Key? key,
     required this.registerInformation,
     required this.mentorModel,
     required this.program,
   }) : super(key: key);
 
-  final ThemeStore _themeStore = getIt<ThemeStore>();
   final RegisterInformation registerInformation;
   final MentorModel mentorModel;
   final Program? program;
@@ -428,7 +425,7 @@ class ProgramConfirmContainer extends StatelessWidget {
   Widget _ShimmerSection(BuildContext context, {required Widget child}) {
     return Shimmer.fromColors(
       child: child,
-      baseColor: _themeStore.light.withOpacity(0.5),
+      baseColor: Colors.white70.withOpacity(0.5),
       highlightColor: Theme.of(context).primaryColor,
       direction: ShimmerDirection.ltr,
       period: const Duration(milliseconds: 3000),

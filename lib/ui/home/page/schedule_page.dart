@@ -77,9 +77,8 @@ class _SchedulePageState extends State<SchedulePage> {
 
     _tabBar = TabBar(
       tabs: _tab,
-      // padding: EdgeInsets.symmetric(horizontal: 30 * _scaleScreen),
       indicator: BoxDecoration(
-        color: Theme.of(context).primaryColor,
+        color: Theme.of(context).selectedRowColor,
         borderRadius: Dimens.kMaxBorderRadius,
       ),
       unselectedLabelColor: Colors.black54,
@@ -159,7 +158,11 @@ class _SchedulePageState extends State<SchedulePage> {
             blur: Properties.hevily_blur_glass_morphism,
             opacity: Properties.hevily_opacity_glass_morphism,
             padding: const EdgeInsets.all(2),
-            background: Theme.of(context).highlightColor,
+            radius: 50,
+            background: Color.alphaBlend(
+              Theme.of(context).primaryColor.withOpacity(0.5),
+              Theme.of(context).highlightColor,
+            ),
           ),
         ),
       ),

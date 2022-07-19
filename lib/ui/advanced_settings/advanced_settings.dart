@@ -133,7 +133,7 @@ class AdvancedSettings extends StatelessWidget {
 }
 
 class LanguagePopup extends StatelessWidget {
-  LanguagePopup({
+  const LanguagePopup({
     Key? key,
     required this.spLangs,
     required this.selectLocale,
@@ -143,8 +143,6 @@ class LanguagePopup extends StatelessWidget {
   final List<Language> spLangs;
   final String selectLocale;
   final bool darkMode;
-
-  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -201,7 +199,7 @@ class LanguagePopup extends StatelessWidget {
                           fontSize: Dimens.small_text,
                           color: selectLocale == object.locale
                               ? Theme.of(context).indicatorColor
-                              : _themeStore.themeColor,
+                              : Theme.of(context).primaryColor,
                         ),
                       ),
                       onTap: () {
@@ -229,7 +227,7 @@ class ThemeModeItem {
 }
 
 class ThemePopup extends StatelessWidget {
-  ThemePopup({
+  const ThemePopup({
     Key? key,
     required this.spThemes,
     required this.selectTheme,
@@ -237,8 +235,6 @@ class ThemePopup extends StatelessWidget {
 
   final List<ThemeModeItem> spThemes;
   final bool selectTheme;
-
-  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -290,11 +286,11 @@ class ThemePopup extends StatelessWidget {
                       dense: true,
                       title: Text(
                         object.mode!,
-                        style: TextStyle(
-                          color: selectTheme == object.val
-                              ? Theme.of(context).indicatorColor
-                              : _themeStore.themeColor,
-                        ),
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                              color: selectTheme == object.val
+                                  ? Theme.of(context).highlightColor
+                                  : Theme.of(context).indicatorColor,
+                            ),
                       ),
                       onTap: () {
                         Navigator.of(context).maybePop<ThemeModeItem?>(object);
