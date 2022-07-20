@@ -11,7 +11,7 @@ class RoomInformation extends Equatable {
   final bool isActive;
   final DateTime createAt;
   final DateTime updatedAt;
-  final List<Participants> participants;
+  final List<Participant> participants;
 
   const RoomInformation({
     required this.id,
@@ -33,21 +33,21 @@ class RoomInformation extends Equatable {
 }
 
 @JsonSerializable()
-class Participants extends Equatable {
+class Participant extends Equatable {
   final int id;
   final String name;
   final String avatar;
 
-  const Participants({
+  const Participant({
     required this.id,
     required this.name,
     required this.avatar,
   });
 
-  factory Participants.fromJson(Map<String, dynamic> json) =>
-      _$ParticipantsFromJson(json);
+  factory Participant.fromJson(Map<String, dynamic> json) =>
+      _$ParticipantFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ParticipantsToJson(this);
+  Map<String, dynamic> toJson() => _$ParticipantToJson(this);
 
   @override
   List<Object?> get props => [id];

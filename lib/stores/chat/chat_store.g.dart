@@ -15,6 +15,13 @@ mixin _$ChatStore on _ChatStore, Store {
   bool get isLoading => (_$isLoadingComputed ??=
           Computed<bool>(() => super.isLoading, name: '_ChatStore.isLoading'))
       .value;
+  Computed<bool>? _$isConnectingComputed;
+
+  @override
+  bool get isConnecting =>
+      (_$isConnectingComputed ??= Computed<bool>(() => super.isConnecting,
+              name: '_ChatStore.isConnecting'))
+          .value;
   Computed<String>? _$getSuccessMessageKeyComputed;
 
   @override
@@ -110,6 +117,22 @@ mixin _$ChatStore on _ChatStore, Store {
     });
   }
 
+  late final _$connectFutureAtom =
+      Atom(name: '_ChatStore.connectFuture', context: context);
+
+  @override
+  FutureStatus get connectFuture {
+    _$connectFutureAtom.reportRead();
+    return super.connectFuture;
+  }
+
+  @override
+  set connectFuture(FutureStatus value) {
+    _$connectFutureAtom.reportWrite(value, super.connectFuture, () {
+      super.connectFuture = value;
+    });
+  }
+
   late final _$chatMessagesAtom =
       Atom(name: '_ChatStore.chatMessages', context: context);
 
@@ -126,11 +149,19 @@ mixin _$ChatStore on _ChatStore, Store {
     });
   }
 
+  late final _$connectSocketAsyncAction =
+      AsyncAction('_ChatStore.connectSocket', context: context);
+
+  @override
+  Future<dynamic> connectSocket() {
+    return _$connectSocketAsyncAction.run(() => super.connectSocket());
+  }
+
   late final _$getChatRoomInformationAsyncAction =
       AsyncAction('_ChatStore.getChatRoomInformation', context: context);
 
   @override
-  Future<bool> getChatRoomInformation() {
+  Future<types.User?> getChatRoomInformation() {
     return _$getChatRoomInformationAsyncAction
         .run(() => super.getChatRoomInformation());
   }
@@ -193,8 +224,10 @@ successInConnectSocket: ${successInConnectSocket},
 successInGetMessage: ${successInGetMessage},
 success: ${success},
 requestFuture: ${requestFuture},
+connectFuture: ${connectFuture},
 chatMessages: ${chatMessages},
 isLoading: ${isLoading},
+isConnecting: ${isConnecting},
 getSuccessMessageKey: ${getSuccessMessageKey},
 getFailedMessageKey: ${getFailedMessageKey}
     ''';

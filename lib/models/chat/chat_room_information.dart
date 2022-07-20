@@ -8,19 +8,19 @@ part 'chat_room_information.g.dart';
 class ChatRoomInformation extends Equatable {
   final int id;
   final String name;
-  final int sessionId;
+  // final int sessionId;
   final bool isActive;
-  final DateTime createAt;
-  final DateTime updatedAt;
-  final List<Participants> participants;
+  // final DateTime createAt;
+  // final DateTime updatedAt;
+  final List<Participant> participants;
 
   const ChatRoomInformation({
     required this.id,
     required this.name,
-    required this.sessionId,
+    // required this.sessionId,
     required this.isActive,
-    required this.createAt,
-    required this.updatedAt,
+    // required this.createAt,
+    // required this.updatedAt,
     this.participants = const [],
   });
 

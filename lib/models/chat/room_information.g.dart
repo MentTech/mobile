@@ -15,7 +15,7 @@ RoomInformation _$RoomInformationFromJson(Map<String, dynamic> json) =>
       createAt: DateTime.parse(json['createAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       participants: (json['participants'] as List<dynamic>)
-          .map((e) => Participants.fromJson(e as Map<String, dynamic>))
+          .map((e) => Participant.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
@@ -30,13 +30,13 @@ Map<String, dynamic> _$RoomInformationToJson(RoomInformation instance) =>
       'participants': instance.participants,
     };
 
-Participants _$ParticipantsFromJson(Map<String, dynamic> json) => Participants(
+Participant _$ParticipantFromJson(Map<String, dynamic> json) => Participant(
       id: json['id'] as int,
       name: json['name'] as String,
       avatar: json['avatar'] as String,
     );
 
-Map<String, dynamic> _$ParticipantsToJson(Participants instance) =>
+Map<String, dynamic> _$ParticipantToJson(Participant instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,

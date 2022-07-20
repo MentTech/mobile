@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
@@ -5,7 +7,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobile/constants/dimens.dart';
 import 'package:mobile/di/components/service_locator.dart';
 import 'package:mobile/stores/chat/chat_store.dart';
-import 'package:mobile/stores/mentor/mentor_store.dart';
 import 'package:mobile/stores/user/user_store.dart';
 import 'package:mobile/utils/application/application_utils.dart';
 import 'package:mobile/widgets/progress_indicator_widget.dart';
@@ -23,7 +24,6 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final ChatStore _chatStore = getIt<ChatStore>();
   late final UserStore _userStore;
-  late final MentorStore _mentorStore;
 
   late final types.User _user;
   types.User? _mentor;
@@ -38,22 +38,35 @@ class _ChatScreenState extends State<ChatScreen> {
         lastName: _userStore.user!.name,
         imageUrl: _userStore.user!.avatar);
 
-    _mentorStore = Provider.of<MentorStore>(context, listen: false);
-    _mentorStore.fetchMentor(_chatStore.mentorID).then((mentor) {
-      _mentor = types.User(
-          id: mentor?.id.toString() ?? const Uuid().v4(),
-          lastName: mentor?.name ?? "Mentor's name",
-          imageUrl: mentor?.avatar);
+    _mentor = types.User(
+        id: const Uuid().v4(),
+        lastName: "Mentor",
+        imageUrl:
+            "https://www.gravatar.com/avatar/460d94fc5806df528296a0f9447d4ceb?s=200");
+
+    _chatStore.getChatRoomInformation().then((user) {
+      if (null != user) {
+        _mentor = user;
+      }
     });
 
-    _chatStore.getChatRoomInformation();
+    log("[Chat] [initState] _chatStore.isLoading: ${_chatStore.isLoading} || _chatStore.isConnecting: ${_chatStore.isConnecting}");
+  }
+
+  @override
+  void dispose() {
+    _chatStore.disconnectSocket();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) => Observer(
         builder: (_) {
           return GlassmorphismGradientScaffoldAppbar(
-            appbarName: _mentor?.lastName ?? "Mentor's name",
+            appbarName: _chatStore.chatRoomInformation?.name ??
+                _mentor?.lastName ??
+                "Mentor's name",
             child: Chat(
               messages: _chatStore.chats,
               onAttachmentPressed: null,
@@ -197,6 +210,12 @@ class _ChatScreenState extends State<ChatScreen> {
                         _chatStore.getSuccessMessageKey, callback: () {
                         _chatStore.connectSocket();
                         _chatStore.fetchAllMessages();
+
+                        _mentor = types.User(
+                            id: const Uuid().v4(),
+                            lastName: "Mentor",
+                            imageUrl:
+                                "https://www.gravatar.com/avatar/460d94fc5806df528296a0f9447d4ceb?s=200");
                       })
                     : _chatStore.successInGetMessage &&
                             _chatStore.successInConnectSocket
@@ -210,8 +229,9 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             progressIndicator: Observer(
               builder: (context) {
+                log("[Chat] [progressIndicator: Observer] _chatStore.isLoading: ${_chatStore.isLoading} || _chatStore.isConnecting: ${_chatStore.isConnecting}");
                 return Visibility(
-                  visible: _chatStore.isLoading,
+                  visible: _chatStore.isLoading || _chatStore.isConnecting,
                   child: const CustomProgressIndicatorWidget(),
                 );
               },

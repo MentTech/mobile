@@ -26,6 +26,7 @@ abstract class _ChatStore with Store {
   final MessageStore _messageStore = getIt<MessageStore>();
 
   // websocket
+  // static const String apiUrl = "https://api.menttech.live";
   io.Socket socket = io.io(
     Endpoints.apiUrl,
     io.OptionBuilder()
@@ -44,8 +45,10 @@ abstract class _ChatStore with Store {
   }
 
   // connect to server by websocket
+  @action
   Future connectSocket() async {
     // socket setup
+    connectFuture = FutureStatus.pending;
     await _repository.authToken.then((accessToken) {
       if (accessToken != null && accessToken.isNotEmpty) {
         log("[Chat] [socket io] set up");
@@ -59,33 +62,35 @@ abstract class _ChatStore with Store {
           log('[Chat] [socket io] onConnect: ' + data.toString());
 
           successInConnectSocket = true;
+          connectFuture = FutureStatus.fulfilled;
         });
 
         socket.onConnectError((data) {
-          log("[Chat] [socket io] [onConnectError]" + data.toString());
+          log("[Chat] [socket io] [onConnectError] " + data.toString());
+          connectFuture = FutureStatus.fulfilled;
         });
 
         socket.onError((data) {
-          log("[Chat] [socket io] [onError]" + data.toString());
+          log("[Chat] [socket io] [onError] " + data.toString());
+          connectFuture = FutureStatus.fulfilled;
         });
 
-        // listen event
-        socket.on('notification', (data) {
-          log("[Chat] [socket io] data from notification event " +
-              data.toString());
-        });
-
-        socket.on('chat:${roomInformation!.id}', (data) {
+        socket.on('chat:${chatRoomInformation!.id}', (data) {
           addNewMessageFromSocket(data);
         });
       } else {
         _messageStore.setErrorMessageByCode(401);
+        connectFuture = FutureStatus.fulfilled;
 
         socket.dispose();
 
         success = false;
       }
     });
+  } // connect to server by websocket
+
+  Future disconnectSocket() async {
+    socket.dispose();
   }
 
   // disposers:-----------------------------------------------------------------
@@ -160,11 +165,17 @@ abstract class _ChatStore with Store {
   ObservableFuture<Map<String, dynamic>?> requestFuture = emptyResponse;
 
   @observable
+  FutureStatus connectFuture = FutureStatus.fulfilled;
+
+  @observable
   ObservableList<ChatMessage> chatMessages = ObservableList<ChatMessage>();
 
   // computed:------------------------------------------------------------------
   @computed
   bool get isLoading => requestFuture.status == FutureStatus.pending;
+
+  @computed
+  bool get isConnecting => connectFuture == FutureStatus.pending;
 
   @computed
   String get getSuccessMessageKey => _messageStore.successMessagekey;
@@ -175,7 +186,7 @@ abstract class _ChatStore with Store {
   // actions:-------------------------------------------------------------------
 
   @action
-  Future<bool> getChatRoomInformation() async {
+  Future<types.User?> getChatRoomInformation() async {
     String? accessToken = await _repository.authToken;
 
     if (null == accessToken) {
@@ -183,7 +194,7 @@ abstract class _ChatStore with Store {
 
       successInGetRoom = false;
 
-      return Future.value(false);
+      return Future.value(null);
     }
 
     final future = _repository.getChatRoomInformation(
@@ -192,6 +203,8 @@ abstract class _ChatStore with Store {
     );
 
     requestFuture = ObservableFuture(future);
+
+    log("[Chat] [getChatRoomInformation] requestFuture: ${requestFuture.status}");
 
     return await future.then((res) async {
       try {
@@ -207,6 +220,16 @@ abstract class _ChatStore with Store {
           }
 
           _messageStore.setSuccessMessage(Code.getChatRoom);
+
+          final Participant participant = chatRoomInformation!.participants[0];
+
+          final types.User typesUser = types.User(
+            id: participant.id.toString(),
+            lastName: participant.name,
+            imageUrl: participant.avatar,
+          );
+
+          return Future.value(typesUser);
         } else {
           int code = res["statusCode"] as int;
 
@@ -220,7 +243,7 @@ abstract class _ChatStore with Store {
         successInGetRoom = false;
       }
 
-      return Future.value(successInGetRoom);
+      return Future.value(null);
     });
   }
 

@@ -66,11 +66,11 @@ abstract class _NotificationStore with Store {
         });
 
         socket.onConnectError((data) {
-          log("[socket io] [onConnectError]" + data.toString());
+          log("[socket io] [onConnectError] " + data.toString());
         });
 
         socket.onError((data) {
-          log("[socket io] [onError]" + data.toString());
+          log("[socket io] [onError] " + data.toString());
         });
 
         // listen event
