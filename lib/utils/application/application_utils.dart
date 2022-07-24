@@ -115,9 +115,11 @@ class ApplicationUtils {
     String messageKey, {
     int duration = Properties.delayTimeInSecond,
     VoidCallback? callback,
+    VoidCallback? action,
   }) {
     if (messageKey.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        action?.call();
         FlushbarHelper.createSuccess(
           message: AppLocalizations.of(context).translate(messageKey),
           title: AppLocalizations.of(context).translate(titleKey),

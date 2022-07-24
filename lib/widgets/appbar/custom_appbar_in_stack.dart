@@ -8,9 +8,11 @@ class CustomInStackAppBar extends StatelessWidget {
   const CustomInStackAppBar({
     Key? key,
     required this.nameAppbar,
+    this.customColor,
   }) : super(key: key);
 
   final String nameAppbar;
+  final Color? customColor;
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +26,17 @@ class CustomInStackAppBar extends StatelessWidget {
               },
               icon: Icon(
                 Icons.arrow_back_ios,
-                color: Theme.of(context).indicatorColor,
+                color: customColor ?? Theme.of(context).indicatorColor,
               ),
             ),
-            Text(
-              nameAppbar,
-              style: TextStyle(
-                fontSize: Dimens.medium_text,
-                color: Theme.of(context).indicatorColor,
+            Flexible(
+              child: Text(
+                nameAppbar,
+                softWrap: true,
+                style: TextStyle(
+                  fontSize: Dimens.medium_text,
+                  color: customColor ?? Theme.of(context).indicatorColor,
+                ),
               ),
             ),
           ],

@@ -153,7 +153,10 @@ class ChatAPI {
   }) async {
     try {
       final res = await _dioClient.get(
-        Endpoints.sendMessageToRoom.replaceAll(":roomId", roomId.toString()),
+        Endpoints.getAllMessageOfRoom.replaceAll(
+          ":roomId",
+          roomId.toString(),
+        ),
         queryParameters: parameters,
         options: Options(
           followRedirects: false,

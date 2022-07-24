@@ -15,6 +15,12 @@ mixin _$ChatStore on _ChatStore, Store {
   bool get isLoading => (_$isLoadingComputed ??=
           Computed<bool>(() => super.isLoading, name: '_ChatStore.isLoading'))
       .value;
+  Computed<bool>? _$isInittingComputed;
+
+  @override
+  bool get isInitting => (_$isInittingComputed ??=
+          Computed<bool>(() => super.isInitting, name: '_ChatStore.isInitting'))
+      .value;
   Computed<bool>? _$isConnectingComputed;
 
   @override
@@ -36,6 +42,14 @@ mixin _$ChatStore on _ChatStore, Store {
           Computed<String>(() => super.getFailedMessageKey,
               name: '_ChatStore.getFailedMessageKey'))
       .value;
+  Computed<ObservableList<types.Message>>? _$typesMessageChatsComputed;
+
+  @override
+  ObservableList<types.Message> get typesMessageChats =>
+      (_$typesMessageChatsComputed ??= Computed<ObservableList<types.Message>>(
+              () => super.typesMessageChats,
+              name: '_ChatStore.typesMessageChats'))
+          .value;
 
   late final _$successInGetRoomAtom =
       Atom(name: '_ChatStore.successInGetRoom', context: context);
@@ -117,6 +131,24 @@ mixin _$ChatStore on _ChatStore, Store {
     });
   }
 
+  late final _$requestChatRoomInformationFutureAtom = Atom(
+      name: '_ChatStore.requestChatRoomInformationFuture', context: context);
+
+  @override
+  ObservableFuture<Map<String, dynamic>?> get requestChatRoomInformationFuture {
+    _$requestChatRoomInformationFutureAtom.reportRead();
+    return super.requestChatRoomInformationFuture;
+  }
+
+  @override
+  set requestChatRoomInformationFuture(
+      ObservableFuture<Map<String, dynamic>?> value) {
+    _$requestChatRoomInformationFutureAtom
+        .reportWrite(value, super.requestChatRoomInformationFuture, () {
+      super.requestChatRoomInformationFuture = value;
+    });
+  }
+
   late final _$connectFutureAtom =
       Atom(name: '_ChatStore.connectFuture', context: context);
 
@@ -133,19 +165,18 @@ mixin _$ChatStore on _ChatStore, Store {
     });
   }
 
-  late final _$chatMessagesAtom =
-      Atom(name: '_ChatStore.chatMessages', context: context);
+  late final _$chatsAtom = Atom(name: '_ChatStore.chats', context: context);
 
   @override
-  ObservableList<ChatMessage> get chatMessages {
-    _$chatMessagesAtom.reportRead();
-    return super.chatMessages;
+  ObservableList<types.TextMessage> get chats {
+    _$chatsAtom.reportRead();
+    return super.chats;
   }
 
   @override
-  set chatMessages(ObservableList<ChatMessage> value) {
-    _$chatMessagesAtom.reportWrite(value, super.chatMessages, () {
-      super.chatMessages = value;
+  set chats(ObservableList<types.TextMessage> value) {
+    _$chatsAtom.reportWrite(value, super.chats, () {
+      super.chats = value;
     });
   }
 
@@ -217,6 +248,28 @@ mixin _$ChatStore on _ChatStore, Store {
   }
 
   @override
+  void pushFontToChats(ChatMessage element) {
+    final _$actionInfo = _$_ChatStoreActionController.startAction(
+        name: '_ChatStore.pushFontToChats');
+    try {
+      return super.pushFontToChats(element);
+    } finally {
+      _$_ChatStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void pushBackToChats(ChatMessage element) {
+    final _$actionInfo = _$_ChatStoreActionController.startAction(
+        name: '_ChatStore.pushBackToChats');
+    try {
+      return super.pushBackToChats(element);
+    } finally {
+      _$_ChatStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 successInGetRoom: ${successInGetRoom},
@@ -224,12 +277,15 @@ successInConnectSocket: ${successInConnectSocket},
 successInGetMessage: ${successInGetMessage},
 success: ${success},
 requestFuture: ${requestFuture},
+requestChatRoomInformationFuture: ${requestChatRoomInformationFuture},
 connectFuture: ${connectFuture},
-chatMessages: ${chatMessages},
+chats: ${chats},
 isLoading: ${isLoading},
+isInitting: ${isInitting},
 isConnecting: ${isConnecting},
 getSuccessMessageKey: ${getSuccessMessageKey},
-getFailedMessageKey: ${getFailedMessageKey}
+getFailedMessageKey: ${getFailedMessageKey},
+typesMessageChats: ${typesMessageChats}
     ''';
   }
 }

@@ -10,6 +10,7 @@ class GlassmorphismGradientScaffoldAppbar extends StatelessWidget {
     Key? key,
     required this.appbarName,
     required this.child,
+    this.appbarTitleColor,
     this.safeAreaTop = false,
     this.safeAreaRight = false,
     this.safeAreaBottom = false,
@@ -22,6 +23,8 @@ class GlassmorphismGradientScaffoldAppbar extends StatelessWidget {
   final bool safeAreaRight;
   final bool safeAreaBottom;
   final bool safeAreaLeft;
+
+  final Color? appbarTitleColor;
 
   final String appbarName;
   final Widget child;
@@ -47,6 +50,7 @@ class GlassmorphismGradientScaffoldAppbar extends StatelessWidget {
           ),
           CustomInStackAppBar(
             nameAppbar: appbarName,
+            customColor: appbarTitleColor,
           ),
           messageNotification ?? const SizedBox(),
           progressIndicator ?? const SizedBox(),

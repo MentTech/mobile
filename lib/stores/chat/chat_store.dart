@@ -11,6 +11,7 @@ import 'package:mobile/models/chat/message_chat.dart';
 import 'package:mobile/models/chat/room_information.dart';
 import 'package:mobile/stores/message/message_store.dart';
 import 'package:mobx/mobx.dart';
+import 'package:uuid/uuid.dart';
 
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
@@ -49,6 +50,8 @@ abstract class _ChatStore with Store {
   Future connectSocket() async {
     // socket setup
     connectFuture = FutureStatus.pending;
+    chats.clear();
+
     await _repository.authToken.then((accessToken) {
       if (accessToken != null && accessToken.isNotEmpty) {
         log("[Chat] [socket io] set up");
@@ -75,7 +78,12 @@ abstract class _ChatStore with Store {
           connectFuture = FutureStatus.fulfilled;
         });
 
+        if (socket.connected) {
+          connectFuture = FutureStatus.fulfilled;
+        }
+
         socket.on('chat:${chatRoomInformation!.id}', (data) {
+          log("[Chat] [socket io] [on receive chat] " + data.toString());
           addNewMessageFromSocket(data);
         });
       } else {
@@ -107,19 +115,9 @@ abstract class _ChatStore with Store {
           (_) => successInConnectSocket, (_) => successInConnectSocket = false,
           delay: 200),
       reaction(
-        (_) => chatMessages,
+        (_) => chats,
         (_) {
-          for (var element in chatMessages) {
-            chats.add(
-              types.TextMessage(
-                author: types.User(
-                  id: element.userId.toString(),
-                ),
-                id: element.id.toString(),
-                text: element.content,
-              ),
-            );
-          }
+          log("[chat] reacted types Message to update");
         },
         delay: 200,
       ),
@@ -146,7 +144,16 @@ abstract class _ChatStore with Store {
 
   int get mentorID => _mentorId;
 
-  List<types.Message> chats = [];
+  final types.User defaultMentor = types.User(
+    id: const Uuid().v4(),
+    // lastName: "Mentor",
+    imageUrl:
+        "https://www.gravatar.com/avatar/460d94fc5806df528296a0f9447d4ceb?s=200",
+  );
+
+  types.User? mentorData;
+
+  types.User? userData;
 
   // observable variables:------------------------------------------------------
   @observable
@@ -165,14 +172,25 @@ abstract class _ChatStore with Store {
   ObservableFuture<Map<String, dynamic>?> requestFuture = emptyResponse;
 
   @observable
-  FutureStatus connectFuture = FutureStatus.fulfilled;
+  ObservableFuture<Map<String, dynamic>?> requestChatRoomInformationFuture =
+      emptyResponse;
 
   @observable
-  ObservableList<ChatMessage> chatMessages = ObservableList<ChatMessage>();
+  FutureStatus connectFuture = FutureStatus.fulfilled;
+
+  // @observable
+  // ObservableList<ChatMessage> chatMessages = ObservableList<ChatMessage>();
+
+  @observable
+  ObservableList<types.TextMessage> chats = ObservableList<types.TextMessage>();
 
   // computed:------------------------------------------------------------------
   @computed
   bool get isLoading => requestFuture.status == FutureStatus.pending;
+
+  @computed
+  bool get isInitting =>
+      requestChatRoomInformationFuture.status == FutureStatus.pending;
 
   @computed
   bool get isConnecting => connectFuture == FutureStatus.pending;
@@ -182,6 +200,9 @@ abstract class _ChatStore with Store {
 
   @computed
   String get getFailedMessageKey => _messageStore.errorMessagekey;
+
+  @computed
+  ObservableList<types.Message> get typesMessageChats => chats;
 
   // actions:-------------------------------------------------------------------
 
@@ -202,11 +223,12 @@ abstract class _ChatStore with Store {
       sessionId: _sessionId,
     );
 
-    requestFuture = ObservableFuture(future);
+    requestChatRoomInformationFuture = ObservableFuture(future);
 
-    log("[Chat] [getChatRoomInformation] requestFuture: ${requestFuture.status}");
+    // log("[Chat] [getChatRoomInformation] requestChatRoomInformationFuture: ${requestChatRoomInformationFuture.status}");
 
-    return await future.then((res) async {
+    return future.then((res) async {
+      // log("[Chat] [getChatRoomInformation] requestChatRoomInformationFuture when done: ${requestChatRoomInformationFuture.status}");
       try {
         if (res!["statusCode"] == null) {
           // [TODO] implement here
@@ -221,15 +243,25 @@ abstract class _ChatStore with Store {
 
           _messageStore.setSuccessMessage(Code.getChatRoom);
 
-          final Participant participant = chatRoomInformation!.participants[0];
+          final Participant mentorParticipant =
+              chatRoomInformation!.participants[0];
 
-          final types.User typesUser = types.User(
-            id: participant.id.toString(),
-            lastName: participant.name,
-            imageUrl: participant.avatar,
+          mentorData = types.User(
+            id: mentorParticipant.id.toString(),
+            // lastName: participant.name,
+            imageUrl: mentorParticipant.avatar,
           );
 
-          return Future.value(typesUser);
+          final Participant userParticipant =
+              chatRoomInformation!.participants[1];
+
+          userData = types.User(
+            id: userParticipant.id.toString(),
+            // lastName: participant.name,
+            imageUrl: userParticipant.avatar,
+          );
+
+          return Future.value(mentorData);
         } else {
           int code = res["statusCode"] as int;
 
@@ -352,20 +384,43 @@ abstract class _ChatStore with Store {
       message: message.text.trim(),
     );
 
-    requestFuture = ObservableFuture(future);
+    // requestFuture = ObservableFuture(future);
 
     future.then((res) {
       try {
         if (res!["statusCode"] == null) {
           // [TODO] implement here
-          ChatMessage chatMessage = ChatMessage.fromJson(res);
+          final chatMessage = ChatMessage.fromJson(res);
 
-          for (var chat in chatMessages) {
-            if (chat.content.compareTo(chatMessage.content) == 0) {
-              chat = chatMessage;
+          for (var i = 0; i < chats.length; i++) {
+            final chat = chats.elementAt(i);
+            if (chat.status == types.Status.sending &&
+                chat.text.compareTo(chatMessage.content) == 0) {
+              chats.removeAt(i);
+              chats.insert(
+                  i,
+                  chat.copyWith(
+                    id: chatMessage.id.toString(),
+                    status: types.Status.sent,
+                  ) as types.TextMessage);
+
+              break;
             }
           }
 
+          // for (var chat in chats) {
+          //   if (chat.status == types.Status.sending &&
+          //       chat.text.compareTo(chatMessage.content) == 0) {
+          //     chat = chat.copyWith(
+          //       id: chatMessage.id.toString(),
+          //       status: types.Status.sent,
+          //     ) as types.TextMessage;
+
+          //     break;
+          //   }
+          // }
+
+          successInGetMessage = true;
           success = true;
         } else {
           int code = res["statusCode"] as int;
@@ -407,12 +462,33 @@ abstract class _ChatStore with Store {
 
     requestFuture = ObservableFuture(future);
 
+    log("[chat] fetch message");
+
+    await Future.doWhile(() async {
+      if ((mentorData != null && userData != null)) {
+        return false;
+      }
+
+      log("[chat] request until has data");
+
+      await getChatRoomInformation();
+
+      return true;
+    });
+
     future.then((res) {
       try {
         if (res!["statusCode"] == null) {
           // [TODO] implement here
-          chatMessages =
-              ObservableList.of(ChatMessageList.fromJson(res).chatMessages);
+
+          final chatMessages = ChatMessageList.fromJson(res).chatMessages;
+
+          log("[chat] fetched message with length: ${chatMessages.length}");
+
+          chats.clear();
+          for (var element in chatMessages) {
+            pushBackToChats(element);
+          }
 
           successInGetMessage = true;
         } else {
@@ -432,7 +508,91 @@ abstract class _ChatStore with Store {
 
   @action
   void addNewMessageFromSocket(dynamic data) {
-    chatMessages.add(ChatMessage.fromJson(data));
+    final chatMessage = ChatMessage.fromJson(data);
+
+    // if (chatMessage.userId.toString().compareTo(userData!.id) == 0) {
+    //   for (var chat in chats) {
+    //     if (chat.status == types.Status.sending &&
+    //         chat.text.compareTo(chatMessage.content) == 0) {
+    //       chat = chat.copyWith(
+    //         id: chatMessage.id.toString(),
+    //         status: types.Status.sent,
+    //       ) as types.TextMessage;
+
+    //       break;
+    //     }
+    //   }
+    // } else {
+    //   pushFontToChats(chatMessage);
+    // }
+
+    pushFontToChats(chatMessage);
+
+    successInGetMessage = true;
+  }
+
+  @action
+  void pushFontToChats(ChatMessage element) {
+    if (element.userId.toString().compareTo(mentorData!.id) == 0) {
+      chats.insert(
+        0,
+        types.TextMessage(
+          author: types.User(
+            id: element.userId.toString(),
+            imageUrl: mentorData!.imageUrl, // difference image url
+          ),
+          id: element.id.toString(),
+          text: element.content,
+          createdAt: element.createAt.millisecondsSinceEpoch,
+          status: types.Status.seen,
+        ),
+      );
+    } else {
+      chats.insert(
+        0,
+        types.TextMessage(
+          author: types.User(
+            id: element.userId.toString(),
+            imageUrl: userData!.imageUrl, // difference image url
+          ),
+          id: element.id.toString(),
+          text: element.content,
+          createdAt: element.createAt.millisecondsSinceEpoch,
+          status: types.Status.seen,
+        ),
+      );
+    }
+  }
+
+  @action
+  void pushBackToChats(ChatMessage element) {
+    if (element.userId.toString().compareTo(mentorData!.id) == 0) {
+      chats.add(
+        types.TextMessage(
+          author: types.User(
+            id: element.userId.toString(),
+            imageUrl: mentorData!.imageUrl, // difference image url
+          ),
+          id: element.id.toString(),
+          text: element.content,
+          createdAt: element.createAt.millisecondsSinceEpoch,
+          status: types.Status.seen,
+        ),
+      );
+    } else {
+      chats.add(
+        types.TextMessage(
+          author: types.User(
+            id: element.userId.toString(),
+            imageUrl: userData!.imageUrl, // difference image url
+          ),
+          id: element.id.toString(),
+          text: element.content,
+          createdAt: element.createAt.millisecondsSinceEpoch,
+          status: types.Status.seen,
+        ),
+      );
+    }
   }
 
   // @action
